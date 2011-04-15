@@ -1,0 +1,5 @@
+FAT est un tracker pour la Gameboy Advance.
+Ce logiciel est programmé en C (qui n'est peut-être pas de toute dernière qualité)
+Pour le compiler, vous devez disposer d'un environnement HAM configuré sur votre machine (http://www.aaronrogers.com/ham/downloads.php)
+
+Have fun !
