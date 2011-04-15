@@ -1,0 +1,41 @@
+#ifndef _SOUND_API_REGISTER_
+#define _SOUND_API_REGISTER_
+
+#define	REG_BASE	0x04000000
+
+// Registres globaux
+#define	REG_SOUNDCNT_L	(*((u16 volatile *) (REG_BASE + 0x080)))
+#define	REG_SOUNDCNT_H	(*((u16 volatile *) (REG_BASE + 0x082)))
+#define	REG_SOUNDCNT_X	(*((u16 volatile *) (REG_BASE + 0x084)))
+
+#define SOUNDINIT			0x8000
+
+// Channel 1
+#define	REG_SOUND1CNT_L	(*((u16 volatile *) (REG_BASE + 0x060)))
+#define	REG_SOUND1CNT_H	(*((u16 volatile *) (REG_BASE + 0x062)))
+#define	REG_SOUND1CNT_X	(*((u16 volatile *) (REG_BASE + 0x064)))
+
+#define SOUND1INIT			0x8000
+
+// Channel 2
+#define	REG_SOUND2CNT_L	(*((u16 volatile *) (REG_BASE + 0x068)))
+#define	REG_SOUND2CNT_H	(*((u16 volatile *) (REG_BASE + 0x06C)))
+
+// Channel 3
+#define	REG_SOUND3CNT_L	(*((u16 volatile *) (REG_BASE + 0x070)))
+#define	REG_SOUND3CNT_H	(*((u16 volatile *) (REG_BASE + 0x072)))
+#define	REG_SOUND3CNT_X	(*((u16 volatile *) (REG_BASE + 0x074)))
+
+// Channel 4
+#define	REG_SOUND4CNT_L	(*((u16 volatile *) (REG_BASE + 0x078)))
+#define	REG_SOUND4CNT_H	(*((u16 volatile *) (REG_BASE + 0x07C)))
+
+// DMA (mémoire)
+#define REG_DMA3SAD     (*((u32 volatile *) (REG_BASE + 0x0D4)))
+#define REG_DMA3DAD     (*((u32 volatile *) (REG_BASE + 0x0D8)))
+#define REG_DMA3CNT_L   (*((u16 volatile *) (REG_BASE + 0x0DC)))
+#define REG_DMA3CNT_H   (*((u16 volatile *) (REG_BASE + 0x0DE)))
+
+#define ECRAN           (*((u16 volatile *) (0x6000000)));
+
+#endif

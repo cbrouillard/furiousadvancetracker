@@ -1,0 +1,29 @@
+#ifndef _SOUND_API_
+#define _SOUND_API_
+
+#include "register.h"
+
+/**
+
+Quelques règles à suivre :
+
+- toutes les fonctions sont préfixées par "snd_" comme ca pas de risque de conflit.
+- les fonctions non testées sont préfixées par "tmp_snd_", une fois testée -> on change en "snd_".
+- un petit commentaire au dessus de la fonction pour documenter.
+
+**/
+
+/**
+Initialise le mode audio sur la Gameboy: active les 4 canaux.
+**/
+void snd_init_soundApi ();
+
+/**
+Joue un son sur le channel 1.
+**/
+void tmp_snd_playSoundOnChannel1 (
+    u16 sweeptime, u16 sweepdir, u16 sweepshifts, u16 envinit, 
+    u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
+    u16 loopmode, u16 sfreq);
+
+#endif

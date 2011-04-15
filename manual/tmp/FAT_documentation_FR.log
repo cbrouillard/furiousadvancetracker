@@ -1,0 +1,578 @@
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.4.14)  14 APR 2011 20:35
+entering extended mode
+ %&-line parsing enabled.
+**FAT_documentation_FR.tex
+(./FAT_documentation_FR.tex
+LaTeX2e <2009/09/24>
+Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, loaded.
+(/usr/share/texmf-texlive/tex/latex/base/article.cls
+Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
+(/usr/share/texmf-texlive/tex/latex/base/size12.clo
+File: size12.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texmf-texlive/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-texlive/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+(/usr/share/texmf-texlive/tex/latex/graphics/graphics.sty
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-texlive/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/etc/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2009/08/28 v1.8 graphics configuration of TeX Live
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+
+(/usr/share/texmf-texlive/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2010/03/12 v0.04p Graphics/color for pdfTeX
+\Gread@gobject=\count87
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+\@input{epsf.aux}
+\openout2 = `epsf.aux'.
+
+(/usr/share/texmf-texlive/tex/generic/epsf/epsf.tex
+This is `epsf.tex' v2.7.3 <23 July 2005>
+\epsffilein=\read1
+\epsfframemargin=\dimen105
+\epsfframethickness=\dimen106
+\epsfrsize=\dimen107
+\epsftmp=\dimen108
+\epsftsize=\dimen109
+\epsfxsize=\dimen110
+\epsfysize=\dimen111
+\pspoints=\dimen112
+) (/usr/share/texmf-texlive/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2009/04/10 v2.0 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in pdf mode detected.
+)
+(/usr/share/texmf-texlive/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2009/10/09 v6.79a Hypertext links for LaTeX
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/ifvtex.sty
+Package: ifvtex 2008/11/04 v1.4 Switches for detecting VTeX and its modes (HO)
+Package ifvtex Info: VTeX not detected.
+)
+(/usr/share/texmf-texlive/tex/generic/ifxetex/ifxetex.sty
+Package: ifxetex 2009/01/23 v0.5 Provides ifxetex conditional
+)
+(/usr/share/texmf-texlive/tex/latex/oberdiek/hycolor.sty
+Package: hycolor 2009/10/02 v1.5 Code for color options of hyperref/bookmark (H
+O)
+
+(/usr/share/texmf-texlive/tex/latex/oberdiek/xcolor-patch.sty
+Package: xcolor-patch 2009/10/02 xcolor patch
+))
+\@linkdim=\dimen113
+\Hy@linkcounter=\count88
+\Hy@pagecounter=\count89
+
+(/usr/share/texmf-texlive/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2009/10/09 v6.79a Hyperref: PDFDocEncoding definition (HO)
+)
+(/usr/share/texmf-texlive/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2007/12/12 v1.2 Prefix for e-TeX command names (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2007/09/09 v1.2 Providing info/warning/message (HO)
+)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)
+(/usr/share/texmf-texlive/tex/latex/latexconfig/hyperref.cfg
+File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
+)
+(/usr/share/texmf-texlive/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2009/08/13 v3.4 Keyval support for LaTeX options (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2009/07/30 v1.5 Key value parser with default handler suppor
+t (HO)
+))
+Package hyperref Info: Hyper figures OFF on input line 2975.
+Package hyperref Info: Link nesting OFF on input line 2980.
+Package hyperref Info: Hyper index ON on input line 2983.
+Package hyperref Info: Plain pages OFF on input line 2990.
+Package hyperref Info: Backreferencing OFF on input line 2995.
+
+Implicit mode ON; LaTeX internals redefined
+Package hyperref Info: Bookmarks ON on input line 3191.
+(/usr/share/texmf-texlive/tex/latex/ltxmisc/url.sty
+\Urlmuskip=\muskip10
+Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 3428.
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/bitset.sty
+Package: bitset 2007/09/28 v1.0 Data type bit set (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/intcalc.sty
+Package: intcalc 2007/09/27 v1.1 Expandable integer calculations (HO)
+)
+(/usr/share/texmf-texlive/tex/generic/oberdiek/bigintcalc.sty
+Package: bigintcalc 2007/11/11 v1.1 Expandable big integer calculations (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2009/09/23 v0.6 LuaTeX support for pdfTeX utility functions
+ (HO)
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2009/04/17 v1.2 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+(/usr/share/texmf-texlive/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2009/08/05 v1.0 Some LaTeX kernel commands for general use (HO
+)
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+)))
+\Fld@menulength=\count90
+\Field@Width=\dimen114
+\Fld@charsize=\dimen115
+\Field@toks=\toks15
+Package hyperref Info: Hyper figures OFF on input line 4377.
+Package hyperref Info: Link nesting OFF on input line 4382.
+Package hyperref Info: Hyper index ON on input line 4385.
+Package hyperref Info: backreferencing OFF on input line 4392.
+Package hyperref Info: Link coloring OFF on input line 4397.
+Package hyperref Info: Link coloring with OCG OFF on input line 4402.
+Package hyperref Info: PDF/A mode OFF on input line 4407.
+
+(/usr/share/texmf-texlive/tex/generic/oberdiek/atbegshi.sty
+Package: atbegshi 2008/07/31 v1.9 At begin shipout hook (HO)
+)
+\Hy@abspage=\count91
+\c@Item=\count92
+\c@Hfootnote=\count93
+)
+*hyperref using driver hpdftex*
+(/usr/share/texmf-texlive/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2009/10/09 v6.79a Hyperref driver for pdfTeX
+\Fld@listcount=\count94
+)
+(/usr/share/texmf-texlive/tex/latex/moreverb/moreverb.sty
+Package: moreverb 2008/06/03 v2.3 `more' verbatim facilities
+
+(/usr/share/texmf-texlive/tex/latex/tools/verbatim.sty
+Package: verbatim 2003/08/22 v1.5q LaTeX2e package for verbatim enhancements
+\every@verbatim=\toks16
+\verbatim@line=\toks17
+\verbatim@in@stream=\read2
+)
+\verbatim@out=\write3
+\tab@position=\count95
+\tab@size=\count96
+\listing@line=\count97
+)
+(/usr/share/texmf-texlive/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count98
+\float@exts=\toks18
+\float@box=\box26
+\@float@everytoks=\toks19
+\@floatcapt=\box27
+)
+(/usr/share/texmf-texlive/tex/latex/listings/listings.sty
+\lst@mode=\count99
+\lst@gtempboxa=\box28
+\lst@token=\toks20
+\lst@length=\count100
+\lst@currlwidth=\dimen116
+\lst@column=\count101
+\lst@pos=\count102
+\lst@lostspace=\dimen117
+\lst@width=\dimen118
+\lst@newlines=\count103
+\lst@lineno=\count104
+\lst@maxwidth=\dimen119
+
+(/usr/share/texmf-texlive/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2007/02/22 1.4 (Carsten Heinz)
+\c@lstnumber=\count105
+\lst@skipnumbers=\count106
+\lst@framebox=\box29
+)
+(/usr/share/texmf-texlive/tex/latex/listings/listings.cfg
+File: listings.cfg 2007/02/22 1.4 listings configuration
+))
+Package: listings 2007/02/22 1.4 (Carsten Heinz)
+
+(/usr/share/texmf-texlive/tex/latex/eso-pic/eso-pic.sty
+Package: eso-pic 2006/07/14 v1.1d eso-pic (RN)
+
+(/usr/share/texmf-texlive/tex/latex/ms/everyshi.sty
+Package: everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
+))
+(/usr/share/texmf-texlive/tex/latex/graphics/color.sty
+Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
+
+(/etc/texmf/tex/latex/config/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package color Info: Driver file: pdftex.def on input line 130.
+)
+(/usr/share/texmf-texlive/tex/latex/supertabular/supertabular.sty
+Package: supertabular 2004/02/20 v4.1e the supertabular environment
+\c@tracingst=\count107
+\ST@wd=\dimen120
+\ST@rightskip=\skip43
+\ST@leftskip=\skip44
+\ST@parfillskip=\skip45
+\ST@pageleft=\dimen121
+\ST@headht=\dimen122
+\ST@tailht=\dimen123
+\ST@pagesofar=\dimen124
+\ST@pboxht=\dimen125
+\ST@lineht=\dimen126
+\ST@stretchht=\dimen127
+\ST@prevht=\dimen128
+\ST@toadd=\dimen129
+\ST@dimen=\dimen130
+\ST@pbox=\box30
+)
+(/usr/share/texmf-texlive/tex/latex/colortbl/colortbl.sty
+Package: colortbl 2001/02/13 v0.1j Color table columns (DPC)
+
+(/usr/share/texmf-texlive/tex/latex/tools/array.sty
+Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
+\col@sep=\dimen131
+\extrarowheight=\dimen132
+\NC@list=\toks21
+\extratabsurround=\skip46
+\backup@length=\skip47
+)
+\everycr=\toks22
+\minrowclearance=\skip48
+) (./picins.sty
+Option `picins' Version 3.0 Sep. 1992, TH Darmstadt/HRZ
+\@BILD=\box31
+\@TEXT=\box32
+\d@breite=\dimen133
+\d@hoehe=\dimen134
+\d@xoff=\dimen135
+\d@yoff=\dimen136
+\d@shad=\dimen137
+\d@dash=\dimen138
+\d@boxl=\dimen139
+\d@pichskip=\dimen140
+\d@tmp=\dimen141
+\d@tmpa=\dimen142
+\d@bskip=\dimen143
+\hsiz@=\dimen144
+\p@getot@l=\dimen145
+\c@breite=\count108
+\c@hoehe=\count109
+\c@xoff=\count110
+\c@yoff=\count111
+\c@pos=\count112
+\c@shad=\count113
+\c@dash=\count114
+\c@boxl=\count115
+\c@zeilen=\count116
+\@changemode=\count117
+\c@piccaption=\count118
+\c@piccaptionpos=\count119
+\c@picpos=\count120
+\c@whole=\count121
+\c@half=\count122
+\c@tmp=\count123
+\c@tmpa=\count124
+\c@tmpb=\count125
+\c@tmpc=\count126
+\c@tmpd=\count127
+\d@leftskip=\skip49
+\ptoti=\dimen146
+\ptotii=\dimen147
+\env@box=\box33
+\d@envdp=\dimen148
+\c@hsize=\count128
+\c@envdp=\count129
+\d@envb=\dimen149
+)
+(/usr/share/texmf-texlive/tex/latex/base/openbib.sty)
+(/usr/share/texmf-texlive/tex/latex/base/makeidx.sty
+Package: makeidx 2000/03/29 v1.0m Standard LaTeX package
+)
+\@indexfile=\write4
+\openout4 = `FAT_documentation_FR.idx'.
+
+
+Writing index file FAT_documentation_FR.idx
+
+Package hyperref Warning: Option `backref' has already been used,
+(hyperref)                setting the option has no effect on input line 42.
+
+
+Package hyperref Warning: Option `pagebackref' has already been used,
+(hyperref)                setting the option has no effect on input line 42.
+
+
+Package hyperref Warning: Option `hyperindex' has already been used,
+(hyperref)                setting the option has no effect on input line 42.
+
+Package hyperref Info: Option `colorlinks' set `true' on input line 42.
+Package hyperref Info: Option `breaklinks' set `true' on input line 42.
+
+Package hyperref Warning: Option `bookmarks' has already been used,
+(hyperref)                setting the option has no effect on input line 42.
+
+(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
+Package: inputenc 2008/03/30 v1.1d Input encoding file
+\inpenc@prehook=\toks23
+\inpenc@posthook=\toks24
+
+(/usr/share/texmf-texlive/tex/latex/ucs/utf8x.def
+File: utf8x.def 2004/10/17 UCS: Input encoding UTF-8
+))
+(/usr/share/texmf-texlive/tex/latex/ucs/ucs.sty
+Package: ucs 2004/10/17 UCS: Unicode input support
+
+(/usr/share/texmf-texlive/tex/latex/ucs/data/uni-global.def
+File: uni-global.def 2004/10/17 UCS: Unicode global data
+)
+\uc@secondtry=\count130
+\uc@combtoks=\toks25
+\uc@combtoksb=\toks26
+\uc@temptokena=\toks27
+)
+(/usr/share/texmf-texlive/tex/generic/babel/babel.sty
+Package: babel 2008/07/06 v3.8l The Babel package
+
+(/usr/share/texmf-texlive/tex/generic/babel/frenchb.ldf
+Language: frenchb 2009/03/16 v2.3d French support from the babel system
+
+(/usr/share/texmf-texlive/tex/generic/babel/babel.def
+File: babel.def 2008/07/06 v3.8l Babel common definitions
+\babel@savecnt=\count131
+\U@D=\dimen150
+)
+
+Package babel Warning: No hyphenation patterns were loaded for
+(babel)                the language `French'
+(babel)                I will use the patterns loaded for \language=0 instead.
+
+\l@french = a dialect from \language0
+Package babel Info: Making : an active character on input line 120.
+Package babel Info: Making ; an active character on input line 121.
+Package babel Info: Making ! an active character on input line 122.
+Package babel Info: Making ? an active character on input line 123.
+\FB@Mht=\dimen151
+\std@mcc=\count132
+\dec@mcc=\count133
+\parindentFFN=\dimen152
+*************************************
+* Local config file frenchb.cfg used
+*
+(/usr/share/texmf-texlive/tex/generic/babel/frenchb.cfg)))
+(/usr/share/texmf-texlive/tex/latex/carlisle/scalefnt.sty)
+(/usr/share/texmf-texlive/tex/latex/tools/layout.sty
+Package: layout 2000/09/25 v1.2c Show layout parameters
+\oneinch=\count134
+\cnt@paperwidth=\count135
+\cnt@paperheight=\count136
+\cnt@hoffset=\count137
+\cnt@voffset=\count138
+\cnt@textheight=\count139
+\cnt@textwidth=\count140
+\cnt@topmargin=\count141
+\cnt@oddsidemargin=\count142
+\cnt@evensidemargin=\count143
+\cnt@headheight=\count144
+\cnt@headsep=\count145
+\cnt@marginparsep=\count146
+\cnt@marginparwidth=\count147
+\cnt@marginparpush=\count148
+\cnt@footskip=\count149
+\fheight=\count150
+\ref@top=\count151
+\ref@hoffset=\count152
+\ref@voffset=\count153
+\ref@head=\count154
+\ref@body=\count155
+\ref@foot=\count156
+\ref@margin=\count157
+\ref@marginwidth=\count158
+\ref@marginpar=\count159
+\Interval=\count160
+\ExtraYPos=\count161
+\PositionX=\count162
+\PositionY=\count163
+\ArrowLength=\count164
+)
+(/usr/share/texmf-texlive/tex/latex/fancyhdr/fancyhdr.sty
+\fancy@headwidth=\skip50
+\f@ncyO@elh=\skip51
+\f@ncyO@erh=\skip52
+\f@ncyO@olh=\skip53
+\f@ncyO@orh=\skip54
+\f@ncyO@elf=\skip55
+\f@ncyO@erf=\skip56
+\f@ncyO@olf=\skip57
+\f@ncyO@orf=\skip58
+)
+(/usr/share/texmf-texlive/tex/latex/ntgclass/a4.sty
+Package: a4 2004/04/15 v1.2g A4 based page layout
+)
+\@input{fonctions.aux}
+\openout2 = `fonctions.aux'.
+
+(./fonctions.tex) (./tmp/FAT_documentation_FR.aux)
+\openout1 = `FAT_documentation_FR.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 94.
+LaTeX Font Info:    ... okay on input line 94.
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 94.
+
+(/usr/share/texmf-texlive/tex/latex/psnfss/ot1phv.fd
+File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
+)
+(/usr/share/texmf-texlive/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count165
+\scratchdimen=\dimen153
+\scratchbox=\box34
+\nofMPsegments=\count166
+\nofMParguments=\count167
+\everyMPshowfont=\toks28
+\MPscratchCnt=\count168
+\MPscratchDim=\dimen154
+\MPnumerator=\count169
+\everyMPtoPDFconversion=\toks29
+)
+Package hyperref Info: Link coloring ON on input line 94.
+ (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
+Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
+
+(/usr/share/texmf-texlive/tex/latex/oberdiek/refcount.sty
+Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
+)
+\c@section@level=\count170
+)
+LaTeX Info: Redefining \ref on input line 94.
+LaTeX Info: Redefining \pageref on input line 94.
+
+(./tmp/FAT_documentation_FR.out) (./tmp/FAT_documentation_FR.out)
+\@outlinefile=\write5
+\openout5 = `FAT_documentation_FR.out'.
+
+\AtBeginShipoutBox=\box35
+\c@lstlisting=\count171
+
+ABD: EveryShipout initializing macros
+(/usr/share/texmf-texlive/tex/latex/ucs/ucsencs.def
+File: ucsencs.def 2003/11/29 Fixes to fontencodings LGR, T3
+)
+LaTeX Info: Redefining \degres on input line 94.
+LaTeX Info: Redefining \dots on input line 94.
+LaTeX Info: Redefining \up on input line 94.
+
+
+Package frenchb.ldf Warning: OT1 encoding should not be used for French. 
+(frenchb.ldf)                Add \usepackage[T1]{fontenc} to the preamble
+(frenchb.ldf)                of your document, on input line 94.
+
+<images/logo.png, id=75, 137.51375pt x 46.1725pt>
+File: images/logo.png Graphic file (type png)
+ <use images/logo.png>
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <20.74> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 103.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <14.4> on input line 103.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 103.
+
+[0
+
+
+
+
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./images/logo.png>]
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <12> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 115.
+
+(/usr/share/texmf-texlive/tex/latex/ucs/data/uni-0.def
+File: uni-0.def 2004/10/17 UCS: Unicode data U+0000..U+00FF
+)pdfTeX warning (ext4): destination with the same identifier (name{page.0}) has
+ been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.130   \newpage
+                 [0]
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <17.28> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 133.
+ (./tmp/FAT_documentation_FR.toc
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 3.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 3.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 3.
+)
+\tf@toc=\write6
+\openout6 = `FAT_documentation_FR.toc'.
+
+
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 15.55193pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[1]
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 138.
+ [2] (./tmp/FAT_documentation_FR.aux) ) 
+Here is how much of TeX's memory you used:
+ 7831 strings out of 495061
+ 110875 string characters out of 1182621
+ 205287 words of memory out of 3000000
+ 10833 multiletter control sequences out of 15000+50000
+ 18553 words of font info for 40 fonts, out of 3000000 for 9000
+ 28 hyphenation exceptions out of 8191
+ 38i,12n,45p,320b,553s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/share/texmf-texlive/fonts/enc/dvip
+s/base/8r.enc}</usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8a.pfb></u
+sr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvr8a.pfb>
+Output written on ./tmp/FAT_documentation_FR.pdf (4 pages, 39300 bytes).
+PDF statistics:
+ 130 PDF objects out of 1000 (max. 8388607)
+ 23 named destinations out of 1000 (max. 500000)
+ 150 words of extra memory for PDF output out of 10000 (max. 10000000)
+

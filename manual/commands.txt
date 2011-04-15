@@ -1,0 +1,77 @@
+COMMON:
+--------------------------------------------------------
+SELECT: afficher la popup de déplacement OK
+SELECT+DIRECTION: changer d'écran (relacher SELECT pour valider) OK
+(TODO) R+L: afficher l'aide
+HAUT/BAS/GAUCHE/DROITE: déplacer le curseur (OK)
+
+PROJECT:
+--------------------------------------------------------
+A+DIRECTION: modifier une valeur sous le curseur OK
+START: lancer la lecture depuis le séquenceur (SONG) / stopper la lecture OK
+
+LIVE:
+--------------------------------------------------------
+COMPOSER:
+--------------------------------------------------------
+SONG:
+--------------------------------------------------------
+START: lancer la lecture depuis le séquenceur (SONG) / stopper la lecture OK
+L+HAUT: déplacer le curseur tout en haut OK
+L+BAS: déplacer le curseur tout en bas OK
+R+HAUT: déplacer le curseur d'une page vers le haut (OK)
+R+BAS: déplacer le curseur d'une page vers le bas (OK)
+A: inscrit le dernier numéro de séquence dans la case sous le curseur (OK)
+A+DIRECTION: modifier la valeur de la séquence dans la case sous le curseur (OK)
+L+A: trouver une nouvelle séquence disponible puis l'inscrire dans la case sous le curseur (OK)
+R+A: ??
+B: SI CASE NON VIDE -> couper la séquence (efface et remplit un espace mémoire avec les données) (OK)
+B: SI CASE VIDE -> colle une séquence (récupère l'espace mémoire et l'assigne à la case désignée) (OK)
+L+B: SI CASE VIDE -> colle la séquence en changeant le numéro (OK MODE NON DEEP)
+L+B: SI CASE NON VIDE -> change le numéro de la séquence en copiant son contenu (OK MODE NON DEEP)
+
+
+BLOCKS:
+--------------------------------------------------------
+START: lancer la lecture des blocks / stopper la lecture OK
+L+HAUT: déplacer le curseur tout en haut (OK)
+L+BAS: déplacer le curseur tout en bas (OK)
+A: inscrit le dernier numéro de block dans la case désignée (OK)
+A+DIRECTION: modifie le numéro de block dans la case désignée (OK)
+L+A: trouver un nouveau block dispo et l'inscrire OK
+R+A: ??
+B: SI CASE NON VIDE -> couper le block (efface et remplit un espace mémoire avec les données) OK
+B: SI CASE VIDE -> colle le block en espace mémoire OK
+L+B: SI CASE NON VIDE -> change le numéro de block en copiant le contenu OK
+L+B: SI CASE VIDE -> colle le block en espace mémoire en changeant son numéro OK
+R+DROITE/GAUCHE: changer le numéro de séquence en cours d'édition OK
+(TODO) R+HAUT/BAS: sauter à la séquence précédente/suivante dans le séquenceur
+
+
+NOTES:
+--------------------------------------------------------
+START: lancer la lecture des notes / stopper la lecture OK
+L+HAUT: déplacer le curseur tout en haut (OK)
+L+BAS: déplacer le curseur tout en bas (OK)
+A: inscrit une note (OK)
+A+HAUT/BAS: COLONNE NOTE -> modifie l'octave de la note désignée par le curseur (OK)
+A+DROITE/GAUCHE: COLONNE NOTE -> modifier la tonalitée de la note désignée (OK)
+A+DIRECTION: COLONNE INSTRU -> modifier le numéro d'instrument utilisée pour la note désignée (OK)
+A+DIRECTION: COLONNE CMD -> modifier les valeurs de commandes
+L+A: COLONNE INSTRU -> trouver un nouvel instrument et l'inscrire OK
+R+A: ??
+R+DROITE/GAUCHE: modifier le numéro de block en cours d'édition OK
+R+HAUT/BAS: sauter au block précédent/suivant dans la séquence en cours d'édition
+B: SI CASE NON VIDE -> couper la note (et la garder en mémoire) OK
+B: SI CASE VIDE -> coller la note depuis l'espace mémoire OK
+
+
+INSTRUMENTS:
+--------------------------------------------------------
+START: lancer la lecture des notes / stopper la lecture
+A+DIRECTION: modifier la valeur sous le curseur (OK)
+R+DROITE/GAUCHE: changer le numéro d'instru en cours d'édition KO -> BUG sur le switchScreen :(
+L+DROITE/GAUCHE: changer le type d'instrument (changer d'onglet) (OK)
+
+EFFECTS:
+--------------------------------------------------------

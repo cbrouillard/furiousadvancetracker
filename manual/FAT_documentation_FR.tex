@@ -1,0 +1,171 @@
+% Header du document et paramétrage des packages utilisés
+\documentclass[12pt,a4paper]{article}
+
+% On utilise les images
+\usepackage{graphicx}
+\include{epsf}
+
+% Gestion de la portabilité du document (PDF ou pas)
+\usepackage{ifpdf} 
+
+\ifpdf
+  \usepackage[pdftex,pdfstartview=FitH,pdfhighlight =/O]{hyperref}
+  \pdfcompresslevel=9
+  \DeclareGraphicsExtensions{.png, .jpg, .pdf}
+\else
+  \DeclareGraphicsExtensions{.eps, .ps}
+\fi
+
+\usepackage{moreverb}
+\usepackage{float}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{eso-pic}
+\usepackage{color}
+\usepackage{supertabular}
+\usepackage{colortbl}
+\usepackage{picins}
+\usepackage{openbib}
+\usepackage{makeidx}
+\makeindex
+
+% Configuration des liens
+\hypersetup{
+     backref=true,    %permet d'ajouter des liens dans...
+     pagebackref=true,%...les bibliographies
+     hyperindex=true, %ajoute des liens dans les index.
+     colorlinks=true, %colorie les liens
+     breaklinks=true, %permet le retour à la ligne dans les liens trop longs
+     urlcolor= blue, %couleur des hyperliens
+     linkcolor= blue, %couleur des liens internes
+     bookmarks=true %créé des signets pour Acrobat
+}
+
+% Gérer le problème des accents
+%\usepackage[T1]{fontenc}
+%\usepackage[latin1]{inputenc}
+%\usepackage[utf8x]{fontenc}
+\usepackage[utf8x]{inputenc}
+
+% On parle français (Table des matières au lieu de Contents) et on s'organise français
+\usepackage[french]{babel}
+\usepackage[french]{layout}
+
+% Changement de police par defaut
+\renewcommand{\familydefault}{phv}
+\selectfont
+
+% On utilise les entêtes et pied de page
+\usepackage{fancyhdr}
+
+%Page
+\usepackage{a4}
+% Le fullpage est déconseillé (il fait de la merde dans l'entete)
+%\usepackage{fullpage}
+\textwidth=16cm % largeur du texte hors note en marge
+\oddsidemargin=0pt % marge gauche rduite  1 pouce
+\textheight=22cm % longueur utile de la page
+\topmargin=0pt % marge haute réduite  1 pouce
+\headsep=20pt % séparation 20 points entre entte et texte
+\footskip=20pt % idem sparation pied de page
+
+%---------------------------------------------------------------------------------------------%
+
+% Mes fonctions perso
+\include{fonctions}
+
+% Definition entete et pied de page
+\lfoot{\bf Cyril Brouillard}
+\rfoot{\bf \thepage}
+\cfoot{FuriousAdvanceTracker}
+\lhead{\rightmark}
+\rhead{FAT}
+\renewcommand{\footrulewidth}{0.2pt}
+\renewcommand{\headrulewidth}{0.2pt}
+\pagestyle{fancy}
+
+% Titre du document
+\title{\bf Manuel utilisateur}
+%\date{2011}
+\author{version 0-01-alpha}
+
+\bibliographystyle{plain}
+% Corps du document
+\begin{document}
+
+	% Page de garde
+  \begin{figure}
+    \begin{center}
+    \includegraphics[scale=2]{images/logo}
+    \end{center}
+  \end{figure}
+  % Titre
+  \maketitle{}
+  % Pas de style ni de numéro pour la page de garde
+  \thispagestyle{empty}
+  \setcounter{page}{0}
+  \ClearShipoutPicture
+
+  % Fin de la page de garde
+  \newpage
+
+  \begin{center}
+  
+  % Page Copyright et remerciements
+  {\bf FAT FuriousAdvanceTracker} \medskip
+  
+  {\bf version 0-01-alpha} \medskip
+  
+  {\bf code et design: Cyril Brouillard} \medskip
+  
+  Merci à Guillaume Dualé et Aline Bouquillon pour leur patience et leurs encouragements.\medskip
+  
+  Merci à XXX pour la traduction de ce document en anglais.
+  \end{center}
+  
+  % Pas de style ni de numéro pour cette page
+  \thispagestyle{empty}
+  \setcounter{page}{0}
+  \ClearShipoutPicture
+  \newpage
+  
+  % Table des matières
+  \tableofcontents{}
+  \newpage
+  
+  % C'est parti !!
+  \section{Présentation}
+    \subsection{Avertissement}
+  
+    \subsection{Pourquoi FAT ?}
+    
+    \subsection{Comment utiliser FAT ?}
+    
+    \subsection{Premier son}
+    
+    \subsection{Structure des données}
+    
+    \subsection{Données techniques de la Gameboy Advance}
+    
+  \section{Les écrans}
+    \section{La popup de déplacement}
+  
+    \subsection{L'écran SONG}
+    
+    \subsection{L'écran BLOCKS}
+    
+    \subsection{L'écran NOTES}
+    
+    \subsection{L'écran INSTRUMENT}
+    
+    \subsection{L'écran PROJECT}
+    
+    \subsection{L'écran EFFECTS}
+    
+    \subsection{L'écran LIVE}
+    
+    \subsection{L'écran COMPOSER}  
+    
+  \section{Effets et commandes}
+	
+\end{document}

@@ -1,0 +1,213 @@
+% Fichier de fonctions et de parametres pour LATEX
+% Pour l'utiliser: \include{fonctions}
+
+% Prototypes des fonctions
+
+
+
+% Definition des couleurs
+% JAVA
+\definecolor{code_key_JAVA}{rgb}{0.26,0.45,0.72} % #4476ba
+\definecolor{code_string_JAVA}{rgb}{0.85,0.08,0.08} % #db1515
+\definecolor{code_comments_JAVA}{rgb}{0.40,0.66,0.23} % #68aa3d
+% XML
+\definecolor{code_key_XML}{rgb}{0.28,0.56,0.09} % #499118
+\definecolor{code_string_XML}{rgb}{0.85,0.08,0.08} % #db1515
+\definecolor{code_comment_XML}{rgb}{0.11,0.14,0.50} % #1f2480
+\definecolor{code_tag_XML}{rgb}{0.30,0.60,0.58} % #4f9995
+% Tableau
+\definecolor{headertab}{rgb}{0.70, 0.70, 0.70}
+\definecolor{impair}{rgb}{0.95, 0.95, 0.95}
+
+\definecolor{bordureannotation}{rgb}{0.80, 0.86, 0.47}
+\definecolor{fondannotation}{rgb}{0.98, 0.99, 0.83}
+
+\newcommand{\POM}{\textcolor{code_key_XML}{pom.xml} }
+
+% JAVA
+% Usage: \JAVA
+\newcommand{\JAVA}{
+  \lstset{
+    language=java,
+    float=hbp,
+    basicstyle=\small,
+    identifierstyle=\color{black},
+    keywordstyle=\bf \color{code_key_JAVA},
+    stringstyle=\color{code_string_JAVA},
+    commentstyle=\color{code_comments_JAVA},
+    %declarationstyle=\bg,
+    columns=flexible,
+    tabsize=4,
+    frame=single,
+    rulesepcolor=\color[gray]{0.5},
+    extendedchars=true,
+    showspaces=false,
+    showstringspaces=false,
+    numbers=left,
+    numberstyle=\tiny,
+    breaklines=true,
+    captionpos=b
+  }
+}
+% XML
+% Usage: \XML
+\newcommand{\XML}{
+  \lstset{
+    language=xml,
+    float=hbp,
+    basicstyle=\small,
+    identifierstyle=\color{black},
+    keywordstyle=\bf \color{code_key_XML},
+    stringstyle=\color{code_string_XML},
+    commentstyle=\color{code_comment_XML},
+    tagstyle=\color{code_tag_XML},
+    columns=flexible,
+    tabsize=2,
+    frame=single,
+    rulesepcolor=\color[gray]{0.5},
+    extendedchars=true,
+    showspaces=false,
+    showstringspaces=false,
+    numbers=left,
+    numberstyle=\tiny,
+    breaklines=true,
+    captionpos=b,
+    morekeywords={xmlns, xmlns:xsi, encoding}
+  }
+}
+% SHELL
+% Usage: \SHELL
+\newcommand{\SHELL}{
+  \lstset{
+    language=csh,
+    float=hbp,
+    basicstyle=\small,
+    identifierstyle=\color{black},
+    keywordstyle=\bf \color{black},
+    stringstyle=\color{red},
+    commentstyle=\color{blue},
+    columns=flexible,
+    tabsize=2,
+    frame=single,
+    rulesepcolor=\color[gray]{0.5},
+    extendedchars=true,
+    showspaces=false,
+    showstringspaces=false,
+    numbers=left,
+    numberstyle=\tiny,
+    breaklines=true,
+    captionpos=b,
+    morekeywords={mvn,export}
+  }
+}
+
+
+% -- Fonctions
+% -- Insérer un backslash
+% Usage: \bslash
+\newcommand{\bslash}{\texttt{\symbol{92}}}
+
+% -- Insérer un espace 
+% Usage: \tbsp
+\newcommand{\tbsp}{\rule{0pt}{18pt}}
+
+% -- Insérer du code JAVA
+% Usage: \IncludeJavaCode{nomfichier.java}{caption}
+\newcommand{\IncludeJavaCode}[2]{
+  \begin{center}
+  \JAVA
+    \begin{frame}
+    
+      \lstinputlisting[caption=#2]{#1}
+      \end{frame}
+  \end{center}
+}
+% -- Insérer du code XML
+% Usage: \IncludeXMLCode{nomfichier.xml}{caption}
+\newcommand{\IncludeXMLCode}[2]{
+  \begin{center}
+  \XML
+    \begin{frame}
+    
+      \lstinputlisting[caption=#2]{#1}
+      \end{frame}
+  \end{center}
+}
+% -- Insérer une commande shell
+% Usage: \IncludeShellCMD{nomfichier.sh}{caption}
+\newcommand{\IncludeShellCMD}[2]{
+  \begin{center}
+  \SHELL
+    \begin{frame}
+    
+      \lstinputlisting[caption=#2]{#1}
+      \end{frame}
+  \end{center}
+}
+% -- Insérer une annotation
+% Usage: \Annotation{texte}
+\newcommand{\Annotation}[1]{
+  \begin{center}
+    \fbox{
+      \begin{minipage}{1.0\linewidth}
+        \vspace{0.2cm}
+        \sloppy{#1}
+        \vspace{0.2cm}
+      \end{minipage}
+    }
+  \end{center}
+}
+
+% -- Insérer une annotation dans une boite colorée
+% Usage: \ColoredAnnotation{texte}
+\newcommand{\ColoredAnnotation}[1]{
+    \begin{center}
+        %\fcolorbox{bordure}{couleur }{ . . . }
+    	\fcolorbox{bordureannotation}{fondannotation}{
+    	    \begin{minipage}{1.0\linewidth}
+                \vspace{0.2cm}
+                \sloppy{#1}
+                \vspace{0.2cm}
+            \end{minipage}    	
+    	}
+    \end{center}
+}
+
+
+% -- Insérer une image
+% Usage : \Image{nomFichier}{scale}{caption}
+\newcommand {\Image}[3]{
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale=#2]{#1}
+    \caption{#3}
+  \end{figure}
+}
+
+% -- Insérer une image tournée
+% Usage : \ImageRotated{nomfichier}{scale}{caption}{angle}
+\newcommand {\ImageRotated}[4]{
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale=#2,angle=#4]{#1}
+    \caption{#3}
+  \end{figure}
+}
+
+% -- Insérer une image simplement
+% Usage: \SimpleImage{nomfichier}{scale}
+\newcommand {\SimpleImage}[2]{
+  \includegraphics[scale=#2]{#1}
+}
+
+% -- Ecrire du texte avec une image a droite
+% Usage: \WriteTextWithImgOnRight{fichierimage}{scale}{texte}
+\newcommand{\WriteTextWithImgOnRight}[3]{
+  \parpic[r][b]{\SimpleImage{#1}{#2}} #3
+}
+
+% -- Ecrire du texte avec une image a gauche
+% Usage: \WriteTextWithImgOnLeft{fichierimage}{scale}{texte}
+\newcommand{\WriteTextWithImgOnLeft}[3]{
+  \parpic[l][b]{\SimpleImage{#1}{#2}} #3
+}

@@ -1,0 +1,19 @@
+\select@language {french}
+\contentsline {section}{\numberline {1}Pr\IeC {\'e}sentation}{2}{section.1}
+\contentsline {subsection}{\numberline {1.1}Avertissement}{2}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Pourquoi FAT ?}{2}{subsection.1.2}
+\contentsline {subsection}{\numberline {1.3}Comment utiliser FAT ?}{2}{subsection.1.3}
+\contentsline {subsection}{\numberline {1.4}Premier son}{2}{subsection.1.4}
+\contentsline {subsection}{\numberline {1.5}Structure des donn\IeC {\'e}es}{2}{subsection.1.5}
+\contentsline {subsection}{\numberline {1.6}Donn\IeC {\'e}es techniques de la Gameboy Advance}{2}{subsection.1.6}
+\contentsline {section}{\numberline {2}Les \IeC {\'e}crans}{2}{section.2}
+\contentsline {section}{\numberline {3}La popup de d\IeC {\'e}placement}{2}{section.3}
+\contentsline {subsection}{\numberline {3.1}L'\IeC {\'e}cran SONG}{2}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}L'\IeC {\'e}cran BLOCKS}{2}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}L'\IeC {\'e}cran NOTES}{2}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}L'\IeC {\'e}cran INSTRUMENT}{2}{subsection.3.4}
+\contentsline {subsection}{\numberline {3.5}L'\IeC {\'e}cran PROJECT}{2}{subsection.3.5}
+\contentsline {subsection}{\numberline {3.6}L'\IeC {\'e}cran EFFECTS}{2}{subsection.3.6}
+\contentsline {subsection}{\numberline {3.7}L'\IeC {\'e}cran LIVE}{2}{subsection.3.7}
+\contentsline {subsection}{\numberline {3.8}L'\IeC {\'e}cran COMPOSER}{2}{subsection.3.8}
+\contentsline {section}{\numberline {4}Effets et commandes}{2}{section.4}

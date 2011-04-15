@@ -1,0 +1,27 @@
+#include <mygba.h>
+#include "soundApi.h"
+
+void snd_init_soundApi () {
+    
+    // activation de la puce sonore
+	REG_SOUNDCNT_X = 0x80;
+	
+	// volume à fond, activation stéréo des 4 canaux
+	REG_SOUNDCNT_L = 0x1177 | 0x2277 | 0x4477 | 0x8877;
+	REG_SOUNDCNT_H = 0x2000;
+}
+
+void tmp_snd_playSoundOnChannel1 (
+    u16 sweeptime, u16 sweepdir, u16 sweepshifts, u16 envinit, 
+    u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
+    u16 loopmode, u16 sfreq) {
+    
+    //REG_SOUND1CNT_L = 0x0056;
+	//REG_SOUND1CNT_H = 0xf780;
+	//REG_SOUND1CNT_X = 0x8400;   
+	
+	REG_SOUND1CNT_L=(sweeptime<<4)+(sweepdir<<3)+sweepshifts;
+	REG_SOUND1CNT_H=(envinit<<12)+(envdir<<11)+(envsteptime<<8)+(waveduty<<6)+soundlength;
+	REG_SOUND1CNT_X=SOUND1INIT+(loopmode<<14)+sfreq;
+    
+}
