@@ -77,6 +77,7 @@ void FAT_player_startPlayerFromSequences(u8 startLine);
 void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel);
 void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel); 
 void FAT_player_stopPlayer();
+void FAT_player_playComposerNote (u8 noteLine);
 
 bool FAT_isCurrentlyPlaying = 0;
 
@@ -98,7 +99,7 @@ void FAT_init() {
     // HAM !
     ham_Init();
     
-    ham_InitRAM (RAM_TYPE_SRAM_256K);
+    //ham_InitRAM (RAM_TYPE_SRAM_256K);
     //ham_ResetRAM ();
     
     ham_InitText(1);
@@ -131,6 +132,11 @@ void FAT_init() {
     // chargement des sprites pour l'écran instrument
     FAT_screenInstrument_initSpritesForInstrument ();
 
+    FAT_screenSong_initCursor();
+    FAT_screenBlocks_initCursor();
+    FAT_screenNotes_initCursor();
+    FAT_screenComposer_initCursor();
+    
     // intialisation des données "tracker" stockées en RAM
     FAT_data_initData();
 }
@@ -152,6 +158,8 @@ void FAT_showIntro() {
     ham_bg[2].mi = ham_InitMapSet((void *) screen_intro_Map, 1024, 0, 0);
     ham_InitBg(2, 1, 3, 0);
 
+    ham_DrawText(19,15, "SIZE %dKo", sizeof(FAT_tracker) / 1024);
+    
     while (!F_CTRLINPUT_START_PRESSED) {
     }
 

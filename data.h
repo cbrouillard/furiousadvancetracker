@@ -7,7 +7,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
 #ifndef _DATA_H_
 #define	_DATA_H_
 
@@ -15,7 +15,7 @@
 #define NB_MAX_SEQUENCES 0x80
 #define NB_SEQUENCES_IN_ONE_CHANNEL 0x40
 // nombre de blocks dispo en mémoire
-#define NB_MAX_BLOCKS 0xff
+#define NB_MAX_BLOCKS 0xef
 // nombre d'instruments dispo en mémoire 0x3f = 63
 #define NB_MAX_INSTRUMENTS 0x3f
 // nombre de notes dans un block (une mesure)  16
@@ -50,6 +50,8 @@
 #define INSTRUMENT_WAVE_LENGTH_MAX 256
 #define INSTRUMENT_WAVE_NB_VOICE 0x18
 
+#define NB_MAX_TRANSPOSE 256
+
 #define MAX_TEMPO 255
 #define MAX_TRANSPOSE 256
 
@@ -61,6 +63,9 @@
  */
 #define NULL_VALUE 0xff
 #define NULL_VALUE_u16 0xffff
+
+#define GAMEPAK_RAM  ((u8*)0x0E000000)
+u8 *pSaveMemory = GAMEPAK_RAM;
 
 const char* noteName[NB_NOTE] = {"C ", "C\"", "D ", "D\"", "E ", "F ", "F\"", "G ", "G\"", "A ", "A\"", "B "};
 
@@ -84,16 +89,18 @@ bool FAT_data_smartAllocateBlock(u8 sequence, u8 blockLine);
 // POIDS ACTUEL: 4 octets
 
 typedef struct NOTE {
-    u8 freq;
+    // TODO regrouper ces 2 variables
     u8 name;
-    u8 instrument;
     u8 octave;
+    u8 freq;
+    u8 instrument;
 } note;
 
 note FAT_data_lastNoteWritten, FAT_data_noteClipboard;
 
-typedef struct COMPOSER{
-    note notes[8];    
+typedef struct COMPOSER {
+    note notes[8];
+    u8 transpose[8];
 } composer;
 
 // POIDS ACTUEL: 16 * 4 = 64 octets 
@@ -110,6 +117,7 @@ u8 FAT_data_lastBlockWritten, FAT_data_blockClipboard;
 typedef struct SEQUENCE {
     // 1 sequence pointe sur 16 id de block (stockés dans allBlocks)
     u8 blocks[NB_BLOCKS_IN_SEQUENCE];
+    u8 transpose[NB_BLOCKS_IN_SEQUENCE];
 } sequence;
 
 u8 FAT_data_lastSequenceWritten, FAT_data_sequenceClipboard;
@@ -194,7 +202,7 @@ void FAT_data_initData() {
 
     FAT_data_sequenceClipboard = NULL_VALUE;
     FAT_data_blockClipboard = NULL_VALUE;
-    memset(&FAT_data_noteClipboard, NULL_VALUE, sizeof(note));
+    memset(&FAT_data_noteClipboard, NULL_VALUE, sizeof (note));
 }
 
 /**
@@ -281,8 +289,17 @@ void FAT_data_cutNote(u8 block, u8 noteLine) {
     FAT_tracker.allBlocks[block].notes[noteLine].freq = NULL_VALUE;
 }
 
+void FAT_data_composer_cutNote(u8 line) {
+    memcpy(&FAT_data_noteClipboard, &(FAT_tracker.composer.notes[line]), sizeof (note));
+    FAT_tracker.composer.notes[line].freq = NULL_VALUE;
+}
+
 void FAT_data_pasteNote(u8 block, u8 noteLine) {
     memcpy(&(FAT_tracker.allBlocks[block].notes[noteLine]), &FAT_data_noteClipboard, sizeof (note));
+}
+
+void FAT_data_composer_pasteNote(u8 line) {
+    memcpy(&(FAT_tracker.composer.notes[line]), &FAT_data_noteClipboard, sizeof (note));
 }
 
 /**
@@ -414,6 +431,20 @@ bool FAT_data_isBlockEmpty(u8 blockId) {
     return 1;
 }
 
+bool FAT_data_block_isTransposeEmpty(u8 sequence, u8 line) {
+    return FAT_tracker.allSequences[sequence].transpose[line] == NULL_VALUE;
+}
+
+u8 FAT_data_block_getTranspose(u8 sequence, u8 line) {
+    return FAT_tracker.allSequences[sequence].transpose[line];
+}
+
+void FAT_data_block_allocateTranspose(u8 sequence, u8 line) {
+    if (FAT_data_block_isTransposeEmpty(sequence, line)) {
+        FAT_tracker.allSequences[sequence].transpose[line] = 0;
+    }
+}
+
 bool FAT_data_isSequenceEmpty(u8 sequenceId) {
     u8 block = 0;
     while (block < NB_BLOCKS_IN_SEQUENCE) {
@@ -522,6 +553,15 @@ void FAT_data_sequence_changeValue(u8 channelId, u8 line, s8 addedValue) {
         FAT_tracker.channels[channelId].sequences[line] += addedValue;
         FAT_data_lastSequenceWritten = FAT_tracker.channels[channelId].sequences[line];
     }
+}
+
+void FAT_data_block_changeTransposeValue(u8 sequence, u8 line, s8 addedValue) {
+    //    if (
+    //            (addedValue < 0 && FAT_tracker.allBlocks[blockId].transpose > (-addedValue - 1)) ||
+    //            (addedValue > 0 && FAT_tracker.allBlocks[blockId].transpose < NB_MAX_TRANSPOSE - addedValue)
+    //            ) {
+    FAT_tracker.allSequences[sequence].transpose[line] += addedValue;
+    //}
 }
 
 /**
@@ -784,28 +824,109 @@ void FAT_data_instrumentWave_changeBankmode(u8 instrumentId, s8 value) {
 
 void FAT_data_project_changeTempo(s8 addedValue) {
     if (
-            (addedValue > 0 && FAT_tracker.tempo < MAX_TEMPO) ||
-            (addedValue < 0 && FAT_tracker.tempo > 0)) {
+            (addedValue > 0 && FAT_tracker.tempo <= MAX_TEMPO - addedValue) ||
+            (addedValue < 0 && FAT_tracker.tempo > (-addedValue - 1))) {
         FAT_tracker.tempo += addedValue;
     }
 }
 
 void FAT_data_project_changeTranspose(s8 addedValue) {
     if (
-            (addedValue > 0 && FAT_tracker.transpose < MAX_TRANSPOSE) ||
-            (addedValue < 0 && FAT_tracker.transpose > 0)) {
+            (addedValue > 0 && FAT_tracker.transpose < MAX_TRANSPOSE - addedValue) ||
+            (addedValue < 0 && FAT_tracker.transpose > (-addedValue - 1))) {
         FAT_tracker.transpose += addedValue;
+    }
+}
+
+bool FAT_data_composer_isNoteEmpty(u8 line) {
+    return FAT_tracker.composer.notes[line].freq == NULL_VALUE;
+}
+
+void FAT_data_composer_addDefaultNote(u8 line) {
+
+    FAT_tracker.composer.notes[line].freq = FAT_data_lastNoteWritten.freq;
+
+    FAT_tracker.composer.notes[line].instrument = FAT_data_lastNoteWritten.instrument;
+    FAT_tracker.composer.notes[line].name = FAT_data_lastNoteWritten.name;
+    FAT_tracker.composer.notes[line].octave = FAT_data_lastNoteWritten.octave;
+
+    FAT_data_initInstrumentIfNeeded(FAT_tracker.composer.notes[line].instrument, 0);
+
+}
+
+note* FAT_data_composer_getNote(u8 line) {
+    return & (FAT_tracker.composer.notes[line]);
+}
+
+void FAT_data_composer_changeValue(u8 line, s8 addedValue) {
+    if (
+            (addedValue < 0 && FAT_tracker.composer.notes[line].name > 0) ||
+            (addedValue > 0 && FAT_tracker.composer.notes[line].name < NB_NOTE - 1)
+
+            ) {
+        FAT_tracker.composer.notes[line].freq += addedValue;
+        FAT_tracker.composer.notes[line].name += addedValue;
+
+        FAT_data_lastNoteWritten.freq = FAT_tracker.composer.notes[line].freq;
+        FAT_data_lastNoteWritten.name = FAT_tracker.composer.notes[line].name;
+    }
+}
+
+void FAT_data_composer_changeOctave(u8 line, s8 addedValue) {
+    if (
+            (addedValue < 0 && FAT_tracker.composer.notes[line].octave > MIN_OCTAVE) ||
+            (addedValue > 0 && FAT_tracker.composer.notes[line].octave < MAX_OCTAVE)
+
+            ) {
+        FAT_tracker.composer.notes[line].freq += addedValue * NB_NOTE;
+        FAT_tracker.composer.notes[line].octave += addedValue;
+
+        FAT_data_lastNoteWritten.freq = FAT_tracker.composer.notes[line].freq;
+        FAT_data_lastNoteWritten.octave = FAT_tracker.composer.notes[line].octave;
+    }
+}
+
+bool FAT_data_composer_smartChangeInstrument(u8 line) {
+    u8 inst = 0;
+    while (inst < NB_MAX_INSTRUMENTS) {
+        if (FAT_data_isInstrumentFree(inst)) {
+            FAT_tracker.composer.notes[line].instrument = inst;
+            FAT_data_lastNoteWritten.instrument = inst;
+
+            FAT_data_initInstrumentIfNeeded(inst,
+                    0);
+
+            return 1;
+        }
+        inst++;
+    }
+
+    return 0;
+}
+
+void FAT_data_composer_changeInstrument(u8 line, s8 addedValue) {
+    if (
+            (addedValue < 0 && FAT_tracker.composer.notes[line].instrument > (-addedValue - 1)) ||
+            (addedValue > 0 && FAT_tracker.composer.notes[line].instrument < NB_MAX_INSTRUMENTS - addedValue)
+
+            ) {
+        FAT_tracker.composer.notes[line].instrument += addedValue;
+        FAT_data_lastNoteWritten.instrument = FAT_tracker.composer.notes[line].instrument;
+
+        FAT_data_initInstrumentIfNeeded(FAT_tracker.composer.notes[line].instrument,
+                0);
     }
 }
 
 void FAT_data_project_save() {
     ham_DrawText(23, 16, "SAVE !");
-    ham_SaveRawToRAM("SONGNAME", &FAT_tracker, 1);
+
+    memcpy(pSaveMemory, &FAT_tracker, sizeof (FAT_tracker));
 }
 
 void FAT_data_project_load() {
     ham_DrawText(23, 16, "LOAD !");
-    ham_LoadRawFromRAM("SONGNAME", &FAT_tracker);
+    memcpy(&FAT_tracker, pSaveMemory, sizeof (FAT_tracker));
 }
 
 #endif	/* DATA_H */

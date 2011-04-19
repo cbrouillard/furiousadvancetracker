@@ -7,12 +7,12 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
 #ifndef _PLAYER_H_
 #define	_PLAYER_H_
 
-#include "soundApi/soundApi.h"
 #include "data.h"
+
 
 // DOC: Délai pour 1/16e de mesure = (60000 / bpm) / 4.
 // BPM 128 -> 1 note = 117,18
@@ -56,6 +56,8 @@ void FAT_player_hideAllCursors();
 void FAT_player_hideSequencesCursors();
 void FAT_player_hideBlockCursor();
 void FAT_player_hideNoteCursor();
+void FAT_player_playNote(note* note, u8 channel);
+void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose);
 
 void FAT_player_init();
 
@@ -82,12 +84,21 @@ void FAT_player_initCursors() {
 }
 
 void FAT_player_timerFunc_iCanPressStart() {
-    waitForStart ++;
+    waitForStart++;
     if (waitForStart >= WAIT_FOR_START && !iCanPressStart) {
         iCanPressStart = 1;
         waitForStart = 0;
         M_TIM0CNT_IRQ_DISABLE
         M_TIM0CNT_TIMER_STOP
+    }
+}
+
+void FAT_player_playComposerNote(u8 noteLine) {
+    note* note = &(FAT_tracker.composer.notes[noteLine]);
+
+    if (note->freq != NULL_VALUE) {
+        FAT_player_playNoteWithTsp(note, FAT_tracker.allInstruments[note->instrument].type,
+                FAT_tracker.composer.transpose[noteLine]);
     }
 }
 
@@ -97,6 +108,10 @@ void FAT_player_timerFunc_iCanPressStart() {
  * @param channel
  */
 void FAT_player_playNote(note* note, u8 channel) {
+    FAT_player_playNoteWithTsp(note, channel, 0);
+}
+
+void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
     if (note->freq != NULL_VALUE) {
         instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
         u16 sweepshifts = (inst->sweep & 0x70) >> 4;
@@ -114,23 +129,23 @@ void FAT_player_playNote(note* note, u8 channel) {
                         sweeptime, sweepdir, sweepshifts,
                         inst->volume, inst->envdirection, inst->envsteptime, inst->wavedutyOrPolynomialStep,
                         inst->soundlength, inst->loopmode,
-                        freqs[note->freq]);
+                        freqs[note->freq], transpose);
                 break;
             case 1: // PU2
                 //ham_DrawText (23, 16, "PU2");
                 snd_playSoundOnChannel2(inst->volume, inst->envdirection, inst->envsteptime, inst->wavedutyOrPolynomialStep,
                         inst->soundlength, inst->loopmode,
-                        freqs[note->freq]);
+                        freqs[note->freq], transpose);
                 break;
 
             case 2: // WAV
                 snd_playSoundOnChannel3(inst->volumeRatio, inst->soundlength, inst->loopmode, inst->voice,
-                        inst->bank, inst->bankMode, freqs[note->freq]);
+                        inst->bank, inst->bankMode, freqs[note->freq], transpose);
                 break;
             case 3: // NOISE
                 //ham_DrawText (23, 16, "NOI");
                 snd_playSoundOnChannel4(inst->volume, inst->envdirection, inst->envsteptime, inst->soundlength,
-                        inst->loopmode, note->octave, inst->wavedutyOrPolynomialStep, note->freq / NB_FREQUENCES);
+                        inst->loopmode, note->octave, inst->wavedutyOrPolynomialStep, note->freq / NB_FREQUENCES, transpose);
                 break;
         }
 
@@ -242,7 +257,8 @@ void FAT_player_timerFunc_playSequences() {
                     FAT_player_moveOrHideCursor(i);
 
                     // TODO BUFFERISER
-                    FAT_player_playNote(&(block->notes[actualNotesForChannel[i]]), i);
+                    FAT_player_playNoteWithTsp
+                            (&(block->notes[actualNotesForChannel[i]]), i, seq->transpose[actualBlocksForChannel[i]]);
 
                     actualNotesForChannel[i]++;
                     if (actualNotesForChannel[i] >= NB_NOTES_IN_ONE_BLOCK) {
@@ -295,7 +311,8 @@ void FAT_player_timerFunc_playBlocks() {
                 FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);
 
                 // TODO BUFFERISER
-                FAT_player_playNote(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]), FAT_currentPlayedChannel);
+                FAT_player_playNoteWithTsp(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]), FAT_currentPlayedChannel,
+                        seq->transpose[actualBlocksForChannel[FAT_currentPlayedChannel]]);
 
                 actualNotesForChannel[FAT_currentPlayedChannel]++;
                 if (actualNotesForChannel[FAT_currentPlayedChannel] >= NB_NOTES_IN_ONE_BLOCK) {
@@ -328,7 +345,8 @@ void FAT_player_timerFunc_playNotes() {
             FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);
 
             // TODO BUFFERISER
-            FAT_player_playNote(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]), FAT_currentPlayedChannel);
+            FAT_player_playNote(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]),
+                    FAT_currentPlayedChannel);
 
             actualNotesForChannel[FAT_currentPlayedChannel]++;
             if (actualNotesForChannel[FAT_currentPlayedChannel] >= NB_NOTES_IN_ONE_BLOCK) {

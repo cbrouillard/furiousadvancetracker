@@ -7,7 +7,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
 #ifndef _SCREEN_BLOCKS_H_
 #define _SCREEN_BLOCKS_H_
 
@@ -15,6 +15,7 @@
 #define SCREENBLOCKS_LINE_START_Y 2
 // début de l'affichage des blocks
 #define SCREENBLOCKS_BLOCK_LINE_X 3
+#define SCREENBLOCKS_TRANSPOSE_LINE_X 6
 // début de l'affichage des numéros de lignes
 #define SCREENBLOCKS_LINE_X 0
 // nombre de blocks visibles à l'écran
@@ -39,6 +40,8 @@ void FAT_screenBlocks_pressA();
 void FAT_screenBlocks_pressB();
 
 #include "screen_blocks_cursor.h"
+#include "cursors.h"
+#include "data.h"
 
 void FAT_screenBlocks_printLineColumns() {
     mutex = 0;
@@ -76,10 +79,20 @@ void FAT_screenBlocks_printBlock(u8 line) {
     mutex = 1;
 }
 
+void FAT_screenBlocks_printTranspose(u8 line) {
+    mutex = 0;
+    if (!FAT_data_block_isTransposeEmpty(FAT_screenBlocks_currentSequenceId, line)) {
+        ham_DrawText(SCREENBLOCKS_TRANSPOSE_LINE_X, line + SCREENBLOCKS_LINE_START_Y,
+                "%.2x\0", FAT_data_block_getTranspose(FAT_screenBlocks_currentSequenceId, line));
+    }
+    mutex = 1;
+}
+
 void FAT_screenBlocks_printAllBlocks() {
     mutex = 0;
     for (u8 b = 0; b < SCREENBLOCKS_NB_LINES_ON_SCREEN; b++) {
         FAT_screenBlocks_printBlock(b);
+        FAT_screenBlocks_printTranspose(b);
     }
     mutex = 1;
 }
@@ -115,15 +128,15 @@ void FAT_screenBlocks_init() {
     FAT_screenBlocks_printSequenceNumber();
     FAT_screenBlocks_printAllScreenText();
 
-    // init du curseur
-    FAT_screenBlocks_initCursor();
-    // affichage du curseur
-    FAT_cursors_showCursor2();
-    FAT_cursors_moveCursorChange(INPUT_R_CURSOR_CHANGE_X, INPUT_R_CURSOR_CHANGE_Y);
-
     // démarrage du cycle pour l'écran
     ham_StopIntHandler(INT_TYPE_VBL);
     ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenBlocks_mainFunc);
+
+    // affichage du curseur
+    FAT_cursors_hideCursor2();
+    FAT_screenBlocks_commitCursorMove();
+    FAT_cursors_showCursor2();
+    FAT_cursors_moveCursorChange(INPUT_R_CURSOR_CHANGE_X, INPUT_R_CURSOR_CHANGE_Y);
 }
 
 void FAT_screenBlocks_checkButtons() {
@@ -240,7 +253,7 @@ void FAT_screenBlocks_checkButtons() {
 void FAT_screenBlocks_pressB() {
     if (F_CTRLINPUT_L_PRESSED) {
 
-        if (FAT_data_isBlockAllocatable(FAT_screenBlocks_currentSequenceId, 
+        if (FAT_data_isBlockAllocatable(FAT_screenBlocks_currentSequenceId,
                 FAT_screenBlocks_currentSelectedLine)) {
             // espace libre
             FAT_data_pasteBlockWithNewNumber(FAT_screenBlocks_currentSequenceId,
@@ -249,10 +262,10 @@ void FAT_screenBlocks_pressB() {
             FAT_data_copyBlock(FAT_screenBlocks_currentSequenceId,
                     FAT_screenBlocks_currentSelectedLine);
         }
-        
+
     } else {
 
-        if (FAT_data_isBlockAllocatable(FAT_screenBlocks_currentSequenceId, 
+        if (FAT_data_isBlockAllocatable(FAT_screenBlocks_currentSequenceId,
                 FAT_screenBlocks_currentSelectedLine)) {
             // espace libre
             FAT_data_pasteBlock(FAT_screenBlocks_currentSequenceId,
@@ -300,6 +313,33 @@ void FAT_screenBlocks_pressA() {
             }
 
             FAT_screenBlocks_printBlock(FAT_screenBlocks_currentSelectedLine);
+            break;
+
+        case SCREENBLOCKS_COLUMN_ID_TSP:
+            FAT_data_block_allocateTranspose(FAT_screenBlocks_currentSequenceId,
+                    FAT_screenBlocks_currentSelectedLine);
+            
+            if (F_CTRLINPUT_LEFT_PRESSED){
+                FAT_data_block_changeTransposeValue (FAT_screenBlocks_currentSequenceId,
+                        FAT_screenBlocks_currentSelectedLine, -1);
+            }
+            
+            if (F_CTRLINPUT_RIGHT_PRESSED){
+                FAT_data_block_changeTransposeValue (FAT_screenBlocks_currentSequenceId,
+                        FAT_screenBlocks_currentSelectedLine, 1);
+            }
+            
+            if (F_CTRLINPUT_DOWN_PRESSED){
+                FAT_data_block_changeTransposeValue (FAT_screenBlocks_currentSequenceId,
+                        FAT_screenBlocks_currentSelectedLine, -16);
+            }
+            
+            if (F_CTRLINPUT_UP_PRESSED){
+                FAT_data_block_changeTransposeValue (FAT_screenBlocks_currentSequenceId,
+                        FAT_screenBlocks_currentSelectedLine, 16);
+            }
+            
+            FAT_screenBlocks_printTranspose(FAT_screenBlocks_currentSelectedLine);
             break;
 
     }

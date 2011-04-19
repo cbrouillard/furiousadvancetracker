@@ -39,8 +39,6 @@ void FAT_screenBlocks_initCursor() {
 
     FAT_screenBlocks_currentSelectedLine = 0;
     FAT_screenBlocks_currentSelectedColumn = 0;
-
-    FAT_screenBlocks_commitCursorMove();
 }
 
 void FAT_screenBlocks_commitCursorMove() {

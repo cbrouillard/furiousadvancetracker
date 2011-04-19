@@ -44,7 +44,10 @@ void snd_init_soundApi();
 void snd_playSoundOnChannel1(
         u16 sweeptime, u16 sweepdir, u16 sweepshifts, u16 volume,
         u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
-        u16 loopmode, u16 sfreq);
+        u16 loopmode, u16 sfreq, u8 transpose);
+
+void snd_simple_playSoundOnChannel1 (u8 sweep, u16 envelope, u8 mode,
+        u8 length, u16 noteFreq, u8 transpose);
 
 /**
  * Joue un son sur le channel 2 
@@ -58,7 +61,10 @@ void snd_playSoundOnChannel1(
  */
 void snd_playSoundOnChannel2(u16 volume,
         u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
-        u16 loopmode, u16 sfreq);
+        u16 loopmode, u16 sfreq, u8 transpose);
+
+void snd_simple_playSoundOnChannel2 (u16 envelope, 
+        u8 mode, u8 length, u8 noteFreq, u8 transpose);
 
 /**
  * Joue un son sur le channel 3 
@@ -71,7 +77,9 @@ void snd_playSoundOnChannel2(u16 volume,
  * freq: la fréquence de la note
  */
 void snd_playSoundOnChannel3 (u16 volume, u16 soundLength, u16 loopmode, u16 voice, 
-        u16 bank, u16 bankMode, u16 freq);
+        u16 bank, u16 bankMode, u16 freq, u8 transpose);
+
+void snd_simple_playSoundOnChannel3 ();
 
 /**
  * Joue un son sur le channel 3
@@ -86,7 +94,9 @@ void snd_playSoundOnChannel3 (u16 volume, u16 soundLength, u16 loopmode, u16 voi
  * freqRatio: 
  */
 void snd_playSoundOnChannel4 (u16 volume, u16 envdir, u16 envsteptime, u16 soundlength,
-        u16 loopmode, u16 shiftFreq, u16 stepping, u16 freqRatio);
+        u16 loopmode, u16 shiftFreq, u16 stepping, u16 freqRatio, u8 transpose);
+
+void snd_simple_playSoundOnChannel4 (u16 envelope, u8 mode, u8 length);
 
 /**
  * Eteint tout les sons en cours de lecture. 

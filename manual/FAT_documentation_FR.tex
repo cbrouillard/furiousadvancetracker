@@ -30,6 +30,7 @@
 \makeindex
 
 % Configuration des liens
+\ifpdf
 \hypersetup{
      backref=true,    %permet d'ajouter des liens dans...
      pagebackref=true,%...les bibliographies
@@ -40,12 +41,14 @@
      linkcolor= blue, %couleur des liens internes
      bookmarks=true %créé des signets pour Acrobat
 }
+\fi
 
 % Gérer le problème des accents
 %\usepackage[T1]{fontenc}
 %\usepackage[latin1]{inputenc}
 %\usepackage[utf8x]{fontenc}
-\usepackage[utf8x]{inputenc}
+%\usepackage[utf8x]{inputenc}
+\usepackage[utf8]{inputenc}
 
 % On parle français (Table des matières au lieu de Contents) et on s'organise français
 \usepackage[french]{babel}
@@ -135,20 +138,67 @@
   
   % C'est parti !!
   \section{Présentation}
-    \subsection{Avertissement}
+    \subsection{Présentation et avertissement}
+    FAT est un logiciel musical conçu pour la Gameboy Advance. Avec FAT, vous pouvez composer de la musique directement sur votre console de jeu en utilisant ses capacités techniques. FAT se veut le plus simple possible mais un apprentissage de son mode de fonctionnement reste néanmoins nécessaire avant de pouvoir en exploiter toutes les possibilités.\medskip
+    
+    Attention ! La version 0-01 (celle qui est actuellement disponible) est une première version. Le logiciel est donc très probablement buggué ou non finalisé. Paris ne s'est pas construit en un jour: FAT évoluera dans les mois et années (je l'espère) qui viennent. Dans le cas où vous détecteriez un bug ou un comportement "bizarre", n'hésitez pas ! Faites un rapport de bug sur http://wwww.furiousadvancetracker.com/bugtracker/ . Le rapport ne vous prendra pas plus de 5minutes et cela m'aidera pour faire avancer le logiciel ! D'avance merci ! (et un bisou aussi !)\medskip
+    
+    Ceux qui ont déjà un pied dans la composition de musique chiptune ne tarderont pas à se rendre compte que l'interface de FAT ressemble énormément à celle d'LSDJ (LittleSoundDJ). J'ai en effet considérer LSDJ comme un modèle mais en y ajoutant ma touche personnelle. Quelques fonctionnalités sont aussi complétement originale, d'autres ont été revus et d'autres encore ont disparu.\medskip
+    
+    Je n'ai évidemment pas la prétention d'affirmer que FAT joue dans la même cour qu'LSDJ. Néanmoins, j'espère qu'un jour, FAT deviendra une référence pour la composition de musique chiptune sur GBA.\medskip
+    
+    Et donc ... un grand merci à toi qui lit ce manuel probablement pour essayer FAT. J'espère qu'il te plaira !
   
     \subsection{Pourquoi FAT ?}
+    En 2011, il existe déjà quelques solutions pour composer de la musique sur une Gameboy Advance:
+    
+    \begin{itemize}
+        \item{Nanoloop 2.3}
+        \item{M4G tracker}
+        \item{et probablement d'autres que je n'ai su trouver...}
+    \end{itemize}\medskip
+    
+    Toutes ces solutions ne me semblent pas viables (quoique parfaitement fonctionnelles!).
+    
+    \begin{itemize}
+        \item{Nanoloop 2.3 est un excellent logiciel ! mais sa disponibilité quasi nulle (et donc par effet de "marché", son prix rhédibitoire) en fait une solution finalement pas si simple d'accès.}
+        \item{M4G tracker est aussi un excellent logiciel: mais son développement semble être abondonné alors même que toute les fonctionnalités ne sont pas programmées. M4G refuse aussi de se lancer sur ma cartouche.}
+        \item{quand aux possibles autres solutions, je ne les ai pas trouvé...}
+    \end{itemize}\medskip
+    
     
     \subsection{Comment utiliser FAT ?}
+
+    FAT est livré sous la forme d'un fichier gba. Ce fichier est directement utilisable sur votre ordinateur avec l'aide d'un émulateur (VirtualBoy Advance par exemple).\medskip
+    
+    Mais l'avantage d'une Gameboy, c'est la portabilité ! D'autant plus qu'un son émulé n'égalera jamais l'original. Pour exécuter FAT sur une vraie Gameboy Advance, il vous faudra:
+    \begin{itemize}
+        \item{une vraie Gameboy (scoop!)}
+        \item{une cartouche EZ-Flash, SuperCardToSD, ou autre ... par exemple ici: http://www.r4i-r4.co.uk/products/EZ-Flash-iV-GBA-Mini-Card-for-Nintendo-GBA-and-DS-Lite.html}
+        \item{une carte SD qui va bien avec la cartouche}
+    \end{itemize}\medskip
+    
+    Après avoir investi dans tout ce petit matériel, il suffira de copier le fichier fat.gba sur la carte SD: direction la GBA !\medskip
+    
+    Attention ! Cette version de FAT est expérimental. Il est inutile d'investir trop d'argent dans le but de tester sur GBA. Patience !  
     
     \subsection{Premier son}
+
+    Commençons simple ! Nous allons poser notre premier son dans FAT.
     
     \subsection{Structure des données}
     
+    Comment sont organisé les données ?
+    
     \subsection{Données techniques de la Gameboy Advance}
     
+    Mémoire, processeur, toussa...
+    
   \section{Les écrans}
-    \section{La popup de déplacement}
+  
+    
+  
+    \subsection{La popup de déplacement}
   
     \subsection{L'écran SONG}
     

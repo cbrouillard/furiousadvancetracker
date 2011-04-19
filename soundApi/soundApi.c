@@ -11,6 +11,8 @@
 #include <mygba.h>
 #include "soundApi.h"
 
+#define NULL_VALUE 0xff
+
 const unsigned long voices[] = {
     /*?*/
     0x02468ace, 0xfdb97531, 0x02468ace, 0xfdb97531,
@@ -70,6 +72,10 @@ void snd_loadWav(u8 inst) {
     REG_SOUND3CNT_L ^= 0x0040;
 }
 
+u16 snd_calculateTransposedFrequency (u16 freq, u8 transpose){
+    return freq+transpose;
+}
+
 void snd_init_soundApi() {
 
     // activation de la puce sonore
@@ -85,17 +91,21 @@ void snd_init_soundApi() {
 }
 
 void snd_playSoundOnChannel1(
-        u16 sweeptime, u16 sweepdir, u16 sweepshifts, u16 envinit,
+        u16 sweeptime, u16 sweepdir, u16 sweepshifts, u16 volume,
         u16 envdirection, u16 envsteptime, u16 waveduty, u16 soundlength,
-        u16 loopmode, u16 sfreq) {
+        u16 loopmode, u16 sfreq, u8 transpose) {
 
 
     if (loopmode == 0) {
         soundlength = 0;
     }
+    
+    if (transpose!= NULL_VALUE){
+        sfreq = snd_calculateTransposedFrequency(sfreq, transpose);
+    }
 
     REG_SOUND1CNT_L = (sweeptime << 4) | (sweepdir << 3) | sweepshifts;
-    REG_SOUND1CNT_H = (envinit << 12) | (envdirection << 11) | (envsteptime << 8) | (waveduty << 6) | soundlength;
+    REG_SOUND1CNT_H = (volume << 12) | (envdirection << 11) | (envsteptime << 8) | (waveduty << 6) | soundlength;
 
     REG_SOUND1CNT_X = SOUND1INIT | (loopmode << 14) | sfreq;
     REG_SOUND1CNT_X = (REG_SOUND1CNT_X & 0xf800) | (loopmode << 14) | sfreq;
@@ -110,10 +120,14 @@ void snd_playSoundOnChannel1(
 
 void snd_playSoundOnChannel2(u16 volume,
         u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
-        u16 loopmode, u16 sfreq) {
+        u16 loopmode, u16 sfreq, u8 transpose) {
 
     if (loopmode == 0) {
         soundlength = 0;
+    }
+    
+    if (transpose!= NULL_VALUE){
+        sfreq = snd_calculateTransposedFrequency(sfreq, transpose);
     }
 
     REG_SOUND2CNT_L = (volume << 12) | (envdir << 11) | (envsteptime << 8) | (waveduty << 6) | soundlength;
@@ -123,7 +137,7 @@ void snd_playSoundOnChannel2(u16 volume,
 }
 
 void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voice,
-        u16 bank, u16 bankMode, u16 freq) {
+        u16 bank, u16 bankMode, u16 freq, u8 transpose) {
 
     REG_SOUND3CNT_L |= SOUND3PLAY;
     REG_SOUND3CNT_X |= SOUND3INIT;
@@ -166,6 +180,10 @@ void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voic
             break;
     }
 
+    if (transpose!= NULL_VALUE){
+        freq = snd_calculateTransposedFrequency(freq, transpose);
+    }
+    
     if (loopmode == 0) {
         REG_SOUND3CNT_X = freq | SOUND3PLAYLOOP | SOUND3INIT;
     } else {
@@ -174,7 +192,7 @@ void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voic
 }
 
 void snd_playSoundOnChannel4(u16 volume, u16 envdir, u16 envsteptime, u16 soundlength,
-        u16 loopmode, u16 shiftFreq, u16 stepping, u16 freqRatio) {
+        u16 loopmode, u16 shiftFreq, u16 stepping, u16 freqRatio, u8 transpose) {
 
     REG_SOUND4CNT_L = (volume << 12) | (envdir << 11) | (envsteptime << 8) | soundlength;
 
