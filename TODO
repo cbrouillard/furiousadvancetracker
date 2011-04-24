@@ -1,0 +1,6 @@
+- refactoring DATA pour diminuer l'empreinte mémoire
+- stabiliser les instruments WAV
+- sauvegarder/charger (juste 1 chanson pour le moment)
+
+- commande K (Kill)
+- design de l'écran effets (+ ajout dans les datas)
