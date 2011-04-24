@@ -4,6 +4,7 @@
 *.mk
 nbproject
 *.o
+*.zip
 manual/tmp
 manual/FAT_documentation_FR.iso
 manual/*.pdf
