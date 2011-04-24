@@ -142,9 +142,9 @@
     \subsection{Présentation et avertissement}
     \FAT est un logiciel musical conçu pour la Gameboy Advance. Avec \FAT, vous pouvez composer de la musique directement sur votre console de jeu en utilisant ses capacités techniques. \FAT se veut le plus simple possible mais un apprentissage de son mode de fonctionnement reste néanmoins nécessaire avant de pouvoir en exploiter toutes les possibilités.\medskip
     
-    Attention ! La version 0-01 (celle qui est actuellement disponible) est une première version. Le logiciel est donc très probablement buggué ou non finalisé. Paris ne s'est pas construit en un jour: \FAT évoluera dans les mois et années (je l'espère) qui viennent. Dans le cas où vous détecteriez un bug ou un comportement "bizarre", n'hésitez pas ! Faites un rapport de bug sur \url{http://wwww.furiousadvancetracker.com/bugtracker/}. Le rapport ne vous prendra pas plus de 5minutes et cela m'aidera pour faire avancer le logiciel ! D'avance merci ! (et un bisou aussi !)\medskip
+    Attention ! La version 0-01 (celle qui est actuellement disponible) est une première version. Le logiciel est donc très probablement buggé ou non finalisé. Paris ne s'est pas construit en un jour: \FAT évoluera dans les mois et années (je l'espère) qui viennent. Dans le cas où vous détecteriez un bug ou un comportement "bizarre", n'hésitez pas ! Faites un rapport de bug sur \url{http://wwww.furiousadvancetracker.com/bugtracker/}. Le rapport ne vous prendra pas plus de 5 minutes et cela m'aidera pour faire avancer le logiciel ! D'avance merci ! (et un bisou aussi !)\medskip
     
-    Ceux qui ont déjà un pied dans la composition de musique chiptune ne tarderont pas à se rendre compte que l'interface de \FAT ressemble énormément à celle d'LSDJ (LittleSoundDJ). J'ai en effet considérer LSDJ comme LE modèle mais en y ajoutant ma touche personnelle. Quelques fonctionnalités sont aussi complétement originale, d'autres ont été revues et d'autres encore ont disparu.\medskip
+    Ceux qui ont déjà un pied dans la composition de musique chiptune ne tarderont pas à se rendre compte que l'interface de \FAT ressemble énormément à celle d'LSDJ (LittleSoundDJ). J'ai en effet considéré LSDJ comme LE modèle mais en y ajoutant ma touche personnelle. Quelques fonctionnalités sont aussi complétement originales, d'autres ont été revues et d'autres encore ont disparu.\medskip
     
     Je n'ai évidemment pas la prétention d'affirmer que \FAT joue dans la même cour qu'LSDJ. Néanmoins, j'espère qu'un jour, \FAT deviendra une référence pour la composition de musique chiptune sur GBA.\medskip
     
@@ -163,8 +163,8 @@
     
     \begin{itemize}
         \item{Nanoloop 2.3 est un excellent logiciel ! mais sa disponibilité quasi nulle (et donc par effet de "marché", son prix rédhibitoire) en fait une solution finalement pas si simple d'accès.}
-        \item{M4G tracker est aussi un excellent logiciel: mais son développement semble être abondonné alors même que toute les fonctionnalités ne sont pas programmées. M4G refuse aussi de se lancer sur ma cartouche.}
-        \item{quand aux possibles autres solutions, je ne les ai pas trouvé...}
+        \item{M4G tracker est aussi un excellent logiciel: mais son développement semble être abondonné alors même que toutes les fonctionnalités ne sont pas programmées. M4G refuse aussi de se lancer sur ma cartouche.}
+        \item{quand aux possibles autres solutions, je ne les ai pas trouvées...}
     \end{itemize}\medskip
     
     Et puis, finalement, programmer son propre tracker c'est quand même super fun ! 
@@ -193,15 +193,15 @@
     
     \Image{images/screen_song}{1.0}{L'écran SONG}
     
-    Pressez ensuite SELECT (laissez enfoncer) et déplacez vous d'un écran vers la droite: l'interface change. 
+    Pressez ensuite SELECT (laissez la touche enfoncée) et déplacez vous d'un écran vers la droite: l'interface change. 
     
     \Image{images/screen_popup}{1.0}{L'écran POPUP}
     
-    Sans bouger le curseur, appuyez une fois sur A: un nouveau "00" apparait. Cette fois ci il s'agit d'un block. 
+    Sans bouger le curseur, appuyez une fois sur A: un nouveau "00" apparait. Cette fois-ci il s'agit d'un block. 
     
     \Image{images/screen_blocks}{1.0}{L'écran BLOCKS}
         
-    Pressez à nouveau SELECT (restez appuyer) et déplacez vous encore d'un cran vers la droite. L'interface a encore changée ! Appuyez une dernière fois sur A : un "C 3" apparait. Votre première note !Appuyez sur START : voici votre premier son avec \FAT sur une Gameboy Advance !
+    Pressez à nouveau SELECT (restez appuyé) et déplacez vous encore d'un cran vers la droite. L'interface a encore changé ! Appuyez une dernière fois sur A : un "C 3" apparait. Votre première note ! Appuyez sur START : voici votre premier son avec \FAT sur une Gameboy Advance !
     
     \Image{images/screen_notes}{1.0}{L'écran NOTES - appuyez sur START !}    
     
@@ -216,7 +216,7 @@
     
     La façon d'organiser une chanson ressemble un peu au principe de "poupées russes". Les séquences contiennent des blocks qui eux même embarquent les notes. Quand \FAT lit une séquence, il passe d'un block à l'autre et lit toutes les notes une par une.\medskip
     
-    Pour éviter que chaque note sonnent de la même façon, on les "branche" sur des "instruments". Chaque instrument contient un certain nombre de paramètres. Si vous changez les valeurs de ces parametres, alors la note sonnera différemment. Il faut également savoir qu'il existe plusieurs types d'instruments : les canaux sonores de la GBA permettent de faire des choses différentes sur chacun d'eux.
+    Pour éviter que chaque note sonne de la même façon, on les "branche" sur des "instruments". Chaque instrument contient un certain nombre de paramètres. Si vous changez les valeurs de ces paramètres, alors la note sonnera différemment. Il faut également savoir qu'il existe plusieurs types d'instruments : les canaux sonores de la GBA permettent de faire des choses différentes sur chacun d'eux.
     
     \subsection{Données techniques de la Gameboy Advance}
     
@@ -248,7 +248,7 @@
   
     \subsection{L'écran SONG}
     
-    Cette écran fait office de "séquenceur". C'est ici que vous allez organiser l'agencement de toutes vos séquences. Lorsque la lecture de l'ensemble est lancée, \FAT lit toutes les séquences ligne par ligne. Lorsque un emplacement est vide \FAT essaie de remonter à la première de la liste.
+    Cet écran fait office de "séquenceur". C'est ici que vous allez organiser l'agencement de toutes vos séquences. Lorsque la lecture de l'ensemble est lancée, \FAT lit toutes les séquences ligne par ligne. Lorsque un emplacement est vide \FAT essaie de remonter à la première de la liste.
     
     \Image{images/screen_song_complete}{1.0}{L'écran SONG se présente comme un gros tableau}
     
@@ -278,11 +278,11 @@
             \hline
             {\bf B} & SI CASE NON VIDE | Couper la séquence \\
             \hline
-            {\bf B} & SI CASE VIDE | Colle une séquence préalablement coupée \\
+            {\bf B} & SI CASE VIDE | Coller une séquence préalablement coupée \\
             \hline
-            {\bf L+B} & SI CASE VIDE | Colle une séquence préalablement coupée en changeant le numéro \\
+            {\bf L+B} & SI CASE VIDE | Coller une séquence préalablement coupée en changeant le numéro \\
             \hline
-            {\bf L+B} & SI CASE NON VIDE | Change le numéro de la séquence en copiant son contenu \\
+            {\bf L+B} & SI CASE NON VIDE | Changer le numéro de la séquence en copiant son contenu \\
         \hline
         \end{tabular}
         
@@ -290,7 +290,7 @@
 
     Dans cet écran, vous pouvez éditer le contenu d'une séquence : chaque séquence peut contenir de 0 à 16 blocks. Lorsque \FAT jouera la séquence, elle commencera par lire le premier block pour descendre jusqu'au dernier emplacement vide. Si \FAT rencontre un emplacement vide lors de la lecture alors il remonte au premier emplacement. Si aucun block n'est présent dans la séquence en cours, alors \FAT ne la jouera pas (elle sera sautée).\medskip
     
-    Pour faire simple, considérez cette écran comme une liste de blocks contenue dans une séquence (dont le numéro est affiché à droite de l'écran).
+    Pour faire simple, considérez cet écran comme une liste de blocks contenue dans une séquence (dont le numéro est affiché à droite de l'écran).
     
     \Image{images/screen_blocks_complete}{1.0}{L'écran BLOCKS}
     
@@ -308,7 +308,7 @@
             \hline
             {\bf A} & Inscrire le dernier numéro de block dans la case désignée \\
             \hline
-            {\bf A+DIRECTION} & Modifie le numéro de block dans la case désignée \\
+            {\bf A+DIRECTION} & Modifier le numéro de block dans la case désignée \\
             \hline
             {\bf L+A} & Trouver un nouveau numéro de block disponible et l'inscrire \\
             \hline
@@ -333,7 +333,7 @@
     
     C'est dans cet écran que vous allez écrire ... vos notes ! (scooooop !). Vous ne pouvez écrire qu'une seule note par ligne. Un BLOCK possède 16 lignes, vous pouvez donc y insérer 16 notes.\medskip
     
-    La notation anglo-saxonne est utilisé pour l'affichage des notes. Ainsi, le "DO" s'écrit "C" chez nos amis anglais.\medskip
+    La notation anglo-saxonne est utilisée pour l'affichage des notes. Ainsi, le "DO" s'écrit "C" chez nos amis anglais.\medskip
     
     %\begin{figure}
         \begin{center}
@@ -411,7 +411,7 @@
     
      \ColoredAnnotation{Notez que cette version de \FAT n'implémente pas encore les instruments de type SAMPLE. Dans le futur, cette catégorie sera probablement renommée ou subdivisée en 2 parties: les samples embarqués dans la ROM et une partie synthétiseur.}
      
-     Chaque instrument est spécialisé dans la lecture de notes {\bf sur un certain canal}. Rappelez-vous, l'écran SONG est composée de 6 colonnes. Ces 6 colonnes représentent en fait chacun des 6 canaux de la GBA. Ainsi, 
+     Chaque instrument est spécialisé dans la lecture de notes {\bf sur un certain canal}. Rappelez-vous, l'écran SONG est composé de 6 colonnes. Ces 6 colonnes représentent en fait chacun des 6 canaux de la GBA. Ainsi, 
      
      \begin{itemize}
         \item{les instruments PULSE sont spécialistes du canal 1 et 2: le PU1 et PU2}
@@ -474,11 +474,11 @@
             
             \paragraph{Paramètre : "Sweep"} de 0 à 7F. Ajoute un effet particulier sur la note (le mieux est encore de tester).
 
-            \paragraph{Simulator} Cette fonctionnalité n'est pas encore prète: l'objectif sera de permettre de tester directement une note joué avec les paramètres de l'instrument en cours. Cette espace sera donc dédié au changement de la note à tester.
+            \paragraph{Simulator} Cette fonctionnalité n'est pas encore prête: l'objectif sera de permettre de tester directement une note jouée avec les paramètres de l'instrument en cours. Cet espace permettra de changer la note de test.
         
         \subsubsection{Instrument de type WAVE}
         
-        \ColoredAnnotation{Ce type d'instrument n'est pas encore suffisamment stable: il peut donner des résultats encore aléatoires. Ceci sera corrigé dans les versions futures.}
+        \ColoredAnnotation{Ce type d'instrument n'est pas encore suffisamment stable: il peut donner des résultats encore aléatoires. Tout ceci sera corrigé dans les versions futures.}
         
         \Image{images/screen_instrument_wave}{1.0}{Type WAVE}
         
@@ -497,13 +497,13 @@
                 \item{ff: le son est très (très très) court}
             \end{itemize}
         
-        \paragraph{Paramètre : "Voice"} de 0 à 17. \FAT inclut 23 type d'instruments WAV (en héxadécimal, 17 = 23). Pour le moment, ces instruments ne sont pas customisables. Il le seront dans des versions futures.
+        \paragraph{Paramètre : "Voice"} de 0 à 17. \FAT inclut 23 types d'instruments WAV (en héxadécimal, 17 = 23). Pour le moment, ces instruments ne sont pas customisables. Ils le seront dans les prochaines versions.
         
-        \paragraph{Paramètre : "Bank"} 0 ou 1. Le canal WAV de la GBA est capable de charger 2 banques dans sa mémoire. Vous pouvez décider quelle banque sera jouée. Sachant que la banque est directement chargée depuis le paramètre "Voice" juste au dessus (chaque "Voice" possède 2 banques).
+        \paragraph{Paramètre : "Bank"} 0 ou 1. Le canal WAV de la GBA est capable de charger 2 banks dans sa mémoire. Vous pouvez décider quelle bank sera jouée. Sachant que la bank est directement chargée depuis le paramètre "Voice" juste au dessus (chaque "Voice" possède 2 banks).
         
-        \paragraph{Paramètre : "Bankmode"} "SIN" ou "DUA". Le canal WAV est capable de faire une synthèse des 2 banques chargées en mémoire (le mode DUA = Dual) ou bien de n'en jouer qu'une seule (le mode SIN = Single). Notez que si vous réglez ce paramètre avec SIN, \FAT jouera la bank sélectionné avec le paramètre "Bank".
+        \paragraph{Paramètre : "Bankmode"} "SIN" ou "DUA". Le canal WAV est capable de faire une synthèse des 2 banks chargées en mémoire (le mode DUA = Dual) ou bien de n'en jouer qu'une seule (le mode SIN = Single). Notez que si vous réglez ce paramètre avec SIN, \FAT jouera la bank sélectionnée avec le paramètre "Bank".
         
-        \paragraph{Simulator} Cette fonctionnalité n'est pas encore prète: l'objectif sera de permettre de tester directement une note joué avec les paramètres de l'instrument en cours. Cette espace sera donc dédié au changement de la note à tester.
+        \paragraph{Simulator} Cette fonctionnalité n'est pas encore prète: l'objectif sera de permettre de tester directement une note jouée avec les paramètres de l'instrument en cours. Cet espace sera donc dédié au changement de la note à tester.
         
         \subsubsection{Instrument de type NOISE}
         
@@ -541,7 +541,7 @@
         
         \paragraph{Paramètre : "Output"} Ce paramètre n'est actuellement pas disponible.
         
-        \paragraph{Simulator} Cette fonctionnalité n'est pas encore prète: l'objectif sera de permettre de tester directement une note joué avec les paramètres de l'instrument en cours. Cette espace sera donc dédié au changement de la note à tester.
+        \paragraph{Simulator} Cette fonctionnalité n'est pas encore prête: l'objectif sera de permettre de tester directement une note jouée avec les paramètres de l'instrument en cours. Cet espace sera donc dédié au changement de la note à tester.
         
         \subsubsection{Instrument de type SAMPLE}
         
@@ -551,7 +551,7 @@
     
     \subsection{L'écran PROJECT}
     
-    L'écran PROJECT fait office de gestionnaire de propriétés pour votre chanson. A l'heure actuelle, seule les propriétés de "Transpose" et de "Tempo" sont fonctionnelles.
+    L'écran PROJECT fait office de gestionnaire de propriétés pour votre chanson. A l'heure actuelle, seules les propriétés de "Transpose" et de "Tempo" sont fonctionnelles.
     
     \Image{images/screen_project}{1.0}{L'écran PROJECT - pas grand chose pour le moment}
     
@@ -573,11 +573,11 @@
     
     \subsection{L'écran LIVE}
     
-    \ColoredAnnotation{Le mode LIVE n'est pas encore disponible. Ce mode permettra de pouvoir tripatouiller votre chanson en live pour faire en sorte qu'elle ne sonne jamais pareille.}
+    \ColoredAnnotation{Le mode LIVE n'est pas encore disponible. Ce mode permettra de pouvoir tripatouiller votre chanson en live pour faire en sorte qu'elle ne sonne jamais pareil.}
     
     \subsection{L'écran COMPOSER}  
     
-    Imaginez cette écran comme un mini-piano: le COMPOSER va transformer votre Gameboy Advance en machine a improviser des sons !
+    Imaginez cet écran comme un mini-piano: le COMPOSER va transformer votre Gameboy Advance en machine a improviser des sons !
     
     \Image{images/screen_composer}{1.0}{L'écran COMPOSER}
     
