@@ -129,6 +129,14 @@ void FAT_screenProject_pressA() {
         addedValue = 1;
     }
 
+    if (F_CTRLINPUT_UP_PRESSED){
+        addedValue = 16;
+    }
+    
+    if (F_CTRLINPUT_DOWN_PRESSED){
+        addedValue = -16;
+    }
+    
     switch (FAT_screenProject_currentSelectedLine) {
         case 0:
             FAT_data_project_changeTempo (addedValue);

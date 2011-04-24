@@ -13,6 +13,15 @@
 
 #define NULL_VALUE 0xff
 
+#define NB_FREQUENCES 72
+const u16 freqs[NB_FREQUENCES] = 
+   {44, 156, 262, 363, 457, 547, 631, 710, 786, 854, 923, 986,
+    1046, 1102, 1155, 1205, 1253, 1297, 1339, 1379, 1417, 1452, 1486, 1517,
+    1546, 1575, 1602, 1627, 1650, 1673, 1694, 1714, 1732, 1750, 1767, 1783,
+    1798, 1812, 1825, 1837, 1849, 1860, 1871, 1881, 1890, 1899, 1907, 1915,
+    1923, 1930, 1936, 1943, 1949, 1954, 1959, 1964, 1969, 1974, 1978, 1982,
+    1985, 1988, 1992, 1995, 1998, 2001, 2004, 2006, 2009, 2011, 2013, 2015};
+
 const unsigned long voices[] = {
     /*?*/
     0x02468ace, 0xfdb97531, 0x02468ace, 0xfdb97531,
@@ -73,7 +82,13 @@ void snd_loadWav(u8 inst) {
 }
 
 u16 snd_calculateTransposedFrequency (u16 freq, u8 transpose){
-    return freq+transpose;
+    freq += transpose;
+    if (freq >= NB_FREQUENCES){
+        // 32 + 244 = 276 
+        freq /= NB_FREQUENCES;
+        // 276 / 72 = 8 reste 0,6
+    }
+    return freq;
 }
 
 void snd_init_soundApi() {
@@ -103,12 +118,12 @@ void snd_playSoundOnChannel1(
     if (transpose!= NULL_VALUE){
         sfreq = snd_calculateTransposedFrequency(sfreq, transpose);
     }
-
+    
     REG_SOUND1CNT_L = (sweeptime << 4) | (sweepdir << 3) | sweepshifts;
     REG_SOUND1CNT_H = (volume << 12) | (envdirection << 11) | (envsteptime << 8) | (waveduty << 6) | soundlength;
 
-    REG_SOUND1CNT_X = SOUND1INIT | (loopmode << 14) | sfreq;
-    REG_SOUND1CNT_X = (REG_SOUND1CNT_X & 0xf800) | (loopmode << 14) | sfreq;
+    REG_SOUND1CNT_X = SOUND1INIT | (loopmode << 14) | freqs[sfreq];
+    REG_SOUND1CNT_X = (REG_SOUND1CNT_X & 0xf800) | (loopmode << 14) | freqs[sfreq];
 
     /*
         REG_SOUND1CNT_L = (sweeptime << 4)+(sweepdir << 3) + sweepshifts;
@@ -132,8 +147,8 @@ void snd_playSoundOnChannel2(u16 volume,
 
     REG_SOUND2CNT_L = (volume << 12) | (envdir << 11) | (envsteptime << 8) | (waveduty << 6) | soundlength;
 
-    REG_SOUND2CNT_H = SOUND2INIT | (loopmode << 14) | sfreq;
-    REG_SOUND2CNT_H = (REG_SOUND2CNT_H & 0xf800) | (loopmode << 14) | sfreq;
+    REG_SOUND2CNT_H = SOUND2INIT | (loopmode << 14) | freqs[sfreq];
+    REG_SOUND2CNT_H = (REG_SOUND2CNT_H & 0xf800) | (loopmode << 14) | freqs[sfreq];
 }
 
 void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voice,
@@ -185,9 +200,9 @@ void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voic
     }
     
     if (loopmode == 0) {
-        REG_SOUND3CNT_X = freq | SOUND3PLAYLOOP | SOUND3INIT;
+        REG_SOUND3CNT_X = freqs[freq] | SOUND3PLAYLOOP | SOUND3INIT;
     } else {
-        REG_SOUND3CNT_X = freq | SOUND3PLAYONCE | SOUND3INIT;
+        REG_SOUND3CNT_X = freqs[freq] | SOUND3PLAYONCE | SOUND3INIT;
     }
 }
 

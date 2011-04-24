@@ -39,8 +39,6 @@ void FAT_screenNotes_initCursor() {
 
     FAT_screenNotes_currentSelectedLine = 0;
     FAT_screenNotes_currentSelectedColumn = 0;
-
-    FAT_screenNotes_commitCursorMove();
 }
 
 void FAT_screenNotes_commitCursorMove() {

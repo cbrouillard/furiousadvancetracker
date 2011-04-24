@@ -73,8 +73,7 @@ void FAT_screenBlocks_printBlock(u8 line) {
                 "%.2x\0", FAT_data_getBlock(FAT_screenBlocks_currentSequenceId, line));
     } else {
         ham_DrawText(SCREENBLOCKS_BLOCK_LINE_X,
-                line + SCREENBLOCKS_LINE_START_Y,
-                "  ");
+                line + SCREENBLOCKS_LINE_START_Y, "  ");
     }
     mutex = 1;
 }

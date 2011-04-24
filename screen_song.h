@@ -41,6 +41,8 @@ void FAT_screenSong_pressB();
 
 #include "screen_song_cursor.h"
 
+const char* CHANNEL_NAME[6] = {"PU1\0", "PU2\0", "WAV\0", "NOI\0", "SNA\0", "SNB\0"};
+
 void FAT_screenSong_mainFunc() {
     speedCounter++;
     if (mutex) {
@@ -58,24 +60,24 @@ void FAT_screenSong_init() {
     ham_bg[2].mi = ham_InitMapSet((void *) screen_song_Map, 1024, 0, 0);
     ham_InitBg(2, 1, 3, 0);
 
-    FAT_screenSong_initCursor();
-
-    // affichage du curseur
-    FAT_cursors_showCursor2();
-
     // affichage du numéro des lignes, des séquences, ...
     FAT_screenSong_printAllScreenText();
 
     // démarrage du cycle pour l'écran
     ham_StopIntHandler(INT_TYPE_VBL);
     ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenSong_mainFunc);
+    
+    // affichage du curseur
+    FAT_cursors_hideCursor2();
+    FAT_screenSong_commitCursorMove();
+    FAT_cursors_showCursor2();
 }
 
 void FAT_screenSong_printInfos() {
     mutex = 0;
     ham_DrawText(21, 3, "%s", FAT_tracker.songName);
     ham_DrawText(21, 4, "LINE  %.2x", FAT_screenSong_currentSelectedLine);
-    ham_DrawText(21, 5, "CHAN  %2x", FAT_screenSong_currentSelectedColumn + 1);
+    ham_DrawText(21, 5, "CHAN %s", CHANNEL_NAME[FAT_screenSong_currentSelectedColumn]);
     mutex = 1;
 }
 

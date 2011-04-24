@@ -108,7 +108,7 @@ void FAT_player_playComposerNote(u8 noteLine) {
  * @param channel
  */
 void FAT_player_playNote(note* note, u8 channel) {
-    FAT_player_playNoteWithTsp(note, channel, 0);
+    FAT_player_playNoteWithTsp(note, channel, FAT_tracker.transpose);
 }
 
 void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
@@ -121,7 +121,7 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
             sweeptime -= 8;
             sweepdir = 0;
         }
-
+        
         switch (channel) {
             case 0: // PU1
                 //ham_DrawText (23, 16, "PU1");
@@ -129,23 +129,23 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                         sweeptime, sweepdir, sweepshifts,
                         inst->volume, inst->envdirection, inst->envsteptime, inst->wavedutyOrPolynomialStep,
                         inst->soundlength, inst->loopmode,
-                        freqs[note->freq], transpose);
+                        note->freq, transpose + FAT_tracker.transpose);
                 break;
             case 1: // PU2
                 //ham_DrawText (23, 16, "PU2");
                 snd_playSoundOnChannel2(inst->volume, inst->envdirection, inst->envsteptime, inst->wavedutyOrPolynomialStep,
                         inst->soundlength, inst->loopmode,
-                        freqs[note->freq], transpose);
+                        note->freq, transpose + FAT_tracker.transpose);
                 break;
 
             case 2: // WAV
                 snd_playSoundOnChannel3(inst->volumeRatio, inst->soundlength, inst->loopmode, inst->voice,
-                        inst->bank, inst->bankMode, freqs[note->freq], transpose);
+                        inst->bank, inst->bankMode, note->freq, transpose + FAT_tracker.transpose);
                 break;
             case 3: // NOISE
                 //ham_DrawText (23, 16, "NOI");
                 snd_playSoundOnChannel4(inst->volume, inst->envdirection, inst->envsteptime, inst->soundlength,
-                        inst->loopmode, note->octave, inst->wavedutyOrPolynomialStep, note->freq / NB_FREQUENCES, transpose);
+                        inst->loopmode, note->octave, inst->wavedutyOrPolynomialStep, note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
                 break;
         }
 

@@ -7,7 +7,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
 #ifndef _SCREEN_NOTES_H_
 #define _SCREEN_NOTES_H_
 
@@ -37,6 +37,7 @@ u8 FAT_screenNotes_currentBlockId;
 #include "screen_notes_cursor.h"
 #include "screen_song_cursor.h"
 #include "data.h"
+#include "cursors.h"
 
 void FAT_screenNotes_mainFunc() {
     if (mutex) {
@@ -114,15 +115,20 @@ void FAT_screenNotes_init() {
     FAT_screenNotes_printBlockNumber();
     FAT_screenNotes_printAllScreenText();
 
-    // init du curseur
-    FAT_screenNotes_initCursor();
-    // affichage du curseur
-    FAT_cursors_showCursor3();
-    FAT_cursors_moveCursorChange(INPUT_R_CURSOR_CHANGE_X, INPUT_R_CURSOR_CHANGE_Y);
-
     // démarrage du cycle pour l'écran
     ham_StopIntHandler(INT_TYPE_VBL);
     ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenNotes_mainFunc);
+    
+    // affichage du curseur
+    FAT_cursors_hideCursor2();
+    FAT_cursors_hideCursor3();
+    FAT_screenNotes_commitCursorMove();
+    if (FAT_screenNotes_currentSelectedColumn == 0) {
+        FAT_cursors_showCursor3();
+    } else {
+        FAT_cursors_showCursor2();
+    }
+    FAT_cursors_moveCursorChange(INPUT_R_CURSOR_CHANGE_X, INPUT_R_CURSOR_CHANGE_Y);
 }
 
 void FAT_screenNotes_checkButtons() {

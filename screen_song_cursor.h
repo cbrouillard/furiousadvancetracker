@@ -44,7 +44,7 @@ void FAT_screenSong_initCursor() {
     FAT_screenSong_currentSelectedLine = 0;
     FAT_screenSong_currentStartLine = 0;
     FAT_screenSong_currentSelectedColumn = 0;
-    FAT_screenSong_commitCursorMove();
+    
 };
 
 void FAT_screenSong_moveCursorRight() {
