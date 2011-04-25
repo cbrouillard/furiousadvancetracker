@@ -15,7 +15,7 @@
 #define NB_MAX_SEQUENCES 0x80
 #define NB_SEQUENCES_IN_ONE_CHANNEL 0x40
 // nombre de blocks dispo en mémoire
-#define NB_MAX_BLOCKS 0xff
+#define NB_MAX_BLOCKS 0xef
 // nombre d'instruments dispo en mémoire 0x3f = 63
 #define NB_MAX_INSTRUMENTS 0x3f
 // nombre de notes dans un block (une mesure)  16
