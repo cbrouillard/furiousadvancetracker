@@ -158,7 +158,7 @@ void FAT_showIntro() {
     ham_bg[2].mi = ham_InitMapSet((void *) screen_intro_Map, 1024, 0, 0);
     ham_InitBg(2, 1, 3, 0);
 
-    //ham_DrawText(0, 1, "SIZE %dKo", sizeof(FAT_tracker) / 1024);
+    ham_DrawText(0, 1, "SIZE %d octets", (sizeof(tracker)));
     
     while (!F_CTRLINPUT_START_PRESSED) {
     }

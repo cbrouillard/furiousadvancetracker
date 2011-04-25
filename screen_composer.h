@@ -70,7 +70,7 @@ void FAT_screenComposer_printNote(u8 line) {
 
         ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
                 line + SCREENCOMPOSER_LINE_START_Y,
-                "%s%1x %.2x\0", noteName[actualNote->name], actualNote->octave, actualNote->instrument);
+                "%s%1x %.2x\0", noteName[(actualNote->note & 0xf0)>>4], actualNote->note & 0x0f, actualNote->instrument);
     } else {
         ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
                 line + SCREENCOMPOSER_LINE_START_Y, "      \0");

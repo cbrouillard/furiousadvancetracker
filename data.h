@@ -23,6 +23,8 @@
 // nombre de blocks (mesures) dans une séquence (pattern)
 #define NB_BLOCKS_IN_SEQUENCE 16
 
+#define NB_EFFECTS_IN_ONE_TABLE 16
+
 // nombre défini de variantes d'octave
 #define MIN_OCTAVE 3
 #define MAX_OCTAVE 8
@@ -80,12 +82,24 @@ void FAT_data_initInstrumentIfNeeded(u8 instId, u8 channel);
 bool FAT_data_smartAllocateSequence(u8 channelId, u8 line);
 bool FAT_data_smartAllocateBlock(u8 sequence, u8 blockLine);
 
+
+typedef struct EFFECT{
+    u8 name; // jusqu'a 255 nom d'effets
+    u8 value; // 255 >= value >= 0 
+} effect;
+
+typedef struct TABLE{
+    effect effects[NB_EFFECTS_IN_ONE_TABLE];
+} table;
+
 // POIDS ACTUEL: 4 octets
 
 typedef struct NOTE {
-    // TODO regrouper ces 2 variables
-    u8 name;
-    u8 octave;
+    u8 note;
+    // 0x 0000  0000
+    // 0x name  octave
+    // récupérer le nom -> (note & 0xf0) >> 4
+    // récupérer l'octave -> note & 0x0f
     u8 freq;
     u8 instrument;
 } note;
@@ -102,6 +116,7 @@ typedef struct COMPOSER {
 typedef struct BLOCK {
     // 1 block contient physiquement 16 notes 
     note notes[NB_NOTES_IN_ONE_BLOCK];
+    effect effect;
 } block;
 
 u8 FAT_data_lastBlockWritten, FAT_data_blockClipboard;
@@ -130,13 +145,13 @@ typedef struct INSTRUMENT {
 
     u8 sweep;
 
-    u16 volume;
-    u16 envdirection;
-    u16 envsteptime;
-    u16 wavedutyOrPolynomialStep;
-    u16 soundlength;
+    u8 volume;
+    u8 envdirection;
+    u8 envsteptime;
+    u8 wavedutyOrPolynomialStep;
+    u8 soundlength;
 
-    u16 loopmode;
+    u8 loopmode;
 
     u8 voice;
     u8 bank;
@@ -187,8 +202,9 @@ void FAT_data_initData() {
     // note par défaut
     FAT_data_lastNoteWritten.freq = 0;
     FAT_data_lastNoteWritten.instrument = 0;
-    FAT_data_lastNoteWritten.name = 0;
-    FAT_data_lastNoteWritten.octave = MIN_OCTAVE;
+    FAT_data_lastNoteWritten.note = 0x03;
+    //FAT_data_lastNoteWritten.name = 0;
+    //FAT_data_lastNoteWritten.octave = MIN_OCTAVE;
 
     // block par défaut
     FAT_data_lastBlockWritten = 0;
@@ -501,8 +517,9 @@ void FAT_data_addDefaultNote(u8 block, u8 noteLine, u8 channel) {
     FAT_tracker.allBlocks[block].notes[noteLine].freq = FAT_data_lastNoteWritten.freq;
 
     FAT_tracker.allBlocks[block].notes[noteLine].instrument = FAT_data_lastNoteWritten.instrument;
-    FAT_tracker.allBlocks[block].notes[noteLine].name = FAT_data_lastNoteWritten.name;
-    FAT_tracker.allBlocks[block].notes[noteLine].octave = FAT_data_lastNoteWritten.octave;
+    FAT_tracker.allBlocks[block].notes[noteLine].note = FAT_data_lastNoteWritten.note;
+    //FAT_tracker.allBlocks[block].notes[noteLine].name = FAT_data_lastNoteWritten.name;
+    //FAT_tracker.allBlocks[block].notes[noteLine].octave = FAT_data_lastNoteWritten.octave;
 
     FAT_data_initInstrumentIfNeeded(FAT_tracker.allBlocks[block].notes[noteLine].instrument, channel);
 }
@@ -586,16 +603,19 @@ void FAT_data_block_changeValue(u8 sequence, u8 blockLine, s8 addedValue) {
  * @param addedValue la valeur à ajouter/retirer (1 ou -1 généralement)
  */
 void FAT_data_note_changeValue(u8 block, u8 noteLine, s8 addedValue) {
+    u8 noteName = (FAT_tracker.allBlocks[block].notes[noteLine].note & 0xf0) >> 4;
+    u8 noteOctave = FAT_tracker.allBlocks[block].notes[noteLine].note & 0x0f;
     if (
-            (addedValue < 0 && FAT_tracker.allBlocks[block].notes[noteLine].name > 0) ||
-            (addedValue > 0 && FAT_tracker.allBlocks[block].notes[noteLine].name < NB_NOTE - 1)
+            (addedValue < 0 && noteName > 0) ||
+            (addedValue > 0 && noteName < NB_NOTE - 1)
 
             ) {
         FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue;
-        FAT_tracker.allBlocks[block].notes[noteLine].name += addedValue;
+        noteName += addedValue;
+        FAT_tracker.allBlocks[block].notes[noteLine].note = (noteName << 4) + noteOctave;
 
         FAT_data_lastNoteWritten.freq = FAT_tracker.allBlocks[block].notes[noteLine].freq;
-        FAT_data_lastNoteWritten.name = FAT_tracker.allBlocks[block].notes[noteLine].name;
+        FAT_data_lastNoteWritten.note = FAT_tracker.allBlocks[block].notes[noteLine].note;
     }
 };
 
@@ -608,16 +628,17 @@ void FAT_data_note_changeValue(u8 block, u8 noteLine, s8 addedValue) {
  * @param addedValue la valeur à ajouter/retirer (1 ou -1 généralement)
  */
 void FAT_data_note_changeOctave(u8 block, u8 noteLine, s8 addedValue) {
+    u8 noteOctave = FAT_tracker.allBlocks[block].notes[noteLine].note & 0x0f;
     if (
-            (addedValue < 0 && FAT_tracker.allBlocks[block].notes[noteLine].octave > MIN_OCTAVE) ||
-            (addedValue > 0 && FAT_tracker.allBlocks[block].notes[noteLine].octave < MAX_OCTAVE)
+            (addedValue < 0 && noteOctave > MIN_OCTAVE) ||
+            (addedValue > 0 && noteOctave < MAX_OCTAVE)
 
             ) {
         FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue * NB_NOTE;
-        FAT_tracker.allBlocks[block].notes[noteLine].octave += addedValue;
+        FAT_tracker.allBlocks[block].notes[noteLine].note += addedValue;
 
         FAT_data_lastNoteWritten.freq = FAT_tracker.allBlocks[block].notes[noteLine].freq;
-        FAT_data_lastNoteWritten.octave = FAT_tracker.allBlocks[block].notes[noteLine].octave;
+        FAT_data_lastNoteWritten.note = FAT_tracker.allBlocks[block].notes[noteLine].note;
     }
 }
 
@@ -841,8 +862,9 @@ void FAT_data_composer_addDefaultNote(u8 line) {
     FAT_tracker.composer.notes[line].freq = FAT_data_lastNoteWritten.freq;
 
     FAT_tracker.composer.notes[line].instrument = FAT_data_lastNoteWritten.instrument;
-    FAT_tracker.composer.notes[line].name = FAT_data_lastNoteWritten.name;
-    FAT_tracker.composer.notes[line].octave = FAT_data_lastNoteWritten.octave;
+    FAT_tracker.composer.notes[line].note = FAT_data_lastNoteWritten.note;
+    //FAT_tracker.composer.notes[line].name = FAT_data_lastNoteWritten.name;
+    //FAT_tracker.composer.notes[line].octave = FAT_data_lastNoteWritten.octave;
 
     FAT_data_initInstrumentIfNeeded(FAT_tracker.composer.notes[line].instrument, 0);
 
@@ -853,30 +875,34 @@ note* FAT_data_composer_getNote(u8 line) {
 }
 
 void FAT_data_composer_changeValue(u8 line, s8 addedValue) {
+    u8 noteName = (FAT_tracker.composer.notes[line].note & 0xf0) >> 4;
+    u8 noteOctave = FAT_tracker.composer.notes[line].note & 0x0f;
     if (
-            (addedValue < 0 && FAT_tracker.composer.notes[line].name > 0) ||
-            (addedValue > 0 && FAT_tracker.composer.notes[line].name < NB_NOTE - 1)
+            (addedValue < 0 && noteName > 0) ||
+            (addedValue > 0 && noteName < NB_NOTE - 1)
 
             ) {
         FAT_tracker.composer.notes[line].freq += addedValue;
-        FAT_tracker.composer.notes[line].name += addedValue;
+        noteName += addedValue;
+        FAT_tracker.composer.notes[line].note += (addedValue << 4) + noteOctave;
 
         FAT_data_lastNoteWritten.freq = FAT_tracker.composer.notes[line].freq;
-        FAT_data_lastNoteWritten.name = FAT_tracker.composer.notes[line].name;
+        FAT_data_lastNoteWritten.note = FAT_tracker.composer.notes[line].note;
     }
 }
 
 void FAT_data_composer_changeOctave(u8 line, s8 addedValue) {
+    u8 noteOctave = FAT_tracker.composer.notes[line].note & 0x0f;
     if (
-            (addedValue < 0 && FAT_tracker.composer.notes[line].octave > MIN_OCTAVE) ||
-            (addedValue > 0 && FAT_tracker.composer.notes[line].octave < MAX_OCTAVE)
+            (addedValue < 0 && noteOctave > MIN_OCTAVE) ||
+            (addedValue > 0 && noteOctave < MAX_OCTAVE)
 
             ) {
         FAT_tracker.composer.notes[line].freq += addedValue * NB_NOTE;
-        FAT_tracker.composer.notes[line].octave += addedValue;
+        FAT_tracker.composer.notes[line].note += addedValue;
 
         FAT_data_lastNoteWritten.freq = FAT_tracker.composer.notes[line].freq;
-        FAT_data_lastNoteWritten.octave = FAT_tracker.composer.notes[line].octave;
+        FAT_data_lastNoteWritten.note = FAT_tracker.composer.notes[line].note;
     }
 }
 

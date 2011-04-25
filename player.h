@@ -146,7 +146,7 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
             case 3: // NOISE
                 //ham_DrawText (23, 16, "NOI");
                 snd_playSoundOnChannel4(inst->volume, inst->envdirection, inst->envsteptime, inst->soundlength,
-                        inst->loopmode, note->octave, inst->wavedutyOrPolynomialStep, note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
+                        inst->loopmode, note->note & 0x0f, inst->wavedutyOrPolynomialStep, note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
                 break;
         }
 
