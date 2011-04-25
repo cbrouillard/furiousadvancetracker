@@ -8,3 +8,5 @@ nbproject
 manual/tmp
 manual/FAT_documentation_FR.iso
 manual/*.pdf
+gfx/icons
+gfx/img
