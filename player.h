@@ -12,6 +12,7 @@
 #define	_PLAYER_H_
 
 #include "data.h"
+#include "screen_song.h"
 
 
 // DOC: Délai pour 1/16e de mesure = (60000 / bpm) / 4.
@@ -121,7 +122,7 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
             sweeptime -= 8;
             sweepdir = 0;
         }
-        
+
         switch (channel) {
             case 0: // PU1
                 //ham_DrawText (23, 16, "PU1");
@@ -415,7 +416,8 @@ void FAT_player_moveOrHideCursor(u8 channel) {
                 // la lecture a été lancée depuis l'écran SONG
                 // on dispose du numéro de ligne actuellement jouée dans actualSequencesForChannel[channel]
                 ham_SetObjXY(FAT_cursor_playerSequences_obj[channel],
-                        23 + (channel * (8 + 16)), 15 + (actualSequencesForChannel[channel]*8));
+                        23 + (channel * (8 + 16)), 
+                        15 + ((actualSequencesForChannel[channel] - FAT_screenSong_currentStartLine)*8));
                 ham_SetObjVisible(FAT_cursor_playerSequences_obj[channel], 1);
             } else {
                 FAT_player_hideSequencesCursors();
