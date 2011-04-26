@@ -8,44 +8,59 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
 */
+
+/**
+ * \file soundApi.h
+ * \brief Définition des fonctions implémentées par la soundApi GBA.
+ * 
+ * Quelques règles à suivre :
+ * 
+ * - toutes les fonctions sont préfixées par "snd_" comme ca pas de risque de conflit.
+ * - les fonctions non testées sont préfixées par "tmp_snd_", une fois testée -> on change en "snd_".
+ * - un petit commentaire au dessus de la fonction pour documenter.
+ **/
 #ifndef _SOUND_API_
 #define _SOUND_API_
 
 #include "register.h"
 
-/**
-
-Quelques règles à suivre :
-
-- toutes les fonctions sont préfixées par "snd_" comme ca pas de risque de conflit.
-- les fonctions non testées sont préfixées par "tmp_snd_", une fois testée -> on change en "snd_".
-- un petit commentaire au dessus de la fonction pour documenter.
-
- **/
 
 /**
-Initialise le mode audio sur la Gameboy: active les 4 canaux.
+ * Initialise le mode audio sur la Gameboy: active les 4 canaux.
  **/
 void snd_init_soundApi();
 
 /**
- * Joue un son sur le channel 1.
- * sweeptime: temps de sweep de 0 à 7
- * sweepdir: direction du sweep 1 increase, 0 decrease
- * sweepshifts: l'effet sweep de 0 à 7
- * volume: de 0 à F
- * envdir: direction de l'enveloppe 1 increase, 0 decrease
- * envsteptime: pas de l'enveloppe de 0 à 7
- * waveduty: forme de l'onde 0, 1, 2 ou 3
- * soundlength: durée du son 0 à 3f (attention valeur inversée: 3f = court) ACTIF seulement si loopmode = 1
- * loopmode: timed 1, continuous 0
- * sfreq: la numéro de fréquence de la note jouée. de 0 à 72 cf: const u16 freqs[NB_FREQUENCES]
+ * 
+ * \brief Joue un son sur le channel 1.
+ * \param sweeptime Temps de sweep de 0 à 7
+ * \param sweepdir Direction du sweep 1 increase, 0 decrease
+ * \param sweepshifts L'effet sweep de 0 à 7
+ * \param volume De 0 à F
+ * \param envdir Direction de l'enveloppe 1 increase, 0 decrease
+ * \param envsteptime Pas de l'enveloppe de 0 à 7
+ * \param waveduty Forme de l'onde 0, 1, 2 ou 3
+ * \param soundlength Durée du son 0 à 3f (attention valeur inversée: 3f = court) ACTIF seulement si loopmode = 1
+ * \param loopmode Timed 1, continuous 0
+ * \param sfreq Le numéro de fréquence de la note jouée. de 0 à 72 cf: const u16 freqs[NB_FREQUENCES]
+ * \param transpose La valeur de transposition de 0 à FF
  **/
 void snd_playSoundOnChannel1(
         u16 sweeptime, u16 sweepdir, u16 sweepshifts, u16 volume,
         u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
         u16 loopmode, u16 sfreq, u8 transpose);
 
+/**
+ * \brief Joue un son sur le channel 1.
+ * \param sweep Combinaison de tous les paramètres sweep (sweeptime, sweepdir, sweepshifts) de 0 à FF.
+ * \param envelope Combinaison de tous les paramètres pour l'enveloppe (volume, envdir, envsteptime, waveduty) de 0 à FFFF
+ * \param mode Timed 1, continuous 0
+ * \param length Durée du son 0 à 3f (attention valeur inversée: 3f = court) ACTIF seulement si loopmode = 1
+ * \param noteFreq Le numéro de fréquence de la note jouée. de 0 à 72 cf: const u16 freqs[NB_FREQUENCES]
+ * \param transpose La valeur de transposition de 0 à FF.
+ * 
+ * Cette méthode est plus simple que snd_playSoundOnChannel1 mais produit le même résultat. 
+ */
 void snd_simple_playSoundOnChannel1 (u8 sweep, u16 envelope, u8 mode,
         u8 length, u16 noteFreq, u8 transpose);
 

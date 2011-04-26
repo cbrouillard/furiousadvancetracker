@@ -1,0 +1,75 @@
+\documentclass[a4paper]{book}
+\usepackage{a4wide}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{textcomp}
+\usepackage{alltt}
+\usepackage{times}
+\usepackage{ifpdf}
+\ifpdf
+\usepackage[pdftex,
+            pagebackref=true,
+            colorlinks=true,
+            linkcolor=blue,
+            unicode
+           ]{hyperref}
+\else
+\usepackage[ps2pdf,
+            pagebackref=true,
+            colorlinks=true,
+            linkcolor=blue,
+            unicode
+           ]{hyperref}
+\usepackage{pspicture}
+\fi
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage{doxygen}
+\lstset{language=C++,inputencoding=utf8,basicstyle=\footnotesize,breaklines=true,breakatwhitespace=true,tabsize=8,numbers=left }
+\makeindex
+\setcounter{tocdepth}{3}
+\renewcommand{\footrulewidth}{0.4pt}
+\begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+\vspace*{7cm}
+\begin{center}
+{\Large FAT FuriousAdvanceTracker \\[1ex]\large version 0-\/02 }\\
+\vspace*{1cm}
+{\large Généré par Doxygen 1.7.1}\\
+\vspace*{0.5cm}
+{\small Tue Apr 26 2011 17:22:49}\\
+\end{center}
+\end{titlepage}
+\clearemptydoublepage
+\pagenumbering{roman}
+\tableofcontents
+\clearemptydoublepage
+\pagenumbering{arabic}
+\hypersetup{pageanchor=true}
+\chapter{Index des structures de données}
+\input{annotated}
+\chapter{Index des fichiers}
+\input{files}
+\chapter{Documentation des structures de données}
+\input{struct_b_l_o_c_k}
+\input{struct_c_h_a_n_n_e_l}
+\input{struct_c_o_m_p_o_s_e_r}
+\input{struct_e_f_f_e_c_t}
+\input{struct_f_a_t}
+\input{struct_i_n_s_t_r_u_m_e_n_t}
+\input{struct_n_o_t_e}
+\input{struct_s_e_q_u_e_n_c_e}
+\input{struct_t_a_b_l_e}
+\chapter{Documentation des fichiers}
+\input{cursors_8h}
+\input{data_8h}
+\input{register_8h}
+\input{sound_api_8h}
+\printindex
+\end{document}

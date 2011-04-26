@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>FAT FuriousAdvanceTracker: Référence du fichier soundApi/register.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Généré par Doxygen 1.7.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul class="tablist">
+      <li><a href="main.html"><span>Page&nbsp;principale</span></a></li>
+      <li><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
+      <li class="current"><a href="files.html"><span>Fichiers</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Liste&nbsp;des&nbsp;fichiers</span></a></li>
+      <li><a href="globals.html"><span>Portée&nbsp;globale</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="header">
+  <div class="summary">
+<a href="#define-members">Macros</a>  </div>
+  <div class="headertitle">
+<h1>Référence du fichier soundApi/register.h</h1>  </div>
+</div>
+<div class="contents">
+
+<p>Définit un certain nombres d'addresses hexadécimales en vu d'accéder à certains registres et espaces mémoires.  
+<a href="#_details">Plus de détails...</a></p>
+
+<p><a href="register_8h_source.html">Aller au code source de ce fichier.</a></p>
+<table class="memberdecls">
+<tr><td colspan="2"><h2><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af668d1af32807bb8ffb17c0ed32a1697"></a><!-- doxytag: member="register.h::REG_BASE" ref="af668d1af32807bb8ffb17c0ed32a1697" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_BASE</b>&nbsp;&nbsp;&nbsp;0x04000000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a446f761db6250798e671e893b084916e"></a><!-- doxytag: member="register.h::REG_SOUNDCNT_L" ref="a446f761db6250798e671e893b084916e" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_SOUNDCNT_L</b>&nbsp;&nbsp;&nbsp;(*((u16 volatile *) (REG_BASE + 0x080)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad527b5102122fd008452f79706e6482b"></a><!-- doxytag: member="register.h::REG_SOUNDCNT_H" ref="ad527b5102122fd008452f79706e6482b" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_SOUNDCNT_H</b>&nbsp;&nbsp;&nbsp;(*((u16 volatile *) (REG_BASE + 0x082)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1e513b6dfb04b5855f9cf4d1db3a0fcc"></a><!-- doxytag: member="register.h::REG_SOUNDCNT_X" ref="a1e513b6dfb04b5855f9cf4d1db3a0fcc" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_SOUNDCNT_X</b>&nbsp;&nbsp;&nbsp;(*((u16 volatile *) (REG_BASE + 0x084)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae62e75c097c2115b328128f5113d2434"></a><!-- doxytag: member="register.h::SOUNDINIT" ref="ae62e75c097c2115b328128f5113d2434" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUNDINIT</b>&nbsp;&nbsp;&nbsp;0x8000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad7befcb9c0c47425ab484b61c2f6e18b"></a><!-- doxytag: member="register.h::REG_SOUND1CNT_L" ref="ad7befcb9c0c47425ab484b61c2f6e18b" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_SOUND1CNT_L</b>&nbsp;&nbsp;&nbsp;(*((u16 volatile *) (REG_BASE + 0x060)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a134c65fe394493ea74885a1dd3a02a82"></a><!-- doxytag: member="register.h::REG_SOUND1CNT_H" ref="a134c65fe394493ea74885a1dd3a02a82" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_SOUND1CNT_H</b>&nbsp;&nbsp;&nbsp;(*((u16 volatile *) (REG_BASE + 0x062)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad42362836ba7747cab3a6b7ed276c163"></a><!-- doxytag: member="register.h::REG_SOUND1CNT_X" ref="ad42362836ba7747cab3a6b7ed276c163" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_SOUND1CNT_X</b>&nbsp;&nbsp;&nbsp;(*((u16 volatile *) (REG_BASE + 0x064)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa3e1528a7a60d33e2fa188d38be45e14"></a><!-- doxytag: member="register.h::SOUND1INIT" ref="aa3e1528a7a60d33e2fa188d38be45e14" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUND1INIT</b>&nbsp;&nbsp;&nbsp;0x8000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a27c9b8488e4d8f37c8dde9a4bacfd9dc"></a><!-- doxytag: member="register.h::REG_SOUND2CNT_L" ref="a27c9b8488e4d8f37c8dde9a4bacfd9dc" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_SOUND2CNT_L</b>&nbsp;&nbsp;&nbsp;(*((u16 volatile *) (REG_BASE + 0x068)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a90d7cca3084e31ee176161bccd68b3d2"></a><!-- doxytag: member="register.h::REG_SOUND2CNT_H" ref="a90d7cca3084e31ee176161bccd68b3d2" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_SOUND2CNT_H</b>&nbsp;&nbsp;&nbsp;(*((u16 volatile *) (REG_BASE + 0x06C)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9e02014cad322245e4c3d66b5261de2c"></a><!-- doxytag: member="register.h::SOUND2INIT" ref="a9e02014cad322245e4c3d66b5261de2c" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUND2INIT</b>&nbsp;&nbsp;&nbsp;0x8000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aff159c97cb75854277a29327634a755f"></a><!-- doxytag: member="register.h::REG_SOUND3CNT_L" ref="aff159c97cb75854277a29327634a755f" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_SOUND3CNT_L</b>&nbsp;&nbsp;&nbsp;(*((u16 volatile *) (REG_BASE + 0x070)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af3a36f8283c5b474339ccf3883323605"></a><!-- doxytag: member="register.h::REG_SOUND3CNT_H" ref="af3a36f8283c5b474339ccf3883323605" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_SOUND3CNT_H</b>&nbsp;&nbsp;&nbsp;(*((u16 volatile *) (REG_BASE + 0x072)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aca6f88ea849cab35a35759553a611687"></a><!-- doxytag: member="register.h::REG_SOUND3CNT_X" ref="aca6f88ea849cab35a35759553a611687" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_SOUND3CNT_X</b>&nbsp;&nbsp;&nbsp;(*((u16 volatile *) (REG_BASE + 0x074)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3c14d32e260d6002d3d8aa95d908464a"></a><!-- doxytag: member="register.h::SOUND3INIT" ref="a3c14d32e260d6002d3d8aa95d908464a" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUND3INIT</b>&nbsp;&nbsp;&nbsp;0x8000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8037a9a8b21f56f67276aa2c19d14f7e"></a><!-- doxytag: member="register.h::SOUND3PLAYONCE" ref="a8037a9a8b21f56f67276aa2c19d14f7e" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUND3PLAYONCE</b>&nbsp;&nbsp;&nbsp;0x4000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa060ff1a20c1ca6dbe408d09135c69ff"></a><!-- doxytag: member="register.h::SOUND3PLAYLOOP" ref="aa060ff1a20c1ca6dbe408d09135c69ff" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUND3PLAYLOOP</b>&nbsp;&nbsp;&nbsp;0x0000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad60eda5a32d562f32873c9c8947c7c64"></a><!-- doxytag: member="register.h::SOUND3OUTPUT0" ref="ad60eda5a32d562f32873c9c8947c7c64" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUND3OUTPUT0</b>&nbsp;&nbsp;&nbsp;0x0000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a286c7b462f17f2368a48a92b0b3bce8e"></a><!-- doxytag: member="register.h::SOUND3OUTPUT1" ref="a286c7b462f17f2368a48a92b0b3bce8e" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUND3OUTPUT1</b>&nbsp;&nbsp;&nbsp;0x2000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab7f59c9a47828abe69a85a89e32c5956"></a><!-- doxytag: member="register.h::SOUND3OUTPUT12" ref="ab7f59c9a47828abe69a85a89e32c5956" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUND3OUTPUT12</b>&nbsp;&nbsp;&nbsp;0x4000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8ac27ce83d2d0d85c516c798e1d20808"></a><!-- doxytag: member="register.h::SOUND3OUTPUT14" ref="a8ac27ce83d2d0d85c516c798e1d20808" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUND3OUTPUT14</b>&nbsp;&nbsp;&nbsp;0x6000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7ed38172b9838e066407557c6b6a1202"></a><!-- doxytag: member="register.h::SOUND3OUTPUT34" ref="a7ed38172b9838e066407557c6b6a1202" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUND3OUTPUT34</b>&nbsp;&nbsp;&nbsp;0x8000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeab105ee86227e3d0356337c1a9176a8"></a><!-- doxytag: member="register.h::SOUND3PLAY" ref="aeab105ee86227e3d0356337c1a9176a8" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUND3PLAY</b>&nbsp;&nbsp;&nbsp;0x0080</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8ef6812d9abe31a06771366ff8898f23"></a><!-- doxytag: member="register.h::REG_SOUND4CNT_L" ref="a8ef6812d9abe31a06771366ff8898f23" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_SOUND4CNT_L</b>&nbsp;&nbsp;&nbsp;(*((u16 volatile *) (REG_BASE + 0x078)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0acdeb648a552d2991d67a5d9c950954"></a><!-- doxytag: member="register.h::REG_SOUND4CNT_H" ref="a0acdeb648a552d2991d67a5d9c950954" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_SOUND4CNT_H</b>&nbsp;&nbsp;&nbsp;(*((u16 volatile *) (REG_BASE + 0x07C)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab3bef5ecb067fe0581ef7414531d0509"></a><!-- doxytag: member="register.h::REG_WAVE_RAM0" ref="ab3bef5ecb067fe0581ef7414531d0509" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_WAVE_RAM0</b>&nbsp;&nbsp;&nbsp;*(u32 volatile*)0x4000090</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a84c0e31a8b6f12ea88929e7f040d7139"></a><!-- doxytag: member="register.h::SOUND3SETBANK0" ref="a84c0e31a8b6f12ea88929e7f040d7139" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUND3SETBANK0</b>&nbsp;&nbsp;&nbsp;0x0000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a19a7d51117d41dba7de27a41416e8e1a"></a><!-- doxytag: member="register.h::SOUND3SETBANK1" ref="a19a7d51117d41dba7de27a41416e8e1a" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUND3SETBANK1</b>&nbsp;&nbsp;&nbsp;0x0040</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aed8f1ceb0592ba93c1fd36160ea48ee6"></a><!-- doxytag: member="register.h::SOUND3BANK32" ref="aed8f1ceb0592ba93c1fd36160ea48ee6" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUND3BANK32</b>&nbsp;&nbsp;&nbsp;0x0000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6a07d063a0b39bf333e1c12c2fa880cc"></a><!-- doxytag: member="register.h::SOUND3BANK64" ref="a6a07d063a0b39bf333e1c12c2fa880cc" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUND3BANK64</b>&nbsp;&nbsp;&nbsp;0x0020</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae6b4fe25b8a1bb6c11fc8d54a66c1ca6"></a><!-- doxytag: member="register.h::SOUND4INIT" ref="ae6b4fe25b8a1bb6c11fc8d54a66c1ca6" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SOUND4INIT</b>&nbsp;&nbsp;&nbsp;0x8000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab9bed89d09e421b4f9593068056b376f"></a><!-- doxytag: member="register.h::REG_DMA3SAD" ref="ab9bed89d09e421b4f9593068056b376f" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_DMA3SAD</b>&nbsp;&nbsp;&nbsp;(*((u32 volatile *) (REG_BASE + 0x0D4)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a69252e92caed680b03828e17343c5dda"></a><!-- doxytag: member="register.h::REG_DMA3DAD" ref="a69252e92caed680b03828e17343c5dda" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_DMA3DAD</b>&nbsp;&nbsp;&nbsp;(*((u32 volatile *) (REG_BASE + 0x0D8)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a32f8cd34ca2b26a8a05dfc991652de41"></a><!-- doxytag: member="register.h::REG_DMA3CNT_L" ref="a32f8cd34ca2b26a8a05dfc991652de41" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_DMA3CNT_L</b>&nbsp;&nbsp;&nbsp;(*((u16 volatile *) (REG_BASE + 0x0DC)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5d2cdf7831dd87671c4d94aedbaf756a"></a><!-- doxytag: member="register.h::REG_DMA3CNT_H" ref="a5d2cdf7831dd87671c4d94aedbaf756a" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>REG_DMA3CNT_H</b>&nbsp;&nbsp;&nbsp;(*((u16 volatile *) (REG_BASE + 0x0DE)))</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afb951c0ce104ce7b2ee159085f7e865f"></a><!-- doxytag: member="register.h::ECRAN" ref="afb951c0ce104ce7b2ee159085f7e865f" args="" -->
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>ECRAN</b>&nbsp;&nbsp;&nbsp;(*((u16 volatile *) (0x6000000)));</td></tr>
+</table>
+<hr/><a name="_details"></a><h2>Description détaillée</h2>
+<p>Définit un certain nombres d'addresses hexadécimales en vu d'accéder à certains registres et espaces mémoires. </p>
+</div>
+<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 17:22:49 pour FAT FuriousAdvanceTracker par&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
+</body>
+</html>

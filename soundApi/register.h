@@ -7,7 +7,12 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
+
+/**
+ * \file register.h
+ * \brief Définit un certain nombres d'addresses hexadécimales en vu d'accéder à certains registres et espaces mémoires.
+ */
 #ifndef _SOUND_API_REGISTER_
 #define _SOUND_API_REGISTER_
 

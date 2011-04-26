@@ -8,6 +8,15 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+
+/**
+ * \file data.h
+ * \brief Ce fichier contient toutes les définitions des types de données et autres structures.
+ * 
+ * Il contient également un set de fonctions utiles pour les modifications et récupérations
+ * sur toutes les données techniques du tracker.
+ */
+
 #ifndef _DATA_H_
 #define	_DATA_H_
 
