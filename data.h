@@ -884,7 +884,7 @@ void FAT_data_composer_changeValue(u8 line, s8 addedValue) {
             ) {
         FAT_tracker.composer.notes[line].freq += addedValue;
         noteName += addedValue;
-        FAT_tracker.composer.notes[line].note += (addedValue << 4) + noteOctave;
+        FAT_tracker.composer.notes[line].note = (noteName << 4) + noteOctave;
 
         FAT_data_lastNoteWritten.freq = FAT_tracker.composer.notes[line].freq;
         FAT_data_lastNoteWritten.note = FAT_tracker.composer.notes[line].note;
