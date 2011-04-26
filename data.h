@@ -76,7 +76,6 @@ const char* noteName[NB_NOTE] = {"C ", "C\"", "D ", "D\"", "E ", "F ", "F\"", "G
 // nombre maximal de fréquences de notes
 // F(Hz)=4194304/(32*(2048-register value)). The minimum frequency is 64Hz and the maximum is 131Khz.
 // http://jeanjacques.dialo.free.fr/frequenc.htm
-// POIDS ACTUEL: 85*2 = 170 octets
 #define NB_FREQUENCES 72
 
 // prototypes

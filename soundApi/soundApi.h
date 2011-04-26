@@ -39,7 +39,7 @@ void snd_init_soundApi();
  * waveduty: forme de l'onde 0, 1, 2 ou 3
  * soundlength: durée du son 0 à 3f (attention valeur inversée: 3f = court) ACTIF seulement si loopmode = 1
  * loopmode: timed 1, continuous 0
- * sfreq: la fréquence de la note jouée. de 0 à 2047
+ * sfreq: la numéro de fréquence de la note jouée. de 0 à 72 cf: const u16 freqs[NB_FREQUENCES]
  **/
 void snd_playSoundOnChannel1(
         u16 sweeptime, u16 sweepdir, u16 sweepshifts, u16 volume,
@@ -57,7 +57,7 @@ void snd_simple_playSoundOnChannel1 (u8 sweep, u16 envelope, u8 mode,
  * waveduty: forme de l'onde 0, 1, 2 ou 3
  * soundlength: durée du son 0 à 3f (attention valeur inversée: 3f = court) ACTIF seulement si loopmode = 1
  * loopmode: continuous 0, timed 1
- * sfreq: la fréquence de la note jouée. de 0 à 2047
+ * sfreq: la numéro de fréquence de la note jouée. de 0 à 72 cf: const u16 freqs[NB_FREQUENCES]
  */
 void snd_playSoundOnChannel2(u16 volume,
         u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
@@ -74,7 +74,7 @@ void snd_simple_playSoundOnChannel2 (u16 envelope,
  * voice: numéro de la voix à jouer (A REFACTORER passer un unsigned long *)
  * bank: numéro de la bank à jouer 0 ou 1 (appliqué seulement si bankMode = 0)
  * bankMode : single 0, dual 1
- * freq: la fréquence de la note
+ * freq: la numéro de fréquence de la note jouée. de 0 à 72 cf: const u16 freqs[NB_FREQUENCES]
  */
 void snd_playSoundOnChannel3 (u16 volume, u16 soundLength, u16 loopmode, u16 voice, 
         u16 bank, u16 bankMode, u16 freq, u8 transpose);
