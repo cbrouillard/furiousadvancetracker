@@ -7,7 +7,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
 
 /**
  * \file soundApi.h
@@ -26,13 +26,14 @@
 
 
 /**
- * Initialise le mode audio sur la Gameboy: active les 4 canaux.
+ * \brief Initialise le mode audio sur la Gameboy: active les 4 canaux.
  **/
 void snd_init_soundApi();
 
 /**
  * 
  * \brief Joue un son sur le channel 1.
+ * 
  * \param sweeptime Temps de sweep de 0 à 7
  * \param sweepdir Direction du sweep 1 increase, 0 decrease
  * \param sweepshifts L'effet sweep de 0 à 7
@@ -52,6 +53,7 @@ void snd_playSoundOnChannel1(
 
 /**
  * \brief Joue un son sur le channel 1.
+ * 
  * \param sweep Combinaison de tous les paramètres sweep (sweeptime, sweepdir, sweepshifts) de 0 à FF.
  * \param envelope Combinaison de tous les paramètres pour l'enveloppe (volume, envdir, envsteptime, waveduty) de 0 à FFFF
  * \param mode Timed 1, continuous 0
@@ -61,60 +63,65 @@ void snd_playSoundOnChannel1(
  * 
  * Cette méthode est plus simple que snd_playSoundOnChannel1 mais produit le même résultat. 
  */
-void snd_simple_playSoundOnChannel1 (u8 sweep, u16 envelope, u8 mode,
+void snd_simple_playSoundOnChannel1(u8 sweep, u16 envelope, u8 mode,
         u8 length, u16 noteFreq, u8 transpose);
 
 /**
- * Joue un son sur le channel 2 
- * volume: de 0 à F
- * envdir: direction de l'enveloppe 1 increase, 0 decrease
- * envsteptime: pas de l'enveloppe de 0 à 7
- * waveduty: forme de l'onde 0, 1, 2 ou 3f
- * soundlength: durée du son 0 à 3f (attention valeur inversée: 3f = court) ACTIF seulement si loopmode = 1
- * loopmode: continuous 0, timed 1
- * sfreq: la numéro de fréquence de la note jouée. de 0 à 72 cf: const u16 freqs[NB_FREQUENCES]
+ * \brief Joue un son sur le channel 2 
+ * 
+ * @param volume de 0 à F
+ * @param envdir direction de l'enveloppe 1 increase, 0 decrease
+ * @param envsteptime pas de l'enveloppe de 0 à 7
+ * @param waveduty forme de l'onde 0, 1, 2 ou 3f
+ * @param soundlength durée du son 0 à 3f (attention valeur inversée: 3f = court) ACTIF seulement si loopmode = 1
+ * @param loopmode continuous 0, timed 1
+ * @param sfreq le numéro de fréquence de la note jouée. de 0 à 72 cf: const u16 freqs[NB_FREQUENCES]
+ * @param transpose le paramètre de transposition
  */
 void snd_playSoundOnChannel2(u16 volume,
         u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
         u16 loopmode, u16 sfreq, u8 transpose);
 
-void snd_simple_playSoundOnChannel2 (u16 envelope, 
+void snd_simple_playSoundOnChannel2(u16 envelope,
         u8 mode, u8 length, u8 noteFreq, u8 transpose);
 
 /**
- * Joue un son sur le channel 3 
- * volume: 0 à 3
- * soundlength: durée du son de 0 a FF (valeur inversée: FF = très court)
- * loopmode: timed = 1, continuous = 0
- * voice: numéro de la voix à jouer (A REFACTORER passer un unsigned long *)
- * bank: numéro de la bank à jouer 0 ou 1 (appliqué seulement si bankMode = 0)
- * bankMode : single 0, dual 1
- * freq: la numéro de fréquence de la note jouée. de 0 à 72 cf: const u16 freqs[NB_FREQUENCES]
+ * \brief Joue un son sur le channel 3 
+ * 
+ * @param volume 0 à 4
+ * @param soundLength durée du son de 0 a FF (valeur inversée: FF = très court)
+ * @param loopmode timed = 1, continuous = 0
+ * @param voice numéro de la voix à jouer
+ * @param bank numéro de la bank à jouer 0 ou 1 (appliqué seulement si bankMode = 1)
+ * @param bankMode single 0, dual 1
+ * @param freq le numéro de fréquence de la note jouée. de 0 à 72 cf: const u16 freqs[NB_FREQUENCES]
+ * @param transpose le paramètre de transposition
  */
-void snd_playSoundOnChannel3 (u16 volume, u16 soundLength, u16 loopmode, u16 voice, 
+void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voice,
         u16 bank, u16 bankMode, u16 freq, u8 transpose);
 
-void snd_simple_playSoundOnChannel3 ();
+void snd_simple_playSoundOnChannel3();
 
 /**
- * Joue un son sur le channel 3
- * volume: de 0 à F
- * envdir: direction de l'enveloppe 1 increase, 0 decrease
- * envsteptime: pas de l'enveloppe de 0 à 7
- * waveduty: forme de l'onde 0, 1, 2 ou 3
- * soundlength: durée du son 0 à 3f (attention valeur inversée: 3f = court) ACTIF seulement si loopmode = 1
- * loopmode: timed 1, continuous 0
- * shiftFreq:
- * stepping:
- * freqRatio: 
+ * \brief Joue un son sur le channel 4
+ *  
+ * @param volume de 0 à F
+ * @param envdir direction de l'enveloppe 1 increase, 0 decrease
+ * @param envsteptime pas de l'enveloppe de 0 à 7
+ * @param soundlength durée du son 0 à 3f (attention valeur inversée: 3f = court) ACTIF seulement si loopmode = 1
+ * @param loopmode timed 1, continuous 0
+ * @param shiftFreq
+ * @param stepping
+ * @param freqRatio
+ * @param transpose
  */
-void snd_playSoundOnChannel4 (u16 volume, u16 envdir, u16 envsteptime, u16 soundlength,
+void snd_playSoundOnChannel4(u16 volume, u16 envdir, u16 envsteptime, u16 soundlength,
         u16 loopmode, u16 shiftFreq, u16 stepping, u16 freqRatio, u8 transpose);
 
-void snd_simple_playSoundOnChannel4 (u16 envelope, u8 mode, u8 length);
+void snd_simple_playSoundOnChannel4(u16 envelope, u8 mode, u8 length);
 
 /**
- * Eteint tout les sons en cours de lecture. 
+ * \brief Eteint tout les sons en cours de lecture. 
  */
 void snd_stopAllSounds();
 

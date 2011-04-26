@@ -258,7 +258,7 @@ void FAT_screenBlocks_pressB() {
             FAT_data_pasteBlockWithNewNumber(FAT_screenBlocks_currentSequenceId,
                     FAT_screenBlocks_currentSelectedLine);
         } else {
-            FAT_data_copyBlock(FAT_screenBlocks_currentSequenceId,
+            FAT_data_cloneBlock(FAT_screenBlocks_currentSequenceId,
                     FAT_screenBlocks_currentSelectedLine);
         }
 

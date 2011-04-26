@@ -275,8 +275,8 @@ typedef struct CHANNEL {
  * attachée à un instrument.
  */
 typedef struct INSTRUMENT {
-    u8 type;/*!< Le type de l'instrument: PULSE1, PULSE2, WAVE, NOISE, SAMPLEA, SAMPLEB */
-    u8 sweep;/*!< Valeur de "sweep". Le "sweep" n'est applicable que sur le channel 1. */
+    u8 type; /*!< Le type de l'instrument: PULSE1, PULSE2, WAVE, NOISE, SAMPLEA, SAMPLEB */
+    u8 sweep; /*!< Valeur de "sweep". Le "sweep" n'est applicable que sur le channel 1. */
     //u8 volume; // max = F = 4bits
     //u8 envdirection; // max = 1
     //u8 envsteptime; // max = 7
@@ -297,7 +297,7 @@ typedef struct INSTRUMENT {
     //u8 bankMode; // max = 1
     // 0x 0   0        0     0 0000
     // 0x NA  bankmode bank  voice
-    u8 voiceAndBank;/*!< Ce paramètre agrége plusieurs autres paramètres dédiés aux instruments de type WAVE : "voice", "bank", "bankmode". */
+    u8 voiceAndBank; /*!< Ce paramètre agrége plusieurs autres paramètres dédiés aux instruments de type WAVE : "voice", "bank", "bankmode". */
     // voice -> voiceAndBank & 0x1f
     // bank -> (voiceAndBank & 0x20) >> 5
     // bankMode -> (voiceAndBank & 0x40) >> 6
@@ -307,6 +307,7 @@ typedef struct INSTRUMENT {
 
     u8 table; /*!< Numéro de table de commandes à appliquer pour chaque note assignée à cet instrument. */
 } instrument;
+
 /**
  * \struct FAT
  * \brief Structure principale: stocke l'intégralité d'une track en cours de composition.
@@ -314,17 +315,17 @@ typedef struct INSTRUMENT {
  * Cette structure définit le tracker: toutes les données sont référencés dans cette espace.
  */
 typedef struct FAT {
-    channel channels[6];/*!< Définition des channels: la GBA en dispose de 6. */
+    channel channels[6]; /*!< Définition des channels: la GBA en dispose de 6. */
     sequence allSequences [NB_MAX_SEQUENCES]; /*!< Tableau (physique) contenant toutes les séquence. */
-    block allBlocks [NB_MAX_BLOCKS];/*!< Tableau (physique) contenant tous les blocks. */
-    instrument allInstruments[NB_MAX_INSTRUMENTS];/*!< Tableau (physique) contenant tous les instruments. */
+    block allBlocks [NB_MAX_BLOCKS]; /*!< Tableau (physique) contenant tous les blocks. */
+    instrument allInstruments[NB_MAX_INSTRUMENTS]; /*!< Tableau (physique) contenant tous les instruments. */
     composer composer; /*!< Données pour l'écran de composition. */
 
-    u8 tempo;/*!< Tempo pour la track en cours de composition. */
-    u8 transpose;/*!< Valeur de transposition pour la track en cours de composition. */
-    char songName[SONG_NAME_MAX_LETTERS];/*!< Nom de la track en cours de composition. */
+    u8 tempo; /*!< Tempo pour la track en cours de composition. */
+    u8 transpose; /*!< Valeur de transposition pour la track en cours de composition. */
+    char songName[SONG_NAME_MAX_LETTERS]; /*!< Nom de la track en cours de composition. */
 
-    table tables[NB_MAX_TABLES];/*!< Tableau (physique) contenant toutes les tables. */
+    table tables[NB_MAX_TABLES]; /*!< Tableau (physique) contenant toutes les tables. */
 } tracker;
 
 /**
@@ -387,6 +388,7 @@ void FAT_data_cutSequence(u8 channelId, u8 line) {
     FAT_data_sequenceClipboard = FAT_tracker.channels[channelId].sequences[line];
     FAT_tracker.channels[channelId].sequences[line] = NULL_VALUE;
 }
+
 /**
  * \brief Colle la séquence actuellement stockée dans le clipboard.
  * 
@@ -396,6 +398,7 @@ void FAT_data_cutSequence(u8 channelId, u8 line) {
 void FAT_data_pasteSequence(u8 channelId, u8 line) {
     FAT_tracker.channels[channelId].sequences[line] = FAT_data_sequenceClipboard;
 }
+
 /**
  * \brief Clone une séquence: change le numéro de la séquence pointée.
  * 
@@ -431,7 +434,8 @@ void FAT_data_pasteSequenceWithNewNumber(u8 channelId, u8 line) {
 }
 
 /**
- * \brief Efface un block dans une séquence donnée.
+ * \brief Coupe un block depuis une séquence donnée. Le numéro de block est stocké 
+ * dans le presse-papier.
  * 
  * Attention, cette méthode n'efface pas le contenu du block, seulement la 
  * référence dans la séquence.
@@ -443,11 +447,26 @@ void FAT_data_cutBlock(u8 sequence, u8 blockLine) {
     FAT_tracker.allSequences[sequence].blocks[blockLine] = NULL_VALUE;
 }
 
+/**
+ * \brief Colle un block depuis le presse-papier dans une séquence donnée.
+ * 
+ * @param sequence le numéro de la séquence de 0 à NB_MAX_SEQUENCES
+ * @param blockLine le numéro de ligne du block à effacer dans la séquence
+ */
 void FAT_data_pasteBlock(u8 sequence, u8 blockLine) {
     FAT_tracker.allSequences[sequence].blocks[blockLine] = FAT_data_blockClipboard;
 }
 
-void FAT_data_copyBlock(u8 sequence, u8 blockLine) {
+/**
+ * \brief Clone le block: change le numéro du block pointé.
+ * 
+ * Cette méthode permet de changer le numéro d'un block tout en conservant son
+ * contenu. Le nouveau numéro est le premier numéro de block vide disponible.
+ * 
+ * @param sequence le numéro de la séquence de 0 à NB_MAX_SEQUENCES
+ * @param blockLine le numéro de ligne du block à effacer dans la séquence
+ */
+void FAT_data_cloneBlock(u8 sequence, u8 blockLine) {
     u8 blockIdTemp = FAT_tracker.allSequences[sequence].blocks[blockLine];
     if (FAT_data_smartAllocateBlock(sequence, blockLine) && blockIdTemp != NULL_VALUE) {
         // copie de tout le contenu de la séquence dans la nouvelle
@@ -456,6 +475,14 @@ void FAT_data_copyBlock(u8 sequence, u8 blockLine) {
     }
 }
 
+/**
+ * \brief Colle un block depuis le presse-papier en changeant le numéro.
+ * 
+ * Le nouveau numéro est le premier numéro de block vide disponible.
+ * 
+ * @param sequence
+ * @param blockLine
+ */
 void FAT_data_pasteBlockWithNewNumber(u8 sequence, u8 blockLine) {
     if (FAT_data_smartAllocateBlock(sequence, blockLine) && FAT_data_blockClipboard != NULL_VALUE) {
         // copie de tout le contenu de la séquence dans la nouvelle
@@ -465,10 +492,10 @@ void FAT_data_pasteBlockWithNewNumber(u8 sequence, u8 blockLine) {
 }
 
 /**
- * Efface une note donnée dans un block. 
+ * \brief Coupe une note donnée dans un block et la place dans le presse-papier.
+ * 
  * Attention cette méthode EFFACE POUR DE VRAI la note ! Elle est cependant
- * copiée dans l'espace mémoire "lastNoteWritten"
- * TODO reserver un espace mémoire spécial pour cette note
+ * copiée dans le presse-papier avant suppression.
  * @param block le numéro de block
  * @param noteLine le numéro de ligne de la note dans le block
  */
@@ -477,22 +504,41 @@ void FAT_data_cutNote(u8 block, u8 noteLine) {
     FAT_tracker.allBlocks[block].notes[noteLine].freq = NULL_VALUE;
 }
 
+/**
+ * \brief Coupe une note donnée dans le composer et la place dans le presse-papier.
+ * 
+ * Attention cette méthode EFFACE POUR DE VRAI la note ! Elle est cependant
+ * copiée dans le presse-papier avant suppression.
+ * @param line le numéro de ligne de la note dans le composer
+ */
 void FAT_data_composer_cutNote(u8 line) {
     memcpy(&FAT_data_noteClipboard, &(FAT_tracker.composer.notes[line]), sizeof (note));
     FAT_tracker.composer.notes[line].freq = NULL_VALUE;
 }
 
+/**
+ * \brief Colle une note depuis le presse-papier dans un block.
+ * 
+ * @param block le numéro de block
+ * @param noteLine la ligne de la note dans le block
+ */
 void FAT_data_pasteNote(u8 block, u8 noteLine) {
     memcpy(&(FAT_tracker.allBlocks[block].notes[noteLine]), &FAT_data_noteClipboard, sizeof (note));
 }
 
+/**
+ * \brief Colle une note depuis le presse-papier dans le composer.
+ *  
+ * @param line le numéro de ligne de la note dans le composer
+ */
 void FAT_data_composer_pasteNote(u8 line) {
     memcpy(&(FAT_tracker.composer.notes[line]), &FAT_data_noteClipboard, sizeof (note));
 }
 
 /**
- * Permet de savoir si une séquence est allouable (disponible). 
- * @param channelId le canal de 0 à 5
+ * \brief Permet de savoir si une séquence est allouable (séquence vide). 
+ * 
+ * @param channelId le channel de 0 à 5
  * @param line le numéro de ligne de la séquence dans le tableau SONG
  * @return vrai si la séquence est disponible (non déjà utilisée)
  */
@@ -501,7 +547,8 @@ bool FAT_data_isSequenceAllocatable(u8 channelId, u8 line) {
 }
 
 /**
- * Permet de savoir si un block est allouable (disponible)
+ * \brief Permet de savoir si un block est allouable (block vide)
+ * 
  * @param sequence le numéro de séquence
  * @param blockLine le numéro de ligne du block dans la séquence
  * @return vrai si le block est disponible (non déjà utilisé)
@@ -511,7 +558,8 @@ bool FAT_data_isBlockAllocatable(u8 sequence, u8 blockLine) {
 }
 
 /**
- * Cette méthode indique si une note est déjà présente un emplacement donné.
+ * \brief Cette méthode indique si une note est déjà présente un emplacement donné.
+ * 
  * @param block le numéro de block concerné
  * @param noteLine le numéro de ligne de la note dans le block
  * @return vrai si aucune note n'est présente à cet endroit.
@@ -521,7 +569,8 @@ bool FAT_data_isNoteEmpty(u8 block, u8 noteLine) {
 }
 
 /**
- * Retourne un id séquence. 
+ * \brief Retourne un id séquence. 
+ * 
  * @param channelId le canal
  * @param sequenceLine le numéro de ligne de la séquence dans le tableau SONG
  * @return l'id de la séquence de 0 à NB_MAX_SEQUENCES ou NULL_VALUE si la séquence n'est pas allouée
@@ -531,7 +580,8 @@ u8 FAT_data_getSequence(u8 channelId, u8 sequenceLine) {
 }
 
 /**
- * Retourne un id block.
+ * \brief Retourne un id block.
+ * 
  * @param sequence le numéro de séquence
  * @param blockLine le numéro de ligne du block dans la séquence
  * @return l'id du block de 0 à NB_MAX_BLOCKS ou NULL_VALUE si le block n'est pas alloué
@@ -541,8 +591,11 @@ u8 FAT_data_getBlock(u8 sequence, u8 blockLine) {
 }
 
 /**
- * Retourne un pointeur sur une variable de type "note". Ce pointeur donne 
- * accès à toute les données présentes dans une note. Cf struct note
+ * \brief Retourne un pointeur sur une variable de type "note". Ce pointeur donne 
+ * accès à toute les données présentes dans une note. 
+ * 
+ * Cf NOTE
+ * 
  * @param block le numéro du block
  * @param noteLine le numéro de la ligne dans le block
  * @return le pointeur sur une variable note
@@ -552,10 +605,11 @@ note* FAT_data_getNote(u8 block, u8 noteLine) {
 }
 
 /**
- * Remplit automatiquement un id séquence avec la valeur d'un compteur.
+ * \brief Remplit automatiquement un id séquence avec la valeur d'un compteur.
+ * 
  * Attention, pour le moment cette méthode est stupide et ne vérifie pas si 
  * la valeur du compteur ne correspond pas déjà à une séquence déjà allouée (manuellement)
- * TODO rendre cette méthode plus intelligente
+ * 
  * @param channelId le canal
  * @param line le numéro de ligne de la séquence dans le tableau SONG
  */
@@ -565,7 +619,16 @@ void FAT_data_allocateSequenceToNextAvailableId(u8 channelId, u8 line) {
         FAT_nextAvailableSequenceId++;
     }
 }
-
+/**
+ * \brief Alloue une séquence.
+ * 
+ * Si la séquence est allouable, alors on y place par défaut le dernier numéro
+ * de séquence écrit.
+ * 
+ * @param channelId le numéro de channel (0 à 5)
+ * @param line le numéro de ligne de la séquence dans le tableau
+ * @return 1 si la séquence a été allouée, 0 si échec
+ */
 bool FAT_data_allocateSequence(u8 channelId, u8 line) {
     if (FAT_data_isSequenceAllocatable(channelId, line)) {
         FAT_tracker.channels[channelId].sequences[line] = FAT_data_lastSequenceWritten;
@@ -576,10 +639,11 @@ bool FAT_data_allocateSequence(u8 channelId, u8 line) {
 }
 
 /**
- * Remplit automatiquement un id block avec la valeur d'un compteur.
+ * \brief Remplit automatiquement un id block avec la valeur d'un compteur.
+ * 
  * Attention, pour le moment cette méthode est stupide et ne vérifie pas si 
  * la valeur du compteur ne correspond pas déjà à un block déjà alloué (manuellement) 
- * TODO rendre cette méthode plus intelligente
+ *
  * @param sequence le numéro de la séquence
  * @param blockLine le numéro de ligne du block dans la séquence
  */
@@ -591,11 +655,13 @@ void FAT_data_allocateBlockToNextAvailableId(u8 sequence, u8 blockLine) {
 }
 
 /**
- * Méthode intelligente pour l'allocation d'un block dans une séquence.
+ * \brief Méthode intelligente pour l'allocation d'un block dans une séquence.
+ * 
  * - si le block est vide, alors on pose le même block que le dernier posé
  * - si le block n'est pas vide alors on ne fait rien (on pourra afficher un message plus tard)
- * @param instId
- * @param channel
+ *
+ * @param sequence le numéro de séquence
+ * @param blockLine le numéro de ligne du block dans la séquence
  * @return 1 si un nouveau block a été écrit, 0 si rien n'a été fait
  */
 bool FAT_data_allocateBlock(u8 sequence, u8 blockLine) {
@@ -607,6 +673,12 @@ bool FAT_data_allocateBlock(u8 sequence, u8 blockLine) {
     return 0;
 }
 
+/**
+ * \brief Indique si un block est vide ou pas.
+ *  
+ * @param blockId l'id de block à vérifier
+ * @return 1 si vide, 0 si au moins une note est trouvée
+ */
 bool FAT_data_isBlockEmpty(u8 blockId) {
     u8 note = 0;
     while (note < NB_NOTES_IN_ONE_BLOCK) {
@@ -619,10 +691,24 @@ bool FAT_data_isBlockEmpty(u8 blockId) {
     return 1;
 }
 
+/**
+ * \brief Indique si le paramètre de transpose d'un block est renseigné.
+ *  
+ * @param sequence le numéro de séquence
+ * @param line la ligne du block dans la séquence
+ * @return 1 si vide, 0 si initialisé
+ */
 bool FAT_data_block_isTransposeEmpty(u8 sequence, u8 line) {
     return FAT_tracker.allSequences[sequence].transpose[line] == NULL_VALUE;
 }
 
+/**
+ * \brief Donne la valeur du paramètre transpose pour un block.
+ * 
+ * @param sequence le numéro de séquence
+ * @param line la ligne du block dans la séquence
+ * @return la valeur du parametre transpose pour le block désigné
+ */
 u8 FAT_data_block_getTranspose(u8 sequence, u8 line) {
     return FAT_tracker.allSequences[sequence].transpose[line];
 }
