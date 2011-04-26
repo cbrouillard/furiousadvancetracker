@@ -2,20 +2,39 @@
 \section{Référence de la structure SEQUENCE}
 \label{struct_s_e_q_u_e_n_c_e}\index{SEQUENCE@{SEQUENCE}}
 }
+
+
+Une séquence contient un certain nombre de blocks.  
+
+
+
+
+{\ttfamily \#include $<$data.h$>$}
+
 \subsection*{Champs de données}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{struct_s_e_q_u_e_n_c_e_a3fdcd2dd1a30726b67f6e843572fc843}{
-u8 {\bfseries blocks} \mbox{[}NB\_\-BLOCKS\_\-IN\_\-SEQUENCE\mbox{]}}
-\label{struct_s_e_q_u_e_n_c_e_a3fdcd2dd1a30726b67f6e843572fc843}
-
+u8 \hyperlink{struct_s_e_q_u_e_n_c_e_a3fdcd2dd1a30726b67f6e843572fc843}{blocks} \mbox{[}NB\_\-BLOCKS\_\-IN\_\-SEQUENCE\mbox{]}
 \item 
-\hypertarget{struct_s_e_q_u_e_n_c_e_a1a1289316feaf01165a558425cd0eb0e}{
-u8 {\bfseries transpose} \mbox{[}NB\_\-BLOCKS\_\-IN\_\-SEQUENCE\mbox{]}}
-\label{struct_s_e_q_u_e_n_c_e_a1a1289316feaf01165a558425cd0eb0e}
-
+u8 \hyperlink{struct_s_e_q_u_e_n_c_e_a1a1289316feaf01165a558425cd0eb0e}{transpose} \mbox{[}NB\_\-BLOCKS\_\-IN\_\-SEQUENCE\mbox{]}
 \end{DoxyCompactItemize}
 
+
+\subsection{Description détaillée}
+Une séquence contient un certain nombre de blocks. 
+
+\subsection{Documentation des champs}
+\hypertarget{struct_s_e_q_u_e_n_c_e_a3fdcd2dd1a30726b67f6e843572fc843}{
+\index{SEQUENCE@{SEQUENCE}!blocks@{blocks}}
+\index{blocks@{blocks}!SEQUENCE@{SEQUENCE}}
+\subsubsection[{blocks}]{\setlength{\rightskip}{0pt plus 5cm}u8 {\bf blocks}\mbox{[}NB\_\-BLOCKS\_\-IN\_\-SEQUENCE\mbox{]}}}
+\label{struct_s_e_q_u_e_n_c_e_a3fdcd2dd1a30726b67f6e843572fc843}
+Un tableau contenant des numéros de blocks. \hypertarget{struct_s_e_q_u_e_n_c_e_a1a1289316feaf01165a558425cd0eb0e}{
+\index{SEQUENCE@{SEQUENCE}!transpose@{transpose}}
+\index{transpose@{transpose}!SEQUENCE@{SEQUENCE}}
+\subsubsection[{transpose}]{\setlength{\rightskip}{0pt plus 5cm}u8 {\bf transpose}\mbox{[}NB\_\-BLOCKS\_\-IN\_\-SEQUENCE\mbox{]}}}
+\label{struct_s_e_q_u_e_n_c_e_a1a1289316feaf01165a558425cd0eb0e}
+Chaque block peut être transposé: on stocke la valeur de transpose ici. On ne peut pas la stocker dans \hyperlink{struct_b_l_o_c_k}{BLOCK}, car cela ne permettrait qu'une seule transposition par block. Ici, un block peut être transposé avec telle valeur dans une séquence et telle autre valeur dans une autre séquence. De même, au sein de la même séquence, on peut ainsi transposer différemment chacun des blocks présent. 
 
 La documentation de cette structure a été générée à partir du fichier suivant :\begin{DoxyCompactItemize}
 \item 

@@ -43,81 +43,116 @@
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Structures de données</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_e_f_f_e_c_t.html">EFFECT</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Définit une commande.  <a href="struct_e_f_f_e_c_t.html#_details">Plus de détails...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_t_a_b_l_e.html">TABLE</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Définit une table d'effets: soit une liste de commandes.  <a href="struct_t_a_b_l_e.html#_details">Plus de détails...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_n_o_t_e.html">NOTE</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Définit une note.  <a href="struct_n_o_t_e.html#_details">Plus de détails...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_c_o_m_p_o_s_e_r.html">COMPOSER</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Définit les données pour le compositeur (écran de composition).  <a href="struct_c_o_m_p_o_s_e_r.html#_details">Plus de détails...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_b_l_o_c_k.html">BLOCK</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Un block représente une mesure et contient un nombre de notes définies.  <a href="struct_b_l_o_c_k.html#_details">Plus de détails...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_e_q_u_e_n_c_e.html">SEQUENCE</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Une séquence contient un certain nombre de blocks.  <a href="struct_s_e_q_u_e_n_c_e.html#_details">Plus de détails...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_c_h_a_n_n_e_l.html">CHANNEL</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Un channel représente une colonne de séquences: la GBA dispose de 6 channels.  <a href="struct_c_h_a_n_n_e_l.html#_details">Plus de détails...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_i_n_s_t_r_u_m_e_n_t.html">INSTRUMENT</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">L'instrument possède divers paramètres utiles pour modifier la sonorité d'une note: chaque note est attachée à un instrument.  <a href="struct_i_n_s_t_r_u_m_e_n_t.html#_details">Plus de détails...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_a_t.html">FAT</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Structure principale: stocke l'intégralité d'une track en cours de composition.  <a href="struct_f_a_t.html#_details">Plus de détails...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a81d08d166134e2779a6e3ff0bde5335f"></a><!-- doxytag: member="data.h::NB_MAX_SEQUENCES" ref="a81d08d166134e2779a6e3ff0bde5335f" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>NB_MAX_SEQUENCES</b>&nbsp;&nbsp;&nbsp;0x80</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a81d08d166134e2779a6e3ff0bde5335f">NB_MAX_SEQUENCES</a>&nbsp;&nbsp;&nbsp;0x80</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Nombre de séquences disponibles <b>au total</b> en mémoire. 0x80 = 128. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab03f7970bb45a47ddf343b166834e509"></a><!-- doxytag: member="data.h::NB_SEQUENCES_IN_ONE_CHANNEL" ref="ab03f7970bb45a47ddf343b166834e509" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>NB_SEQUENCES_IN_ONE_CHANNEL</b>&nbsp;&nbsp;&nbsp;0x40</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#ab03f7970bb45a47ddf343b166834e509">NB_SEQUENCES_IN_ONE_CHANNEL</a>&nbsp;&nbsp;&nbsp;0x40</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Nombre de séquences référençables par canal. 0x40 = 64. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a89e382c9cc3fc73a9c0efaffcecbb64e"></a><!-- doxytag: member="data.h::NB_MAX_BLOCKS" ref="a89e382c9cc3fc73a9c0efaffcecbb64e" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>NB_MAX_BLOCKS</b>&nbsp;&nbsp;&nbsp;0x70</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a89e382c9cc3fc73a9c0efaffcecbb64e">NB_MAX_BLOCKS</a>&nbsp;&nbsp;&nbsp;0x70</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Nombre de blocks disponibles <b>au total</b> en mémoire. 0x70 = 112. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab350644f5e4e61b86453bfb738933657"></a><!-- doxytag: member="data.h::NB_MAX_INSTRUMENTS" ref="ab350644f5e4e61b86453bfb738933657" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>NB_MAX_INSTRUMENTS</b>&nbsp;&nbsp;&nbsp;0x3f</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#ab350644f5e4e61b86453bfb738933657">NB_MAX_INSTRUMENTS</a>&nbsp;&nbsp;&nbsp;0x3f</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Nombre d'instruments disponibles <b>au total</b> en mémoire. 0x3f = 63. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3cc691908434e6f1df8fe855b80c4b47"></a><!-- doxytag: member="data.h::NB_MAX_TABLES" ref="a3cc691908434e6f1df8fe855b80c4b47" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>NB_MAX_TABLES</b>&nbsp;&nbsp;&nbsp;0xF</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a3cc691908434e6f1df8fe855b80c4b47">NB_MAX_TABLES</a>&nbsp;&nbsp;&nbsp;0xF</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Nombre de tables disponibles <b>au total</b> en mémoire. 0xf = 15. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7fde9b5c26612acc0ea98d451d1385e2"></a><!-- doxytag: member="data.h::NB_NOTES_IN_ONE_BLOCK" ref="a7fde9b5c26612acc0ea98d451d1385e2" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>NB_NOTES_IN_ONE_BLOCK</b>&nbsp;&nbsp;&nbsp;16</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a7fde9b5c26612acc0ea98d451d1385e2">NB_NOTES_IN_ONE_BLOCK</a>&nbsp;&nbsp;&nbsp;16</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Nombre de notes dans un block (une mesure). <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa02724a155deb55b10d8769cf7f40d3b"></a><!-- doxytag: member="data.h::NB_BLOCKS_IN_SEQUENCE" ref="aa02724a155deb55b10d8769cf7f40d3b" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>NB_BLOCKS_IN_SEQUENCE</b>&nbsp;&nbsp;&nbsp;16</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#aa02724a155deb55b10d8769cf7f40d3b">NB_BLOCKS_IN_SEQUENCE</a>&nbsp;&nbsp;&nbsp;16</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Nombre de blocks (mesures) dans une séquence (pattern). <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adaff2eb859d55d08f87b994a9d13f964"></a><!-- doxytag: member="data.h::NB_EFFECTS_IN_ONE_TABLE" ref="adaff2eb859d55d08f87b994a9d13f964" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>NB_EFFECTS_IN_ONE_TABLE</b>&nbsp;&nbsp;&nbsp;16</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#adaff2eb859d55d08f87b994a9d13f964">NB_EFFECTS_IN_ONE_TABLE</a>&nbsp;&nbsp;&nbsp;16</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Nombre d'effets référençables par table. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0076ea1d8acf02060b1b55ca71e943f7"></a><!-- doxytag: member="data.h::MIN_OCTAVE" ref="a0076ea1d8acf02060b1b55ca71e943f7" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>MIN_OCTAVE</b>&nbsp;&nbsp;&nbsp;3</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a0076ea1d8acf02060b1b55ca71e943f7">MIN_OCTAVE</a>&nbsp;&nbsp;&nbsp;3</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Octave minimale pour une note. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a014ef7bb141b556358a7dc8e470709e1"></a><!-- doxytag: member="data.h::MAX_OCTAVE" ref="a014ef7bb141b556358a7dc8e470709e1" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>MAX_OCTAVE</b>&nbsp;&nbsp;&nbsp;8</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a014ef7bb141b556358a7dc8e470709e1">MAX_OCTAVE</a>&nbsp;&nbsp;&nbsp;8</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Octave maximale pour une note. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6c756e83c3b7e8e647d9c062233a3fd2"></a><!-- doxytag: member="data.h::NB_NOTE" ref="a6c756e83c3b7e8e647d9c062233a3fd2" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>NB_NOTE</b>&nbsp;&nbsp;&nbsp;12</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a6c756e83c3b7e8e647d9c062233a3fd2">NB_NOTE</a>&nbsp;&nbsp;&nbsp;12</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Nombre total de notes disponibles: de C à B (notation anglo-saxonne). <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abdab37520b9d4b3dc59f7a27f28adbb7"></a><!-- doxytag: member="data.h::SONG_NAME_MAX_LETTERS" ref="abdab37520b9d4b3dc59f7a27f28adbb7" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>SONG_NAME_MAX_LETTERS</b>&nbsp;&nbsp;&nbsp;9</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#abdab37520b9d4b3dc59f7a27f28adbb7">SONG_NAME_MAX_LETTERS</a>&nbsp;&nbsp;&nbsp;9</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Taille maximale pour le nom d'une chanson. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a77502820e6444460e84d982d3010a968"></a><!-- doxytag: member="data.h::INSTRUMENT_TYPE_PULSE" ref="a77502820e6444460e84d982d3010a968" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>INSTRUMENT_TYPE_PULSE</b>&nbsp;&nbsp;&nbsp;0</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a77502820e6444460e84d982d3010a968">INSTRUMENT_TYPE_PULSE</a>&nbsp;&nbsp;&nbsp;0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Type d'instrument PULSE 1. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac13d41af9df01e91bd768c3ddc570e60"></a><!-- doxytag: member="data.h::INSTRUMENT_TYPE_PULSE2" ref="ac13d41af9df01e91bd768c3ddc570e60" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>INSTRUMENT_TYPE_PULSE2</b>&nbsp;&nbsp;&nbsp;1</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#ac13d41af9df01e91bd768c3ddc570e60">INSTRUMENT_TYPE_PULSE2</a>&nbsp;&nbsp;&nbsp;1</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Type d'instrument PULSE 2. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aac311da3d084f6027ac99da075e404b6"></a><!-- doxytag: member="data.h::INSTRUMENT_TYPE_WAVE" ref="aac311da3d084f6027ac99da075e404b6" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>INSTRUMENT_TYPE_WAVE</b>&nbsp;&nbsp;&nbsp;2</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#aac311da3d084f6027ac99da075e404b6">INSTRUMENT_TYPE_WAVE</a>&nbsp;&nbsp;&nbsp;2</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Type d'instrument WAVE. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac6907eb7f5bdf02c7a04f5f5e0370f25"></a><!-- doxytag: member="data.h::INSTRUMENT_TYPE_NOISE" ref="ac6907eb7f5bdf02c7a04f5f5e0370f25" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>INSTRUMENT_TYPE_NOISE</b>&nbsp;&nbsp;&nbsp;3</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#ac6907eb7f5bdf02c7a04f5f5e0370f25">INSTRUMENT_TYPE_NOISE</a>&nbsp;&nbsp;&nbsp;3</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Type d'instrument NOISE. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7dd438b73eda546c95c07c14490ac600"></a><!-- doxytag: member="data.h::INSTRUMENT_TYPE_SAMPLEA" ref="a7dd438b73eda546c95c07c14490ac600" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>INSTRUMENT_TYPE_SAMPLEA</b>&nbsp;&nbsp;&nbsp;4</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a7dd438b73eda546c95c07c14490ac600">INSTRUMENT_TYPE_SAMPLEA</a>&nbsp;&nbsp;&nbsp;4</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Type d'instrument SAMPLE A. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a47c0de160c778f524431c84b1c86987e"></a><!-- doxytag: member="data.h::INSTRUMENT_TYPE_SAMPLEB" ref="a47c0de160c778f524431c84b1c86987e" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>INSTRUMENT_TYPE_SAMPLEB</b>&nbsp;&nbsp;&nbsp;5</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a47c0de160c778f524431c84b1c86987e">INSTRUMENT_TYPE_SAMPLEB</a>&nbsp;&nbsp;&nbsp;5</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Type d'instrument SAMPLE B. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a49cc08d44311888478381eef3f9179c4"></a><!-- doxytag: member="data.h::INSTRUMENT_PULSE_VOLUME_MAX" ref="a49cc08d44311888478381eef3f9179c4" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>INSTRUMENT_PULSE_VOLUME_MAX</b>&nbsp;&nbsp;&nbsp;16</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a49cc08d44311888478381eef3f9179c4">INSTRUMENT_PULSE_VOLUME_MAX</a>&nbsp;&nbsp;&nbsp;16</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Valeur de volume maximum pour un instrument de type PULSE. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9ea9d824a108faa4fb7fc9b620ffe16e"></a><!-- doxytag: member="data.h::INSTRUMENT_PULSE_WAVE_MAX" ref="a9ea9d824a108faa4fb7fc9b620ffe16e" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>INSTRUMENT_PULSE_WAVE_MAX</b>&nbsp;&nbsp;&nbsp;4</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a9ea9d824a108faa4fb7fc9b620ffe16e">INSTRUMENT_PULSE_WAVE_MAX</a>&nbsp;&nbsp;&nbsp;4</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Valeur de "wave" maximum pour un instrument de type PULSE. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae567a6a1a8e49a0f7a1afcc5e253816a"></a><!-- doxytag: member="data.h::INSTRUMENT_PULSE_STEPTIME_MAX" ref="ae567a6a1a8e49a0f7a1afcc5e253816a" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>INSTRUMENT_PULSE_STEPTIME_MAX</b>&nbsp;&nbsp;&nbsp;8</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#ae567a6a1a8e49a0f7a1afcc5e253816a">INSTRUMENT_PULSE_STEPTIME_MAX</a>&nbsp;&nbsp;&nbsp;8</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Valeur de "steptime" maximum pour un instrument de type PULSE. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab44bfda58157444cc7f498ce87a5c684"></a><!-- doxytag: member="data.h::INSTRUMENT_PULSE_LENGTH_MAX" ref="ab44bfda58157444cc7f498ce87a5c684" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>INSTRUMENT_PULSE_LENGTH_MAX</b>&nbsp;&nbsp;&nbsp;64</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#ab44bfda58157444cc7f498ce87a5c684">INSTRUMENT_PULSE_LENGTH_MAX</a>&nbsp;&nbsp;&nbsp;64</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Valeur de "soundlength" maximum pour un instrument de type PULSE. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaf607e37e5c7ea0749cc05486812532c"></a><!-- doxytag: member="data.h::INSTRUMENT_PULSE_SWEEP_MAX" ref="aaf607e37e5c7ea0749cc05486812532c" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>INSTRUMENT_PULSE_SWEEP_MAX</b>&nbsp;&nbsp;&nbsp;128</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#aaf607e37e5c7ea0749cc05486812532c">INSTRUMENT_PULSE_SWEEP_MAX</a>&nbsp;&nbsp;&nbsp;128</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Valeur de "sweep" maximum pour un instrument de type PULSE. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aba5d18090f5c80c91af87a65a7309ec7"></a><!-- doxytag: member="data.h::INSTRUMENT_WAVE_VOLUME_MAX" ref="aba5d18090f5c80c91af87a65a7309ec7" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>INSTRUMENT_WAVE_VOLUME_MAX</b>&nbsp;&nbsp;&nbsp;5</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#aba5d18090f5c80c91af87a65a7309ec7">INSTRUMENT_WAVE_VOLUME_MAX</a>&nbsp;&nbsp;&nbsp;5</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Valeur de volume maximum pour un instrument de type WAVE. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2548285698759b7a4605486fdd277699"></a><!-- doxytag: member="data.h::INSTRUMENT_WAVE_LENGTH_MAX" ref="a2548285698759b7a4605486fdd277699" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>INSTRUMENT_WAVE_LENGTH_MAX</b>&nbsp;&nbsp;&nbsp;256</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a2548285698759b7a4605486fdd277699">INSTRUMENT_WAVE_LENGTH_MAX</a>&nbsp;&nbsp;&nbsp;256</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Valeur de "soundlength" maximum pour un instrument de type WAVE. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5a361d4dd2353645ffc47f3588a4eff3"></a><!-- doxytag: member="data.h::INSTRUMENT_WAVE_NB_VOICE" ref="a5a361d4dd2353645ffc47f3588a4eff3" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>INSTRUMENT_WAVE_NB_VOICE</b>&nbsp;&nbsp;&nbsp;0x18</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a85a56d0b81304e9e20156e17a4bb7e3c"></a><!-- doxytag: member="data.h::NB_MAX_TRANSPOSE" ref="a85a56d0b81304e9e20156e17a4bb7e3c" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>NB_MAX_TRANSPOSE</b>&nbsp;&nbsp;&nbsp;256</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a5a361d4dd2353645ffc47f3588a4eff3">INSTRUMENT_WAVE_NB_VOICE</a>&nbsp;&nbsp;&nbsp;0x18</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Nombre de voix disponibles pour un instrument de type WAVE. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a532d6a86cc3829102e78edc2b13a4eb7"></a><!-- doxytag: member="data.h::MAX_TEMPO" ref="a532d6a86cc3829102e78edc2b13a4eb7" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>MAX_TEMPO</b>&nbsp;&nbsp;&nbsp;255</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a532d6a86cc3829102e78edc2b13a4eb7">MAX_TEMPO</a>&nbsp;&nbsp;&nbsp;255</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tempo maximal. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adbe81c23743f9f00700c5551b1400737"></a><!-- doxytag: member="data.h::MAX_TRANSPOSE" ref="adbe81c23743f9f00700c5551b1400737" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>MAX_TRANSPOSE</b>&nbsp;&nbsp;&nbsp;256</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#adbe81c23743f9f00700c5551b1400737">MAX_TRANSPOSE</a>&nbsp;&nbsp;&nbsp;256</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Valeur de transposition maximale. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#aff0fa3a7735ac0218d293d0ee2b8f12e">NULL_VALUE</a>&nbsp;&nbsp;&nbsp;0xff</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa70974af2906cc78c114d0ced19bfea7"></a><!-- doxytag: member="data.h::NULL_VALUE_u16" ref="aa70974af2906cc78c114d0ced19bfea7" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>NULL_VALUE_u16</b>&nbsp;&nbsp;&nbsp;0xffff</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">NULL_VALUE représente la valeur "interdite".  <a href="#aff0fa3a7735ac0218d293d0ee2b8f12e"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad90c589ed12dfc46a900846aea2813a8"></a><!-- doxytag: member="data.h::GAMEPAK_RAM" ref="ad90c589ed12dfc46a900846aea2813a8" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>GAMEPAK_RAM</b>&nbsp;&nbsp;&nbsp;((u8*)0x0E000000)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a14d7e791a2b533c485847a23738a05f1"></a><!-- doxytag: member="data.h::NB_FREQUENCES" ref="a14d7e791a2b533c485847a23738a05f1" args="" -->
-#define&nbsp;</td><td class="memItemRight" valign="bottom"><b>NB_FREQUENCES</b>&nbsp;&nbsp;&nbsp;72</td></tr>
+#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#ad90c589ed12dfc46a900846aea2813a8">GAMEPAK_RAM</a>&nbsp;&nbsp;&nbsp;((u8*)0x0E000000)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Addresse vers la mémoire SRAM (la mémoire pour la sauvegarde). <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a14d7e791a2b533c485847a23738a05f1">NB_FREQUENCES</a>&nbsp;&nbsp;&nbsp;72</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Nombre total de fréquences de notes.  <a href="#a14d7e791a2b533c485847a23738a05f1"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="typedef-members"></a>
 Définition de type</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a276aa8e6c8a0fc2f08faa56c28294b93"></a><!-- doxytag: member="data.h::effect" ref="a276aa8e6c8a0fc2f08faa56c28294b93" args="" -->
@@ -267,22 +302,31 @@ void&nbsp;</td><td class="memItemRight" valign="bottom"><b>FAT_data_project_load
 <tr><td colspan="2"><h2><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad3a7f4d567fa428c8696f6c3aa07b4d7"></a><!-- doxytag: member="data.h::pSaveMemory" ref="ad3a7f4d567fa428c8696f6c3aa07b4d7" args="" -->
-u8 *&nbsp;</td><td class="memItemRight" valign="bottom"><b>pSaveMemory</b> = GAMEPAK_RAM</td></tr>
+u8 *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#ad3a7f4d567fa428c8696f6c3aa07b4d7">pSaveMemory</a> = GAMEPAK_RAM</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pointeur vers la mémoire SRAM. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2d022bd059f9e0170675ea90d275c138"></a><!-- doxytag: member="data.h::noteName" ref="a2d022bd059f9e0170675ea90d275c138" args="[NB_NOTE]" -->
-const char *&nbsp;</td><td class="memItemRight" valign="bottom"><b>noteName</b> [NB_NOTE] = {&quot;C &quot;, &quot;C\&quot;&quot;, &quot;D &quot;, &quot;D\&quot;&quot;, &quot;E &quot;, &quot;F &quot;, &quot;F\&quot;&quot;, &quot;G &quot;, &quot;G\&quot;&quot;, &quot;A &quot;, &quot;A\&quot;&quot;, &quot;B &quot;}</td></tr>
+const char *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a2d022bd059f9e0170675ea90d275c138">noteName</a> [NB_NOTE] = {&quot;C &quot;, &quot;C\&quot;&quot;, &quot;D &quot;, &quot;D\&quot;&quot;, &quot;E &quot;, &quot;F &quot;, &quot;F\&quot;&quot;, &quot;G &quot;, &quot;G\&quot;&quot;, &quot;A &quot;, &quot;A\&quot;&quot;, &quot;B &quot;}</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tableau constant contenant toutes les notes sous formes de chaînes de caractères. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5e3d8aa3d807546927ebbfa7879dd1db"></a><!-- doxytag: member="data.h::FAT_data_lastNoteWritten" ref="a5e3d8aa3d807546927ebbfa7879dd1db" args="" -->
-<a class="el" href="struct_n_o_t_e.html">note</a>&nbsp;</td><td class="memItemRight" valign="bottom"><b>FAT_data_lastNoteWritten</b></td></tr>
+<a class="el" href="struct_n_o_t_e.html">note</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a5e3d8aa3d807546927ebbfa7879dd1db">FAT_data_lastNoteWritten</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Espace mémoire contenant la dernière note écrite. Par défaut, cette note est initialisée à "C 3". <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a91d93754507a9274b4bce3973f1934e6"></a><!-- doxytag: member="data.h::FAT_data_noteClipboard" ref="a91d93754507a9274b4bce3973f1934e6" args="" -->
-<a class="el" href="struct_n_o_t_e.html">note</a>&nbsp;</td><td class="memItemRight" valign="bottom"><b>FAT_data_noteClipboard</b></td></tr>
+<a class="el" href="struct_n_o_t_e.html">note</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a91d93754507a9274b4bce3973f1934e6">FAT_data_noteClipboard</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Presse-papier pour couper/coller une note. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a033bebb4e82a9ed24921852768cf2f56"></a><!-- doxytag: member="data.h::FAT_data_lastBlockWritten" ref="a033bebb4e82a9ed24921852768cf2f56" args="" -->
-u8&nbsp;</td><td class="memItemRight" valign="bottom"><b>FAT_data_lastBlockWritten</b></td></tr>
+u8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a033bebb4e82a9ed24921852768cf2f56">FAT_data_lastBlockWritten</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Cette variable permet de stocker le dernier numéro de block écrit. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a91635c0b8ca5a274b3234df8e5ae8882"></a><!-- doxytag: member="data.h::FAT_data_blockClipboard" ref="a91635c0b8ca5a274b3234df8e5ae8882" args="" -->
-u8&nbsp;</td><td class="memItemRight" valign="bottom"><b>FAT_data_blockClipboard</b></td></tr>
+u8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a91635c0b8ca5a274b3234df8e5ae8882">FAT_data_blockClipboard</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Presse-papier pour couper/coller des numéros de blocks. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8acfd82747910b7fcc1f3842698b6cd1"></a><!-- doxytag: member="data.h::FAT_data_lastSequenceWritten" ref="a8acfd82747910b7fcc1f3842698b6cd1" args="" -->
-u8&nbsp;</td><td class="memItemRight" valign="bottom"><b>FAT_data_lastSequenceWritten</b></td></tr>
+u8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a8acfd82747910b7fcc1f3842698b6cd1">FAT_data_lastSequenceWritten</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Stocke le dernier numéro de séquence écrit. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aac335934a0a8316cdd431fdcabd9e3ed"></a><!-- doxytag: member="data.h::FAT_data_sequenceClipboard" ref="aac335934a0a8316cdd431fdcabd9e3ed" args="" -->
-u8&nbsp;</td><td class="memItemRight" valign="bottom"><b>FAT_data_sequenceClipboard</b></td></tr>
+u8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#aac335934a0a8316cdd431fdcabd9e3ed">FAT_data_sequenceClipboard</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Presse-papier pour couper/coller des séquences. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_f_a_t.html">tracker</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Contient toutes les données déjà instanciées.  <a href="#a18f87e57411357f0660f039aab83e970"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">u8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#ad764827cb4504c9e21df31cc39426247">FAT_nextAvailableSequenceId</a> = 0</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acb50319888a516349008c986f1d2bca9"></a><!-- doxytag: member="data.h::FAT_nextAvailableBlockId" ref="acb50319888a516349008c986f1d2bca9" args="" -->
 u8&nbsp;</td><td class="memItemRight" valign="bottom"><b>FAT_nextAvailableBlockId</b> = 0</td></tr>
@@ -295,6 +339,22 @@ u8&nbsp;</td><td class="memItemRight" valign="bottom"><b>FAT_lastUsedInstrumentI
 <p>Ce fichier contient toutes les définitions des types de données et autres structures. </p>
 <p>Il contient également un set de fonctions utiles pour les modifications et récupérations sur toutes les données techniques du tracker. </p>
 <hr/><h2>Documentation des macros</h2>
+<a class="anchor" id="a14d7e791a2b533c485847a23738a05f1"></a><!-- doxytag: member="data.h::NB_FREQUENCES" ref="a14d7e791a2b533c485847a23738a05f1" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NB_FREQUENCES&nbsp;&nbsp;&nbsp;72</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Nombre total de fréquences de notes. </p>
+<p>F(Hz)=4194304/(32*(2048-register value)). The minimum frequency is 64Hz and the maximum is 131Khz. Voir <a href="http://jeanjacques.dialo.free.fr/frequenc.htm">http://jeanjacques.dialo.free.fr/frequenc.htm</a> </p>
+
+</div>
+</div>
 <a class="anchor" id="aff0fa3a7735ac0218d293d0ee2b8f12e"></a><!-- doxytag: member="data.h::NULL_VALUE" ref="aff0fa3a7735ac0218d293d0ee2b8f12e" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -305,7 +365,9 @@ u8&nbsp;</td><td class="memItemRight" valign="bottom"><b>FAT_lastUsedInstrumentI
       </table>
 </div>
 <div class="memdoc">
-<p>NULL_VALUE représente la valeur "interdite". Au démarrage de l'appli, toutes les données dans FAT_tracker sont initialisées avec NULL_VALUE. NE PAS TOUCHER ! </p>
+
+<p>NULL_VALUE représente la valeur "interdite". </p>
+<p>Au démarrage de l'appli, toutes les données dans FAT_tracker sont initialisées avec NULL_VALUE. <b>NE PAS TOUCHER !</b> </p>
 
 </div>
 </div>
@@ -1146,12 +1208,14 @@ u8&nbsp;</td><td class="memItemRight" valign="bottom"><b>FAT_lastUsedInstrumentI
       </table>
 </div>
 <div class="memdoc">
-<p>Contient toutes les données déjà instanciées. C'est cette variable qui est utilisée (écrite sur la ram) lors de la sauvegarde et vice versa pour le chargement. </p>
+
+<p>Contient toutes les données déjà instanciées. </p>
+<p>C'est cette variable qui est utilisée (écrite sur la ram) lors de la sauvegarde et vice versa pour le chargement. </p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 17:22:49 pour FAT FuriousAdvanceTracker par&nbsp;
+<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 18:27:21 pour FAT FuriousAdvanceTracker par&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

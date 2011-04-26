@@ -11,188 +11,175 @@ Ce fichier contient toutes les définitions des types de données et autres stru
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{struct_e_f_f_e_c_t}{EFFECT}
-\item 
+\begin{DoxyCompactList}\small\item\em Définit une commande. \item\end{DoxyCompactList}\item 
 struct \hyperlink{struct_t_a_b_l_e}{TABLE}
-\item 
+\begin{DoxyCompactList}\small\item\em Définit une table d'effets: soit une liste de commandes. \item\end{DoxyCompactList}\item 
 struct \hyperlink{struct_n_o_t_e}{NOTE}
-\item 
+\begin{DoxyCompactList}\small\item\em Définit une note. \item\end{DoxyCompactList}\item 
 struct \hyperlink{struct_c_o_m_p_o_s_e_r}{COMPOSER}
-\item 
+\begin{DoxyCompactList}\small\item\em Définit les données pour le compositeur (écran de composition). \item\end{DoxyCompactList}\item 
 struct \hyperlink{struct_b_l_o_c_k}{BLOCK}
-\item 
+\begin{DoxyCompactList}\small\item\em Un block représente une mesure et contient un nombre de notes définies. \item\end{DoxyCompactList}\item 
 struct \hyperlink{struct_s_e_q_u_e_n_c_e}{SEQUENCE}
-\item 
+\begin{DoxyCompactList}\small\item\em Une séquence contient un certain nombre de blocks. \item\end{DoxyCompactList}\item 
 struct \hyperlink{struct_c_h_a_n_n_e_l}{CHANNEL}
-\item 
+\begin{DoxyCompactList}\small\item\em Un channel représente une colonne de séquences: la GBA dispose de 6 channels. \item\end{DoxyCompactList}\item 
 struct \hyperlink{struct_i_n_s_t_r_u_m_e_n_t}{INSTRUMENT}
-\item 
+\begin{DoxyCompactList}\small\item\em L'instrument possède divers paramètres utiles pour modifier la sonorité d'une note: chaque note est attachée à un instrument. \item\end{DoxyCompactList}\item 
 struct \hyperlink{struct_f_a_t}{FAT}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Structure principale: stocke l'intégralité d'une track en cours de composition. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \hypertarget{data_8h_a81d08d166134e2779a6e3ff0bde5335f}{
-\#define {\bfseries NB\_\-MAX\_\-SEQUENCES}~0x80}
+\#define \hyperlink{data_8h_a81d08d166134e2779a6e3ff0bde5335f}{NB\_\-MAX\_\-SEQUENCES}~0x80}
 \label{data_8h_a81d08d166134e2779a6e3ff0bde5335f}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Nombre de séquences disponibles {\bfseries au total} en mémoire. 0x80 = 128. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_ab03f7970bb45a47ddf343b166834e509}{
-\#define {\bfseries NB\_\-SEQUENCES\_\-IN\_\-ONE\_\-CHANNEL}~0x40}
+\#define \hyperlink{data_8h_ab03f7970bb45a47ddf343b166834e509}{NB\_\-SEQUENCES\_\-IN\_\-ONE\_\-CHANNEL}~0x40}
 \label{data_8h_ab03f7970bb45a47ddf343b166834e509}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Nombre de séquences référençables par canal. 0x40 = 64. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a89e382c9cc3fc73a9c0efaffcecbb64e}{
-\#define {\bfseries NB\_\-MAX\_\-BLOCKS}~0x70}
+\#define \hyperlink{data_8h_a89e382c9cc3fc73a9c0efaffcecbb64e}{NB\_\-MAX\_\-BLOCKS}~0x70}
 \label{data_8h_a89e382c9cc3fc73a9c0efaffcecbb64e}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Nombre de blocks disponibles {\bfseries au total} en mémoire. 0x70 = 112. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_ab350644f5e4e61b86453bfb738933657}{
-\#define {\bfseries NB\_\-MAX\_\-INSTRUMENTS}~0x3f}
+\#define \hyperlink{data_8h_ab350644f5e4e61b86453bfb738933657}{NB\_\-MAX\_\-INSTRUMENTS}~0x3f}
 \label{data_8h_ab350644f5e4e61b86453bfb738933657}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Nombre d'instruments disponibles {\bfseries au total} en mémoire. 0x3f = 63. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a3cc691908434e6f1df8fe855b80c4b47}{
-\#define {\bfseries NB\_\-MAX\_\-TABLES}~0xF}
+\#define \hyperlink{data_8h_a3cc691908434e6f1df8fe855b80c4b47}{NB\_\-MAX\_\-TABLES}~0xF}
 \label{data_8h_a3cc691908434e6f1df8fe855b80c4b47}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Nombre de tables disponibles {\bfseries au total} en mémoire. 0xf = 15. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a7fde9b5c26612acc0ea98d451d1385e2}{
-\#define {\bfseries NB\_\-NOTES\_\-IN\_\-ONE\_\-BLOCK}~16}
+\#define \hyperlink{data_8h_a7fde9b5c26612acc0ea98d451d1385e2}{NB\_\-NOTES\_\-IN\_\-ONE\_\-BLOCK}~16}
 \label{data_8h_a7fde9b5c26612acc0ea98d451d1385e2}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Nombre de notes dans un block (une mesure). \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_aa02724a155deb55b10d8769cf7f40d3b}{
-\#define {\bfseries NB\_\-BLOCKS\_\-IN\_\-SEQUENCE}~16}
+\#define \hyperlink{data_8h_aa02724a155deb55b10d8769cf7f40d3b}{NB\_\-BLOCKS\_\-IN\_\-SEQUENCE}~16}
 \label{data_8h_aa02724a155deb55b10d8769cf7f40d3b}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Nombre de blocks (mesures) dans une séquence (pattern). \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_adaff2eb859d55d08f87b994a9d13f964}{
-\#define {\bfseries NB\_\-EFFECTS\_\-IN\_\-ONE\_\-TABLE}~16}
+\#define \hyperlink{data_8h_adaff2eb859d55d08f87b994a9d13f964}{NB\_\-EFFECTS\_\-IN\_\-ONE\_\-TABLE}~16}
 \label{data_8h_adaff2eb859d55d08f87b994a9d13f964}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Nombre d'effets référençables par table. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a0076ea1d8acf02060b1b55ca71e943f7}{
-\#define {\bfseries MIN\_\-OCTAVE}~3}
+\#define \hyperlink{data_8h_a0076ea1d8acf02060b1b55ca71e943f7}{MIN\_\-OCTAVE}~3}
 \label{data_8h_a0076ea1d8acf02060b1b55ca71e943f7}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Octave minimale pour une note. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a014ef7bb141b556358a7dc8e470709e1}{
-\#define {\bfseries MAX\_\-OCTAVE}~8}
+\#define \hyperlink{data_8h_a014ef7bb141b556358a7dc8e470709e1}{MAX\_\-OCTAVE}~8}
 \label{data_8h_a014ef7bb141b556358a7dc8e470709e1}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Octave maximale pour une note. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a6c756e83c3b7e8e647d9c062233a3fd2}{
-\#define {\bfseries NB\_\-NOTE}~12}
+\#define \hyperlink{data_8h_a6c756e83c3b7e8e647d9c062233a3fd2}{NB\_\-NOTE}~12}
 \label{data_8h_a6c756e83c3b7e8e647d9c062233a3fd2}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Nombre total de notes disponibles: de C à B (notation anglo-\/saxonne). \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_abdab37520b9d4b3dc59f7a27f28adbb7}{
-\#define {\bfseries SONG\_\-NAME\_\-MAX\_\-LETTERS}~9}
+\#define \hyperlink{data_8h_abdab37520b9d4b3dc59f7a27f28adbb7}{SONG\_\-NAME\_\-MAX\_\-LETTERS}~9}
 \label{data_8h_abdab37520b9d4b3dc59f7a27f28adbb7}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Taille maximale pour le nom d'une chanson. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a77502820e6444460e84d982d3010a968}{
-\#define {\bfseries INSTRUMENT\_\-TYPE\_\-PULSE}~0}
+\#define \hyperlink{data_8h_a77502820e6444460e84d982d3010a968}{INSTRUMENT\_\-TYPE\_\-PULSE}~0}
 \label{data_8h_a77502820e6444460e84d982d3010a968}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Type d'instrument PULSE 1. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_ac13d41af9df01e91bd768c3ddc570e60}{
-\#define {\bfseries INSTRUMENT\_\-TYPE\_\-PULSE2}~1}
+\#define \hyperlink{data_8h_ac13d41af9df01e91bd768c3ddc570e60}{INSTRUMENT\_\-TYPE\_\-PULSE2}~1}
 \label{data_8h_ac13d41af9df01e91bd768c3ddc570e60}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Type d'instrument PULSE 2. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_aac311da3d084f6027ac99da075e404b6}{
-\#define {\bfseries INSTRUMENT\_\-TYPE\_\-WAVE}~2}
+\#define \hyperlink{data_8h_aac311da3d084f6027ac99da075e404b6}{INSTRUMENT\_\-TYPE\_\-WAVE}~2}
 \label{data_8h_aac311da3d084f6027ac99da075e404b6}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Type d'instrument WAVE. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_ac6907eb7f5bdf02c7a04f5f5e0370f25}{
-\#define {\bfseries INSTRUMENT\_\-TYPE\_\-NOISE}~3}
+\#define \hyperlink{data_8h_ac6907eb7f5bdf02c7a04f5f5e0370f25}{INSTRUMENT\_\-TYPE\_\-NOISE}~3}
 \label{data_8h_ac6907eb7f5bdf02c7a04f5f5e0370f25}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Type d'instrument NOISE. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a7dd438b73eda546c95c07c14490ac600}{
-\#define {\bfseries INSTRUMENT\_\-TYPE\_\-SAMPLEA}~4}
+\#define \hyperlink{data_8h_a7dd438b73eda546c95c07c14490ac600}{INSTRUMENT\_\-TYPE\_\-SAMPLEA}~4}
 \label{data_8h_a7dd438b73eda546c95c07c14490ac600}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Type d'instrument SAMPLE A. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a47c0de160c778f524431c84b1c86987e}{
-\#define {\bfseries INSTRUMENT\_\-TYPE\_\-SAMPLEB}~5}
+\#define \hyperlink{data_8h_a47c0de160c778f524431c84b1c86987e}{INSTRUMENT\_\-TYPE\_\-SAMPLEB}~5}
 \label{data_8h_a47c0de160c778f524431c84b1c86987e}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Type d'instrument SAMPLE B. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a49cc08d44311888478381eef3f9179c4}{
-\#define {\bfseries INSTRUMENT\_\-PULSE\_\-VOLUME\_\-MAX}~16}
+\#define \hyperlink{data_8h_a49cc08d44311888478381eef3f9179c4}{INSTRUMENT\_\-PULSE\_\-VOLUME\_\-MAX}~16}
 \label{data_8h_a49cc08d44311888478381eef3f9179c4}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Valeur de volume maximum pour un instrument de type PULSE. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a9ea9d824a108faa4fb7fc9b620ffe16e}{
-\#define {\bfseries INSTRUMENT\_\-PULSE\_\-WAVE\_\-MAX}~4}
+\#define \hyperlink{data_8h_a9ea9d824a108faa4fb7fc9b620ffe16e}{INSTRUMENT\_\-PULSE\_\-WAVE\_\-MAX}~4}
 \label{data_8h_a9ea9d824a108faa4fb7fc9b620ffe16e}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Valeur de \char`\"{}wave\char`\"{} maximum pour un instrument de type PULSE. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_ae567a6a1a8e49a0f7a1afcc5e253816a}{
-\#define {\bfseries INSTRUMENT\_\-PULSE\_\-STEPTIME\_\-MAX}~8}
+\#define \hyperlink{data_8h_ae567a6a1a8e49a0f7a1afcc5e253816a}{INSTRUMENT\_\-PULSE\_\-STEPTIME\_\-MAX}~8}
 \label{data_8h_ae567a6a1a8e49a0f7a1afcc5e253816a}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Valeur de \char`\"{}steptime\char`\"{} maximum pour un instrument de type PULSE. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_ab44bfda58157444cc7f498ce87a5c684}{
-\#define {\bfseries INSTRUMENT\_\-PULSE\_\-LENGTH\_\-MAX}~64}
+\#define \hyperlink{data_8h_ab44bfda58157444cc7f498ce87a5c684}{INSTRUMENT\_\-PULSE\_\-LENGTH\_\-MAX}~64}
 \label{data_8h_ab44bfda58157444cc7f498ce87a5c684}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Valeur de \char`\"{}soundlength\char`\"{} maximum pour un instrument de type PULSE. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_aaf607e37e5c7ea0749cc05486812532c}{
-\#define {\bfseries INSTRUMENT\_\-PULSE\_\-SWEEP\_\-MAX}~128}
+\#define \hyperlink{data_8h_aaf607e37e5c7ea0749cc05486812532c}{INSTRUMENT\_\-PULSE\_\-SWEEP\_\-MAX}~128}
 \label{data_8h_aaf607e37e5c7ea0749cc05486812532c}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Valeur de \char`\"{}sweep\char`\"{} maximum pour un instrument de type PULSE. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_aba5d18090f5c80c91af87a65a7309ec7}{
-\#define {\bfseries INSTRUMENT\_\-WAVE\_\-VOLUME\_\-MAX}~5}
+\#define \hyperlink{data_8h_aba5d18090f5c80c91af87a65a7309ec7}{INSTRUMENT\_\-WAVE\_\-VOLUME\_\-MAX}~5}
 \label{data_8h_aba5d18090f5c80c91af87a65a7309ec7}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Valeur de volume maximum pour un instrument de type WAVE. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a2548285698759b7a4605486fdd277699}{
-\#define {\bfseries INSTRUMENT\_\-WAVE\_\-LENGTH\_\-MAX}~256}
+\#define \hyperlink{data_8h_a2548285698759b7a4605486fdd277699}{INSTRUMENT\_\-WAVE\_\-LENGTH\_\-MAX}~256}
 \label{data_8h_a2548285698759b7a4605486fdd277699}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Valeur de \char`\"{}soundlength\char`\"{} maximum pour un instrument de type WAVE. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a5a361d4dd2353645ffc47f3588a4eff3}{
-\#define {\bfseries INSTRUMENT\_\-WAVE\_\-NB\_\-VOICE}~0x18}
+\#define \hyperlink{data_8h_a5a361d4dd2353645ffc47f3588a4eff3}{INSTRUMENT\_\-WAVE\_\-NB\_\-VOICE}~0x18}
 \label{data_8h_a5a361d4dd2353645ffc47f3588a4eff3}
 
-\item 
-\hypertarget{data_8h_a85a56d0b81304e9e20156e17a4bb7e3c}{
-\#define {\bfseries NB\_\-MAX\_\-TRANSPOSE}~256}
-\label{data_8h_a85a56d0b81304e9e20156e17a4bb7e3c}
-
-\item 
+\begin{DoxyCompactList}\small\item\em Nombre de voix disponibles pour un instrument de type WAVE. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a532d6a86cc3829102e78edc2b13a4eb7}{
-\#define {\bfseries MAX\_\-TEMPO}~255}
+\#define \hyperlink{data_8h_a532d6a86cc3829102e78edc2b13a4eb7}{MAX\_\-TEMPO}~255}
 \label{data_8h_a532d6a86cc3829102e78edc2b13a4eb7}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Tempo maximal. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_adbe81c23743f9f00700c5551b1400737}{
-\#define {\bfseries MAX\_\-TRANSPOSE}~256}
+\#define \hyperlink{data_8h_adbe81c23743f9f00700c5551b1400737}{MAX\_\-TRANSPOSE}~256}
 \label{data_8h_adbe81c23743f9f00700c5551b1400737}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Valeur de transposition maximale. \item\end{DoxyCompactList}\item 
 \#define \hyperlink{data_8h_aff0fa3a7735ac0218d293d0ee2b8f12e}{NULL\_\-VALUE}~0xff
-\item 
-\hypertarget{data_8h_aa70974af2906cc78c114d0ced19bfea7}{
-\#define {\bfseries NULL\_\-VALUE\_\-u16}~0xffff}
-\label{data_8h_aa70974af2906cc78c114d0ced19bfea7}
-
-\item 
+\begin{DoxyCompactList}\small\item\em NULL\_\-VALUE représente la valeur \char`\"{}interdite\char`\"{}. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_ad90c589ed12dfc46a900846aea2813a8}{
-\#define {\bfseries GAMEPAK\_\-RAM}~((u8$\ast$)0x0E000000)}
+\#define \hyperlink{data_8h_ad90c589ed12dfc46a900846aea2813a8}{GAMEPAK\_\-RAM}~((u8$\ast$)0x0E000000)}
 \label{data_8h_ad90c589ed12dfc46a900846aea2813a8}
 
-\item 
-\hypertarget{data_8h_a14d7e791a2b533c485847a23738a05f1}{
-\#define {\bfseries NB\_\-FREQUENCES}~72}
-\label{data_8h_a14d7e791a2b533c485847a23738a05f1}
-
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Addresse vers la mémoire SRAM (la mémoire pour la sauvegarde). \item\end{DoxyCompactList}\item 
+\#define \hyperlink{data_8h_a14d7e791a2b533c485847a23738a05f1}{NB\_\-FREQUENCES}~72
+\begin{DoxyCompactList}\small\item\em Nombre total de fréquences de notes. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Définition de type}
 \begin{DoxyCompactItemize}
 \item 
@@ -547,47 +534,47 @@ void {\bfseries FAT\_\-data\_\-project\_\-load} ()}
 \begin{DoxyCompactItemize}
 \item 
 \hypertarget{data_8h_ad3a7f4d567fa428c8696f6c3aa07b4d7}{
-u8 $\ast$ {\bfseries pSaveMemory} = GAMEPAK\_\-RAM}
+u8 $\ast$ \hyperlink{data_8h_ad3a7f4d567fa428c8696f6c3aa07b4d7}{pSaveMemory} = GAMEPAK\_\-RAM}
 \label{data_8h_ad3a7f4d567fa428c8696f6c3aa07b4d7}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Pointeur vers la mémoire SRAM. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a2d022bd059f9e0170675ea90d275c138}{
-const char $\ast$ {\bfseries noteName} \mbox{[}NB\_\-NOTE\mbox{]} = \{\char`\"{}C \char`\"{}, \char`\"{}C$\backslash$\char`\"{}\char`\"{}, \char`\"{}D \char`\"{}, \char`\"{}D$\backslash$\char`\"{}\char`\"{}, \char`\"{}E \char`\"{}, \char`\"{}F \char`\"{}, \char`\"{}F$\backslash$\char`\"{}\char`\"{}, \char`\"{}G \char`\"{}, \char`\"{}G$\backslash$\char`\"{}\char`\"{}, \char`\"{}A \char`\"{}, \char`\"{}A$\backslash$\char`\"{}\char`\"{}, \char`\"{}B \char`\"{}\}}
+const char $\ast$ \hyperlink{data_8h_a2d022bd059f9e0170675ea90d275c138}{noteName} \mbox{[}NB\_\-NOTE\mbox{]} = \{\char`\"{}C \char`\"{}, \char`\"{}C$\backslash$\char`\"{}\char`\"{}, \char`\"{}D \char`\"{}, \char`\"{}D$\backslash$\char`\"{}\char`\"{}, \char`\"{}E \char`\"{}, \char`\"{}F \char`\"{}, \char`\"{}F$\backslash$\char`\"{}\char`\"{}, \char`\"{}G \char`\"{}, \char`\"{}G$\backslash$\char`\"{}\char`\"{}, \char`\"{}A \char`\"{}, \char`\"{}A$\backslash$\char`\"{}\char`\"{}, \char`\"{}B \char`\"{}\}}
 \label{data_8h_a2d022bd059f9e0170675ea90d275c138}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Tableau constant contenant toutes les notes sous formes de chaînes de caractères. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a5e3d8aa3d807546927ebbfa7879dd1db}{
-\hyperlink{struct_n_o_t_e}{note} {\bfseries FAT\_\-data\_\-lastNoteWritten}}
+\hyperlink{struct_n_o_t_e}{note} \hyperlink{data_8h_a5e3d8aa3d807546927ebbfa7879dd1db}{FAT\_\-data\_\-lastNoteWritten}}
 \label{data_8h_a5e3d8aa3d807546927ebbfa7879dd1db}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Espace mémoire contenant la dernière note écrite. Par défaut, cette note est initialisée à \char`\"{}C 3\char`\"{}. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a91d93754507a9274b4bce3973f1934e6}{
-\hyperlink{struct_n_o_t_e}{note} {\bfseries FAT\_\-data\_\-noteClipboard}}
+\hyperlink{struct_n_o_t_e}{note} \hyperlink{data_8h_a91d93754507a9274b4bce3973f1934e6}{FAT\_\-data\_\-noteClipboard}}
 \label{data_8h_a91d93754507a9274b4bce3973f1934e6}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Presse-\/papier pour couper/coller une note. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a033bebb4e82a9ed24921852768cf2f56}{
-u8 {\bfseries FAT\_\-data\_\-lastBlockWritten}}
+u8 \hyperlink{data_8h_a033bebb4e82a9ed24921852768cf2f56}{FAT\_\-data\_\-lastBlockWritten}}
 \label{data_8h_a033bebb4e82a9ed24921852768cf2f56}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Cette variable permet de stocker le dernier numéro de block écrit. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a91635c0b8ca5a274b3234df8e5ae8882}{
-u8 {\bfseries FAT\_\-data\_\-blockClipboard}}
+u8 \hyperlink{data_8h_a91635c0b8ca5a274b3234df8e5ae8882}{FAT\_\-data\_\-blockClipboard}}
 \label{data_8h_a91635c0b8ca5a274b3234df8e5ae8882}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Presse-\/papier pour couper/coller des numéros de blocks. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_a8acfd82747910b7fcc1f3842698b6cd1}{
-u8 {\bfseries FAT\_\-data\_\-lastSequenceWritten}}
+u8 \hyperlink{data_8h_a8acfd82747910b7fcc1f3842698b6cd1}{FAT\_\-data\_\-lastSequenceWritten}}
 \label{data_8h_a8acfd82747910b7fcc1f3842698b6cd1}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Stocke le dernier numéro de séquence écrit. \item\end{DoxyCompactList}\item 
 \hypertarget{data_8h_aac335934a0a8316cdd431fdcabd9e3ed}{
-u8 {\bfseries FAT\_\-data\_\-sequenceClipboard}}
+u8 \hyperlink{data_8h_aac335934a0a8316cdd431fdcabd9e3ed}{FAT\_\-data\_\-sequenceClipboard}}
 \label{data_8h_aac335934a0a8316cdd431fdcabd9e3ed}
 
-\item 
+\begin{DoxyCompactList}\small\item\em Presse-\/papier pour couper/coller des séquences. \item\end{DoxyCompactList}\item 
 \hyperlink{struct_f_a_t}{tracker} \hyperlink{data_8h_a18f87e57411357f0660f039aab83e970}{FAT\_\-tracker}
-\item 
+\begin{DoxyCompactList}\small\item\em Contient toutes les données déjà instanciées. \item\end{DoxyCompactList}\item 
 u8 \hyperlink{data_8h_ad764827cb4504c9e21df31cc39426247}{FAT\_\-nextAvailableSequenceId} = 0
 \item 
 \hypertarget{data_8h_acb50319888a516349008c986f1d2bca9}{
@@ -611,12 +598,25 @@ u8 {\bfseries FAT\_\-lastUsedInstrumentId} = 0}
 Ce fichier contient toutes les définitions des types de données et autres structures. Il contient également un set de fonctions utiles pour les modifications et récupérations sur toutes les données techniques du tracker. 
 
 \subsection{Documentation des macros}
-\hypertarget{data_8h_aff0fa3a7735ac0218d293d0ee2b8f12e}{
+\hypertarget{data_8h_a14d7e791a2b533c485847a23738a05f1}{
+\index{data.h@{data.h}!NB\_\-FREQUENCES@{NB\_\-FREQUENCES}}
+\index{NB\_\-FREQUENCES@{NB\_\-FREQUENCES}!data.h@{data.h}}
+\subsubsection[{NB\_\-FREQUENCES}]{\setlength{\rightskip}{0pt plus 5cm}\#define NB\_\-FREQUENCES~72}}
+\label{data_8h_a14d7e791a2b533c485847a23738a05f1}
+
+
+Nombre total de fréquences de notes. 
+
+F(Hz)=4194304/(32$\ast$(2048-\/register value)). The minimum frequency is 64Hz and the maximum is 131Khz. Voir \href{http://jeanjacques.dialo.free.fr/frequenc.htm}{\tt http://jeanjacques.dialo.free.fr/frequenc.htm} \hypertarget{data_8h_aff0fa3a7735ac0218d293d0ee2b8f12e}{
 \index{data.h@{data.h}!NULL\_\-VALUE@{NULL\_\-VALUE}}
 \index{NULL\_\-VALUE@{NULL\_\-VALUE}!data.h@{data.h}}
 \subsubsection[{NULL\_\-VALUE}]{\setlength{\rightskip}{0pt plus 5cm}\#define NULL\_\-VALUE~0xff}}
 \label{data_8h_aff0fa3a7735ac0218d293d0ee2b8f12e}
-NULL\_\-VALUE représente la valeur \char`\"{}interdite\char`\"{}. Au démarrage de l'appli, toutes les données dans FAT\_\-tracker sont initialisées avec NULL\_\-VALUE. NE PAS TOUCHER ! 
+
+
+NULL\_\-VALUE représente la valeur \char`\"{}interdite\char`\"{}. 
+
+Au démarrage de l'appli, toutes les données dans FAT\_\-tracker sont initialisées avec NULL\_\-VALUE. {\bfseries NE PAS TOUCHER !} 
 
 \subsection{Documentation des fonctions}
 \hypertarget{data_8h_a316c55c6e4d676eb87bd5b4748804222}{
@@ -949,4 +949,8 @@ Ces 2 variables permettent de savoir quelle est le prochain id objet disponible 
 \index{FAT\_\-tracker@{FAT\_\-tracker}!data.h@{data.h}}
 \subsubsection[{FAT\_\-tracker}]{\setlength{\rightskip}{0pt plus 5cm}{\bf tracker} {\bf FAT\_\-tracker}}}
 \label{data_8h_a18f87e57411357f0660f039aab83e970}
-Contient toutes les données déjà instanciées. C'est cette variable qui est utilisée (écrite sur la ram) lors de la sauvegarde et vice versa pour le chargement. 
+
+
+Contient toutes les données déjà instanciées. 
+
+C'est cette variable qui est utilisée (écrite sur la ram) lors de la sauvegarde et vice versa pour le chargement. 

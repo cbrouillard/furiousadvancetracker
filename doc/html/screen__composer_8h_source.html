@@ -95,11 +95,11 @@
 <a name="l00066"></a>00066 <span class="keywordtype">void</span> FAT_screenComposer_printNote(u8 line) {
 <a name="l00067"></a>00067     mutex = 0;
 <a name="l00068"></a>00068     <span class="keywordflow">if</span> (!FAT_data_composer_isNoteEmpty(line)) {
-<a name="l00069"></a>00069         <a class="code" href="struct_n_o_t_e.html">note</a>* actualNote = FAT_data_composer_getNote(line);
+<a name="l00069"></a>00069         <a class="code" href="struct_n_o_t_e.html" title="Définit une note.">note</a>* actualNote = FAT_data_composer_getNote(line);
 <a name="l00070"></a>00070 
 <a name="l00071"></a>00071         ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
 <a name="l00072"></a>00072                 line + SCREENCOMPOSER_LINE_START_Y,
-<a name="l00073"></a>00073                 <span class="stringliteral">&quot;%s%1x %.2x\0&quot;</span>, noteName[(actualNote-&gt;note &amp; 0xf0)&gt;&gt;4], actualNote-&gt;note &amp; 0x0f, actualNote-&gt;instrument);
+<a name="l00073"></a>00073                 <span class="stringliteral">&quot;%s%1x %.2x\0&quot;</span>, <a class="code" href="data_8h.html#a2d022bd059f9e0170675ea90d275c138" title="Tableau constant contenant toutes les notes sous formes de chaînes de caractères.">noteName</a>[(actualNote-&gt;<a class="code" href="struct_n_o_t_e.html#ae312e84740a2f94fd423ce02bac7c81d">note</a> &amp; 0xf0)&gt;&gt;4], actualNote-&gt;<a class="code" href="struct_n_o_t_e.html#ae312e84740a2f94fd423ce02bac7c81d">note</a> &amp; 0x0f, actualNote-&gt;<a class="code" href="struct_n_o_t_e.html#a1c6a03f41107c548d1ecb7435d3541e0">instrument</a>);
 <a name="l00074"></a>00074     } <span class="keywordflow">else</span> {
 <a name="l00075"></a>00075         ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
 <a name="l00076"></a>00076                 line + SCREENCOMPOSER_LINE_START_Y, <span class="stringliteral">&quot;      \0&quot;</span>);
@@ -376,7 +376,7 @@
 <a name="l00347"></a>00347 
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 17:22:49 pour FAT FuriousAdvanceTracker par&nbsp;
+<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 18:27:21 pour FAT FuriousAdvanceTracker par&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

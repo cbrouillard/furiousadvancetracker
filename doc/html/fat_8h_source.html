@@ -83,8 +83,8 @@
 <a name="l00074"></a>00074 <span class="preprocessor">#include &quot;<a class="code" href="cursors_8h.html" title="Définitions de fonctions et variables utiles pour la gestion des objets curseurs.">cursors.h</a>&quot;</span>
 <a name="l00075"></a>00075 
 <a name="l00076"></a>00076 <span class="keywordtype">void</span> FAT_player_startPlayerFromSequences(u8 startLine);
-<a name="l00077"></a>00077 <span class="keywordtype">void</span> FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 <a class="code" href="struct_c_h_a_n_n_e_l.html">channel</a>);
-<a name="l00078"></a>00078 <span class="keywordtype">void</span> FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 <a class="code" href="struct_c_h_a_n_n_e_l.html">channel</a>); 
+<a name="l00077"></a>00077 <span class="keywordtype">void</span> FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 <a class="code" href="struct_c_h_a_n_n_e_l.html" title="Un channel représente une colonne de séquences: la GBA dispose de 6 channels.">channel</a>);
+<a name="l00078"></a>00078 <span class="keywordtype">void</span> FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 <a class="code" href="struct_c_h_a_n_n_e_l.html" title="Un channel représente une colonne de séquences: la GBA dispose de 6 channels.">channel</a>); 
 <a name="l00079"></a>00079 <span class="keywordtype">void</span> FAT_player_stopPlayer();
 <a name="l00080"></a>00080 <span class="keywordtype">void</span> FAT_player_playComposerNote (u8 noteLine);
 <a name="l00081"></a>00081 
@@ -160,7 +160,7 @@
 <a name="l00158"></a>00158     ham_bg[2].mi = ham_InitMapSet((<span class="keywordtype">void</span> *) screen_intro_Map, 1024, 0, 0);
 <a name="l00159"></a>00159     ham_InitBg(2, 1, 3, 0);
 <a name="l00160"></a>00160 
-<a name="l00161"></a>00161     ham_DrawText(0, 1, <span class="stringliteral">&quot;SIZE %d octets&quot;</span>, (<span class="keyword">sizeof</span>(<a class="code" href="struct_f_a_t.html">tracker</a>)));
+<a name="l00161"></a>00161     ham_DrawText(0, 1, <span class="stringliteral">&quot;SIZE %d octets&quot;</span>, (<span class="keyword">sizeof</span>(<a class="code" href="struct_f_a_t.html" title="Structure principale: stocke l&amp;#39;intégralité d&amp;#39;une track en cours de composition.">tracker</a>)));
 <a name="l00162"></a>00162     
 <a name="l00163"></a>00163     <span class="keywordflow">while</span> (!F_CTRLINPUT_START_PRESSED) {
 <a name="l00164"></a>00164     }
@@ -249,7 +249,7 @@
 <a name="l00259"></a>00259 <span class="preprocessor"></span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 17:22:49 pour FAT FuriousAdvanceTracker par&nbsp;
+<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 18:27:21 pour FAT FuriousAdvanceTracker par&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

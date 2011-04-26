@@ -20,71 +20,147 @@
 #ifndef _DATA_H_
 #define	_DATA_H_
 
-// nombre de séquences dispo en mémoire
+/**
+ * \def NB_MAX_SEQUENCES
+ * \brief Nombre de séquences disponibles <b>au total</b> en mémoire. 0x80 = 128
+ */
 #define NB_MAX_SEQUENCES 0x80
+/**
+ * \brief Nombre de séquences référençables par canal. 0x40 = 64
+ */
 #define NB_SEQUENCES_IN_ONE_CHANNEL 0x40
-// nombre de blocks dispo en mémoire
+/**
+ * \brief Nombre de blocks disponibles <b>au total</b> en mémoire. 0x70 = 112
+ */
 #define NB_MAX_BLOCKS 0x70
-// nombre d'instruments dispo en mémoire 0x3f = 63
+/**
+ * \brief Nombre d'instruments disponibles <b>au total</b> en mémoire. 0x3f = 63
+ */
 #define NB_MAX_INSTRUMENTS 0x3f
-// nombre de tables dispos en mémoire
+/**
+ * \brief Nombre de tables disponibles <b>au total</b> en mémoire. 0xf = 15
+ */
 #define NB_MAX_TABLES 0xF
-// nombre de notes dans un block (une mesure)  16
+/**
+ * \brief Nombre de notes dans un block (une mesure).
+ */
 #define NB_NOTES_IN_ONE_BLOCK 16
-// nombre de blocks (mesures) dans une séquence (pattern)
+/**
+ * \brief Nombre de blocks (mesures) dans une séquence (pattern).
+ */
 #define NB_BLOCKS_IN_SEQUENCE 16
-
+/**
+ * \brief Nombre d'effets référençables par table.
+ */
 #define NB_EFFECTS_IN_ONE_TABLE 16
-
-// nombre défini de variantes d'octave
+/**
+ * \brief Octave minimale pour une note.
+ */
 #define MIN_OCTAVE 3
+/**
+ * \brief Octave maximale pour une note.
+ */
 #define MAX_OCTAVE 8
-// nombre de nom de note 
+/**
+ * \brief Nombre total de notes disponibles: de C à B (notation anglo-saxonne).
+ */
 #define NB_NOTE 12
-
-// définit le nombre maximal de lettre pour le nom d'une track
+/**
+ * \brief Taille maximale pour le nom d'une chanson.
+ */
 #define SONG_NAME_MAX_LETTERS 9
 
-// définit les types d'instruments
-#define INSTRUMENT_TYPE_PULSE 0
-#define INSTRUMENT_TYPE_PULSE2 1
-#define INSTRUMENT_TYPE_WAVE 2
-#define INSTRUMENT_TYPE_NOISE 3
-#define INSTRUMENT_TYPE_SAMPLEA 4
-#define INSTRUMENT_TYPE_SAMPLEB 5
-
-#define INSTRUMENT_PULSE_VOLUME_MAX 16
-#define INSTRUMENT_PULSE_WAVE_MAX 4
-#define INSTRUMENT_PULSE_STEPTIME_MAX 8
-#define INSTRUMENT_PULSE_LENGTH_MAX 64
-#define INSTRUMENT_PULSE_SWEEP_MAX 128
-
-#define INSTRUMENT_WAVE_VOLUME_MAX 5
-#define INSTRUMENT_WAVE_LENGTH_MAX 256
-#define INSTRUMENT_WAVE_NB_VOICE 0x18
-
-#define NB_MAX_TRANSPOSE 256
-
-#define MAX_TEMPO 255
-#define MAX_TRANSPOSE 256
-
 /**
- * NULL_VALUE représente la valeur "interdite".
+ * \brief Type d'instrument PULSE 1
+ */
+#define INSTRUMENT_TYPE_PULSE 0
+/**
+ * \brief Type d'instrument PULSE 2
+ */
+#define INSTRUMENT_TYPE_PULSE2 1
+/**
+ * \brief Type d'instrument WAVE
+ */
+#define INSTRUMENT_TYPE_WAVE 2
+/**
+ * \brief Type d'instrument NOISE
+ */
+#define INSTRUMENT_TYPE_NOISE 3
+/**
+ * \brief Type d'instrument SAMPLE A
+ */
+#define INSTRUMENT_TYPE_SAMPLEA 4
+/**
+ * \brief Type d'instrument SAMPLE B
+ */
+#define INSTRUMENT_TYPE_SAMPLEB 5
+/**
+ * \brief Valeur de volume maximum pour un instrument de type PULSE.
+ */
+#define INSTRUMENT_PULSE_VOLUME_MAX 16
+/**
+ * \brief Valeur de "wave" maximum pour un instrument de type PULSE.
+ */
+#define INSTRUMENT_PULSE_WAVE_MAX 4
+/**
+ * \brief Valeur de "steptime" maximum pour un instrument de type PULSE.
+ */
+#define INSTRUMENT_PULSE_STEPTIME_MAX 8
+/**
+ * \brief Valeur de "soundlength" maximum pour un instrument de type PULSE.
+ */
+#define INSTRUMENT_PULSE_LENGTH_MAX 64
+/**
+ * \brief Valeur de "sweep" maximum pour un instrument de type PULSE.
+ */
+#define INSTRUMENT_PULSE_SWEEP_MAX 128
+/**
+ * \brief Valeur de volume maximum pour un instrument de type WAVE.
+ */
+#define INSTRUMENT_WAVE_VOLUME_MAX 5
+/**
+ * \brief Valeur de "soundlength" maximum pour un instrument de type WAVE.
+ */
+#define INSTRUMENT_WAVE_LENGTH_MAX 256
+/**
+ * \brief Nombre de voix disponibles pour un instrument de type WAVE.
+ */
+#define INSTRUMENT_WAVE_NB_VOICE 0x18
+/**
+ * \brief Tempo maximal.
+ */
+#define MAX_TEMPO 255
+/**
+ * \brief Valeur de transposition maximale.
+ */
+#define MAX_TRANSPOSE 256
+/**
+ * \brief NULL_VALUE représente la valeur "interdite".
+ * 
  * Au démarrage de l'appli, toutes les données dans FAT_tracker sont initialisées
  * avec NULL_VALUE.
- * NE PAS TOUCHER !
+ * <b>NE PAS TOUCHER !</b>
  */
 #define NULL_VALUE 0xff
-#define NULL_VALUE_u16 0xffff
-
+/**
+ * \brief Addresse vers la mémoire SRAM (la mémoire pour la sauvegarde).
+ */
 #define GAMEPAK_RAM  ((u8*)0x0E000000)
+/**
+ * \brief Pointeur vers la mémoire SRAM.
+ */
 u8 *pSaveMemory = GAMEPAK_RAM;
-
+/**
+ * \brief Tableau constant contenant toutes les notes sous formes de chaînes de caractères.
+ */
 const char* noteName[NB_NOTE] = {"C ", "C\"", "D ", "D\"", "E ", "F ", "F\"", "G ", "G\"", "A ", "A\"", "B "};
 
-// nombre maximal de fréquences de notes
-// F(Hz)=4194304/(32*(2048-register value)). The minimum frequency is 64Hz and the maximum is 131Khz.
-// http://jeanjacques.dialo.free.fr/frequenc.htm
+/**
+ * \brief Nombre total de fréquences de notes.
+ *
+ * F(Hz)=4194304/(32*(2048-register value)). The minimum frequency is 64Hz and the maximum is 131Khz.
+ * Voir <a href="http://jeanjacques.dialo.free.fr/frequenc.htm">http://jeanjacques.dialo.free.fr/frequenc.htm</a>
+ */
 #define NB_FREQUENCES 72
 
 // prototypes
@@ -92,83 +168,128 @@ void FAT_data_initInstrumentIfNeeded(u8 instId, u8 channel);
 bool FAT_data_smartAllocateSequence(u8 channelId, u8 line);
 bool FAT_data_smartAllocateBlock(u8 sequence, u8 blockLine);
 
+/**
+ * \struct EFFECT
+ * \brief Définit une commande.
+ * 
+ * La structure EFFECT permet de stocker une commande : son nom et sa valeur.
+ */
 typedef struct EFFECT {
-    u8 name; // jusqu'a 255 nom d'effets
-    u8 value; // 255 >= value >= 0 
+    u8 name; /*!< Un numéro permettant de pointer vers un tableau de char* afin d'afficher le nom. */
+    u8 value; /*!< La valeur de la commande de 0 à FF. */
 } effect;
 
+/**
+ * \struct TABLE
+ * \brief Définit une table d'effets: soit une liste de commandes.
+ * 
+ * Une table possède un nombre défini de commandes.
+ */
 typedef struct TABLE {
-    effect effects[NB_EFFECTS_IN_ONE_TABLE];
+    effect effects[NB_EFFECTS_IN_ONE_TABLE]; /*!< Le tableau des commandes enregistrées dans cette table. */
 } table;
 
-// POIDS ACTUEL: 4 octets
-
+/**
+ * \struct NOTE
+ * \brief Définit une note.
+ */
 typedef struct NOTE {
-    u8 note;
+    u8 note; /*!< Cette variable contient le nom de la note et son octave. */
     // 0x 0000  0000
     // 0x name  octave
     // récupérer le nom -> (note & 0xf0) >> 4
     // récupérer l'octave -> note & 0x0f
-    u8 freq;
-    u8 instrument;
-    effect effect;
+    u8 freq; /*!< Le numéro de fréquence assigné à la note. Cf: const u16 freqs[NB_FREQUENCES]*/
+    u8 instrument; /*!< Le numéro d'instrument assigné à la note. */
+    effect effect; /*!< L'effet (ou commande) assigné à la note. */
 } note;
+/**
+ * \brief Espace mémoire contenant la dernière note écrite. Par défaut, cette note est initialisée
+ * à "C 3".
+ */
+note FAT_data_lastNoteWritten;
+/**
+ * \brief Presse-papier pour couper/coller une note.
+ */
+note FAT_data_noteClipboard;
 
-note FAT_data_lastNoteWritten, FAT_data_noteClipboard;
-
+/**
+ * \struct COMPOSER
+ * \brief Définit les données pour le compositeur (écran de composition).
+ */
 typedef struct COMPOSER {
-    note notes[8];
-    u8 transpose;
+    note notes[8]; /*!< Un compositeur contient un certain nombre de notes. */
+    u8 transpose; /*!< Définit la valeur de transposition pour le compositeur entier <b>NON IMPLEMENTE</b>. */
 } composer;
 
-// POIDS ACTUEL: 16 * 4 = 64 octets 
-
+/**
+ * \struct BLOCK
+ * \brief Un block représente une mesure et contient un nombre de notes définies.
+ */
 typedef struct BLOCK {
-    // 1 block contient physiquement 16 notes 
-    note notes[NB_NOTES_IN_ONE_BLOCK];
-    effect effect;
+    note notes[NB_NOTES_IN_ONE_BLOCK]; /*!< Un tableau contenant les notes. */
+    effect effect; /*!< Chaque block peut se voir attribuer un effet. Cet effet sera calculé sur chacune des notes présente dans le block. */
 } block;
+/**
+ * \brief Cette variable permet de stocker le dernier numéro de block écrit.
+ */
+u8 FAT_data_lastBlockWritten;
+/**
+ * \brief Presse-papier pour couper/coller des numéros de blocks.
+ */
+u8 FAT_data_blockClipboard;
 
-u8 FAT_data_lastBlockWritten, FAT_data_blockClipboard;
-
-// POIDS ACTUEL: 16 octets
-
+/**
+ * \struct SEQUENCE
+ * \brief Une séquence contient un certain nombre de blocks.
+ */
 typedef struct SEQUENCE {
-    // 1 sequence pointe sur 16 id de block (stockés dans allBlocks)
-    u8 blocks[NB_BLOCKS_IN_SEQUENCE];
-    u8 transpose[NB_BLOCKS_IN_SEQUENCE];
+    u8 blocks[NB_BLOCKS_IN_SEQUENCE]; /*!< Un tableau contenant des numéros de blocks. */
+    u8 transpose[NB_BLOCKS_IN_SEQUENCE]; /*!< Chaque block peut être transposé: on stocke la valeur de transpose ici.
+                                          * On ne peut pas la stocker dans BLOCK, car cela ne permettrait qu'une seule
+                                          * transposition par block. Ici, un block peut être transposé avec telle valeur dans
+                                          * une séquence et telle autre valeur dans une autre séquence. De même, au sein de la
+                                          * même séquence, on peut ainsi transposer différemment chacun des blocks présent.
+                                          */
 } sequence;
+/**
+ * \brief Stocke le dernier numéro de séquence écrit.
+ */
+u8 FAT_data_lastSequenceWritten;
+/**
+ * \brief Presse-papier pour couper/coller des séquences.
+ */
+u8 FAT_data_sequenceClipboard;
 
-u8 FAT_data_lastSequenceWritten, FAT_data_sequenceClipboard;
-
-// POIDS ACTUEL: 255 octets
-
+/**
+ * \struct CHANNEL
+ * \brief Un channel représente une colonne de séquences: la GBA dispose de 6 channels.
+ */
 typedef struct CHANNEL {
-    // 1 channel pointe sur NB_MAX_SEQUENCES id de séquences (stockées dans allSequences)
-    u8 sequences[NB_SEQUENCES_IN_ONE_CHANNEL];
+    u8 sequences[NB_SEQUENCES_IN_ONE_CHANNEL]; /*!< Un channel possède sa collection de numéro de séquence.*/
 } channel;
 
-// POIDS ACTUEL: 19 octets
-
+/**
+ * \struct INSTRUMENT
+ * \brief L'instrument possède divers paramètres utiles pour modifier la sonorité d'une note: chaque note est 
+ * attachée à un instrument.
+ */
 typedef struct INSTRUMENT {
-    u8 type;
-
-    u8 sweep;
-
+    u8 type;/*!< Le type de l'instrument: PULSE1, PULSE2, WAVE, NOISE, SAMPLEA, SAMPLEB */
+    u8 sweep;/*!< Valeur de "sweep". Le "sweep" n'est applicable que sur le channel 1. */
     //u8 volume; // max = F = 4bits
     //u8 envdirection; // max = 1
     //u8 envsteptime; // max = 7
-    u8 envelope;
+    u8 envelope; /*!< Valeur d'enveloppe. L'enveloppe contient trois paramètres: "steptime", "envdir", "volume". */
     // 0x 000          0    0000
     // 0x steptime     dir  volume
     // steptime -> (envelope & 0xE0) >> 5
     // dir -> (envelope & 0x10) >> 4
     // volume -> (envelope & 0x0f)
-
-    u8 wavedutyOrPolynomialStep; // max = 4
-    u8 soundlength; // max FF
-
-    u8 loopmode; // max = 1
+    u8 wavedutyOrPolynomialStep; /*!< Contient la valeur du paramètre "wave" pour les instruments de type PULSE <b>OU</b> 
+                                  la valeur du paramètre "polystep" pour les instruments de type NOISE */
+    u8 soundlength; /*!< Stocke la durée du son: attention, ce paramètre ne sera appliqué que si loopmode = 1. */
+    u8 loopmode; /*!< Mode de durée du son : 1=timed, 0=continuous .*/
 
     // regrouper ces 3 variables en 1 u8
     //u8 voice; // max = 17
@@ -176,52 +297,63 @@ typedef struct INSTRUMENT {
     //u8 bankMode; // max = 1
     // 0x 0   0        0     0 0000
     // 0x NA  bankmode bank  voice
-    u8 voiceAndBank;
+    u8 voiceAndBank;/*!< Ce paramètre agrége plusieurs autres paramètres dédiés aux instruments de type WAVE : "voice", "bank", "bankmode". */
     // voice -> voiceAndBank & 0x1f
     // bank -> (voiceAndBank & 0x20) >> 5
     // bankMode -> (voiceAndBank & 0x40) >> 6
 
     // supprimer cette variable -> volume existe !
-    u8 volumeRatio; // max = 4
+    u8 volumeRatio; /*!< Stocke le volume pour un instrument de type WAVE. */
 
-    // TODO ajouter
-    // lien vers une table (u8)
-    u8 table;
+    u8 table; /*!< Numéro de table de commandes à appliquer pour chaque note assignée à cet instrument. */
 } instrument;
-
-// POIDS ACTUEL: 6*255 + 255*16 + 255*64 + 63*19 = 
-// + 1 + 9 = 10 octets
-
+/**
+ * \struct FAT
+ * \brief Structure principale: stocke l'intégralité d'une track en cours de composition.
+ * 
+ * Cette structure définit le tracker: toutes les données sont référencés dans cette espace.
+ */
 typedef struct FAT {
-    channel channels[6];
-    sequence allSequences [NB_MAX_SEQUENCES];
-    block allBlocks [NB_MAX_BLOCKS];
-    instrument allInstruments[NB_MAX_INSTRUMENTS];
-    composer composer; // TODO plusieurs composer dispo (au moins 3)
+    channel channels[6];/*!< Définition des channels: la GBA en dispose de 6. */
+    sequence allSequences [NB_MAX_SEQUENCES]; /*!< Tableau (physique) contenant toutes les séquence. */
+    block allBlocks [NB_MAX_BLOCKS];/*!< Tableau (physique) contenant tous les blocks. */
+    instrument allInstruments[NB_MAX_INSTRUMENTS];/*!< Tableau (physique) contenant tous les instruments. */
+    composer composer; /*!< Données pour l'écran de composition. */
 
-    u8 tempo;
-    u8 transpose;
-    char songName[SONG_NAME_MAX_LETTERS];
+    u8 tempo;/*!< Tempo pour la track en cours de composition. */
+    u8 transpose;/*!< Valeur de transposition pour la track en cours de composition. */
+    char songName[SONG_NAME_MAX_LETTERS];/*!< Nom de la track en cours de composition. */
 
-    table tables[NB_MAX_TABLES];
+    table tables[NB_MAX_TABLES];/*!< Tableau (physique) contenant toutes les tables. */
 } tracker;
 
 /**
- * Contient toutes les données déjà instanciées. 
+ * \brief Contient toutes les données déjà instanciées.
+ * 
  * C'est cette variable qui est utilisée (écrite sur la ram) lors de la sauvegarde
  * et vice versa pour le chargement. 
  */
 tracker FAT_tracker;
 
 /**
- * Ces 2 variables permettent de savoir quelle est le prochain id objet 
- * disponible (séquence et block).
+ * \brief Stocke le numéro de la prochaine séquence disponible.
  */
-u8 FAT_nextAvailableSequenceId = 0, FAT_nextAvailableBlockId = 0;
-u8 FAT_nextAvailableInstrumentId = 0, FAT_lastUsedInstrumentId = 0;
+u8 FAT_nextAvailableSequenceId = 0;
+/**
+ * \brief Stocke le numéro du prochain block disponible.
+ */
+u8 FAT_nextAvailableBlockId = 0;
+/**
+ * \brief Stocke le numéro du prochain instrument disponible.
+ */
+u8 FAT_nextAvailableInstrumentId = 0;
+/**
+ * \brief Stocke le dernier numéro d'instrument utilisé.
+ */
+u8 FAT_lastUsedInstrumentId = 0;
 
 /**
- * Initialise les données du tracker. Utile lors de l'allumage. 
+ * \brief Initialise les données du tracker. Utile lors de l'allumage de la console.
  */
 void FAT_data_initData() {
     memset(&FAT_tracker, NULL_VALUE, sizeof (tracker));
@@ -244,10 +376,11 @@ void FAT_data_initData() {
 }
 
 /**
- * Efface une séquence dans le tableau "SONG".
+ * \brief Efface une séquence dans le tableau "SONG".
+ * 
  * Attention ! cette méthode n'efface pas le contenu de la séquence. Seulement,
  * la référence dans le tableau !
- * @param channelId le canal (de 0 à 5)
+ * @param channelId le numéro du channel (de 0 à 5)
  * @param line le numéro de ligne ou se situe la séquence dans le tableau
  */
 void FAT_data_cutSequence(u8 channelId, u8 line) {
@@ -256,9 +389,10 @@ void FAT_data_cutSequence(u8 channelId, u8 line) {
 }
 
 /**
- * Colle la séquence actuelle stockée dans le clipboard.
- * @param channelId
- * @param line
+ * \brief Colle la séquence actuellement stockée dans le clipboard.
+ * 
+ * @param channelId le numéro du channel (de 0 à 5)
+ * @param line le numéro de ligne ou se situe la séquence dans le tableau
  */
 void FAT_data_pasteSequence(u8 channelId, u8 line) {
     FAT_tracker.channels[channelId].sequences[line] = FAT_data_sequenceClipboard;
@@ -887,7 +1021,7 @@ void FAT_data_instrumentWave_changeBankmode(u8 instrumentId, s8 value) {
     } else if (value > 0) {
         bankMode = 1;
     }
-    
+
     FAT_tracker.allInstruments[instrumentId].voiceAndBank = (bankMode << 6) | bank | voice;
 }
 

@@ -103,7 +103,7 @@
 <a name="l00075"></a>00075 
 <a name="l00076"></a>00076 <span class="keywordtype">void</span> FAT_screenSong_printInfos() {
 <a name="l00077"></a>00077     mutex = 0;
-<a name="l00078"></a>00078     ham_DrawText(21, 3, <span class="stringliteral">&quot;%s&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.songName);
+<a name="l00078"></a>00078     ham_DrawText(21, 3, <span class="stringliteral">&quot;%s&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#a21b7fa961fccb52ae1decc3ab2fe9bd5">songName</a>);
 <a name="l00079"></a>00079     ham_DrawText(21, 4, <span class="stringliteral">&quot;LINE  %.2x&quot;</span>, FAT_screenSong_currentSelectedLine);
 <a name="l00080"></a>00080     ham_DrawText(21, 5, <span class="stringliteral">&quot;CHAN %s&quot;</span>, CHANNEL_NAME[FAT_screenSong_currentSelectedColumn]);
 <a name="l00081"></a>00081     mutex = 1;
@@ -125,13 +125,13 @@
 <a name="l00097"></a>00097     <span class="keywordflow">for</span> (u8 v = 0; v &lt; SCREENSONG_NB_LINES_ON_SCREEN; v++) {
 <a name="l00098"></a>00098 
 <a name="l00099"></a>00099         <span class="keywordflow">for</span> (c = 0; c &lt; 6; c++) {
-<a name="l00100"></a>00100             <span class="keywordflow">if</span> (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.channels[c].sequences[v + FAT_screenSong_currentStartLine] == <a class="code" href="data_8h.html#aff0fa3a7735ac0218d293d0ee2b8f12e">NULL_VALUE</a>) {
+<a name="l00100"></a>00100             <span class="keywordflow">if</span> (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#a87102826e08bc9bdb2ca1bf0b53f8ac9">channels</a>[c].<a class="code" href="struct_c_h_a_n_n_e_l.html#aa5f01c6f8df8a2e89e6896d79ddd9446">sequences</a>[v + FAT_screenSong_currentStartLine] == <a class="code" href="data_8h.html#aff0fa3a7735ac0218d293d0ee2b8f12e" title="NULL_VALUE représente la valeur &amp;quot;interdite&amp;quot;.">NULL_VALUE</a>) {
 <a name="l00101"></a>00101                 ham_DrawText(SCREENSONG_SEQUENCE_LINE_X + (c * 3),
 <a name="l00102"></a>00102                         v + SCREENSONG_LINE_START_Y, <span class="stringliteral">&quot;  &quot;</span>);
 <a name="l00103"></a>00103             } <span class="keywordflow">else</span> {
 <a name="l00104"></a>00104                 ham_DrawText(SCREENSONG_SEQUENCE_LINE_X + (c * 3),
 <a name="l00105"></a>00105                         v + SCREENSONG_LINE_START_Y, <span class="stringliteral">&quot;%.2x &quot;</span>,
-<a name="l00106"></a>00106                         <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.channels[c].sequences[v + FAT_screenSong_currentStartLine]);
+<a name="l00106"></a>00106                         <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#a87102826e08bc9bdb2ca1bf0b53f8ac9">channels</a>[c].<a class="code" href="struct_c_h_a_n_n_e_l.html#aa5f01c6f8df8a2e89e6896d79ddd9446">sequences</a>[v + FAT_screenSong_currentStartLine]);
 <a name="l00107"></a>00107             }
 <a name="l00108"></a>00108         }
 <a name="l00109"></a>00109 
@@ -139,12 +139,12 @@
 <a name="l00111"></a>00111     mutex = 1;
 <a name="l00112"></a>00112 }
 <a name="l00113"></a>00113 
-<a name="l00114"></a>00114 <span class="keywordtype">void</span> FAT_screenSong_printSequence(u8 <a class="code" href="struct_c_h_a_n_n_e_l.html">channel</a>, u8 lineOnScreen, u8 realLine) {
+<a name="l00114"></a>00114 <span class="keywordtype">void</span> FAT_screenSong_printSequence(u8 <a class="code" href="struct_c_h_a_n_n_e_l.html" title="Un channel représente une colonne de séquences: la GBA dispose de 6 channels.">channel</a>, u8 lineOnScreen, u8 realLine) {
 <a name="l00115"></a>00115     mutex = 0;
-<a name="l00116"></a>00116     <span class="keywordflow">if</span> (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.channels[channel].sequences[realLine] != <a class="code" href="data_8h.html#aff0fa3a7735ac0218d293d0ee2b8f12e">NULL_VALUE</a>) {
+<a name="l00116"></a>00116     <span class="keywordflow">if</span> (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#a87102826e08bc9bdb2ca1bf0b53f8ac9">channels</a>[channel].<a class="code" href="struct_c_h_a_n_n_e_l.html#aa5f01c6f8df8a2e89e6896d79ddd9446">sequences</a>[realLine] != <a class="code" href="data_8h.html#aff0fa3a7735ac0218d293d0ee2b8f12e" title="NULL_VALUE représente la valeur &amp;quot;interdite&amp;quot;.">NULL_VALUE</a>) {
 <a name="l00117"></a>00117         ham_DrawText(SCREENSONG_SEQUENCE_LINE_X + (3 * channel),
 <a name="l00118"></a>00118                 lineOnScreen + SCREENSONG_LINE_START_Y,
-<a name="l00119"></a>00119                 <span class="stringliteral">&quot;%.2x\0&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.channels[channel].sequences[realLine]);
+<a name="l00119"></a>00119                 <span class="stringliteral">&quot;%.2x\0&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#a87102826e08bc9bdb2ca1bf0b53f8ac9">channels</a>[channel].<a class="code" href="struct_c_h_a_n_n_e_l.html#aa5f01c6f8df8a2e89e6896d79ddd9446">sequences</a>[realLine]);
 <a name="l00120"></a>00120     } <span class="keywordflow">else</span> {
 <a name="l00121"></a>00121         ham_DrawText(SCREENSONG_SEQUENCE_LINE_X + (3 * channel),
 <a name="l00122"></a>00122                 lineOnScreen + SCREENSONG_LINE_START_Y, <span class="stringliteral">&quot;  &quot;</span>);
@@ -302,7 +302,7 @@
 <a name="l00274"></a>00274 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 17:22:49 pour FAT FuriousAdvanceTracker par&nbsp;
+<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 18:27:21 pour FAT FuriousAdvanceTracker par&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

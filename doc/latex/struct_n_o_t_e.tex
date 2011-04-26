@@ -2,30 +2,53 @@
 \section{Référence de la structure NOTE}
 \label{struct_n_o_t_e}\index{NOTE@{NOTE}}
 }
+
+
+Définit une note.  
+
+
+
+
+{\ttfamily \#include $<$data.h$>$}
+
 \subsection*{Champs de données}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{struct_n_o_t_e_ae312e84740a2f94fd423ce02bac7c81d}{
-u8 {\bfseries note}}
-\label{struct_n_o_t_e_ae312e84740a2f94fd423ce02bac7c81d}
-
+u8 \hyperlink{struct_n_o_t_e_ae312e84740a2f94fd423ce02bac7c81d}{note}
 \item 
-\hypertarget{struct_n_o_t_e_aadfadeeef2295627c3f6e78dfd46cf73}{
-u8 {\bfseries freq}}
-\label{struct_n_o_t_e_aadfadeeef2295627c3f6e78dfd46cf73}
-
+u8 \hyperlink{struct_n_o_t_e_aadfadeeef2295627c3f6e78dfd46cf73}{freq}
 \item 
-\hypertarget{struct_n_o_t_e_a1c6a03f41107c548d1ecb7435d3541e0}{
-u8 {\bfseries instrument}}
-\label{struct_n_o_t_e_a1c6a03f41107c548d1ecb7435d3541e0}
-
+u8 \hyperlink{struct_n_o_t_e_a1c6a03f41107c548d1ecb7435d3541e0}{instrument}
 \item 
-\hypertarget{struct_n_o_t_e_a741151ee9cb5c0bde79f6dfee55f951a}{
-\hyperlink{struct_e_f_f_e_c_t}{effect} {\bfseries effect}}
-\label{struct_n_o_t_e_a741151ee9cb5c0bde79f6dfee55f951a}
-
+\hyperlink{struct_e_f_f_e_c_t}{effect} \hyperlink{struct_n_o_t_e_a741151ee9cb5c0bde79f6dfee55f951a}{effect}
 \end{DoxyCompactItemize}
 
+
+\subsection{Description détaillée}
+Définit une note. 
+
+\subsection{Documentation des champs}
+\hypertarget{struct_n_o_t_e_a741151ee9cb5c0bde79f6dfee55f951a}{
+\index{NOTE@{NOTE}!effect@{effect}}
+\index{effect@{effect}!NOTE@{NOTE}}
+\subsubsection[{effect}]{\setlength{\rightskip}{0pt plus 5cm}{\bf effect} {\bf effect}}}
+\label{struct_n_o_t_e_a741151ee9cb5c0bde79f6dfee55f951a}
+L'effet (ou commande) assigné à la note. \hypertarget{struct_n_o_t_e_aadfadeeef2295627c3f6e78dfd46cf73}{
+\index{NOTE@{NOTE}!freq@{freq}}
+\index{freq@{freq}!NOTE@{NOTE}}
+\subsubsection[{freq}]{\setlength{\rightskip}{0pt plus 5cm}u8 {\bf freq}}}
+\label{struct_n_o_t_e_aadfadeeef2295627c3f6e78dfd46cf73}
+Le numéro de fréquence assigné à la note. Cf: const u16 freqs\mbox{[}NB\_\-FREQUENCES\mbox{]} \hypertarget{struct_n_o_t_e_a1c6a03f41107c548d1ecb7435d3541e0}{
+\index{NOTE@{NOTE}!instrument@{instrument}}
+\index{instrument@{instrument}!NOTE@{NOTE}}
+\subsubsection[{instrument}]{\setlength{\rightskip}{0pt plus 5cm}u8 {\bf instrument}}}
+\label{struct_n_o_t_e_a1c6a03f41107c548d1ecb7435d3541e0}
+Le numéro d'instrument assigné à la note. \hypertarget{struct_n_o_t_e_ae312e84740a2f94fd423ce02bac7c81d}{
+\index{NOTE@{NOTE}!note@{note}}
+\index{note@{note}!NOTE@{NOTE}}
+\subsubsection[{note}]{\setlength{\rightskip}{0pt plus 5cm}u8 {\bf note}}}
+\label{struct_n_o_t_e_ae312e84740a2f94fd423ce02bac7c81d}
+Cette variable contient le nom de la note et son octave. 
 
 La documentation de cette structure a été générée à partir du fichier suivant :\begin{DoxyCompactItemize}
 \item 

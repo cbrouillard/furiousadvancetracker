@@ -80,64 +80,64 @@
 <a name="l00051"></a>00051 <span class="keywordtype">void</span> FAT_screenInstrument_printAllText(u8 type) {
 <a name="l00052"></a>00052     mutex = 0;
 <a name="l00053"></a>00053     <span class="keywordflow">switch</span> (type) {
-<a name="l00054"></a>00054         <span class="keywordflow">case</span> INSTRUMENT_TYPE_PULSE:
-<a name="l00055"></a>00055         <span class="keywordflow">case</span> INSTRUMENT_TYPE_PULSE2:
-<a name="l00056"></a>00056             ham_DrawText(1, 4, <span class="stringliteral">&quot;VOLUME    %.1x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope &amp; 0x0f);
+<a name="l00054"></a>00054         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#a77502820e6444460e84d982d3010a968" title="Type d&amp;#39;instrument PULSE 1.">INSTRUMENT_TYPE_PULSE</a>:
+<a name="l00055"></a>00055         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#ac13d41af9df01e91bd768c3ddc570e60" title="Type d&amp;#39;instrument PULSE 2.">INSTRUMENT_TYPE_PULSE2</a>:
+<a name="l00056"></a>00056             ham_DrawText(1, 4, <span class="stringliteral">&quot;VOLUME    %.1x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a9e90c973b09de93181dc92b2479499fb">envelope</a> &amp; 0x0f);
 <a name="l00057"></a>00057             ham_DrawText(1, 5, <span class="stringliteral">&quot;DIRECTION&quot;</span>);
-<a name="l00058"></a>00058             FAT_screenInstrument_showEnvdir((<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope &amp; 0x10) &gt;&gt; 4,
+<a name="l00058"></a>00058             FAT_screenInstrument_showEnvdir((<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a9e90c973b09de93181dc92b2479499fb">envelope</a> &amp; 0x10) &gt;&gt; 4,
 <a name="l00059"></a>00059                     88, 40);
-<a name="l00060"></a>00060             ham_DrawText(1, 6, <span class="stringliteral">&quot;STEPTIME  %.1x&quot;</span>, (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope &amp; 0xe0) &gt;&gt; 5 );
+<a name="l00060"></a>00060             ham_DrawText(1, 6, <span class="stringliteral">&quot;STEPTIME  %.1x&quot;</span>, (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a9e90c973b09de93181dc92b2479499fb">envelope</a> &amp; 0xe0) &gt;&gt; 5 );
 <a name="l00061"></a>00061             ham_DrawText(1, 7, <span class="stringliteral">&quot;WAVE&quot;</span>);
-<a name="l00062"></a>00062             FAT_screenInstrument_showWaveduty(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].wavedutyOrPolynomialStep,
+<a name="l00062"></a>00062             FAT_screenInstrument_showWaveduty(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a54aabf48ce8e591830868fe225157dee">wavedutyOrPolynomialStep</a>,
 <a name="l00063"></a>00063                     88, 56);
-<a name="l00064"></a>00064             ham_DrawText(1, 10, <span class="stringliteral">&quot;TIMED     %.1x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
-<a name="l00065"></a>00065             <span class="keywordflow">if</span> (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
-<a name="l00066"></a>00066                 ham_DrawText(1, 11, <span class="stringliteral">&quot;LENGTH    %.2x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
+<a name="l00064"></a>00064             ham_DrawText(1, 10, <span class="stringliteral">&quot;TIMED     %.1x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a8cbe33bff0d7c544428e55850ea1bba9">loopmode</a>);
+<a name="l00065"></a>00065             <span class="keywordflow">if</span> (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a8cbe33bff0d7c544428e55850ea1bba9">loopmode</a>) {
+<a name="l00066"></a>00066                 ham_DrawText(1, 11, <span class="stringliteral">&quot;LENGTH    %.2x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a95a669db24a383bd5d83f637e4bc9f0c">soundlength</a>);
 <a name="l00067"></a>00067             } <span class="keywordflow">else</span> {
 <a name="l00068"></a>00068                 ham_DrawText(1, 11, <span class="stringliteral">&quot;LENGTH    NA&quot;</span>);
 <a name="l00069"></a>00069             }
 <a name="l00070"></a>00070             ham_DrawText(1, 12, <span class="stringliteral">&quot;OUTPUT    RL&quot;</span>);
-<a name="l00071"></a>00071             ham_DrawText(1, 13, <span class="stringliteral">&quot;SWEEP     %.2x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].sweep);
+<a name="l00071"></a>00071             ham_DrawText(1, 13, <span class="stringliteral">&quot;SWEEP     %.2x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a8631f5f71803aa58cd851af4919cd4be">sweep</a>);
 <a name="l00072"></a>00072             ham_DrawText(1, 16, <span class="stringliteral">&quot;TEST IT   C 4&quot;</span>);
 <a name="l00073"></a>00073             <span class="keywordflow">break</span>;
-<a name="l00074"></a>00074         <span class="keywordflow">case</span> INSTRUMENT_TYPE_WAVE:
-<a name="l00075"></a>00075             ham_DrawText(1, 4, <span class="stringliteral">&quot;VOLUME    %.1x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].volumeRatio);
-<a name="l00076"></a>00076             ham_DrawText(1, 7, <span class="stringliteral">&quot;TIMED     %.1x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
-<a name="l00077"></a>00077             <span class="keywordflow">if</span> (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
-<a name="l00078"></a>00078                 ham_DrawText(1, 8, <span class="stringliteral">&quot;LENGTH    %.2x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
+<a name="l00074"></a>00074         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#aac311da3d084f6027ac99da075e404b6" title="Type d&amp;#39;instrument WAVE.">INSTRUMENT_TYPE_WAVE</a>:
+<a name="l00075"></a>00075             ham_DrawText(1, 4, <span class="stringliteral">&quot;VOLUME    %.1x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a1338e4097c1cb451ef7d5a9b7d3c54d7">volumeRatio</a>);
+<a name="l00076"></a>00076             ham_DrawText(1, 7, <span class="stringliteral">&quot;TIMED     %.1x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a8cbe33bff0d7c544428e55850ea1bba9">loopmode</a>);
+<a name="l00077"></a>00077             <span class="keywordflow">if</span> (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a8cbe33bff0d7c544428e55850ea1bba9">loopmode</a>) {
+<a name="l00078"></a>00078                 ham_DrawText(1, 8, <span class="stringliteral">&quot;LENGTH    %.2x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a95a669db24a383bd5d83f637e4bc9f0c">soundlength</a>);
 <a name="l00079"></a>00079             } <span class="keywordflow">else</span> {
 <a name="l00080"></a>00080                 ham_DrawText(1, 8, <span class="stringliteral">&quot;LENGTH    NA&quot;</span>);
 <a name="l00081"></a>00081             }
 <a name="l00082"></a>00082 
-<a name="l00083"></a>00083             ham_DrawText(1, 9, <span class="stringliteral">&quot;VOICE     %.2x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank &amp; 0x1f);
-<a name="l00084"></a>00084             ham_DrawText(1, 10, <span class="stringliteral">&quot;BANK      %.1x&quot;</span>, (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank &amp; 0x20)&gt;&gt;5);
+<a name="l00083"></a>00083             ham_DrawText(1, 9, <span class="stringliteral">&quot;VOICE     %.2x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a6126b24ce345ae666412f07d5528d164">voiceAndBank</a> &amp; 0x1f);
+<a name="l00084"></a>00084             ham_DrawText(1, 10, <span class="stringliteral">&quot;BANK      %.1x&quot;</span>, (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a6126b24ce345ae666412f07d5528d164">voiceAndBank</a> &amp; 0x20)&gt;&gt;5);
 <a name="l00085"></a>00085 
-<a name="l00086"></a>00086             <span class="keywordflow">if</span> ( (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank &amp; 0x40)&gt;&gt;6 == 0) {
+<a name="l00086"></a>00086             <span class="keywordflow">if</span> ( (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a6126b24ce345ae666412f07d5528d164">voiceAndBank</a> &amp; 0x40)&gt;&gt;6 == 0) {
 <a name="l00087"></a>00087                 ham_DrawText(1, 11, <span class="stringliteral">&quot;BANKMODE  SIN&quot;</span>);
 <a name="l00088"></a>00088             } <span class="keywordflow">else</span> {
 <a name="l00089"></a>00089                 ham_DrawText(1, 11, <span class="stringliteral">&quot;BANKMODE  DUA&quot;</span>);
 <a name="l00090"></a>00090             }
 <a name="l00091"></a>00091             ham_DrawText(1, 14, <span class="stringliteral">&quot;TEST IT   C 4&quot;</span>);
 <a name="l00092"></a>00092             <span class="keywordflow">break</span>;
-<a name="l00093"></a>00093         <span class="keywordflow">case</span> INSTRUMENT_TYPE_NOISE:
-<a name="l00094"></a>00094             ham_DrawText(1, 4, <span class="stringliteral">&quot;VOLUME    %.1x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope &amp; 0x0f);
+<a name="l00093"></a>00093         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#ac6907eb7f5bdf02c7a04f5f5e0370f25" title="Type d&amp;#39;instrument NOISE.">INSTRUMENT_TYPE_NOISE</a>:
+<a name="l00094"></a>00094             ham_DrawText(1, 4, <span class="stringliteral">&quot;VOLUME    %.1x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a9e90c973b09de93181dc92b2479499fb">envelope</a> &amp; 0x0f);
 <a name="l00095"></a>00095             ham_DrawText(1, 5, <span class="stringliteral">&quot;DIRECTION&quot;</span>);
-<a name="l00096"></a>00096             FAT_screenInstrument_showEnvdir((<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope &amp; 0x10) &gt;&gt; 4,
+<a name="l00096"></a>00096             FAT_screenInstrument_showEnvdir((<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a9e90c973b09de93181dc92b2479499fb">envelope</a> &amp; 0x10) &gt;&gt; 4,
 <a name="l00097"></a>00097                     88, 40);
-<a name="l00098"></a>00098             ham_DrawText(1, 6, <span class="stringliteral">&quot;STEPTIME  %.1x&quot;</span>, (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope &amp; 0xe0) &gt;&gt; 5 );
-<a name="l00099"></a>00099             ham_DrawText(1, 7, <span class="stringliteral">&quot;POLYSTEP  %.1x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].wavedutyOrPolynomialStep);
+<a name="l00098"></a>00098             ham_DrawText(1, 6, <span class="stringliteral">&quot;STEPTIME  %.1x&quot;</span>, (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a9e90c973b09de93181dc92b2479499fb">envelope</a> &amp; 0xe0) &gt;&gt; 5 );
+<a name="l00099"></a>00099             ham_DrawText(1, 7, <span class="stringliteral">&quot;POLYSTEP  %.1x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a54aabf48ce8e591830868fe225157dee">wavedutyOrPolynomialStep</a>);
 <a name="l00100"></a>00100 
-<a name="l00101"></a>00101             ham_DrawText(1, 10, <span class="stringliteral">&quot;TIMED     %.1x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
-<a name="l00102"></a>00102             <span class="keywordflow">if</span> (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
-<a name="l00103"></a>00103                 ham_DrawText(1, 11, <span class="stringliteral">&quot;LENGTH    %.2x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
+<a name="l00101"></a>00101             ham_DrawText(1, 10, <span class="stringliteral">&quot;TIMED     %.1x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a8cbe33bff0d7c544428e55850ea1bba9">loopmode</a>);
+<a name="l00102"></a>00102             <span class="keywordflow">if</span> (<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a8cbe33bff0d7c544428e55850ea1bba9">loopmode</a>) {
+<a name="l00103"></a>00103                 ham_DrawText(1, 11, <span class="stringliteral">&quot;LENGTH    %.2x&quot;</span>, <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a95a669db24a383bd5d83f637e4bc9f0c">soundlength</a>);
 <a name="l00104"></a>00104             } <span class="keywordflow">else</span> {
 <a name="l00105"></a>00105                 ham_DrawText(1, 11, <span class="stringliteral">&quot;LENGTH    NA&quot;</span>);
 <a name="l00106"></a>00106             }
 <a name="l00107"></a>00107             ham_DrawText(1, 12, <span class="stringliteral">&quot;OUTPUT    RL&quot;</span>);
 <a name="l00108"></a>00108             ham_DrawText(1, 16, <span class="stringliteral">&quot;TEST IT   C 4&quot;</span>);
 <a name="l00109"></a>00109             <span class="keywordflow">break</span>;
-<a name="l00110"></a>00110         <span class="keywordflow">case</span> INSTRUMENT_TYPE_SAMPLEA:
-<a name="l00111"></a>00111         <span class="keywordflow">case</span> INSTRUMENT_TYPE_SAMPLEB:
+<a name="l00110"></a>00110         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#a7dd438b73eda546c95c07c14490ac600" title="Type d&amp;#39;instrument SAMPLE A.">INSTRUMENT_TYPE_SAMPLEA</a>:
+<a name="l00111"></a>00111         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#a47c0de160c778f524431c84b1c86987e" title="Type d&amp;#39;instrument SAMPLE B.">INSTRUMENT_TYPE_SAMPLEB</a>:
 <a name="l00112"></a>00112             <span class="keywordflow">break</span>;
 <a name="l00113"></a>00113     }
 <a name="l00114"></a>00114     mutex = 1;
@@ -145,18 +145,18 @@
 <a name="l00116"></a>00116 
 <a name="l00117"></a>00117 <span class="keywordtype">void</span> FAT_screenInstrument_init() {
 <a name="l00118"></a>00118     <span class="comment">// quel instrument est en cours d&#39;édition ?</span>
-<a name="l00119"></a>00119     <a class="code" href="struct_n_o_t_e.html">note</a>* FAT_screenInstrument_currentNote = <a class="code" href="data_8h.html#a65bc3649781d440d16d5660eb0ddc0c9">FAT_data_getNote</a>(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine);
-<a name="l00120"></a>00120     FAT_screenInstrument_currentInstrumentId = FAT_screenInstrument_currentNote-&gt;instrument;
-<a name="l00121"></a>00121     <span class="keywordflow">if</span> (FAT_screenInstrument_currentInstrumentId == <a class="code" href="data_8h.html#aff0fa3a7735ac0218d293d0ee2b8f12e">NULL_VALUE</a>) {
+<a name="l00119"></a>00119     <a class="code" href="struct_n_o_t_e.html" title="Définit une note.">note</a>* FAT_screenInstrument_currentNote = <a class="code" href="data_8h.html#a65bc3649781d440d16d5660eb0ddc0c9">FAT_data_getNote</a>(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine);
+<a name="l00120"></a>00120     FAT_screenInstrument_currentInstrumentId = FAT_screenInstrument_currentNote-&gt;<a class="code" href="struct_n_o_t_e.html#a1c6a03f41107c548d1ecb7435d3541e0">instrument</a>;
+<a name="l00121"></a>00121     <span class="keywordflow">if</span> (FAT_screenInstrument_currentInstrumentId == <a class="code" href="data_8h.html#aff0fa3a7735ac0218d293d0ee2b8f12e" title="NULL_VALUE représente la valeur &amp;quot;interdite&amp;quot;.">NULL_VALUE</a>) {
 <a name="l00122"></a>00122         FAT_screenInstrument_currentInstrumentId = 0;
 <a name="l00123"></a>00123     }
 <a name="l00124"></a>00124     <a class="code" href="data_8h.html#abaf70d170b0fc60a591c7736f771a254">FAT_data_initInstrumentIfNeeded</a>(FAT_screenInstrument_currentInstrumentId, FAT_screenSong_currentSelectedColumn);
 <a name="l00125"></a>00125 
 <a name="l00126"></a>00126     <span class="comment">// initialisation des curseurs</span>
-<a name="l00127"></a>00127     FAT_screenInstrument_initCursor(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+<a name="l00127"></a>00127     FAT_screenInstrument_initCursor(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>);
 <a name="l00128"></a>00128 
 <a name="l00129"></a>00129     <span class="comment">// initialisation du fond (interface)</span>
-<a name="l00130"></a>00130     FAT_screenInstrument_switchScreen(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+<a name="l00130"></a>00130     FAT_screenInstrument_switchScreen(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>);
 <a name="l00131"></a>00131 
 <a name="l00132"></a>00132     <span class="comment">// initialisation des autre curseurs</span>
 <a name="l00133"></a>00133     <a class="code" href="cursors_8h.html#ad36302796f0c0ffd01925ed0963b93ee" title="Déplace le curseur de changement d&amp;#39;onglet.">FAT_cursors_moveCursorChange</a>(INPUT_R_CURSOR_CHANGE_X, INPUT_R_CURSOR_CHANGE_Y);
@@ -176,30 +176,30 @@
 <a name="l00152"></a>00152     FAT_screenInstrument_hideAllWavedutySprite();
 <a name="l00153"></a>00153 
 <a name="l00154"></a>00154     <span class="keywordflow">switch</span> (type) {
-<a name="l00155"></a>00155         <span class="keywordflow">case</span> INSTRUMENT_TYPE_PULSE:
-<a name="l00156"></a>00156         <span class="keywordflow">case</span> INSTRUMENT_TYPE_PULSE2:
+<a name="l00155"></a>00155         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#a77502820e6444460e84d982d3010a968" title="Type d&amp;#39;instrument PULSE 1.">INSTRUMENT_TYPE_PULSE</a>:
+<a name="l00156"></a>00156         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#ac13d41af9df01e91bd768c3ddc570e60" title="Type d&amp;#39;instrument PULSE 2.">INSTRUMENT_TYPE_PULSE2</a>:
 <a name="l00157"></a>00157             ham_bg[2].ti = ham_InitTileSet((<span class="keywordtype">void</span>*) screen_instrument_pulse_Tiles, SIZEOF_16BIT(screen_instrument_pulse_Tiles), 1, 1);
 <a name="l00158"></a>00158             ham_bg[2].mi = ham_InitMapSet((<span class="keywordtype">void</span> *) screen_instrument_pulse_Map, 1024, 0, 0);
 <a name="l00159"></a>00159             FAT_screenInstrument_printInstrumentNumber();
 <a name="l00160"></a>00160             FAT_screenInstrument_printAllText(type);
 <a name="l00161"></a>00161             FAT_screenInstrument_displayGoodCursor(type);
 <a name="l00162"></a>00162             <span class="keywordflow">break</span>;
-<a name="l00163"></a>00163         <span class="keywordflow">case</span> INSTRUMENT_TYPE_WAVE:
+<a name="l00163"></a>00163         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#aac311da3d084f6027ac99da075e404b6" title="Type d&amp;#39;instrument WAVE.">INSTRUMENT_TYPE_WAVE</a>:
 <a name="l00164"></a>00164             ham_bg[2].ti = ham_InitTileSet((<span class="keywordtype">void</span>*) screen_instrument_wave_Tiles, SIZEOF_16BIT(screen_instrument_wave_Tiles), 1, 1);
 <a name="l00165"></a>00165             ham_bg[2].mi = ham_InitMapSet((<span class="keywordtype">void</span> *) screen_instrument_wave_Map, 1024, 0, 0);
 <a name="l00166"></a>00166             FAT_screenInstrument_printInstrumentNumber();
 <a name="l00167"></a>00167             FAT_screenInstrument_printAllText(type);
 <a name="l00168"></a>00168             FAT_screenInstrument_displayGoodCursor(type);
 <a name="l00169"></a>00169             <span class="keywordflow">break</span>;
-<a name="l00170"></a>00170         <span class="keywordflow">case</span> INSTRUMENT_TYPE_NOISE:
+<a name="l00170"></a>00170         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#ac6907eb7f5bdf02c7a04f5f5e0370f25" title="Type d&amp;#39;instrument NOISE.">INSTRUMENT_TYPE_NOISE</a>:
 <a name="l00171"></a>00171             ham_bg[2].ti = ham_InitTileSet((<span class="keywordtype">void</span>*) screen_instrument_noise_Tiles, SIZEOF_16BIT(screen_instrument_noise_Tiles), 1, 1);
 <a name="l00172"></a>00172             ham_bg[2].mi = ham_InitMapSet((<span class="keywordtype">void</span> *) screen_instrument_noise_Map, 1024, 0, 0);
 <a name="l00173"></a>00173             FAT_screenInstrument_printInstrumentNumber();
 <a name="l00174"></a>00174             FAT_screenInstrument_printAllText(type);
 <a name="l00175"></a>00175             FAT_screenInstrument_displayGoodCursor(type);
 <a name="l00176"></a>00176             <span class="keywordflow">break</span>;
-<a name="l00177"></a>00177         <span class="keywordflow">case</span> INSTRUMENT_TYPE_SAMPLEA:
-<a name="l00178"></a>00178         <span class="keywordflow">case</span> INSTRUMENT_TYPE_SAMPLEB:
+<a name="l00177"></a>00177         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#a7dd438b73eda546c95c07c14490ac600" title="Type d&amp;#39;instrument SAMPLE A.">INSTRUMENT_TYPE_SAMPLEA</a>:
+<a name="l00178"></a>00178         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#a47c0de160c778f524431c84b1c86987e" title="Type d&amp;#39;instrument SAMPLE B.">INSTRUMENT_TYPE_SAMPLEB</a>:
 <a name="l00179"></a>00179             ham_bg[2].ti = ham_InitTileSet((<span class="keywordtype">void</span>*) screen_instrument_sample_Tiles, SIZEOF_16BIT(screen_instrument_sample_Tiles), 1, 1);
 <a name="l00180"></a>00180             ham_bg[2].mi = ham_InitMapSet((<span class="keywordtype">void</span> *) screen_instrument_sample_Map, 1024, 0, 0);
 <a name="l00181"></a>00181             FAT_screenInstrument_printInstrumentNumber();
@@ -211,38 +211,38 @@
 <a name="l00187"></a>00187 }
 <a name="l00188"></a>00188 
 <a name="l00194"></a>00194 <span class="keywordtype">void</span> FAT_screenInstrument_changeInstrumentType(s8 move) {
-<a name="l00195"></a>00195     u8 currentType = <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type;
+<a name="l00195"></a>00195     u8 currentType = <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>;
 <a name="l00196"></a>00196 
 <a name="l00197"></a>00197     <span class="keywordflow">switch</span> (currentType) {
-<a name="l00198"></a>00198         <span class="keywordflow">case</span> INSTRUMENT_TYPE_PULSE:
-<a name="l00199"></a>00199         <span class="keywordflow">case</span> INSTRUMENT_TYPE_PULSE2:
+<a name="l00198"></a>00198         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#a77502820e6444460e84d982d3010a968" title="Type d&amp;#39;instrument PULSE 1.">INSTRUMENT_TYPE_PULSE</a>:
+<a name="l00199"></a>00199         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#ac13d41af9df01e91bd768c3ddc570e60" title="Type d&amp;#39;instrument PULSE 2.">INSTRUMENT_TYPE_PULSE2</a>:
 <a name="l00200"></a>00200             <span class="keywordflow">if</span> (move &gt; 0) {
-<a name="l00201"></a>00201                 FAT_data_instrument_changeType(FAT_screenInstrument_currentInstrumentId, INSTRUMENT_TYPE_WAVE);
+<a name="l00201"></a>00201                 FAT_data_instrument_changeType(FAT_screenInstrument_currentInstrumentId, <a class="code" href="data_8h.html#aac311da3d084f6027ac99da075e404b6" title="Type d&amp;#39;instrument WAVE.">INSTRUMENT_TYPE_WAVE</a>);
 <a name="l00202"></a>00202             }
 <a name="l00203"></a>00203             <span class="keywordflow">break</span>;
-<a name="l00204"></a>00204         <span class="keywordflow">case</span> INSTRUMENT_TYPE_WAVE:
+<a name="l00204"></a>00204         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#aac311da3d084f6027ac99da075e404b6" title="Type d&amp;#39;instrument WAVE.">INSTRUMENT_TYPE_WAVE</a>:
 <a name="l00205"></a>00205             <span class="keywordflow">if</span> (move &gt; 0) {
-<a name="l00206"></a>00206                 FAT_data_instrument_changeType(FAT_screenInstrument_currentInstrumentId, INSTRUMENT_TYPE_NOISE);
+<a name="l00206"></a>00206                 FAT_data_instrument_changeType(FAT_screenInstrument_currentInstrumentId, <a class="code" href="data_8h.html#ac6907eb7f5bdf02c7a04f5f5e0370f25" title="Type d&amp;#39;instrument NOISE.">INSTRUMENT_TYPE_NOISE</a>);
 <a name="l00207"></a>00207             } <span class="keywordflow">else</span> {
-<a name="l00208"></a>00208                 FAT_data_instrument_changeType(FAT_screenInstrument_currentInstrumentId, INSTRUMENT_TYPE_PULSE);
+<a name="l00208"></a>00208                 FAT_data_instrument_changeType(FAT_screenInstrument_currentInstrumentId, <a class="code" href="data_8h.html#a77502820e6444460e84d982d3010a968" title="Type d&amp;#39;instrument PULSE 1.">INSTRUMENT_TYPE_PULSE</a>);
 <a name="l00209"></a>00209             }
 <a name="l00210"></a>00210             <span class="keywordflow">break</span>;
-<a name="l00211"></a>00211         <span class="keywordflow">case</span> INSTRUMENT_TYPE_NOISE:
+<a name="l00211"></a>00211         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#ac6907eb7f5bdf02c7a04f5f5e0370f25" title="Type d&amp;#39;instrument NOISE.">INSTRUMENT_TYPE_NOISE</a>:
 <a name="l00212"></a>00212             <span class="keywordflow">if</span> (move &gt; 0) {
-<a name="l00213"></a>00213                 FAT_data_instrument_changeType(FAT_screenInstrument_currentInstrumentId, INSTRUMENT_TYPE_SAMPLEA);
+<a name="l00213"></a>00213                 FAT_data_instrument_changeType(FAT_screenInstrument_currentInstrumentId, <a class="code" href="data_8h.html#a7dd438b73eda546c95c07c14490ac600" title="Type d&amp;#39;instrument SAMPLE A.">INSTRUMENT_TYPE_SAMPLEA</a>);
 <a name="l00214"></a>00214             } <span class="keywordflow">else</span> {
-<a name="l00215"></a>00215                 FAT_data_instrument_changeType(FAT_screenInstrument_currentInstrumentId, INSTRUMENT_TYPE_WAVE);
+<a name="l00215"></a>00215                 FAT_data_instrument_changeType(FAT_screenInstrument_currentInstrumentId, <a class="code" href="data_8h.html#aac311da3d084f6027ac99da075e404b6" title="Type d&amp;#39;instrument WAVE.">INSTRUMENT_TYPE_WAVE</a>);
 <a name="l00216"></a>00216             }
 <a name="l00217"></a>00217             <span class="keywordflow">break</span>;
-<a name="l00218"></a>00218         <span class="keywordflow">case</span> INSTRUMENT_TYPE_SAMPLEA:
-<a name="l00219"></a>00219         <span class="keywordflow">case</span> INSTRUMENT_TYPE_SAMPLEB:
+<a name="l00218"></a>00218         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#a7dd438b73eda546c95c07c14490ac600" title="Type d&amp;#39;instrument SAMPLE A.">INSTRUMENT_TYPE_SAMPLEA</a>:
+<a name="l00219"></a>00219         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#a47c0de160c778f524431c84b1c86987e" title="Type d&amp;#39;instrument SAMPLE B.">INSTRUMENT_TYPE_SAMPLEB</a>:
 <a name="l00220"></a>00220             <span class="keywordflow">if</span> (move &lt; 0) {
-<a name="l00221"></a>00221                 FAT_data_instrument_changeType(FAT_screenInstrument_currentInstrumentId, INSTRUMENT_TYPE_NOISE);
+<a name="l00221"></a>00221                 FAT_data_instrument_changeType(FAT_screenInstrument_currentInstrumentId, <a class="code" href="data_8h.html#ac6907eb7f5bdf02c7a04f5f5e0370f25" title="Type d&amp;#39;instrument NOISE.">INSTRUMENT_TYPE_NOISE</a>);
 <a name="l00222"></a>00222             }
 <a name="l00223"></a>00223             <span class="keywordflow">break</span>;
 <a name="l00224"></a>00224     }
 <a name="l00225"></a>00225 
-<a name="l00226"></a>00226     FAT_screenInstrument_moveTabulationCursor(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+<a name="l00226"></a>00226     FAT_screenInstrument_moveTabulationCursor(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>);
 <a name="l00227"></a>00227 }
 <a name="l00228"></a>00228 
 <a name="l00233"></a>00233 <span class="keywordtype">void</span> FAT_screenInstrument_checkButtons() {
@@ -263,8 +263,8 @@
 <a name="l00248"></a>00248     } <span class="keywordflow">else</span> {
 <a name="l00249"></a>00249         <span class="keywordflow">if</span> (FAT_screenInstrument_isPopuped) {
 <a name="l00250"></a>00250             FAT_popup_hide();
-<a name="l00251"></a>00251             FAT_screenInstrument_displayGoodCursor(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-<a name="l00252"></a>00252             FAT_screenInstrument_printAllText(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+<a name="l00251"></a>00251             FAT_screenInstrument_displayGoodCursor(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>);
+<a name="l00252"></a>00252             FAT_screenInstrument_printAllText(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>);
 <a name="l00253"></a>00253             FAT_screenInstrument_isPopuped = 0;
 <a name="l00254"></a>00254 
 <a name="l00255"></a>00255             <span class="keywordflow">if</span> (FAT_popup_getSelectedIcon() != SCREEN_INSTRUMENTS_ID) {
@@ -297,7 +297,7 @@
 <a name="l00282"></a>00282                 <span class="keywordflow">if</span> (FAT_screenInstrument_isTabulating) {
 <a name="l00283"></a>00283                     <span class="comment">// relachement du L</span>
 <a name="l00284"></a>00284                     FAT_screenInstrument_isTabulating = 0;
-<a name="l00285"></a>00285                     FAT_screenInstrument_switchScreen(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+<a name="l00285"></a>00285                     FAT_screenInstrument_switchScreen(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>);
 <a name="l00286"></a>00286                     FAT_screenInstrument_hideTabulationCursor();
 <a name="l00287"></a>00287                 }
 <a name="l00288"></a>00288 
@@ -306,24 +306,24 @@
 <a name="l00291"></a>00291                     <a class="code" href="cursors_8h.html#aa00496b5a304b892bfe87cf3d256e277" title="Affiche le curseur de changement d&amp;#39;onglet.">FAT_cursors_showCursorChange</a>();
 <a name="l00292"></a>00292 
 <a name="l00293"></a>00293                     <span class="keywordflow">if</span> (F_CTRLINPUT_RIGHT_PRESSED) {
-<a name="l00294"></a>00294                         <span class="keywordflow">if</span> (FAT_screenInstrument_currentInstrumentId &lt; NB_MAX_INSTRUMENTS - 1) {
-<a name="l00295"></a>00295                             u8 type = <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type;
+<a name="l00294"></a>00294                         <span class="keywordflow">if</span> (FAT_screenInstrument_currentInstrumentId &lt; <a class="code" href="data_8h.html#ab350644f5e4e61b86453bfb738933657" title="Nombre d&amp;#39;instruments disponibles au total en mémoire. 0x3f = 63.">NB_MAX_INSTRUMENTS</a> - 1) {
+<a name="l00295"></a>00295                             u8 type = <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>;
 <a name="l00296"></a>00296                             FAT_screenInstrument_currentInstrumentId++;
 <a name="l00297"></a>00297                             <a class="code" href="data_8h.html#abaf70d170b0fc60a591c7736f771a254">FAT_data_initInstrumentIfNeeded</a>(FAT_screenInstrument_currentInstrumentId, type);
 <a name="l00298"></a>00298                             <span class="comment">//FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);</span>
 <a name="l00299"></a>00299                             FAT_screenInstrument_printInstrumentNumber();
-<a name="l00300"></a>00300                             FAT_screenInstrument_printAllText(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+<a name="l00300"></a>00300                             FAT_screenInstrument_printAllText(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>);
 <a name="l00301"></a>00301                         }
 <a name="l00302"></a>00302                     }
 <a name="l00303"></a>00303 
 <a name="l00304"></a>00304                     <span class="keywordflow">if</span> (F_CTRLINPUT_LEFT_PRESSED) {
 <a name="l00305"></a>00305                         <span class="keywordflow">if</span> (FAT_screenInstrument_currentInstrumentId &gt; 0) {
-<a name="l00306"></a>00306                             u8 type = <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type;
+<a name="l00306"></a>00306                             u8 type = <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>;
 <a name="l00307"></a>00307                             FAT_screenInstrument_currentInstrumentId--;
 <a name="l00308"></a>00308                             <a class="code" href="data_8h.html#abaf70d170b0fc60a591c7736f771a254">FAT_data_initInstrumentIfNeeded</a>(FAT_screenInstrument_currentInstrumentId, type);
 <a name="l00309"></a>00309                             <span class="comment">//FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);</span>
 <a name="l00310"></a>00310                             FAT_screenInstrument_printInstrumentNumber();
-<a name="l00311"></a>00311                             FAT_screenInstrument_printAllText(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+<a name="l00311"></a>00311                             FAT_screenInstrument_printAllText(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>);
 <a name="l00312"></a>00312                         }
 <a name="l00313"></a>00313                     }
 <a name="l00314"></a>00314 
@@ -347,25 +347,25 @@
 <a name="l00332"></a>00332                         }
 <a name="l00333"></a>00333 
 <a name="l00334"></a>00334                         <span class="keywordflow">if</span> (F_CTRLINPUT_RIGHT_PRESSED) {
-<a name="l00335"></a>00335                             FAT_screenInstrument_moveCursorRight(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+<a name="l00335"></a>00335                             FAT_screenInstrument_moveCursorRight(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>);
 <a name="l00336"></a>00336                         }
 <a name="l00337"></a>00337 
 <a name="l00338"></a>00338                         <span class="keywordflow">if</span> (F_CTRLINPUT_LEFT_PRESSED) {
-<a name="l00339"></a>00339                             FAT_screenInstrument_moveCursorLeft(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+<a name="l00339"></a>00339                             FAT_screenInstrument_moveCursorLeft(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>);
 <a name="l00340"></a>00340                         }
 <a name="l00341"></a>00341 
 <a name="l00342"></a>00342                         <span class="keywordflow">if</span> (F_CTRLINPUT_DOWN_PRESSED) {
-<a name="l00343"></a>00343                             FAT_screenInstrument_moveCursorDown(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+<a name="l00343"></a>00343                             FAT_screenInstrument_moveCursorDown(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>);
 <a name="l00344"></a>00344                         }
 <a name="l00345"></a>00345 
 <a name="l00346"></a>00346                         <span class="keywordflow">if</span> (F_CTRLINPUT_UP_PRESSED) {
-<a name="l00347"></a>00347                             FAT_screenInstrument_moveCursorUp(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+<a name="l00347"></a>00347                             FAT_screenInstrument_moveCursorUp(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>);
 <a name="l00348"></a>00348                         }
 <a name="l00349"></a>00349                     }
 <a name="l00350"></a>00350                 }
 <a name="l00351"></a>00351             }
 <a name="l00352"></a>00352 
-<a name="l00353"></a>00353             FAT_screenInstrument_commitCursorMove(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+<a name="l00353"></a>00353             FAT_screenInstrument_commitCursorMove(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>);
 <a name="l00354"></a>00354             speedCounter = 0;
 <a name="l00355"></a>00355         }
 <a name="l00356"></a>00356     }
@@ -486,7 +486,7 @@
 <a name="l00475"></a>00475             <span class="keywordflow">break</span>;
 <a name="l00476"></a>00476     }
 <a name="l00477"></a>00477 
-<a name="l00478"></a>00478     FAT_screenInstrument_printAllText(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+<a name="l00478"></a>00478     FAT_screenInstrument_printAllText(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>);
 <a name="l00479"></a>00479 }
 <a name="l00480"></a>00480 
 <a name="l00481"></a>00481 <span class="keywordtype">void</span> FAT_screenInstrument_wave_pressA() {
@@ -515,7 +515,7 @@
 <a name="l00504"></a>00504             <span class="keywordflow">break</span>;
 <a name="l00505"></a>00505     }
 <a name="l00506"></a>00506 
-<a name="l00507"></a>00507     FAT_screenInstrument_printAllText(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+<a name="l00507"></a>00507     FAT_screenInstrument_printAllText(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>);
 <a name="l00508"></a>00508 }
 <a name="l00509"></a>00509 
 <a name="l00510"></a>00510 <span class="keywordtype">void</span> FAT_screenInstrument_noise_pressA() {
@@ -547,7 +547,7 @@
 <a name="l00536"></a>00536             <span class="keywordflow">break</span>;
 <a name="l00537"></a>00537     }
 <a name="l00538"></a>00538 
-<a name="l00539"></a>00539     FAT_screenInstrument_printAllText(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+<a name="l00539"></a>00539     FAT_screenInstrument_printAllText(<a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>);
 <a name="l00540"></a>00540 }
 <a name="l00541"></a>00541 
 <a name="l00542"></a>00542 <span class="keywordtype">void</span> FAT_screenInstrument_sample_pressA() {
@@ -555,21 +555,21 @@
 <a name="l00544"></a>00544 }
 <a name="l00545"></a>00545 
 <a name="l00546"></a>00546 <span class="keywordtype">void</span> FAT_screenInstrument_pressA() {
-<a name="l00547"></a>00547     u8 currentType = <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970">FAT_tracker</a>.allInstruments[FAT_screenInstrument_currentInstrumentId].type;
+<a name="l00547"></a>00547     u8 currentType = <a class="code" href="data_8h.html#a18f87e57411357f0660f039aab83e970" title="Contient toutes les données déjà instanciées.">FAT_tracker</a>.<a class="code" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[FAT_screenInstrument_currentInstrumentId].<a class="code" href="struct_i_n_s_t_r_u_m_e_n_t.html#a34923af2855ec28604554d526eb97c33">type</a>;
 <a name="l00548"></a>00548 
 <a name="l00549"></a>00549     <span class="keywordflow">switch</span> (currentType) {
-<a name="l00550"></a>00550         <span class="keywordflow">case</span> INSTRUMENT_TYPE_PULSE:
-<a name="l00551"></a>00551         <span class="keywordflow">case</span> INSTRUMENT_TYPE_PULSE2:
+<a name="l00550"></a>00550         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#a77502820e6444460e84d982d3010a968" title="Type d&amp;#39;instrument PULSE 1.">INSTRUMENT_TYPE_PULSE</a>:
+<a name="l00551"></a>00551         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#ac13d41af9df01e91bd768c3ddc570e60" title="Type d&amp;#39;instrument PULSE 2.">INSTRUMENT_TYPE_PULSE2</a>:
 <a name="l00552"></a>00552             FAT_screenInstrument_pulse_pressA();
 <a name="l00553"></a>00553             <span class="keywordflow">break</span>;
-<a name="l00554"></a>00554         <span class="keywordflow">case</span> INSTRUMENT_TYPE_WAVE:
+<a name="l00554"></a>00554         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#aac311da3d084f6027ac99da075e404b6" title="Type d&amp;#39;instrument WAVE.">INSTRUMENT_TYPE_WAVE</a>:
 <a name="l00555"></a>00555             FAT_screenInstrument_wave_pressA();
 <a name="l00556"></a>00556             <span class="keywordflow">break</span>;
-<a name="l00557"></a>00557         <span class="keywordflow">case</span> INSTRUMENT_TYPE_NOISE:
+<a name="l00557"></a>00557         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#ac6907eb7f5bdf02c7a04f5f5e0370f25" title="Type d&amp;#39;instrument NOISE.">INSTRUMENT_TYPE_NOISE</a>:
 <a name="l00558"></a>00558             FAT_screenInstrument_noise_pressA();
 <a name="l00559"></a>00559             <span class="keywordflow">break</span>;
-<a name="l00560"></a>00560         <span class="keywordflow">case</span> INSTRUMENT_TYPE_SAMPLEA:
-<a name="l00561"></a>00561         <span class="keywordflow">case</span> INSTRUMENT_TYPE_SAMPLEB:
+<a name="l00560"></a>00560         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#a7dd438b73eda546c95c07c14490ac600" title="Type d&amp;#39;instrument SAMPLE A.">INSTRUMENT_TYPE_SAMPLEA</a>:
+<a name="l00561"></a>00561         <span class="keywordflow">case</span> <a class="code" href="data_8h.html#a47c0de160c778f524431c84b1c86987e" title="Type d&amp;#39;instrument SAMPLE B.">INSTRUMENT_TYPE_SAMPLEB</a>:
 <a name="l00562"></a>00562             FAT_screenInstrument_sample_pressA();
 <a name="l00563"></a>00563             <span class="keywordflow">break</span>;
 <a name="l00564"></a>00564     }
@@ -580,7 +580,7 @@
 <a name="l00569"></a>00569 
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 17:22:49 pour FAT FuriousAdvanceTracker par&nbsp;
+<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 18:27:21 pour FAT FuriousAdvanceTracker par&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

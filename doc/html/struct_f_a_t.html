@@ -20,6 +20,7 @@
     <ul class="tablist">
       <li><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
       <li><a href="classes.html"><span>Index&nbsp;des&nbsp;structures&nbsp;de&nbsp;données</span></a></li>
+      <li><a href="functions.html"><span>Champs&nbsp;de&nbsp;donnée</span></a></li>
     </ul>
   </div>
 </div>
@@ -30,33 +31,159 @@
 <h1>Référence de la structure FAT</h1>  </div>
 </div>
 <div class="contents">
-<!-- doxytag: class="FAT" --><table class="memberdecls">
+<!-- doxytag: class="FAT" -->
+<p>Structure principale: stocke l'intégralité d'une track en cours de composition.  
+<a href="#_details">Plus de détails...</a></p>
+
+<p><code>#include &lt;<a class="el" href="data_8h_source.html">data.h</a>&gt;</code></p>
+<table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Champs de données</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a87102826e08bc9bdb2ca1bf0b53f8ac9"></a><!-- doxytag: member="FAT::channels" ref="a87102826e08bc9bdb2ca1bf0b53f8ac9" args="[6]" -->
-<a class="el" href="struct_c_h_a_n_n_e_l.html">channel</a>&nbsp;</td><td class="memItemRight" valign="bottom"><b>channels</b> [6]</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aedb7f8fa6f53bd2273c70a9febd76aaa"></a><!-- doxytag: member="FAT::allSequences" ref="aedb7f8fa6f53bd2273c70a9febd76aaa" args="[NB_MAX_SEQUENCES]" -->
-<a class="el" href="struct_s_e_q_u_e_n_c_e.html">sequence</a>&nbsp;</td><td class="memItemRight" valign="bottom"><b>allSequences</b> [NB_MAX_SEQUENCES]</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac7fd37a6fdc98d68f68a4ca0082a31a0"></a><!-- doxytag: member="FAT::allBlocks" ref="ac7fd37a6fdc98d68f68a4ca0082a31a0" args="[NB_MAX_BLOCKS]" -->
-<a class="el" href="struct_b_l_o_c_k.html">block</a>&nbsp;</td><td class="memItemRight" valign="bottom"><b>allBlocks</b> [NB_MAX_BLOCKS]</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af95be502ce562f33d068959c2d3a6c14"></a><!-- doxytag: member="FAT::allInstruments" ref="af95be502ce562f33d068959c2d3a6c14" args="[NB_MAX_INSTRUMENTS]" -->
-<a class="el" href="struct_i_n_s_t_r_u_m_e_n_t.html">instrument</a>&nbsp;</td><td class="memItemRight" valign="bottom"><b>allInstruments</b> [NB_MAX_INSTRUMENTS]</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5295928ddfd03f71d0fe60e2877b253a"></a><!-- doxytag: member="FAT::composer" ref="a5295928ddfd03f71d0fe60e2877b253a" args="" -->
-<a class="el" href="struct_c_o_m_p_o_s_e_r.html">composer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><b>composer</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a818a64490682a41a13e442b417bcb459"></a><!-- doxytag: member="FAT::tempo" ref="a818a64490682a41a13e442b417bcb459" args="" -->
-u8&nbsp;</td><td class="memItemRight" valign="bottom"><b>tempo</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a841401a367ef1cd53370b5c66363bdc9"></a><!-- doxytag: member="FAT::transpose" ref="a841401a367ef1cd53370b5c66363bdc9" args="" -->
-u8&nbsp;</td><td class="memItemRight" valign="bottom"><b>transpose</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a21b7fa961fccb52ae1decc3ab2fe9bd5"></a><!-- doxytag: member="FAT::songName" ref="a21b7fa961fccb52ae1decc3ab2fe9bd5" args="[SONG_NAME_MAX_LETTERS]" -->
-char&nbsp;</td><td class="memItemRight" valign="bottom"><b>songName</b> [SONG_NAME_MAX_LETTERS]</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae51db5320b24fb28d769019f35c2051f"></a><!-- doxytag: member="FAT::tables" ref="ae51db5320b24fb28d769019f35c2051f" args="[NB_MAX_TABLES]" -->
-<a class="el" href="struct_t_a_b_l_e.html">table</a>&nbsp;</td><td class="memItemRight" valign="bottom"><b>tables</b> [NB_MAX_TABLES]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_c_h_a_n_n_e_l.html">channel</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_a_t.html#a87102826e08bc9bdb2ca1bf0b53f8ac9">channels</a> [6]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_s_e_q_u_e_n_c_e.html">sequence</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_a_t.html#aedb7f8fa6f53bd2273c70a9febd76aaa">allSequences</a> [NB_MAX_SEQUENCES]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_b_l_o_c_k.html">block</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_a_t.html#ac7fd37a6fdc98d68f68a4ca0082a31a0">allBlocks</a> [NB_MAX_BLOCKS]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_i_n_s_t_r_u_m_e_n_t.html">instrument</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a> [NB_MAX_INSTRUMENTS]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_c_o_m_p_o_s_e_r.html">composer</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_a_t.html#a5295928ddfd03f71d0fe60e2877b253a">composer</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">u8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_a_t.html#a818a64490682a41a13e442b417bcb459">tempo</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">u8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_a_t.html#a841401a367ef1cd53370b5c66363bdc9">transpose</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">char&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_a_t.html#a21b7fa961fccb52ae1decc3ab2fe9bd5">songName</a> [SONG_NAME_MAX_LETTERS]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_t_a_b_l_e.html">table</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_f_a_t.html#ae51db5320b24fb28d769019f35c2051f">tables</a> [NB_MAX_TABLES]</td></tr>
 </table>
+<hr/><a name="_details"></a><h2>Description détaillée</h2>
+<p>Structure principale: stocke l'intégralité d'une track en cours de composition. </p>
+<p>Cette structure définit le tracker: toutes les données sont référencés dans cette espace. </p>
+<hr/><h2>Documentation des champs</h2>
+<a class="anchor" id="ac7fd37a6fdc98d68f68a4ca0082a31a0"></a><!-- doxytag: member="FAT::allBlocks" ref="ac7fd37a6fdc98d68f68a4ca0082a31a0" args="[NB_MAX_BLOCKS]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_b_l_o_c_k.html">block</a> <a class="el" href="struct_f_a_t.html#ac7fd37a6fdc98d68f68a4ca0082a31a0">allBlocks</a>[NB_MAX_BLOCKS]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Tableau (physique) contenant tous les blocks. </p>
+
+</div>
+</div>
+<a class="anchor" id="af95be502ce562f33d068959c2d3a6c14"></a><!-- doxytag: member="FAT::allInstruments" ref="af95be502ce562f33d068959c2d3a6c14" args="[NB_MAX_INSTRUMENTS]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_i_n_s_t_r_u_m_e_n_t.html">instrument</a> <a class="el" href="struct_f_a_t.html#af95be502ce562f33d068959c2d3a6c14">allInstruments</a>[NB_MAX_INSTRUMENTS]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Tableau (physique) contenant tous les instruments. </p>
+
+</div>
+</div>
+<a class="anchor" id="aedb7f8fa6f53bd2273c70a9febd76aaa"></a><!-- doxytag: member="FAT::allSequences" ref="aedb7f8fa6f53bd2273c70a9febd76aaa" args="[NB_MAX_SEQUENCES]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_s_e_q_u_e_n_c_e.html">sequence</a> <a class="el" href="struct_f_a_t.html#aedb7f8fa6f53bd2273c70a9febd76aaa">allSequences</a>[NB_MAX_SEQUENCES]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Tableau (physique) contenant toutes les séquence. </p>
+
+</div>
+</div>
+<a class="anchor" id="a87102826e08bc9bdb2ca1bf0b53f8ac9"></a><!-- doxytag: member="FAT::channels" ref="a87102826e08bc9bdb2ca1bf0b53f8ac9" args="[6]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_c_h_a_n_n_e_l.html">channel</a> <a class="el" href="struct_f_a_t.html#a87102826e08bc9bdb2ca1bf0b53f8ac9">channels</a>[6]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Définition des channels: la GBA en dispose de 6. </p>
+
+</div>
+</div>
+<a class="anchor" id="a5295928ddfd03f71d0fe60e2877b253a"></a><!-- doxytag: member="FAT::composer" ref="a5295928ddfd03f71d0fe60e2877b253a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_c_o_m_p_o_s_e_r.html">composer</a> <a class="el" href="struct_c_o_m_p_o_s_e_r.html">composer</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Données pour l'écran de composition. </p>
+
+</div>
+</div>
+<a class="anchor" id="a21b7fa961fccb52ae1decc3ab2fe9bd5"></a><!-- doxytag: member="FAT::songName" ref="a21b7fa961fccb52ae1decc3ab2fe9bd5" args="[SONG_NAME_MAX_LETTERS]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char <a class="el" href="struct_f_a_t.html#a21b7fa961fccb52ae1decc3ab2fe9bd5">songName</a>[SONG_NAME_MAX_LETTERS]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Nom de la track en cours de composition. </p>
+
+</div>
+</div>
+<a class="anchor" id="ae51db5320b24fb28d769019f35c2051f"></a><!-- doxytag: member="FAT::tables" ref="ae51db5320b24fb28d769019f35c2051f" args="[NB_MAX_TABLES]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_t_a_b_l_e.html">table</a> <a class="el" href="struct_f_a_t.html#ae51db5320b24fb28d769019f35c2051f">tables</a>[NB_MAX_TABLES]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Tableau (physique) contenant toutes les tables. </p>
+
+</div>
+</div>
+<a class="anchor" id="a818a64490682a41a13e442b417bcb459"></a><!-- doxytag: member="FAT::tempo" ref="a818a64490682a41a13e442b417bcb459" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">u8 <a class="el" href="struct_f_a_t.html#a818a64490682a41a13e442b417bcb459">tempo</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Tempo pour la track en cours de composition. </p>
+
+</div>
+</div>
+<a class="anchor" id="a841401a367ef1cd53370b5c66363bdc9"></a><!-- doxytag: member="FAT::transpose" ref="a841401a367ef1cd53370b5c66363bdc9" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">u8 <a class="el" href="struct_f_a_t.html#a841401a367ef1cd53370b5c66363bdc9">transpose</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Valeur de transposition pour la track en cours de composition. </p>
+
+</div>
+</div>
 <hr/>La documentation de cette structure a été générée à partir du fichier suivant :<ul>
 <li><a class="el" href="data_8h_source.html">data.h</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 17:22:49 pour FAT FuriousAdvanceTracker par&nbsp;
+<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 18:27:21 pour FAT FuriousAdvanceTracker par&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

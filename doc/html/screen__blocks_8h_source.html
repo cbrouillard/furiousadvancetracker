@@ -96,7 +96,7 @@
 <a name="l00067"></a>00067 
 <a name="l00068"></a>00068 <span class="keywordtype">void</span> FAT_screenBlocks_printBlock(u8 line) {
 <a name="l00069"></a>00069     mutex = 0;
-<a name="l00070"></a>00070     <span class="keywordflow">if</span> (<a class="code" href="data_8h.html#aa279e132d9acd6d8fd39fd48c70f474c">FAT_data_getBlock</a>(FAT_screenBlocks_currentSequenceId, line) != <a class="code" href="data_8h.html#aff0fa3a7735ac0218d293d0ee2b8f12e">NULL_VALUE</a>) {
+<a name="l00070"></a>00070     <span class="keywordflow">if</span> (<a class="code" href="data_8h.html#aa279e132d9acd6d8fd39fd48c70f474c">FAT_data_getBlock</a>(FAT_screenBlocks_currentSequenceId, line) != <a class="code" href="data_8h.html#aff0fa3a7735ac0218d293d0ee2b8f12e" title="NULL_VALUE représente la valeur &amp;quot;interdite&amp;quot;.">NULL_VALUE</a>) {
 <a name="l00071"></a>00071         ham_DrawText(SCREENBLOCKS_BLOCK_LINE_X,
 <a name="l00072"></a>00072                 line + SCREENBLOCKS_LINE_START_Y,
 <a name="l00073"></a>00073                 <span class="stringliteral">&quot;%.2x\0&quot;</span>, <a class="code" href="data_8h.html#aa279e132d9acd6d8fd39fd48c70f474c">FAT_data_getBlock</a>(FAT_screenBlocks_currentSequenceId, line));
@@ -150,7 +150,7 @@
 <a name="l00121"></a>00121     <span class="comment">// affichage d&#39;un peu de texte</span>
 <a name="l00122"></a>00122     <span class="comment">// numéro de la séquence en cours d&#39;édition, tout est dans SCREEN_SONG :)</span>
 <a name="l00123"></a>00123     FAT_screenBlocks_currentSequenceId = <a class="code" href="data_8h.html#a24e24d53edc08cd5e795263f4d2a8659">FAT_data_getSequence</a>(FAT_screenSong_currentSelectedColumn, FAT_screenSong_currentSelectedLine);
-<a name="l00124"></a>00124     <span class="keywordflow">if</span> (FAT_screenBlocks_currentSequenceId == <a class="code" href="data_8h.html#aff0fa3a7735ac0218d293d0ee2b8f12e">NULL_VALUE</a>) {
+<a name="l00124"></a>00124     <span class="keywordflow">if</span> (FAT_screenBlocks_currentSequenceId == <a class="code" href="data_8h.html#aff0fa3a7735ac0218d293d0ee2b8f12e" title="NULL_VALUE représente la valeur &amp;quot;interdite&amp;quot;.">NULL_VALUE</a>) {
 <a name="l00125"></a>00125         FAT_screenBlocks_currentSequenceId = 0;
 <a name="l00126"></a>00126     }
 <a name="l00127"></a>00127     FAT_screenBlocks_printSequenceNumber();
@@ -206,7 +206,7 @@
 <a name="l00177"></a>00177                     <a class="code" href="cursors_8h.html#aa00496b5a304b892bfe87cf3d256e277" title="Affiche le curseur de changement d&amp;#39;onglet.">FAT_cursors_showCursorChange</a>();
 <a name="l00178"></a>00178 
 <a name="l00179"></a>00179                     <span class="keywordflow">if</span> (F_CTRLINPUT_RIGHT_PRESSED) {
-<a name="l00180"></a>00180                         <span class="keywordflow">if</span> (FAT_screenBlocks_currentSequenceId &lt; NB_MAX_SEQUENCES - 1) {
+<a name="l00180"></a>00180                         <span class="keywordflow">if</span> (FAT_screenBlocks_currentSequenceId &lt; <a class="code" href="data_8h.html#a81d08d166134e2779a6e3ff0bde5335f" title="Nombre de séquences disponibles au total en mémoire. 0x80 = 128.">NB_MAX_SEQUENCES</a> - 1) {
 <a name="l00181"></a>00181                             FAT_screenBlocks_currentSequenceId++;
 <a name="l00182"></a>00182                             FAT_screenBlocks_printSequenceNumber();
 <a name="l00183"></a>00183                             FAT_screenBlocks_printAllScreenText();
@@ -376,7 +376,7 @@
 <a name="l00347"></a>00347 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 17:22:49 pour FAT FuriousAdvanceTracker par&nbsp;
+<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 18:27:21 pour FAT FuriousAdvanceTracker par&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

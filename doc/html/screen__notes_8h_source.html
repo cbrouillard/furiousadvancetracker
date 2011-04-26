@@ -96,11 +96,11 @@
 <a name="l00067"></a>00067 <span class="keywordtype">void</span> FAT_screenNotes_printNote(u8 line) {
 <a name="l00068"></a>00068     mutex = 0;
 <a name="l00069"></a>00069     <span class="keywordflow">if</span> (!<a class="code" href="data_8h.html#aff76faf75303c7e8c43fb879057add54">FAT_data_isNoteEmpty</a>(FAT_screenNotes_currentBlockId, line)) {
-<a name="l00070"></a>00070         <a class="code" href="struct_n_o_t_e.html">note</a>* actualNote = <a class="code" href="data_8h.html#a65bc3649781d440d16d5660eb0ddc0c9">FAT_data_getNote</a>(FAT_screenNotes_currentBlockId, line);
+<a name="l00070"></a>00070         <a class="code" href="struct_n_o_t_e.html" title="Définit une note.">note</a>* actualNote = <a class="code" href="data_8h.html#a65bc3649781d440d16d5660eb0ddc0c9">FAT_data_getNote</a>(FAT_screenNotes_currentBlockId, line);
 <a name="l00071"></a>00071 
 <a name="l00072"></a>00072         ham_DrawText(SCREENNOTES_NOTE_LINE_X,
 <a name="l00073"></a>00073                 line + SCREENNOTES_LINE_START_Y,
-<a name="l00074"></a>00074                 <span class="stringliteral">&quot;%s%1x %.2x\0&quot;</span>, noteName[(actualNote-&gt;note &amp; 0xf0)&gt;&gt;4], actualNote-&gt;note &amp; 0x0f, actualNote-&gt;instrument);
+<a name="l00074"></a>00074                 <span class="stringliteral">&quot;%s%1x %.2x\0&quot;</span>, <a class="code" href="data_8h.html#a2d022bd059f9e0170675ea90d275c138" title="Tableau constant contenant toutes les notes sous formes de chaînes de caractères.">noteName</a>[(actualNote-&gt;<a class="code" href="struct_n_o_t_e.html#ae312e84740a2f94fd423ce02bac7c81d">note</a> &amp; 0xf0)&gt;&gt;4], actualNote-&gt;<a class="code" href="struct_n_o_t_e.html#ae312e84740a2f94fd423ce02bac7c81d">note</a> &amp; 0x0f, actualNote-&gt;<a class="code" href="struct_n_o_t_e.html#a1c6a03f41107c548d1ecb7435d3541e0">instrument</a>);
 <a name="l00075"></a>00075     } <span class="keywordflow">else</span> {
 <a name="l00076"></a>00076         ham_DrawText(SCREENNOTES_NOTE_LINE_X,
 <a name="l00077"></a>00077                 line + SCREENNOTES_LINE_START_Y, <span class="stringliteral">&quot;      \0&quot;</span>);
@@ -138,7 +138,7 @@
 <a name="l00109"></a>00109 
 <a name="l00110"></a>00110     <span class="comment">// affichage d&#39;un peu de texte</span>
 <a name="l00111"></a>00111     FAT_screenNotes_currentBlockId = <a class="code" href="data_8h.html#aa279e132d9acd6d8fd39fd48c70f474c">FAT_data_getBlock</a>(FAT_screenBlocks_currentSequenceId, FAT_screenBlocks_currentSelectedLine);
-<a name="l00112"></a>00112     <span class="keywordflow">if</span> (FAT_screenNotes_currentBlockId == <a class="code" href="data_8h.html#aff0fa3a7735ac0218d293d0ee2b8f12e">NULL_VALUE</a>) {
+<a name="l00112"></a>00112     <span class="keywordflow">if</span> (FAT_screenNotes_currentBlockId == <a class="code" href="data_8h.html#aff0fa3a7735ac0218d293d0ee2b8f12e" title="NULL_VALUE représente la valeur &amp;quot;interdite&amp;quot;.">NULL_VALUE</a>) {
 <a name="l00113"></a>00113         FAT_screenNotes_currentBlockId = 0;
 <a name="l00114"></a>00114     }
 <a name="l00115"></a>00115     FAT_screenNotes_printBlockNumber();
@@ -204,7 +204,7 @@
 <a name="l00175"></a>00175                     <a class="code" href="cursors_8h.html#aa00496b5a304b892bfe87cf3d256e277" title="Affiche le curseur de changement d&amp;#39;onglet.">FAT_cursors_showCursorChange</a>();
 <a name="l00176"></a>00176 
 <a name="l00177"></a>00177                     <span class="keywordflow">if</span> (F_CTRLINPUT_RIGHT_PRESSED) {
-<a name="l00178"></a>00178                         <span class="keywordflow">if</span> (FAT_screenNotes_currentBlockId &lt; NB_MAX_BLOCKS - 1) {
+<a name="l00178"></a>00178                         <span class="keywordflow">if</span> (FAT_screenNotes_currentBlockId &lt; <a class="code" href="data_8h.html#a89e382c9cc3fc73a9c0efaffcecbb64e" title="Nombre de blocks disponibles au total en mémoire. 0x70 = 112.">NB_MAX_BLOCKS</a> - 1) {
 <a name="l00179"></a>00179                             FAT_screenNotes_currentBlockId++;
 <a name="l00180"></a>00180                             FAT_screenNotes_printBlockNumber();
 <a name="l00181"></a>00181                             FAT_screenNotes_printAllScreenText();
@@ -348,7 +348,7 @@
 <a name="l00319"></a>00319 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 17:22:49 pour FAT FuriousAdvanceTracker par&nbsp;
+<hr class="footer"/><address class="footer"><small>Généré le Tue Apr 26 2011 18:27:21 pour FAT FuriousAdvanceTracker par&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>
