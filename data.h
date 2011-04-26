@@ -161,9 +161,15 @@ typedef struct INSTRUMENT {
     u8 loopmode; // max = 1
 
     // regrouper ces 3 variables en 1 u8
-    u8 voice; // max = 17
-    u8 bank; // max = 1
-    u8 bankMode; // max = 1
+    //u8 voice; // max = 17
+    //u8 bank; // max = 1
+    //u8 bankMode; // max = 1
+    // 0x 0   0        0     0 0000
+    // 0x NA  bankmode bank  voice
+    u8 voiceAndBank;
+    // voice -> voiceAndBank & 0x1f
+    // bank -> (voiceAndBank & 0x20) >> 5
+    // bankMode -> (voiceAndBank & 0x40) >> 6
 
     // supprimer cette variable -> volume existe !
     u8 volumeRatio; // max = 4
@@ -554,9 +560,10 @@ void FAT_data_initInstrumentIfNeeded(u8 instId, u8 channel) {
         FAT_tracker.allInstruments[instId].wavedutyOrPolynomialStep = 0;
         FAT_tracker.allInstruments[instId].soundlength = 0;
         FAT_tracker.allInstruments[instId].loopmode = 0;
-        FAT_tracker.allInstruments[instId].voice = 0;
-        FAT_tracker.allInstruments[instId].bank = 0;
-        FAT_tracker.allInstruments[instId].bankMode = 0;
+        //FAT_tracker.allInstruments[instId].voice = 0;
+        //FAT_tracker.allInstruments[instId].bank = 0;
+        //FAT_tracker.allInstruments[instId].bankMode = 0;
+        FAT_tracker.allInstruments[instId].voiceAndBank = 0;
 
         FAT_tracker.allInstruments[instId].type = channel;
     }
@@ -836,29 +843,42 @@ void FAT_data_instrumentNoise_changeLoopmode(u8 instrumentId, s8 value) {
 }
 
 void FAT_data_instrumentWave_changeVoice(u8 instrumentId, s8 value) {
+    u8 voice = FAT_tracker.allInstruments[instrumentId].voiceAndBank & 0x1f;
+    u8 bank = (FAT_tracker.allInstruments[instrumentId].voiceAndBank & 0x20);
+    u8 bankMode = (FAT_tracker.allInstruments[instrumentId].voiceAndBank & 0x40);
     if (
-            (value < 0 && FAT_tracker.allInstruments[instrumentId].voice > (-value - 1)) ||
-            (value > 0 && FAT_tracker.allInstruments[instrumentId].voice < INSTRUMENT_WAVE_NB_VOICE - value)
+            (value < 0 && voice > (-value - 1)) ||
+            (value > 0 && voice < INSTRUMENT_WAVE_NB_VOICE - value)
 
             ) {
-        FAT_tracker.allInstruments[instrumentId].voice += value;
+        voice += value;
+        FAT_tracker.allInstruments[instrumentId].voiceAndBank = bankMode | bank | voice;
     }
 }
 
 void FAT_data_instrumentWave_changeBank(u8 instrumentId, s8 value) {
+    u8 voice = FAT_tracker.allInstruments[instrumentId].voiceAndBank & 0x1f;
+    u8 bank = (FAT_tracker.allInstruments[instrumentId].voiceAndBank & 0x20) >> 5;
+    u8 bankMode = (FAT_tracker.allInstruments[instrumentId].voiceAndBank & 0x40);
     if (value < 0) {
-        FAT_tracker.allInstruments[instrumentId].bank = 0;
+        bank = 0;
     } else if (value > 0) {
-        FAT_tracker.allInstruments[instrumentId].bank = 1;
+        bank = 1;
     }
+    FAT_tracker.allInstruments[instrumentId].voiceAndBank = bankMode | (bank << 5) | voice;
 }
 
 void FAT_data_instrumentWave_changeBankmode(u8 instrumentId, s8 value) {
+    u8 voice = FAT_tracker.allInstruments[instrumentId].voiceAndBank & 0x1f;
+    u8 bank = (FAT_tracker.allInstruments[instrumentId].voiceAndBank & 0x20);
+    u8 bankMode = (FAT_tracker.allInstruments[instrumentId].voiceAndBank & 0x40) >> 6;
     if (value < 0) {
-        FAT_tracker.allInstruments[instrumentId].bankMode = 0;
+        bankMode = 0;
     } else if (value > 0) {
-        FAT_tracker.allInstruments[instrumentId].bankMode = 1;
+        bankMode = 1;
     }
+    
+    FAT_tracker.allInstruments[instrumentId].voiceAndBank = (bankMode << 6) | bank | voice;
 }
 
 void FAT_data_project_changeTempo(s8 addedValue) {
@@ -963,14 +983,13 @@ void FAT_data_composer_changeInstrument(u8 line, s8 addedValue) {
 }
 
 void FAT_data_project_save() {
-    ham_DrawText(23, 16, "SAVE !");
-
     memcpy(pSaveMemory, &FAT_tracker, sizeof (FAT_tracker));
+    ham_DrawText(23, 16, "SAVED  !");
 }
 
 void FAT_data_project_load() {
-    ham_DrawText(23, 16, "LOAD !");
     memcpy(&FAT_tracker, pSaveMemory, sizeof (FAT_tracker));
+    ham_DrawText(23, 16, "LOADED !");
 }
 
 #endif	/* DATA_H */

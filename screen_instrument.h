@@ -80,10 +80,10 @@ void FAT_screenInstrument_printAllText(u8 type) {
                 ham_DrawText(1, 8, "LENGTH    NA");
             }
 
-            ham_DrawText(1, 9, "VOICE     %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].voice);
-            ham_DrawText(1, 10, "BANK      %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].bank);
+            ham_DrawText(1, 9, "VOICE     %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank & 0x1f);
+            ham_DrawText(1, 10, "BANK      %.1x", (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank & 0x20)>>5);
 
-            if (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].bankMode == 0) {
+            if ( (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank & 0x40)>>6 == 0) {
                 ham_DrawText(1, 11, "BANKMODE  SIN");
             } else {
                 ham_DrawText(1, 11, "BANKMODE  DUA");
