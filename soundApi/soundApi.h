@@ -54,7 +54,7 @@ void snd_simple_playSoundOnChannel1 (u8 sweep, u16 envelope, u8 mode,
  * volume: de 0 à F
  * envdir: direction de l'enveloppe 1 increase, 0 decrease
  * envsteptime: pas de l'enveloppe de 0 à 7
- * waveduty: forme de l'onde 0, 1, 2 ou 3
+ * waveduty: forme de l'onde 0, 1, 2 ou 3f
  * soundlength: durée du son 0 à 3f (attention valeur inversée: 3f = court) ACTIF seulement si loopmode = 1
  * loopmode: continuous 0, timed 1
  * sfreq: la numéro de fréquence de la note jouée. de 0 à 72 cf: const u16 freqs[NB_FREQUENCES]

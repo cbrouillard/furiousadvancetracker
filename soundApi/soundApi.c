@@ -8,7 +8,10 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
 */
-#include <mygba.h>
+typedef     unsigned char           u8;
+typedef     unsigned short int      u16;
+typedef     unsigned int            u32;
+
 #include "soundApi.h"
 
 #define NULL_VALUE 0xff
