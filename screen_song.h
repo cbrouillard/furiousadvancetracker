@@ -218,7 +218,7 @@ void FAT_screenSong_pressB() {
             // espace vide
             FAT_data_pasteSequenceWithNewNumber(FAT_screenSong_currentSelectedColumn, FAT_screenSong_currentSelectedLine);
         } else {
-            FAT_data_copySequence(FAT_screenSong_currentSelectedColumn, FAT_screenSong_currentSelectedLine);
+            FAT_data_cloneSequence(FAT_screenSong_currentSelectedColumn, FAT_screenSong_currentSelectedLine);
         }
 
     } else {

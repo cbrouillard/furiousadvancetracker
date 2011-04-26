@@ -387,7 +387,6 @@ void FAT_data_cutSequence(u8 channelId, u8 line) {
     FAT_data_sequenceClipboard = FAT_tracker.channels[channelId].sequences[line];
     FAT_tracker.channels[channelId].sequences[line] = NULL_VALUE;
 }
-
 /**
  * \brief Colle la séquence actuellement stockée dans le clipboard.
  * 
@@ -397,8 +396,16 @@ void FAT_data_cutSequence(u8 channelId, u8 line) {
 void FAT_data_pasteSequence(u8 channelId, u8 line) {
     FAT_tracker.channels[channelId].sequences[line] = FAT_data_sequenceClipboard;
 }
-
-void FAT_data_copySequence(u8 channelId, u8 line) {
+/**
+ * \brief Clone une séquence: change le numéro de la séquence pointée.
+ * 
+ * Le nouveau numéro est le suivant disponible. La fonction copie égalements les éventuels
+ * ids de blocks se trouvant dans la séquence à cloner (elle ne clone pas les blocks).
+ * 
+ * @param channelId le numéro du channel (de 0 à 5)
+ * @param line le numéro de ligne ou se situe la séquence dans le tableau
+ */
+void FAT_data_cloneSequence(u8 channelId, u8 line) {
     u8 seqIdTemp = FAT_tracker.channels[channelId].sequences[line];
     if (FAT_data_smartAllocateSequence(channelId, line) && seqIdTemp != NULL_VALUE) {
         // copie de tout le contenu de la séquence dans la nouvelle
@@ -407,6 +414,14 @@ void FAT_data_copySequence(u8 channelId, u8 line) {
     }
 }
 
+/**
+ * \brief Colle la séquence dans le presse-papier en changeant le numéro.
+ * 
+ * Le numéro est déterminé automatiquement: c'est le premier numéro de séquence vide.
+ * 
+ * @param channelId le numéro du channel (de 0 à 5)
+ * @param line le numéro de ligne ou se situe la séquence dans le tableau
+ */
 void FAT_data_pasteSequenceWithNewNumber(u8 channelId, u8 line) {
     if (FAT_data_smartAllocateSequence(channelId, line) && FAT_data_sequenceClipboard != NULL_VALUE) {
         // copie de tout le contenu de la séquence dans la nouvelle
@@ -416,7 +431,8 @@ void FAT_data_pasteSequenceWithNewNumber(u8 channelId, u8 line) {
 }
 
 /**
- * Efface un block dans une séquence donnée (Ecran "BLOCK").
+ * \brief Efface un block dans une séquence donnée.
+ * 
  * Attention, cette méthode n'efface pas le contenu du block, seulement la 
  * référence dans la séquence.
  * @param sequence le numéro de la séquence de 0 à NB_MAX_SEQUENCES
