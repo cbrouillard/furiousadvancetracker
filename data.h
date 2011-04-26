@@ -82,13 +82,12 @@ void FAT_data_initInstrumentIfNeeded(u8 instId, u8 channel);
 bool FAT_data_smartAllocateSequence(u8 channelId, u8 line);
 bool FAT_data_smartAllocateBlock(u8 sequence, u8 blockLine);
 
-
-typedef struct EFFECT{
+typedef struct EFFECT {
     u8 name; // jusqu'a 255 nom d'effets
     u8 value; // 255 >= value >= 0 
 } effect;
 
-typedef struct TABLE{
+typedef struct TABLE {
     effect effects[NB_EFFECTS_IN_ONE_TABLE];
 } table;
 
@@ -102,13 +101,14 @@ typedef struct NOTE {
     // récupérer l'octave -> note & 0x0f
     u8 freq;
     u8 instrument;
+    //effect effect;
 } note;
 
 note FAT_data_lastNoteWritten, FAT_data_noteClipboard;
 
 typedef struct COMPOSER {
     note notes[8];
-    u8 transpose[8];
+    u8 transpose;
 } composer;
 
 // POIDS ACTUEL: 16 * 4 = 64 octets 
@@ -145,20 +145,31 @@ typedef struct INSTRUMENT {
 
     u8 sweep;
 
-    u8 volume;
-    u8 envdirection;
-    u8 envsteptime;
-    u8 wavedutyOrPolynomialStep;
-    u8 soundlength;
+    //u8 volume; // max = F = 4bits
+    //u8 envdirection; // max = 1
+    //u8 envsteptime; // max = 7
+    u8 envelope;
+    // 0x 000          0    0000
+    // 0x steptime     dir  volume
+    // steptime -> (envelope & 0xE0) >> 5
+    // dir -> (envelope & 0x10) >> 4
+    // volume -> (envelope & 0x0f)
 
-    u8 loopmode;
+    u8 wavedutyOrPolynomialStep; // max = 4
+    u8 soundlength; // max FF
 
-    u8 voice;
-    u8 bank;
-    u8 bankMode;
-    u8 volumeRatio;
+    u8 loopmode; // max = 1
 
-    // params
+    // regrouper ces 3 variables en 1 u8
+    u8 voice; // max = 17
+    u8 bank; // max = 1
+    u8 bankMode; // max = 1
+
+    // supprimer cette variable -> volume existe !
+    u8 volumeRatio; // max = 4
+
+    // TODO ajouter
+    // lien vers une table (u8)
 } instrument;
 
 // POIDS ACTUEL: 6*255 + 255*16 + 255*64 + 63*19 = 
@@ -169,11 +180,14 @@ typedef struct FAT {
     sequence allSequences [NB_MAX_SEQUENCES];
     block allBlocks [NB_MAX_BLOCKS];
     instrument allInstruments[NB_MAX_INSTRUMENTS];
-    composer composer;
+    composer composer; // TODO plusieurs composer dispo (au moins 3)
 
     u8 tempo;
     u8 transpose;
     char songName[SONG_NAME_MAX_LETTERS];
+
+    // TODO ajouter
+    // les tables: table table[NB_MAX_TABLES]
 } tracker;
 
 /**
@@ -203,8 +217,6 @@ void FAT_data_initData() {
     FAT_data_lastNoteWritten.freq = 0;
     FAT_data_lastNoteWritten.instrument = 0;
     FAT_data_lastNoteWritten.note = 0x03;
-    //FAT_data_lastNoteWritten.name = 0;
-    //FAT_data_lastNoteWritten.octave = MIN_OCTAVE;
 
     // block par défaut
     FAT_data_lastBlockWritten = 0;
@@ -534,10 +546,11 @@ void FAT_data_addDefaultNote(u8 block, u8 noteLine, u8 channel) {
 void FAT_data_initInstrumentIfNeeded(u8 instId, u8 channel) {
     if (FAT_tracker.allInstruments[instId].sweep == NULL_VALUE) {
         FAT_tracker.allInstruments[instId].sweep = 0;
-        FAT_tracker.allInstruments[instId].volume = 0xa;
+        //FAT_tracker.allInstruments[instId].volume = 0xa;
+        //FAT_tracker.allInstruments[instId].envdirection = 0;
+        //FAT_tracker.allInstruments[instId].envsteptime = 0;
+        FAT_tracker.allInstruments[instId].envelope = 0x0a;
         FAT_tracker.allInstruments[instId].volumeRatio = 3;
-        FAT_tracker.allInstruments[instId].envdirection = 0;
-        FAT_tracker.allInstruments[instId].envsteptime = 0;
         FAT_tracker.allInstruments[instId].wavedutyOrPolynomialStep = 0;
         FAT_tracker.allInstruments[instId].soundlength = 0;
         FAT_tracker.allInstruments[instId].loopmode = 0;
@@ -685,12 +698,16 @@ void FAT_data_instrument_changeType(u8 instrumentId, u8 newType) {
 }
 
 void FAT_data_instrumentPulse_changeVolume(u8 instrumentId, s8 value) {
+    u8 volume = FAT_tracker.allInstruments[instrumentId].envelope & 0x0f;
+    u8 steptime = (FAT_tracker.allInstruments[instrumentId].envelope & 0xE0);
+    u8 dir = (FAT_tracker.allInstruments[instrumentId].envelope & 0x10);
     if (
-            (value < 0 && FAT_tracker.allInstruments[instrumentId].volume > (-value - 1)) ||
-            (value > 0 && FAT_tracker.allInstruments[instrumentId].volume < INSTRUMENT_PULSE_VOLUME_MAX - value)
+            (value < 0 && volume > (-value - 1)) ||
+            (value > 0 && volume < INSTRUMENT_PULSE_VOLUME_MAX - value)
 
             ) {
-        FAT_tracker.allInstruments[instrumentId].volume += value;
+        volume += value;
+        FAT_tracker.allInstruments[instrumentId].envelope = steptime | dir | volume;
     }
 }
 
@@ -709,12 +726,15 @@ void FAT_data_instrumentWave_changeVolume(u8 instrumentId, s8 value) {
 }
 
 void FAT_data_instrumentPulse_changeEnvelopeDirection(u8 instrumentId, s8 value) {
-
+    u8 volume = FAT_tracker.allInstruments[instrumentId].envelope & 0x0f;
+    u8 steptime = (FAT_tracker.allInstruments[instrumentId].envelope & 0xE0);
+    u8 dir = (FAT_tracker.allInstruments[instrumentId].envelope & 0x10) >> 4;
     if (value < 0) {
-        FAT_tracker.allInstruments[instrumentId].envdirection = 0;
+        dir = 0;
     } else if (value > 0) {
-        FAT_tracker.allInstruments[instrumentId].envdirection = 1;
+        dir = 1;
     }
+    FAT_tracker.allInstruments[instrumentId].envelope = steptime | (dir << 4) | volume;
 }
 
 void FAT_data_instrumentNoise_changeEnvelopeDirection(u8 instrumentId, s8 value) {
@@ -722,12 +742,16 @@ void FAT_data_instrumentNoise_changeEnvelopeDirection(u8 instrumentId, s8 value)
 }
 
 void FAT_data_instrumentPulse_changeSteptime(u8 instrumentId, s8 value) {
+    u8 volume = FAT_tracker.allInstruments[instrumentId].envelope & 0x0f;
+    u8 steptime = (FAT_tracker.allInstruments[instrumentId].envelope & 0xE0) >> 5;
+    u8 dir = (FAT_tracker.allInstruments[instrumentId].envelope & 0x10);
     if (
-            (value < 0 && FAT_tracker.allInstruments[instrumentId].envsteptime > (-value - 1)) ||
-            (value > 0 && FAT_tracker.allInstruments[instrumentId].envsteptime < INSTRUMENT_PULSE_STEPTIME_MAX - value)
+            (value < 0 && steptime > (-value - 1)) ||
+            (value > 0 && steptime < INSTRUMENT_PULSE_STEPTIME_MAX - value)
 
             ) {
-        FAT_tracker.allInstruments[instrumentId].envsteptime += value;
+        steptime += value;
+        FAT_tracker.allInstruments[instrumentId].envelope = (steptime << 5) | dir | volume;
     }
 }
 

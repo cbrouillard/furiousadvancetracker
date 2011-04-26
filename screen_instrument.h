@@ -22,6 +22,7 @@ u8 FAT_instrument_envdir0_obj, FAT_instrument_envdir1_obj;
 u8 FAT_instrument_waveduty0_obj, FAT_instrument_waveduty1_obj, FAT_instrument_waveduty2_obj, FAT_instrument_waveduty3_obj;
 
 #include "screen_instrument_cursor.h"
+#include "data.h"
 
 // prototypes
 void FAT_screenInstrument_init();
@@ -52,11 +53,11 @@ void FAT_screenInstrument_printAllText(u8 type) {
     switch (type) {
         case INSTRUMENT_TYPE_PULSE:
         case INSTRUMENT_TYPE_PULSE2:
-            ham_DrawText(1, 4, "VOLUME    %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].volume);
+            ham_DrawText(1, 4, "VOLUME    %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0x0f);
             ham_DrawText(1, 5, "DIRECTION");
-            FAT_screenInstrument_showEnvdir(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envdirection,
+            FAT_screenInstrument_showEnvdir((FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0x10) >> 4,
                     88, 40);
-            ham_DrawText(1, 6, "STEPTIME  %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envsteptime);
+            ham_DrawText(1, 6, "STEPTIME  %.1x", (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0xe0) >> 5 );
             ham_DrawText(1, 7, "WAVE");
             FAT_screenInstrument_showWaveduty(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].wavedutyOrPolynomialStep,
                     88, 56);
@@ -90,11 +91,11 @@ void FAT_screenInstrument_printAllText(u8 type) {
             ham_DrawText(1, 14, "TEST IT   C 4");
             break;
         case INSTRUMENT_TYPE_NOISE:
-            ham_DrawText(1, 4, "VOLUME    %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].volume);
+            ham_DrawText(1, 4, "VOLUME    %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0x0f);
             ham_DrawText(1, 5, "DIRECTION");
-            FAT_screenInstrument_showEnvdir(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envdirection,
+            FAT_screenInstrument_showEnvdir((FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0x10) >> 4,
                     88, 40);
-            ham_DrawText(1, 6, "STEPTIME  %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envsteptime);
+            ham_DrawText(1, 6, "STEPTIME  %.1x", (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0xe0) >> 5 );
             ham_DrawText(1, 7, "POLYSTEP  %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].wavedutyOrPolynomialStep);
 
             ham_DrawText(1, 10, "TIMED     %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);

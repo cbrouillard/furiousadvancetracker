@@ -99,7 +99,7 @@ void FAT_player_playComposerNote(u8 noteLine) {
 
     if (note->freq != NULL_VALUE) {
         FAT_player_playNoteWithTsp(note, FAT_tracker.allInstruments[note->instrument].type,
-                FAT_tracker.composer.transpose[noteLine]);
+                FAT_tracker.composer.transpose);
     }
 }
 
@@ -128,13 +128,14 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                 //ham_DrawText (23, 16, "PU1");
                 snd_playSoundOnChannel1(
                         sweeptime, sweepdir, sweepshifts,
-                        inst->volume, inst->envdirection, inst->envsteptime, inst->wavedutyOrPolynomialStep,
+                        inst->envelope & 0x0f, (inst->envelope & 0x10)>>4, (inst->envelope & 0xe0) >> 5, inst->wavedutyOrPolynomialStep,
                         inst->soundlength, inst->loopmode,
                         note->freq, transpose + FAT_tracker.transpose);
                 break;
             case 1: // PU2
                 //ham_DrawText (23, 16, "PU2");
-                snd_playSoundOnChannel2(inst->volume, inst->envdirection, inst->envsteptime, inst->wavedutyOrPolynomialStep,
+                snd_playSoundOnChannel2(inst->envelope & 0x0f, (inst->envelope & 0x10)>>4, (inst->envelope & 0xe0) >> 5,
+                        inst->wavedutyOrPolynomialStep,
                         inst->soundlength, inst->loopmode,
                         note->freq, transpose + FAT_tracker.transpose);
                 break;
@@ -145,7 +146,7 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                 break;
             case 3: // NOISE
                 //ham_DrawText (23, 16, "NOI");
-                snd_playSoundOnChannel4(inst->volume, inst->envdirection, inst->envsteptime, inst->soundlength,
+                snd_playSoundOnChannel4(inst->envelope & 0x0f, (inst->envelope & 0x10)>>4, (inst->envelope & 0xe0) >> 5, inst->soundlength,
                         inst->loopmode, note->note & 0x0f, inst->wavedutyOrPolynomialStep, note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
                 break;
         }
