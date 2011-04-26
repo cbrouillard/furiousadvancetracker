@@ -15,9 +15,11 @@
 #define NB_MAX_SEQUENCES 0x80
 #define NB_SEQUENCES_IN_ONE_CHANNEL 0x40
 // nombre de blocks dispo en mémoire
-#define NB_MAX_BLOCKS 0xef
+#define NB_MAX_BLOCKS 0x70
 // nombre d'instruments dispo en mémoire 0x3f = 63
 #define NB_MAX_INSTRUMENTS 0x3f
+// nombre de tables dispos en mémoire
+#define NB_MAX_TABLES 0xF
 // nombre de notes dans un block (une mesure)  16
 #define NB_NOTES_IN_ONE_BLOCK 16
 // nombre de blocks (mesures) dans une séquence (pattern)
@@ -101,7 +103,7 @@ typedef struct NOTE {
     // récupérer l'octave -> note & 0x0f
     u8 freq;
     u8 instrument;
-    //effect effect;
+    effect effect;
 } note;
 
 note FAT_data_lastNoteWritten, FAT_data_noteClipboard;
@@ -116,7 +118,7 @@ typedef struct COMPOSER {
 typedef struct BLOCK {
     // 1 block contient physiquement 16 notes 
     note notes[NB_NOTES_IN_ONE_BLOCK];
-    //effect effect;
+    effect effect;
 } block;
 
 u8 FAT_data_lastBlockWritten, FAT_data_blockClipboard;
@@ -135,7 +137,7 @@ u8 FAT_data_lastSequenceWritten, FAT_data_sequenceClipboard;
 
 typedef struct CHANNEL {
     // 1 channel pointe sur NB_MAX_SEQUENCES id de séquences (stockées dans allSequences)
-    u8 sequences[NB_MAX_SEQUENCES];
+    u8 sequences[NB_SEQUENCES_IN_ONE_CHANNEL];
 } channel;
 
 // POIDS ACTUEL: 19 octets
@@ -176,6 +178,7 @@ typedef struct INSTRUMENT {
 
     // TODO ajouter
     // lien vers une table (u8)
+    u8 table;
 } instrument;
 
 // POIDS ACTUEL: 6*255 + 255*16 + 255*64 + 63*19 = 
@@ -192,8 +195,7 @@ typedef struct FAT {
     u8 transpose;
     char songName[SONG_NAME_MAX_LETTERS];
 
-    // TODO ajouter
-    // les tables: table table[NB_MAX_TABLES]
+    table tables[NB_MAX_TABLES];
 } tracker;
 
 /**

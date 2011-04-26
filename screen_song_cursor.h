@@ -11,6 +11,9 @@
 #ifndef _CURSOR_H_
 #define _CURSOR_H_
 
+#include "data.h"
+
+
 // taille d'un bloc d'affichage séquence 16*8 en pixels
 #define SCREENSONG_BLOCK_SIZE_X 16
 #define SCREENSONG_BLOCK_SIZE_Y 8
@@ -64,7 +67,7 @@ void FAT_screenSong_moveCursorLeft() {
 }
 
 void FAT_screenSong_movePageDown() {
-    if (FAT_screenSong_currentSelectedLine < NB_MAX_SEQUENCES - SCREENSONG_NB_LINES_ON_SCREEN) {
+    if (FAT_screenSong_currentSelectedLine < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENSONG_NB_LINES_ON_SCREEN) {
         FAT_screenSong_currentStartLine += SCREENSONG_NB_LINES_ON_SCREEN;
         FAT_screenSong_currentSelectedLine += SCREENSONG_NB_LINES_ON_SCREEN;
         FAT_screenSong_printAllScreenText();
@@ -73,15 +76,15 @@ void FAT_screenSong_movePageDown() {
 
 void FAT_screenSong_moveCursorAllDown() {
     FAT_screenSong_cursorY = SCREENSONG_LAST_BLOCK_Y;
-    FAT_screenSong_currentStartLine = NB_MAX_SEQUENCES - SCREENSONG_NB_LINES_ON_SCREEN;
-    FAT_screenSong_currentSelectedLine = NB_MAX_SEQUENCES;
+    FAT_screenSong_currentStartLine = NB_SEQUENCES_IN_ONE_CHANNEL - SCREENSONG_NB_LINES_ON_SCREEN;
+    FAT_screenSong_currentSelectedLine = NB_SEQUENCES_IN_ONE_CHANNEL;
     FAT_screenSong_printAllScreenText();
 }
 
 void FAT_screenSong_moveCursorDown() {
-    if (FAT_screenSong_currentSelectedLine < NB_MAX_SEQUENCES) {
+    if (FAT_screenSong_currentSelectedLine < NB_SEQUENCES_IN_ONE_CHANNEL) {
         if (FAT_screenSong_cursorY >= SCREENSONG_LAST_BLOCK_Y - 1) {
-            if (FAT_screenSong_currentStartLine < NB_MAX_SEQUENCES - SCREENSONG_NB_LINES_ON_SCREEN) {
+            if (FAT_screenSong_currentStartLine < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENSONG_NB_LINES_ON_SCREEN) {
                 // on n'avance pas mais on change de ligne
                 FAT_screenSong_currentStartLine++;
                 FAT_screenSong_currentSelectedLine++;
