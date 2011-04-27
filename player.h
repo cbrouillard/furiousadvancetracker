@@ -48,7 +48,7 @@ u8 FAT_currentPlayedChannel = NULL_VALUE;
 u8 FAT_currentPlayedBlock = NULL_VALUE;
 
 /** \brief Objet HAM pour référencer le sprite "curseur player" de taille 2. */
-u8 FAT_cursor_player3_obj; 
+u8 FAT_cursor_player3_obj;
 /** \brief Objet HAM pour référencer le sprite "curseur player" de taille 3. */
 u8 FAT_cursor_player2_obj;
 /** \brief Objet HAM pour référencer les sprites "curseur player" utilisés dans l'écran SONG. */
@@ -116,6 +116,7 @@ void FAT_player_initCursors() {
         ham_SetObjPrio(FAT_cursor_playerSequences_obj[i], 3);
     }
 }
+
 /**
  * \brief Fonction callback associée avec un TIMER: permet de décompter le temps
  * d'attente pour l'appui sur la touche START. 
@@ -129,6 +130,7 @@ void FAT_player_timerFunc_iCanPressStart() {
         M_TIM0CNT_TIMER_STOP
     }
 }
+
 /**
  * \brief Joue une note écrite dans le composer.
  * 
@@ -199,7 +201,7 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
 }
 
 /**
- * Lance la lecture de toute la track.
+ * \brief Lance la lecture de toute la track.
  */
 void FAT_player_startPlayerFromSequences(u8 startLine) {
 
@@ -404,6 +406,9 @@ void FAT_player_timerFunc_playNotes() {
     }
 }
 
+/**
+ * \brief Arrète la lecture de la track.
+ */
 void FAT_player_stopPlayer() {
     if (iCanPressStart) {
         iCanPressStart = 0;
@@ -428,12 +433,18 @@ void FAT_player_stopPlayer() {
     }
 }
 
+/**
+ * \brief Cache tous les curseurs utilisés lors de la lecture. 
+ */
 void FAT_player_hideAllCursors() {
     FAT_player_hideNoteCursor();
     FAT_player_hideBlockCursor();
     FAT_player_hideSequencesCursors();
 }
 
+/**
+ * \brief Cache les curseurs utilisés lors de la lecture dans l'écran SONG. 
+ */
 void FAT_player_hideSequencesCursors() {
     ham_SetObjVisible(FAT_cursor_playerSequences_obj[0], 0);
     ham_SetObjVisible(FAT_cursor_playerSequences_obj[1], 0);
@@ -443,14 +454,25 @@ void FAT_player_hideSequencesCursors() {
     ham_SetObjVisible(FAT_cursor_playerSequences_obj[5], 0);
 }
 
+/**
+ * \brief Cache les curseurs utilisés lors de la lecture dans l'écran BLOCK. 
+ */
 void FAT_player_hideBlockCursor() {
     ham_SetObjVisible(FAT_cursor_player2_obj, 0);
 }
 
+/**
+ * \brief Cache les curseurs utilisés lors de la lecture dans l'écran NOTE. 
+ */
 void FAT_player_hideNoteCursor() {
     ham_SetObjVisible(FAT_cursor_player3_obj, 0);
 }
 
+/**
+ * \brief Déplace ou cache les curseurs de lecture en fonction de l'état du player.
+ * 
+ * @param channel le numéro de channel sur lequel on joue du son
+ */
 void FAT_player_moveOrHideCursor(u8 channel) {
 
     switch (FAT_currentScreen) {
