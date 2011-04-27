@@ -7,7 +7,28 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
+
+/**
+ * @mainpage FuriousAdvanceTracker
+ * 
+ * FAT (FuriousAdvanceTracker) est un logiciel concu pour la composition musicale sur Gameboy Advance. 
+ * <b>FAT est actuellement en version de test (il n'est pas encore complet).</b><br/>
+ * FAT est un <a href="http://fr.wikipedia.org/wiki/Tracker_%28musique%29">tracker</a> dont l'interface 
+ * s'inspire très profondément de <a href="http://www.littlesounddj.com">LSDJ</a> (LittleSoundDJ), 
+ * un logiciel très connu utilisable sur Gameboy. Malgré cela, FAT se démarque en ajoutant des fonctionnalités 
+ * inédites pour la composition de chiptunes sur GBA.
+ *       
+ * - la GameboyAdvance dispose de 6 canaux sonores. FAT les exploite(ra) tous.
+ * - FAT est (sera) orienté live. Un écran spécial est même prévu pour improviser des lignes mélodiques en live.
+ * - et plein d'autres idées qui s'ajouteront au fur et à mesure !
+ *
+ * FAT est gratuit et libre ! Vous pouvez le télécharger, l'utiliser avec un émulateur ou le graver
+ * sur une cartouche GBA. Si vous remarquer un bug ou un comportement bizarre, faites un rapport de bug :
+ * c'est simple, rapide, et surtout cela permet de faire évoluer le logiciel plus efficacement.<br/>
+ *
+ */
+
 #include <mygba.h>
 
 #include "soundApi/soundApi.h"
@@ -15,14 +36,15 @@
 
 int main() {
 
-    FAT_init ();
+    FAT_init();
     snd_init_soundApi();
-    
-    FAT_showIntro ();
-    
-    FAT_screenSong_init ();
-       
-    while(1) {}
+
+    FAT_showIntro();
+
+    FAT_screenSong_init();
+
+    while (1) {
+    }
     return 0;
 }
 

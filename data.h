@@ -145,7 +145,7 @@
 /**
  * \brief Addresse vers la mémoire SRAM (la mémoire pour la sauvegarde).
  */
-#define GAMEPAK_RAM  ((u8*)0x0E000000)
+#define GAMEPAK_RAM  ((u8*)0x00E0000)
 /**
  * \brief Pointeur vers la mémoire SRAM.
  */
@@ -619,6 +619,7 @@ void FAT_data_allocateSequenceToNextAvailableId(u8 channelId, u8 line) {
         FAT_nextAvailableSequenceId++;
     }
 }
+
 /**
  * \brief Alloue une séquence.
  * 
@@ -713,12 +714,24 @@ u8 FAT_data_block_getTranspose(u8 sequence, u8 line) {
     return FAT_tracker.allSequences[sequence].transpose[line];
 }
 
+/**
+ * \brief Alloue une valeur de paramètre pour la transposition d'un block: 0 par défaut.
+ * 
+ * @param sequence le numéro de séquence concernée
+ * @param line le numéro de ligne du block dans la séquence
+ */
 void FAT_data_block_allocateTranspose(u8 sequence, u8 line) {
     if (FAT_data_block_isTransposeEmpty(sequence, line)) {
         FAT_tracker.allSequences[sequence].transpose[line] = 0;
     }
 }
 
+/**
+ * \brief Permet de savoir si un séquence est vide ou non (sans block).
+ *  
+ * @param sequenceId l'id de la séquence à tester
+ * @return 0 si la séquence n'est pas vide, 1 si elle est vide
+ */
 bool FAT_data_isSequenceEmpty(u8 sequenceId) {
     u8 block = 0;
     while (block < NB_BLOCKS_IN_SEQUENCE) {
@@ -731,15 +744,22 @@ bool FAT_data_isSequenceEmpty(u8 sequenceId) {
     return 1;
 }
 
+/**
+ * \brief Permet de savoir si un instrument est disponible (non initialisé).
+ * 
+ * @param inst le numéro d'instrument à tester
+ * @return 1 si l'instrument est disponible, 0 sinon
+ */
 bool FAT_data_isInstrumentFree(u8 inst) {
     return FAT_tracker.allInstruments[inst].sweep == NULL_VALUE;
 }
 
 /**
- * Méthode intelligente permettant de déterminer un nouveau block vide.
- * @param sequence
- * @param blockLine
- * @return 
+ * \brief Méthode intelligente permettant d'allouer un nouveau numéro de block vide.
+ * 
+ * @param sequence le numéro de séquence
+ * @param blockLine le numéro de ligne du block
+ * @return 1 si le block a été alloué, 0 sinon
  */
 bool FAT_data_smartAllocateBlock(u8 sequence, u8 blockLine) {
     u8 block = FAT_data_lastBlockWritten + 1;
@@ -755,6 +775,13 @@ bool FAT_data_smartAllocateBlock(u8 sequence, u8 blockLine) {
     return 0;
 }
 
+/**
+ * \brief Méthode intelligente permettant d'allouer une nouveau numéro de séquence.
+ *  
+ * @param channelId le numéro du channel (0 à 5)
+ * @param line le numéro de ligne sur laquelle écrire la séquence
+ * @return 1 si la séquence a été allouée, 0 sinon
+ */
 bool FAT_data_smartAllocateSequence(u8 channelId, u8 line) {
 
     u8 seq = FAT_data_lastSequenceWritten + 1;
@@ -771,11 +798,10 @@ bool FAT_data_smartAllocateSequence(u8 channelId, u8 line) {
 }
 
 /**
- * Ajoute la note par défaut (C 1 - 64Hz) sur une ligne dans un block. La note sera attribué
- * à l'instrument numéro "FAT_lastUsedInstrumentId". Si cet instrument est nouveau 
- * il sera automatiquement initialisé.
- * @param block
- * @param noteLine
+ * \brief Ajoute la note par défaut sur une ligne dans un block.
+ * 
+ * @param block le numéro de block
+ * @param noteLine le numéro de ligne de la note à ajouter
  */
 void FAT_data_addDefaultNote(u8 block, u8 noteLine, u8 channel) {
     FAT_tracker.allBlocks[block].notes[noteLine].freq = FAT_data_lastNoteWritten.freq;
@@ -789,26 +815,21 @@ void FAT_data_addDefaultNote(u8 block, u8 noteLine, u8 channel) {
 }
 
 /**
- * Initialise un instrument avec des valeurs par défaut uniquement si cet instrument
+ * \brief Initialise un instrument avec des valeurs par défaut uniquement si cet instrument
  * est nouveau et n'a jamais été initialisé auparavant. 
+ * 
  * Attention, pour déterminer si un instru doit être initialisé, cette méthode
- * se sert d'une donnée (sweepdir) et teste si celle-ci est égale à NULL_VALUE. 
+ * se sert d'une donnée (sweep) et teste si celle-ci est égale à NULL_VALUE. 
  * @param instId l'id de l'instrument à initialiser
  */
 void FAT_data_initInstrumentIfNeeded(u8 instId, u8 channel) {
     if (FAT_tracker.allInstruments[instId].sweep == NULL_VALUE) {
         FAT_tracker.allInstruments[instId].sweep = 0;
-        //FAT_tracker.allInstruments[instId].volume = 0xa;
-        //FAT_tracker.allInstruments[instId].envdirection = 0;
-        //FAT_tracker.allInstruments[instId].envsteptime = 0;
         FAT_tracker.allInstruments[instId].envelope = 0x0a;
         FAT_tracker.allInstruments[instId].volumeRatio = 3;
         FAT_tracker.allInstruments[instId].wavedutyOrPolynomialStep = 0;
         FAT_tracker.allInstruments[instId].soundlength = 0;
         FAT_tracker.allInstruments[instId].loopmode = 0;
-        //FAT_tracker.allInstruments[instId].voice = 0;
-        //FAT_tracker.allInstruments[instId].bank = 0;
-        //FAT_tracker.allInstruments[instId].bankMode = 0;
         FAT_tracker.allInstruments[instId].voiceAndBank = 0;
 
         FAT_tracker.allInstruments[instId].type = channel;
@@ -816,8 +837,10 @@ void FAT_data_initInstrumentIfNeeded(u8 instId, u8 channel) {
 }
 
 /**
- * Modifie le numéro d'une séquence. Cette méthode ajoute la valeur de "addedValue".
- * Passer +1 comme valeur ajoute, -1 pour retirer.
+ * \brief Modifie le numéro d'une séquence. 
+ * 
+ * Cette méthode ajoute la valeur de "addedValue". Passer +1 comme valeur ajoute, -1 pour retirer.
+ * 
  * @param channelId le canal
  * @param line le numéro de ligne de la séquence à modifier
  * @param addedValue la valeur à ajouter/retirer
@@ -832,6 +855,13 @@ void FAT_data_sequence_changeValue(u8 channelId, u8 line, s8 addedValue) {
     }
 }
 
+/**
+ * \brief Modifie la valeur de transposition pour un block donné.
+ *  
+ * @param sequence le numéro de séquence
+ * @param line le numéro de ligne du block dans la séquence
+ * @param addedValue la valeur à ajouter/retrancher (+1 ajouter, -1 retrancher)
+ */
 void FAT_data_block_changeTransposeValue(u8 sequence, u8 line, s8 addedValue) {
     //    if (
     //            (addedValue < 0 && FAT_tracker.allBlocks[blockId].transpose > (-addedValue - 1)) ||
@@ -842,8 +872,10 @@ void FAT_data_block_changeTransposeValue(u8 sequence, u8 line, s8 addedValue) {
 }
 
 /**
- * Modifie le numéro d'un block. Cette méthode ajoute la valeur de "addedValue".
- * Passer +1 comme valeur ajoute, -1 pour retirer. 
+ * \brief Modifie le numéro d'un block. 
+ * 
+ * Cette méthode ajoute la valeur de "addedValue". Passer +1 comme valeur ajoute, -1 pour retirer. 
+ * 
  * @param sequence numéro de séquence
  * @param blockLine le numéro de ligne du block à modifier
  * @param addedValue la valeur à ajouter/retirer
@@ -859,11 +891,14 @@ void FAT_data_block_changeValue(u8 sequence, u8 blockLine, s8 addedValue) {
 }
 
 /**
- * Modifie la valeur d'une note. Cette méthode permet de changer l'intitulé de la note
- * et donc sa fréquence.ex. si j'ai un C 3 et que j'utilise cette méthode avec "addedValue=1" 
+ * \brief Modifie la valeur d'une note. 
+ * 
+ * Cette méthode permet de changer l'intitulé de la not et donc sa fréquence.
+ * ex. si j'ai un C 3 et que j'utilise cette méthode avec "addedValue=1" 
  * alors ma note sera modifiée en "C#3".
- * TODO cette méthode ne permet pas de passer à l'octave supérieure pour enchainer les 
- * gammes.
+ * 
+ * <b>TODO cette méthode ne permet pas de passer à l'octave supérieure pour enchainer les 
+ * gammes.</b>
  * @param block le numéro de block
  * @param noteLine le numéro de ligne de la note dans le block
  * @param addedValue la valeur à ajouter/retirer (1 ou -1 généralement)
@@ -886,9 +921,12 @@ void FAT_data_note_changeValue(u8 block, u8 noteLine, s8 addedValue) {
 };
 
 /**
- * Modifie l'octave d'une note. Cette méthode permet de changer l'octave de la note
- * et donc sa fréquence.ex. si j'ai un C 3 et que j'utilise cette méthode avec "addedValue=1" 
+ * \brief Modifie l'octave d'une note.
+ * 
+ * Cette méthode permet de changer l'octave de la note et donc sa fréquence.
+ * ex. si j'ai un C 3 et que j'utilise cette méthode avec "addedValue=1" 
  * alors ma note sera modifiée en "C 4".
+ * 
  * @param block le numéro de block
  * @param noteLine le numéro de ligne de la note dans le block
  * @param addedValue la valeur à ajouter/retirer (1 ou -1 généralement)
@@ -909,7 +947,8 @@ void FAT_data_note_changeOctave(u8 block, u8 noteLine, s8 addedValue) {
 }
 
 /**
- * Modifie le numéro d'un instrument pour une note donnée. 
+ * \brief Modifie le numéro d'un instrument pour une note donnée. 
+ * 
  * @param block le numéro de block
  * @param noteLine le numéro de ligne de la note dans le block
  * @param addedValue la valeur à ajouter/retirer (1 ou -1 généralement voire 16/-16)
@@ -928,6 +967,14 @@ void FAT_data_note_changeInstrument(u8 currentChannel, u8 block, u8 noteLine, s8
     }
 }
 
+/**
+ * \brief Cette méthode permet de changer le numéro d'un instrument alloué à une note par un nouveau disponible.
+ * 
+ * @param currentChannel le channel (de 0 à 5) utile pour l'initialisation de l'instrument
+ * @param block le numéro de block
+ * @param noteLine le numéro de ligne de la note dans le block
+ * @return 1 si un nouveau numéro a été trouvé, 0 sinon
+ */
 bool FAT_data_note_smartChangeInstrument(u8 currentChannel, u8 block, u8 noteLine) {
     u8 inst = 0;
     while (inst < NB_MAX_INSTRUMENTS) {
@@ -946,10 +993,22 @@ bool FAT_data_note_smartChangeInstrument(u8 currentChannel, u8 block, u8 noteLin
     return 0;
 }
 
+/**
+ * \brief Change le type d'un instrument.
+ * 
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param newType le nouveau type de l'instrument PULSE1, PULSE2, WAVE, NOISE, SAMPLEA, SAMPLEB
+ */
 void FAT_data_instrument_changeType(u8 instrumentId, u8 newType) {
     FAT_tracker.allInstruments[instrumentId].type = newType;
 }
 
+/**
+ * \brief Permet de changer le volume d'un instrumement de type PULSE.
+ * 
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentPulse_changeVolume(u8 instrumentId, s8 value) {
     u8 volume = FAT_tracker.allInstruments[instrumentId].envelope & 0x0f;
     u8 steptime = (FAT_tracker.allInstruments[instrumentId].envelope & 0xE0);
@@ -964,10 +1023,22 @@ void FAT_data_instrumentPulse_changeVolume(u8 instrumentId, s8 value) {
     }
 }
 
+/**
+ * \brief Change le volume pour un instrument de type NOISE.
+ * 
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentNoise_changeVolume(u8 instrumentId, s8 value) {
     FAT_data_instrumentPulse_changeVolume(instrumentId, value);
 }
 
+/**
+ * \brief Change le volume pour un instrument de type WAVE.
+ * 
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentWave_changeVolume(u8 instrumentId, s8 value) {
     if (
             (value < 0 && FAT_tracker.allInstruments[instrumentId].volumeRatio > (-value - 1)) ||
@@ -978,6 +1049,12 @@ void FAT_data_instrumentWave_changeVolume(u8 instrumentId, s8 value) {
     }
 }
 
+/**
+ * \brief Change le paramètre "envdir" (direction de l'enveloppe) pour un instrument de type PULSE.
+ *  
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentPulse_changeEnvelopeDirection(u8 instrumentId, s8 value) {
     u8 volume = FAT_tracker.allInstruments[instrumentId].envelope & 0x0f;
     u8 steptime = (FAT_tracker.allInstruments[instrumentId].envelope & 0xE0);
@@ -990,10 +1067,22 @@ void FAT_data_instrumentPulse_changeEnvelopeDirection(u8 instrumentId, s8 value)
     FAT_tracker.allInstruments[instrumentId].envelope = steptime | (dir << 4) | volume;
 }
 
+/**
+ * \brief Change le paramètre "envdir" (direction de l'enveloppe) pour un instrument de type NOISE.
+ *  
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentNoise_changeEnvelopeDirection(u8 instrumentId, s8 value) {
     FAT_data_instrumentPulse_changeEnvelopeDirection(instrumentId, value);
 }
 
+/**
+ * \brief Change le paramètre "steptime" (pas de l'enveloppe) pour un instrument de type PULSE.
+ *  
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentPulse_changeSteptime(u8 instrumentId, s8 value) {
     u8 volume = FAT_tracker.allInstruments[instrumentId].envelope & 0x0f;
     u8 steptime = (FAT_tracker.allInstruments[instrumentId].envelope & 0xE0) >> 5;
@@ -1008,10 +1097,22 @@ void FAT_data_instrumentPulse_changeSteptime(u8 instrumentId, s8 value) {
     }
 }
 
+/**
+ * \brief Change le paramètre "steptime" (pas de l'enveloppe) pour un instrument de type NOISE.
+ *  
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentNoise_changeSteptime(u8 instrumentId, s8 value) {
     FAT_data_instrumentPulse_changeSteptime(instrumentId, value);
 }
 
+/**
+ * \brief Change le paramètre "waveduty" (forme de l'onde) pour un instrument de type PULSE.
+ *  
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentPulse_changeWaveduty(u8 instrumentId, s8 value) {
     if (
             (value < 0 && FAT_tracker.allInstruments[instrumentId].wavedutyOrPolynomialStep > (-value - 1)) ||
@@ -1022,6 +1123,14 @@ void FAT_data_instrumentPulse_changeWaveduty(u8 instrumentId, s8 value) {
     }
 }
 
+/**
+ * \brief Change le paramètre "polystep" (polynomial step) pour un instrument de type NOISE.
+ * 
+ * cf <a href="http://belogic.com/gba/channel4.shtml">http://belogic.com/gba/channel4.shtml</a>
+ *  
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentNoise_changePolystep(u8 instrumentId, s8 value) {
     if (value < 0) {
         FAT_tracker.allInstruments[instrumentId].wavedutyOrPolynomialStep = 0;
@@ -1030,14 +1139,36 @@ void FAT_data_instrumentNoise_changePolystep(u8 instrumentId, s8 value) {
     }
 }
 
+/**
+ * \brief Change le paramètre "output" (sortie droite/gauche) pour un instrument de type PULSE.
+ *  
+ * TODO à implémenter
+ * 
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentPulse_changeOutput(u8 instrumentId, s8 value) {
 
 }
 
+/**
+ * \brief Change le paramètre "output" (sortie droite/gauche) pour un instrument de type NOISE.
+ *  
+ * TODO à implémenter
+ * 
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentNoise_changeOutput(u8 instrumentId, s8 value) {
     FAT_data_instrumentPulse_changeOutput(instrumentId, value);
 }
 
+/**
+ * \brief Change le paramètre "soundlength" (durée du son) pour un instrument de type PULSE.
+ *  
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentPulse_changeSoundLength(u8 instrumentId, s8 value) {
     if (
             (value < 0 && FAT_tracker.allInstruments[instrumentId].soundlength > (-value - 1)) ||
@@ -1048,10 +1179,22 @@ void FAT_data_instrumentPulse_changeSoundLength(u8 instrumentId, s8 value) {
     }
 }
 
+/**
+ * \brief Change le paramètre "soundlength" (durée du son) pour un instrument de type NOISE.
+ *  
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentNoise_changeSoundLength(u8 instrumentId, s8 value) {
     FAT_data_instrumentPulse_changeSoundLength(instrumentId, value);
 }
 
+/**
+ * \brief Change le paramètre "soundlength" (durée du son) pour un instrument de type WAVE.
+ *  
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentWave_changeSoundLength(u8 instrumentId, s8 value) {
     if (
             (value < 0 && FAT_tracker.allInstruments[instrumentId].soundlength > (-value - 1)) ||
@@ -1062,6 +1205,12 @@ void FAT_data_instrumentWave_changeSoundLength(u8 instrumentId, s8 value) {
     }
 }
 
+/**
+ * \brief Change le paramètre "sweep" (effet sweep) pour un instrument de type PULSE.
+ *  
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentPulse_changeSweep(u8 instrumentId, s8 value) {
     if (
             (value < 0 && FAT_tracker.allInstruments[instrumentId].sweep > (-value - 1)) ||
@@ -1072,6 +1221,14 @@ void FAT_data_instrumentPulse_changeSweep(u8 instrumentId, s8 value) {
     }
 }
 
+/**
+ * \brief Change le paramètre "loopmode" (mode son) pour un instrument de type PULSE.
+ * 
+ * 0 = continuous, 1 = timed
+ *  
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentPulse_changeLoopmode(u8 instrumentId, s8 value) {
     if (value < 0) {
         FAT_tracker.allInstruments[instrumentId].loopmode = 0;
@@ -1080,14 +1237,37 @@ void FAT_data_instrumentPulse_changeLoopmode(u8 instrumentId, s8 value) {
     }
 }
 
+/**
+ * \brief Change le paramètre "loopmode" (mode son) pour un instrument de type WAVE.
+ * 
+ * 0 = continuous, 1 = timed
+ *  
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentWave_changeLoopmode(u8 instrumentId, s8 value) {
     FAT_data_instrumentPulse_changeLoopmode(instrumentId, value);
 }
 
+/**
+ * \brief Change le paramètre "loopmode" (mode son) pour un instrument de type NOISE.
+ * 
+ * 0 = continuous, 1 = timed
+ *  
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentNoise_changeLoopmode(u8 instrumentId, s8 value) {
     FAT_data_instrumentPulse_changeLoopmode(instrumentId, value);
 }
 
+/**
+ * \brief Change le paramètre "voice" (les patterns stockés dans les banks) pour un instrument de 
+ * type WAVE.
+ * 
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
 void FAT_data_instrumentWave_changeVoice(u8 instrumentId, s8 value) {
     u8 voice = FAT_tracker.allInstruments[instrumentId].voiceAndBank & 0x1f;
     u8 bank = (FAT_tracker.allInstruments[instrumentId].voiceAndBank & 0x20);
@@ -1102,6 +1282,13 @@ void FAT_data_instrumentWave_changeVoice(u8 instrumentId, s8 value) {
     }
 }
 
+/**
+ * \brief Change le paramètre "bank" (le numéro de la bank à jouer) pour un instrument de 
+ * type WAVE.
+ * 
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value -1 bank = 0, +1 bank = 1
+ */
 void FAT_data_instrumentWave_changeBank(u8 instrumentId, s8 value) {
     u8 voice = FAT_tracker.allInstruments[instrumentId].voiceAndBank & 0x1f;
     u8 bank = (FAT_tracker.allInstruments[instrumentId].voiceAndBank & 0x20) >> 5;
@@ -1114,6 +1301,13 @@ void FAT_data_instrumentWave_changeBank(u8 instrumentId, s8 value) {
     FAT_tracker.allInstruments[instrumentId].voiceAndBank = bankMode | (bank << 5) | voice;
 }
 
+/**
+ * \brief Change le paramètre "bankmode" (le mode bank) pour un instrument de 
+ * type WAVE.
+ * 
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value -1 bankmode = SINGLE, +1 bank = DUAL
+ */
 void FAT_data_instrumentWave_changeBankmode(u8 instrumentId, s8 value) {
     u8 voice = FAT_tracker.allInstruments[instrumentId].voiceAndBank & 0x1f;
     u8 bank = (FAT_tracker.allInstruments[instrumentId].voiceAndBank & 0x20);
@@ -1127,6 +1321,11 @@ void FAT_data_instrumentWave_changeBankmode(u8 instrumentId, s8 value) {
     FAT_tracker.allInstruments[instrumentId].voiceAndBank = (bankMode << 6) | bank | voice;
 }
 
+/**
+ * \brief Modifie le tempo pour le projet en cours.
+ *  
+ * @param addedValue la valeur à ajouter ou retrancher
+ */
 void FAT_data_project_changeTempo(s8 addedValue) {
     if (
             (addedValue > 0 && FAT_tracker.tempo <= MAX_TEMPO - addedValue) ||
@@ -1135,6 +1334,11 @@ void FAT_data_project_changeTempo(s8 addedValue) {
     }
 }
 
+/**
+ * \brief Change la valeur du transpose pour le projet entier.
+ * 
+ * @param addedValue la valeur à ajouter ou retrancher
+ */
 void FAT_data_project_changeTranspose(s8 addedValue) {
     if (
             (addedValue > 0 && FAT_tracker.transpose < MAX_TRANSPOSE - addedValue) ||
@@ -1143,10 +1347,21 @@ void FAT_data_project_changeTranspose(s8 addedValue) {
     }
 }
 
+/**
+ * \brief Permet de savoir si une note a été écrite sur le composer.
+ * 
+ * @param line la ligne à vérifier sur le composer
+ * @return 1 si la ligne est vide, 0 sinon
+ */
 bool FAT_data_composer_isNoteEmpty(u8 line) {
     return FAT_tracker.composer.notes[line].freq == NULL_VALUE;
 }
 
+/**
+ * \brief Ajoute la dernière note connue sur le composer.
+ *  
+ * @param line le numéro de ligne sur le composer
+ */
 void FAT_data_composer_addDefaultNote(u8 line) {
 
     FAT_tracker.composer.notes[line].freq = FAT_data_lastNoteWritten.freq;
@@ -1160,10 +1375,29 @@ void FAT_data_composer_addDefaultNote(u8 line) {
 
 }
 
+/**
+ * \brief Retourne un pointeur sur un objet de type NOTE sur le composer. 
+ * 
+ * @param line le numéro de ligne de la note dans le composer
+ * @return un pointeur sur un objet NOTE
+ */
 note* FAT_data_composer_getNote(u8 line) {
     return & (FAT_tracker.composer.notes[line]);
 }
 
+/**
+ * \brief Change l'intitulé d'une note dans le composer.
+ * 
+ * Cette méthode permet de changer l'intitulé de la note et donc sa fréquence.
+ * ex. si j'ai un C 3 et que j'utilise cette méthode avec "addedValue=1" 
+ * alors ma note sera modifiée en "C#3".
+ * 
+ * <b>TODO cette méthode ne permet pas de passer à l'octave supérieure pour enchainer les 
+ * gammes.</b>
+ * 
+ * @param line le numéro de la ligne dans le composer
+ * @param addedValue la valeur à ajouter ou retrancher
+ */
 void FAT_data_composer_changeValue(u8 line, s8 addedValue) {
     u8 noteName = (FAT_tracker.composer.notes[line].note & 0xf0) >> 4;
     u8 noteOctave = FAT_tracker.composer.notes[line].note & 0x0f;
@@ -1181,6 +1415,16 @@ void FAT_data_composer_changeValue(u8 line, s8 addedValue) {
     }
 }
 
+/**
+ * \brief Modifie l'octave d'une note.
+ * 
+ * Cette méthode permet de changer l'octave de la note et donc sa fréquence.
+ * ex. si j'ai un C 3 et que j'utilise cette méthode avec "addedValue=1" 
+ * alors ma note sera modifiée en "C 4".
+ * 
+ * @param line le numéro de ligne de la note dans le composer
+ * @param addedValue la valeur à ajouter/retirer (1 ou -1 généralement)
+ */
 void FAT_data_composer_changeOctave(u8 line, s8 addedValue) {
     u8 noteOctave = FAT_tracker.composer.notes[line].note & 0x0f;
     if (
@@ -1196,6 +1440,13 @@ void FAT_data_composer_changeOctave(u8 line, s8 addedValue) {
     }
 }
 
+/**
+ * \brief Permet de changer le numéro d'instrument assigné à une note dans le composer
+ * en cherchant le premier numéro disponible.
+ * 
+ * @param line le numéro de ligne de la note dans le composer
+ * @return 1 si un instrument a été trouvé et assigné, 0 sinon
+ */
 bool FAT_data_composer_smartChangeInstrument(u8 line) {
     u8 inst = 0;
     while (inst < NB_MAX_INSTRUMENTS) {
@@ -1214,6 +1465,12 @@ bool FAT_data_composer_smartChangeInstrument(u8 line) {
     return 0;
 }
 
+/**
+ * \brief Change le numéro d'instrument assigné à une note dans le composer.
+ *  
+ * @param line numéro de ligne de la note dans le composer
+ * @param addedValue valeur à ajouter ou retrancher
+ */
 void FAT_data_composer_changeInstrument(u8 line, s8 addedValue) {
     if (
             (addedValue < 0 && FAT_tracker.composer.notes[line].instrument > (-addedValue - 1)) ||
@@ -1228,11 +1485,29 @@ void FAT_data_composer_changeInstrument(u8 line, s8 addedValue) {
     }
 }
 
+/**
+ * \brief Fonction de sauvegarde d'un track.
+ * 
+ * <b>NON IMPLEMENTE</b> 
+ */
 void FAT_data_project_save() {
-    memcpy(pSaveMemory, &FAT_tracker, sizeof (FAT_tracker));
+    u16 trackSize = sizeof (FAT_tracker);
+    u16 bitCounter = 0;
+    tracker* tracker = &FAT_tracker;
+
+    while (bitCounter < trackSize) {
+        memcpy(pSaveMemory, tracker, 8);
+        bitCounter += 8;
+        tracker += sizeof (u8);
+    }
     ham_DrawText(23, 16, "SAVED  !");
 }
 
+/**
+ *  \brief Fonction de chargement d'une track.
+ * 
+ * <b>NON IMPLEMENTE</b>
+ */
 void FAT_data_project_load() {
     memcpy(&FAT_tracker, pSaveMemory, sizeof (FAT_tracker));
     ham_DrawText(23, 16, "LOADED !");
