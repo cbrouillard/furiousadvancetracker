@@ -7,13 +7,16 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
+
+/**
+ * \file gfx.h
+ * \brief Ce fichier contient toutes les inclusions des fichiers générés par "gfx2gba".
+ */
+
 #ifndef _GFX_H_
 #define	_GFX_H_
 
-/**
- * Inclusion de tout les fichiers générés par gfx2gba.
- */
 
 // PALETTES
 #include "gfx/sprite.pal.c"

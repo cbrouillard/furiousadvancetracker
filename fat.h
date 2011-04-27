@@ -7,78 +7,108 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
+
+/**
+ * \file fat.h
+ * \brief Ce fichier contient quelques macros, définitions et des fonctions de routine pour le tracker.
+ * 
+ * Il contient également tous les include vers les autres fichiers.
+ */
+
 #ifndef _FAT_H_
 #define _FAT_H_
 
-// IDs des écrans
+/** \brief Id écran projet */
 #define SCREEN_PROJECT_ID 0
+/** \brief Id écran live */
 #define SCREEN_LIVE_ID 1
+/** \brief Id écran composer */
 #define SCREEN_COMPOSER_ID 2
+/** \brief Id écran song */
 #define SCREEN_SONG_ID 3
+/** \brief Id écran block */
 #define SCREEN_BLOCKS_ID 4
+/** \brief Id écran notes */
 #define SCREEN_NOTES_ID 5
+/** \brief Id écran instrument */
 #define SCREEN_INSTRUMENTS_ID 6
+/** \brief Id écran effects (tables) */
 #define SCREEN_EFFECTS_ID 7
+/** \brief Nombre total d'écran disponible pour FAT */
 #define NB_SCREEN 8;
-
+/** \brief Numéro de la couleur du texte. Ce numéro correspond à une couleur dans la palette. <b>NE PAS TOUCHER</b>*/
 #define TEXT_COLOR 245 // 159, 247
-
+/** \brief Position par défaut du curseur de changement d'onglet (partie instrument).*/
 #define INPUT_R_CURSOR_CHANGE_X 216
+/** \brief Position par défaut du curseur de changement d'onglet (partie instrument).*/
 #define INPUT_R_CURSOR_CHANGE_Y 24
 
 /**
- * Cette variable sert à gérer les contextes conflictuels (notamment dans les
- * boucles affichant du texte à gogo). Si le mutex est à zéro alors aucun affichage
- * ne pourra avoir lieu.
+ * \brief Cette variable sert à gérer les contextes conflictuels (notamment dans les
+ * boucles affichant du texte à gogo). 
+ * 
+ * Si le mutex est à zéro alors aucun affichage ne pourra avoir lieu.
+ * 
  * Usage:
- * void printBeaucoupTexte() {
- * mutex = 0;
- * print
- * print
- * mutex = 1;
- * }
- * NE PAS TOUCHER !
+ * <code>void printBeaucoupTexte() {
+ *      mutex = 0;
+ *      print text1
+ *      print text2
+ *      mutex = 1;
+ * }</code>
+ * <b>NE PAS TOUCHER !</b>
  */
 bool mutex = 1;
 
 
 /**
- * Cette variable sert à compter le nombre de rafraichissement nécessaire avant
+ * \brief Cette variable sert à compter le nombre de rafraichissement nécessaire avant
  * de prendre en considération les actions utilisateurs.
+ * 
  * Valeurs optimales:
- * 4 pour la GBA hard
- * 5~7 pour l'émulateur
+ * - 4 pour la GBA hard
+ * - 5~7 pour l'émulateur
  */
 u8 speedCounter = 0;
+/**
+ * \brief Définit la valeur à atteindre par le speedcounter avant de tester les actions utilisateurs.
+ */
 #define SLOWDOWN_COUNTER 4
 
-// définition globale du format d'affichage des numéros de lignes
+/** \brief Définition globale du format d'affichage des numéros de lignes. */
 #define FAT_FORMAT_LINE "%.2x\0"
 
-// stocke l'id de l'écran sur lequel l'utilisateur est
+/** \brief Stocke l'id de l'écran sur lequel l'utilisateur se situe. */
 u8 FAT_currentScreen = SCREEN_SONG_ID;
 
-// prototypes
 void FAT_initSpritePalette();
 void FAT_initScreenPalette();
 void FAT_switchToScreen(u8 screenId);
 void FAT_reinitScreen();
 void FAT_forceClearTextLayer();
 void FAT_waitVSync();
-void FAT_blockCPU (u16 time);
+void FAT_blockCPU(u16 time);
 
 #include "gfx.h"
 
 #include "data.h"
 #include "cursors.h"
 
+/** \brief Prototype. Fonction définie dans player.h. */
 void FAT_player_startPlayerFromSequences(u8 startLine);
+/** \brief Prototype. Fonction définie dans player.h. */
 void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel);
-void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel); 
+/** \brief Prototype. Fonction définie dans player.h. */
+void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel);
+/** \brief Prototype. Fonction définie dans player.h. */
 void FAT_player_stopPlayer();
-void FAT_player_playComposerNote (u8 noteLine);
+/** \brief Prototype. Fonction définie dans player.h. */
+void FAT_player_playComposerNote(u8 noteLine);
 
+/**
+ * \brief Permet de savoir si le player est en train de jouer la chanson.
+ */
 bool FAT_isCurrentlyPlaying = 0;
 
 #include "popup.h"
@@ -92,16 +122,25 @@ bool FAT_isCurrentlyPlaying = 0;
 #include "screen_effects.h"
 
 #include "player.h"
+
 /**
- * Initialisation de HAM et d'autres données propres à FAT. 
+ * \brief Initialisation de HAM et d'autres données propres à FAT. 
+ * 
+ * Initialisations:
+ * - HAM (init, text, bgMode, textCol, fx)
+ * - les palettes pour FAT (screen et sprite)
+ * - la popup de déplacement 
+ * - les curseurs
+ * - les sprites
+ * - les données du projet
  */
 void FAT_init() {
     // HAM !
     ham_Init();
-    
+
     //ham_InitRAM (RAM_TYPE_SRAM_256K);
     //ham_ResetRAM ();
-    
+
     ham_InitText(1);
     ham_SetBgMode(0);
     ham_SetTextCol(TEXT_COLOR, 0);
@@ -122,31 +161,34 @@ void FAT_init() {
     FAT_initCursor1();
     FAT_initCursor2();
     FAT_initCursor3();
-    FAT_initCursorChange ();
+    FAT_initCursorChange();
     FAT_popup_initCursors();
     FAT_screenInstrument_tabCursorInit();
-    
+
     FAT_player_initCursors();
     //FAT_cursors_initCursorsChannel ();
-    
+
     // chargement des sprites pour l'écran instrument
-    FAT_screenInstrument_initSpritesForInstrument ();
+    FAT_screenInstrument_initSpritesForInstrument();
 
     FAT_screenSong_initCursor();
     FAT_screenBlocks_initCursor();
     FAT_screenNotes_initCursor();
     FAT_screenComposer_initCursor();
-    
+
     // intialisation des données "tracker" stockées en RAM
     FAT_data_initData();
 }
 
+/**
+ * \brief Charge la palette réservée pour l'écran d'intro. 
+ */
 void FAT_initIntroPalette() {
     ham_LoadBGPal((void*) intro_Palette, 256);
 }
 
 /**
- * Méthode pour afficher un simple écran "titre" avec une boucle infinie en
+ * \brief Méthode pour afficher un simple écran "titre" avec une boucle infinie en
  * attente du bouton "START". 
  */
 void FAT_showIntro() {
@@ -158,8 +200,8 @@ void FAT_showIntro() {
     ham_bg[2].mi = ham_InitMapSet((void *) screen_intro_Map, 1024, 0, 0);
     ham_InitBg(2, 1, 3, 0);
 
-    ham_DrawText(0, 1, "SIZE %d octets", (sizeof(tracker)));
-    
+    ham_DrawText(0, 1, "SIZE %d octets", (sizeof (tracker)));
+
     while (!F_CTRLINPUT_START_PRESSED) {
     }
 
@@ -168,8 +210,9 @@ void FAT_showIntro() {
 }
 
 /**
- * Méthode qui permet de réinitialiser le BG2 proprement. 
- * NE PAS TOUCHER !  
+ * \brief Méthode qui permet de réinitialiser le BG2 proprement. 
+ * 
+ * <b>NE PAS TOUCHER !  </b>
  */
 void FAT_reinitScreen() {
     if (ham_bg[2].ti) {
@@ -181,8 +224,9 @@ void FAT_reinitScreen() {
 }
 
 /**
- * TODO refactorme
- * Méthode à réfactorer : effacer l'écran texte en affichant des espaces partout. 
+ * \brief Méthode à réfactorer : effacer l'écran texte en affichant des espaces partout. 
+ * 
+ * Performance warning ! Afficher du texte via HAM est lent !
  */
 void FAT_forceClearTextLayer() {
     for (u8 l = 1; l < 20; l++) {
@@ -190,19 +234,22 @@ void FAT_forceClearTextLayer() {
     }
 }
 
-/*
- * La palette pour l'écran d'introduction est différente (plus complete).
+/**
+ * \brief La palette pour l'écran d'introduction est différente: cette fonction la charge au bon endroit.
  */
 void FAT_initSpritePalette() {
     ham_LoadObjPal((void*) sprite_Palette, 256);
 }
-
+/**
+ * \brief Charge la palette pour les écrans: les sprites sont exclus. 
+ */
 void FAT_initScreenPalette() {
     ham_LoadBGPal((void*) screen_Palette, 256);
 }
 
 /**
- * Cette méthode permet de changer d'écran.
+ * \brief Cette méthode permet de changer d'écran.
+ * 
  * @param screenId l'id de l'écran que l'on souhaite afficher.
  */
 void FAT_switchToScreen(u8 screenId) {
@@ -237,20 +284,33 @@ void FAT_switchToScreen(u8 screenId) {
     FAT_popup_setCurrentScreen(screenId);
 }
 
+/**
+ * \brief Attendre la synchronisation du balayage vertical. 
+ */
 void FAT_waitVSync() {
     while (F_VCNT_CURRENT_SCANLINE < 160) {
     }
 }
-
+/**
+ * \brief Permet de patienter un certain nombre de cycle de balayage vertical.
+ * @param nbFrames le nombre de balayage à attendre.
+ */
 void FAT_wait(u32 nbFrames) {
     u32 i = 0;
     while (i++ < nbFrames)
         FAT_waitVSync();
 }
-
-void FAT_blockCPU (u16 time){
+/**
+ * \brief Bloque le cpu un certain temps. 
+ * 
+ * Attention le temps n'est pas exprimé en secondes ! Il s'agit juste d'une variable:
+ * plus elle est grande, plus le temps de blocage est long.
+ * 
+ * @param time variable pour définir le temps d'attente
+ */
+void FAT_blockCPU(u16 time) {
     u16 i = 0;
-    while (i++ < time){
+    while (i++ < time) {
         // CPU bloqué
     }
 }
