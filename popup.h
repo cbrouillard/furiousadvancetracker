@@ -8,40 +8,60 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
 */
+
+/**
+ * \file popup.h
+ * \brief Ce fichier contient toutes les méthodes utiles pour la gestion de l'écran "popup" (la barre des tâches permettant 
+ * de changer d'écran).
+ */
+
 #ifndef _POPUP_H_
 #define _POPUP_H_
 
 /**
- * Definit le background utilisé pour afficher la popup. BG0
+ * \brief Definit le background utilisé pour afficher la popup. BG0
  */
 #define POPUP_LAYER 0
 
-// Définit ou le curseur de sélection se situe par défaut
+/** \brief Définit la position par défaut du curseur de sélection. */
 #define POPUP_CURSOR_DEFAULT_X 94 
+/** \brief Définit la position par défaut du curseur de sélection. */
 #define POPUP_CURSOR_DEFAULT_Y 64
-// Définit ou le curseur d'affichage de l'écran courrant se situe par défaut
+/** \brief Définit la position par défaut du curseur d'affichage de l'écran actuellement sélectionné. */
 #define ACTUAL_SCREEN_CURSOR_DEFAULT_X 103
+/** \brief Définit la position par défaut du curseur d'affichage de l'écran actuellement sélectionné. */
 #define ACTUAL_SCREEN_CURSOR_DEFAULT_Y 60
 
 /** 
- * Définit la taille d'une icone dans la popup. On ne se déplace que de droite 
- * à gauche, donc seul X est nécessaire
+ * \brief Définit la taille d'une icone dans la popup.
+ * 
+ * On ne se déplace que de droite à gauche, donc seul X est nécessaire.
  */
 #define POPUP_ICON_SIZE_X 24
+/**
+ * \brief Définit la taille de l'espace blanc qui existe entre chaque icône.
+ */
 #define POPUP_ICON_WHITE_SPACE 4
 
-// Définit les bornes d'affichages pour l'affichage du curseur.
+/** \brief Définit les bornes d'affichages pour l'affichage du curseur. */
 #define POPUP_FIRST_ICON_X 11
+/** \brief Définit les bornes d'affichages pour l'affichage du curseur. */
 #define POPUP_LAST_ICON_X 206
 
-// ID Sprite pour les objets curseurs spécifique à l'écran popup
-u8 FAT_popup_cursorSelectionObj, FAT_popup_cursorActualScreenObj;
-// position actuelle du curseur de selection
-u8 FAT_popup_cursorSelectionX, FAT_popup_cursorSelectionY;
-// position actuelle du curseur indiquant l'écran courant
-u8 FAT_popup_cursorActualScreenX, FAT_popup_cursorActualScreenY;
+/** \brief Id Sprite pour l'objet curseur de sélection dans l'écran POPUP. */
+u8 FAT_popup_cursorSelectionObj;
+/** \brief Id Sprite pour l'objet curseur d'affichage de l'écran courant. */
+u8 FAT_popup_cursorActualScreenObj;
+/** \brief Position actuelle du curseur de selection. */
+u8 FAT_popup_cursorSelectionX;
+/** \brief Position actuelle du curseur de selection. */
+u8 FAT_popup_cursorSelectionY;
+/** \brief Position actuelle du curseur indiquant l'écran courant. */
+u8 FAT_popup_cursorActualScreenX;
+/** \brief Position actuelle du curseur indiquant l'écran courant. */
+u8 FAT_popup_cursorActualScreenY;
 
-// Cette variable contient l'id de l'écran sélectionné
+/** \brief Cette variable contient l'id de l'écran sélectionné. */
 u8 FAT_popup_selectedIcon = SCREEN_SONG_ID;
 
 // prototypes
@@ -58,26 +78,29 @@ void FAT_popup_commitSelectionCursorMove();
 u8 FAT_popup_getSelectedIcon();
 
 /**
- * Récupère l'écran sélectionné.
- * @return id écran
+ * \brief Récupère l'id de l'écran sélectionné.
+ * 
+ * Méthode un peu inutile ... héritage de l'objet. 
+ * 
+ * @return id de l'écran sélectionné
  */
 u8 FAT_popup_getSelectedIcon() {
     return FAT_popup_selectedIcon;
 }
 
 /**
- * Déplace le curseur d'indication "écran actuel" à sa place.
+ * \brief Déplace le curseur d'indication "écran actuel" à sa place.
+ * 
  * Le positionnement est calculé en fonction de l'id de l'écran et de la taille
  * des icônes de l'interface. 
- * @param screenId
  */
-void FAT_popup_setCurrentScreen(u8 screenId) {
+void FAT_popup_moveSelectedScreenCursor() {
     FAT_popup_cursorActualScreenX = FAT_popup_cursorSelectionX + (POPUP_ICON_SIZE_X / 2) - 2;
     ham_SetObjXY(FAT_popup_cursorActualScreenObj, FAT_popup_cursorActualScreenX, FAT_popup_cursorActualScreenY);
 }
 
 /**
- * Cette fonction permet de tester les actions utilisateurs sur la popup.
+ * \brief Cette fonction permet de tester les actions utilisateurs sur la popup.
  */
 void FAT_popup_checkButtons() {
     if (F_CTRLINPUT_RIGHT_PRESSED) {
@@ -92,7 +115,9 @@ void FAT_popup_checkButtons() {
 }
 
 /**
- * Initialisation de l'écran popup. Chargement dans la mémoire GBA de l'écran.
+ * \brief Initialisation de l'écran popup. 
+ * 
+ * Chargement dans la mémoire GBA de l'écran.
  * La popup est cachée par défaut. Les données sont chargées dans le layer POPUP_LAYER, elles le restent
  * jusqu'à extinction du programme. 
  */
@@ -109,7 +134,9 @@ void FAT_popup_init() {
 }
 
 /**
- * Initialisation des curseurs spécifiques à l'écran popup. Chargement des bitmaps + positionnement aux valeurs
+ * \brief Initialisation des curseurs spécifiques à l'écran popup.
+ * 
+ * Chargement des bitmaps + positionnement aux valeurs
  * par défauts. La méthode les cache ensuite. 
  */
 void FAT_popup_initCursors() {
@@ -130,7 +157,7 @@ void FAT_popup_initCursors() {
 }
 
 /**
- * Cache les curseurs (tous). 
+ * \brief Cache les curseurs (tous). 
  */
 void FAT_popup_hideCursors() {
     ham_SetObjVisible(FAT_popup_cursorSelectionObj, 0);
@@ -138,7 +165,7 @@ void FAT_popup_hideCursors() {
 }
 
 /**
- * Affiche les curseurs (tous). 
+ * \brief Affiche les curseurs (tous). 
  */
 void FAT_popup_showCursors() {
     ham_SetObjVisible(FAT_popup_cursorSelectionObj, 1);
@@ -146,7 +173,7 @@ void FAT_popup_showCursors() {
 }
 
 /**
- * Affiche l'écran popup. Cette méthode affiche également les curseurs. 
+ * \brief Affiche l'écran popup. Cette méthode affiche également les curseurs. 
  */
 void FAT_popup_show() {
     ham_SetBgVisible(0, 1);
@@ -154,7 +181,7 @@ void FAT_popup_show() {
 }
 
 /**
- * Cache l'écran popup. Cette méthode cache aussi les curseurs. 
+ * \brief Cache l'écran popup. Cette méthode cache aussi les curseurs. 
  */
 void FAT_popup_hide() {
     ham_SetBgVisible(0, 0);
@@ -162,7 +189,8 @@ void FAT_popup_hide() {
 }
 
 /**
- * Déplace les coordonnées du curseur vers l'icône située à sa droite. 
+ * \brief Déplace les coordonnées du curseur vers l'icône située à sa droite. 
+ * 
  * Attention, cette méthode ne fait que changer le positionnement en mémoire: 
  * le sprite n'est pas déplacée à l'écran. Pour déplacer l'affichage du sprite, faites
  * appel à la méthode FAT_popup_commitSelectionCursorMove().
@@ -175,7 +203,8 @@ void FAT_popup_moveSelectionCursorRight() {
 }
 
 /**
- * Déplace les coordonnées du curseur vers l'icône située à sa gauche. 
+ * \brief Déplace les coordonnées du curseur vers l'icône située à sa gauche. 
+ * 
  * Attention, cette méthode ne fait que changer le positionnement en mémoire: 
  * le sprite n'est pas déplacée à l'écran. Pour déplacer l'affichage du sprite, faites
  * appel à la méthode FAT_popup_commitSelectionCursorMove().
@@ -188,7 +217,7 @@ void FAT_popup_moveSelectionCursorLeft() {
 }
 
 /**
- * Commit tous les changements effectués sur les sprites (positionnement, bitmap) 
+ * \brief Commit tous les changements effectués sur les sprites (positionnement, bitmap) 
  * pour affichage physique à l'écran. 
  */
 void FAT_popup_commitSelectionCursorMove() {

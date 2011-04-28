@@ -281,7 +281,7 @@ void FAT_switchToScreen(u8 screenId) {
             break;
     }
 
-    FAT_popup_setCurrentScreen(screenId);
+    FAT_popup_moveSelectedScreenCursor();
 }
 
 /**

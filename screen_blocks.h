@@ -8,28 +8,46 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+
+/**
+ * \file screen_blocks.h
+ * \brief Fichier réservé pour la gestion de l'écran BLOCKS.
+ */
+
 #ifndef _SCREEN_BLOCKS_H_
 #define _SCREEN_BLOCKS_H_
 
-// numéro du tiles ou l'affichage démarre
+/** \brief Numéro du tiles ou l'affichage démarre (en case tile). */
 #define SCREENBLOCKS_LINE_START_Y 2
-// début de l'affichage des blocks
+/** \brief Début de l'affichage des blocks. */
 #define SCREENBLOCKS_BLOCK_LINE_X 3
+/** \brief Début de l'affichage du paramètre transpose. */
 #define SCREENBLOCKS_TRANSPOSE_LINE_X 6
-// début de l'affichage des numéros de lignes
+/** \brief Début de l'affichage des numéros de lignes. */
 #define SCREENBLOCKS_LINE_X 0
-// nombre de blocks visibles à l'écran
+/** \brief Nombre de blocks visibles à l'écran. */
 #define SCREENBLOCKS_NB_LINES_ON_SCREEN 16
-// taille en tiles d'un block (Y)
+/**  \brief Taille en tiles d'un block (Y). */
 #define SCREENBLOCKS_LINE_SIZE_Y 1
 
 // ID des colonnes réprésentées par l'interface (ne compte pas la colonne du numéro de ligne)
+/** \brief Id de la colonne des BLOCKS. Utile seulement pour la gestion du curseur. */
 #define SCREENBLOCKS_COLUMN_ID_BLK 0
+/** \brief Id de la colonne du transpose. Utile seulement pour la gestion du curseur. */
 #define SCREENBLOCKS_COLUMN_ID_TSP 1
+/** \brief Id de la colonne du nom de la commande. Utile seulement pour la gestion du curseur. */
 #define SCREENBLOCKS_COLUMN_ID_CMD_NAME 2
+/** \brief Id de la colonne de la valeur de la commande. Utile seulement pour la gestion du curseur. */
 #define SCREENBLOCKS_COLUMN_ID_CMD_PARAM 3
 
+/**
+ * \brief Permet de savoir si l'écran BLOCKS est actuellement "popupé".
+ */
 bool FAT_screenBlocks_isPopuped = 0;
+/**
+ * \brief Les blocks sont toujours inclus dans une séquence: cette variable sert
+ * à stocker son id.
+ */
 u8 FAT_screenBlocks_currentSequenceId;
 
 // prototypes
@@ -40,9 +58,10 @@ void FAT_screenBlocks_pressA();
 void FAT_screenBlocks_pressB();
 
 #include "screen_blocks_cursor.h"
-#include "cursors.h"
-#include "data.h"
 
+/**
+ * \brief Fonction de routine qui affiche les numéros de ligne. 
+ */
 void FAT_screenBlocks_printLineColumns() {
     mutex = 0;
     u8 y = SCREENBLOCKS_LINE_START_Y;
@@ -52,19 +71,35 @@ void FAT_screenBlocks_printLineColumns() {
     }
     mutex = 1;
 }
-
+/**
+ * \brief Affiche les infos dynamiques sur le coin haut droit de l'écran.
+ * 
+ * Pour le moment cette fonction se contente d'afficher le numéro de ligne 
+ * en cours d'édition. 
+ */
 void FAT_screenBlocks_printInfos() {
     mutex = 0;
     ham_DrawText(18, 4, "LINE     %.2x", FAT_screenBlocks_currentSelectedLine);
     mutex = 1;
 }
 
+/**
+ * \brief Affiche le numéro de séquence dans le coin en haut à droite de l'écran.
+ * 
+ * Affiche seulement le numéro de séquence: cette fonction est sensé être appelée
+ * peu de fois.  
+ */
 void FAT_screenBlocks_printSequenceNumber() {
     mutex = 0;
     ham_DrawText(18, 3, "SEQUENCE %.2x", FAT_screenBlocks_currentSequenceId);
     mutex = 1;
 }
 
+/**
+ * \brief Ecrit 1 block à l'écran à la bonne ligne.
+ * 
+ * @param line le numéro de la ligne du block à écrire
+ */
 void FAT_screenBlocks_printBlock(u8 line) {
     mutex = 0;
     if (FAT_data_getBlock(FAT_screenBlocks_currentSequenceId, line) != NULL_VALUE) {
@@ -78,6 +113,11 @@ void FAT_screenBlocks_printBlock(u8 line) {
     mutex = 1;
 }
 
+/**
+ * \brief Affiche les informations de transpose pour le block situé à la ligne
+ * 
+ * @param line le numéro de ligne du block
+ */
 void FAT_screenBlocks_printTranspose(u8 line) {
     mutex = 0;
     if (!FAT_data_block_isTransposeEmpty(FAT_screenBlocks_currentSequenceId, line)) {
@@ -87,6 +127,9 @@ void FAT_screenBlocks_printTranspose(u8 line) {
     mutex = 1;
 }
 
+/**
+ * \brief Affiche tous les blocks pour la séquence courante.
+ */
 void FAT_screenBlocks_printAllBlocks() {
     mutex = 0;
     for (u8 b = 0; b < SCREENBLOCKS_NB_LINES_ON_SCREEN; b++) {
@@ -96,12 +139,18 @@ void FAT_screenBlocks_printAllBlocks() {
     mutex = 1;
 }
 
+/**
+ * \brief Fonction wrapping qui affiche toutes les informations intéressantes à l'écran.
+ */
 void FAT_screenBlocks_printAllScreenText() {
     FAT_screenBlocks_printLineColumns();
     FAT_screenBlocks_printAllBlocks();
     FAT_screenBlocks_printInfos();
 }
 
+/**
+ * \brief Fonction temporisée: coeur de l'écran BLOCK (callback). 
+ */
 void FAT_screenBlocks_mainFunc() {
     if (mutex) {
         speedCounter++;
@@ -110,6 +159,12 @@ void FAT_screenBlocks_mainFunc() {
     }
 }
 
+/**
+ * \brief Initialise l'écran BLOCKS.
+ * 
+ * Affiche du texte, déplace le curseur à la dernière position connue, change 
+ * l'interface... 
+ */
 void FAT_screenBlocks_init() {
     FAT_reinitScreen();
 
@@ -138,6 +193,11 @@ void FAT_screenBlocks_init() {
     FAT_cursors_moveCursorChange(INPUT_R_CURSOR_CHANGE_X, INPUT_R_CURSOR_CHANGE_Y);
 }
 
+/**
+ * \brief Fonction qui teste les actions utilisateur. 
+ * 
+ * La gestion des touches A et B est déportée dans des fonctions externes. 
+ */
 void FAT_screenBlocks_checkButtons() {
     if (F_CTRLINPUT_SELECT_PRESSED) {
         if (!FAT_screenBlocks_isPopuped) {
@@ -249,6 +309,9 @@ void FAT_screenBlocks_checkButtons() {
     }
 }
 
+/**
+ * \brief Fonction pour gérer la touche B sur l'écran BLOCKS.
+ */
 void FAT_screenBlocks_pressB() {
     if (F_CTRLINPUT_L_PRESSED) {
 
@@ -279,6 +342,9 @@ void FAT_screenBlocks_pressB() {
     FAT_screenBlocks_printBlock(FAT_screenBlocks_currentSelectedLine);
 }
 
+/**
+ * \brief Fonction pour gérer la touche A sur l'écran BLOCKS.
+ */
 void FAT_screenBlocks_pressA() {
     switch (FAT_screenBlocks_currentSelectedColumn) {
         case SCREENBLOCKS_COLUMN_ID_BLK:

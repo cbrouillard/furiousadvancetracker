@@ -28,7 +28,7 @@
 /** \brief Définition du temps d'attente entre 2 appui sur la touche START. */
 #define WAIT_FOR_START 10
 
-/**
+/*
  * Toutes ces variables sont des repères pour le player. Afin de savoir quelle séquence/block/note jouer.
  * Attention. Les valeurs dans les tableaux représentent des NUMEROS DE LIGNES. 
  * Ce ne sont pas les ids des séquences/blocks/notes. 
@@ -92,8 +92,6 @@ void FAT_player_hideNoteCursor();
 void FAT_player_playNote(note* note, u8 channel);
 void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose);
 
-void FAT_player_init();
-
 /**
  * \brief Initialisation du curseur player pour les notes.
  * 
@@ -151,13 +149,20 @@ void FAT_player_playComposerNote(u8 noteLine) {
  * Cette méthode est un wrapper pour la méthode FAT_player_playNoteWithTsp.
  * Seule la valeur de transpose du projet est utilisée.
  * 
- * @param note l'objet NOTE a jouer
+ * @param note l'objet NOTE à jouer
  * @param channel le channel sur lequel jouer la note
  */
 void FAT_player_playNote(note* note, u8 channel) {
     FAT_player_playNoteWithTsp(note, channel, FAT_tracker.transpose);
 }
 
+/**
+ * \brief Joue une note sur un channel en ajoutant un transpose.
+ * 
+ * @param note l'objet NOTE à jouer
+ * @param channel le numéro de channel sur lequel jouer la note
+ * @param transpose la valeur de transpose, elle sera ajoutée à celle du projet
+ */
 void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
     if (note->freq != NULL_VALUE) {
         instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
@@ -229,7 +234,13 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
     }
 
 }
-
+/**
+ * \brief Démarrer la lecture d'une séquence (lit tous les blocks de la séquence).
+ * 
+ * @param sequenceId l'id de la séquence à jouer
+ * @param startLine le numéro de ligne de départ
+ * @param channel le numéro de channel sur lequel on joue
+ */
 void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
 
     if (iCanPressStart) {
@@ -259,6 +270,13 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
     }
 }
 
+/**
+ * \brief Démarre la lecture d'un block entier.
+ *  
+ * @param blockId l'id du block à jouer
+ * @param startLine la ligne de départ (TODO retirer ce paramètre on devrait jouer depuis 0 tous le temps)
+ * @param channel le numéro de channel sur lequel on joue
+ */
 void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
 
     if (iCanPressStart) {
@@ -287,6 +305,7 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
     }
 }
 
+// DEJA DOCUMENTEE
 void FAT_player_timerFunc_playSequences() {
     tempoReach--;
     if (tempoReach <= 0) {
@@ -343,6 +362,7 @@ void FAT_player_timerFunc_playSequences() {
     }
 }
 
+// DEJA DOCUMENTEE
 void FAT_player_timerFunc_playBlocks() {
 
     tempoReach--;
@@ -383,6 +403,7 @@ void FAT_player_timerFunc_playBlocks() {
 
 }
 
+// DEJA DOCUMENTEE
 void FAT_player_timerFunc_playNotes() {
     tempoReach--;
     if (tempoReach <= 0) {
