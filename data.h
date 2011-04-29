@@ -66,6 +66,10 @@
  */
 #define NB_NOTE 12
 /**
+ * \brief Définit le nombre d'effet disponibles.
+ */
+#define NB_EFFECT 13
+/**
  * \brief Taille maximale pour le nom d'une chanson.
  */
 #define SONG_NAME_MAX_LETTERS 9
@@ -154,6 +158,10 @@ u8 *pSaveMemory = GAMEPAK_RAM;
  * \brief Tableau constant contenant toutes les notes sous formes de chaînes de caractères.
  */
 const char* noteName[NB_NOTE] = {"C ", "C\"", "D ", "D\"", "E ", "F ", "F\"", "G ", "G\"", "A ", "A\"", "B "};
+/**
+ * \brief Tableau constant contenant tous les noms d'effets disponibles.
+ */
+const char* effectName[NB_EFFECT] = {"C ","EN", "H ", "K ", "L ", "O ", "P ", "RE", "RN", "SW", "TA", "TM", "V "};
 
 /**
  * \brief Nombre total de fréquences de notes.
@@ -489,6 +497,16 @@ void FAT_data_pasteBlockWithNewNumber(u8 sequence, u8 blockLine) {
         memcpy(& (FAT_tracker.allBlocks[FAT_tracker.allSequences[sequence].blocks[blockLine]]),
                 & (FAT_tracker.allBlocks[FAT_data_blockClipboard]), sizeof (block));
     }
+}
+
+/**
+ * \brief Supprime la valeur de transpose pour un block désigné.
+ * 
+ * @param sequence l'id de la séquence
+ * @param blockLine le numéro de ligne du block dans la séquence
+ */
+void FAT_data_removeBlockTranspose (u8 sequence, u8 blockLine){
+    FAT_tracker.allSequences[sequence].transpose[blockLine] = NULL_VALUE;
 }
 
 /**

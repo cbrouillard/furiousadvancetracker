@@ -71,6 +71,7 @@ void FAT_screenBlocks_printLineColumns() {
     }
     mutex = 1;
 }
+
 /**
  * \brief Affiche les infos dynamiques sur le coin haut droit de l'écran.
  * 
@@ -123,6 +124,9 @@ void FAT_screenBlocks_printTranspose(u8 line) {
     if (!FAT_data_block_isTransposeEmpty(FAT_screenBlocks_currentSequenceId, line)) {
         ham_DrawText(SCREENBLOCKS_TRANSPOSE_LINE_X, line + SCREENBLOCKS_LINE_START_Y,
                 "%.2x\0", FAT_data_block_getTranspose(FAT_screenBlocks_currentSequenceId, line));
+    } else {
+        ham_DrawText(SCREENBLOCKS_TRANSPOSE_LINE_X, line + SCREENBLOCKS_LINE_START_Y,
+                "  ");
     }
     mutex = 1;
 }
@@ -313,33 +317,43 @@ void FAT_screenBlocks_checkButtons() {
  * \brief Fonction pour gérer la touche B sur l'écran BLOCKS.
  */
 void FAT_screenBlocks_pressB() {
-    if (F_CTRLINPUT_L_PRESSED) {
+    switch (FAT_screenBlocks_currentSelectedColumn) {
+        case SCREENBLOCKS_COLUMN_ID_BLK:
+            if (F_CTRLINPUT_L_PRESSED) {
 
-        if (FAT_data_isBlockAllocatable(FAT_screenBlocks_currentSequenceId,
-                FAT_screenBlocks_currentSelectedLine)) {
-            // espace libre
-            FAT_data_pasteBlockWithNewNumber(FAT_screenBlocks_currentSequenceId,
-                    FAT_screenBlocks_currentSelectedLine);
-        } else {
-            FAT_data_cloneBlock(FAT_screenBlocks_currentSequenceId,
-                    FAT_screenBlocks_currentSelectedLine);
-        }
+                if (FAT_data_isBlockAllocatable(FAT_screenBlocks_currentSequenceId,
+                        FAT_screenBlocks_currentSelectedLine)) {
+                    // espace libre
+                    FAT_data_pasteBlockWithNewNumber(FAT_screenBlocks_currentSequenceId,
+                            FAT_screenBlocks_currentSelectedLine);
+                } else {
+                    FAT_data_cloneBlock(FAT_screenBlocks_currentSequenceId,
+                            FAT_screenBlocks_currentSelectedLine);
+                }
 
-    } else {
+            } else {
 
-        if (FAT_data_isBlockAllocatable(FAT_screenBlocks_currentSequenceId,
-                FAT_screenBlocks_currentSelectedLine)) {
-            // espace libre
-            FAT_data_pasteBlock(FAT_screenBlocks_currentSequenceId,
-                    FAT_screenBlocks_currentSelectedLine);
-        } else {
-            FAT_data_cutBlock(FAT_screenBlocks_currentSequenceId,
-                    FAT_screenBlocks_currentSelectedLine);
-        }
+                if (FAT_data_isBlockAllocatable(FAT_screenBlocks_currentSequenceId,
+                        FAT_screenBlocks_currentSelectedLine)) {
+                    // espace libre
+                    FAT_data_pasteBlock(FAT_screenBlocks_currentSequenceId,
+                            FAT_screenBlocks_currentSelectedLine);
+                } else {
+                    FAT_data_cutBlock(FAT_screenBlocks_currentSequenceId,
+                            FAT_screenBlocks_currentSelectedLine);
+                }
 
+            }
+
+            FAT_screenBlocks_printBlock(FAT_screenBlocks_currentSelectedLine);
+            break;
+        case SCREENBLOCKS_COLUMN_ID_TSP:
+            FAT_data_removeBlockTranspose(FAT_screenBlocks_currentSequenceId,
+                    FAT_screenBlocks_currentSelectedLine);
+
+            FAT_screenBlocks_printTranspose(FAT_screenBlocks_currentSelectedLine);
+            break;
     }
-
-    FAT_screenBlocks_printBlock(FAT_screenBlocks_currentSelectedLine);
 }
 
 /**
@@ -383,27 +397,27 @@ void FAT_screenBlocks_pressA() {
         case SCREENBLOCKS_COLUMN_ID_TSP:
             FAT_data_block_allocateTranspose(FAT_screenBlocks_currentSequenceId,
                     FAT_screenBlocks_currentSelectedLine);
-            
-            if (F_CTRLINPUT_LEFT_PRESSED){
-                FAT_data_block_changeTransposeValue (FAT_screenBlocks_currentSequenceId,
+
+            if (F_CTRLINPUT_LEFT_PRESSED) {
+                FAT_data_block_changeTransposeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, -1);
             }
-            
-            if (F_CTRLINPUT_RIGHT_PRESSED){
-                FAT_data_block_changeTransposeValue (FAT_screenBlocks_currentSequenceId,
+
+            if (F_CTRLINPUT_RIGHT_PRESSED) {
+                FAT_data_block_changeTransposeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, 1);
             }
-            
-            if (F_CTRLINPUT_DOWN_PRESSED){
-                FAT_data_block_changeTransposeValue (FAT_screenBlocks_currentSequenceId,
+
+            if (F_CTRLINPUT_DOWN_PRESSED) {
+                FAT_data_block_changeTransposeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, -16);
             }
-            
-            if (F_CTRLINPUT_UP_PRESSED){
-                FAT_data_block_changeTransposeValue (FAT_screenBlocks_currentSequenceId,
+
+            if (F_CTRLINPUT_UP_PRESSED) {
+                FAT_data_block_changeTransposeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, 16);
             }
-            
+
             FAT_screenBlocks_printTranspose(FAT_screenBlocks_currentSelectedLine);
             break;
 

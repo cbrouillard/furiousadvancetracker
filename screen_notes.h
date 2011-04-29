@@ -71,7 +71,7 @@ void FAT_screenNotes_printNote(u8 line) {
 
         ham_DrawText(SCREENNOTES_NOTE_LINE_X,
                 line + SCREENNOTES_LINE_START_Y,
-                "%s%1x %.2x\0", noteName[(actualNote->note & 0xf0)>>4], actualNote->note & 0x0f, actualNote->instrument);
+                "%s%1x %.2x\0", noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument);
     } else {
         ham_DrawText(SCREENNOTES_NOTE_LINE_X,
                 line + SCREENNOTES_LINE_START_Y, "      \0");
@@ -118,7 +118,7 @@ void FAT_screenNotes_init() {
     // démarrage du cycle pour l'écran
     ham_StopIntHandler(INT_TYPE_VBL);
     ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenNotes_mainFunc);
-    
+
     // affichage du curseur
     FAT_cursors_hideCursor2();
     FAT_cursors_hideCursor3();
