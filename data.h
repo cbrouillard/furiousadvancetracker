@@ -145,7 +145,7 @@
 /**
  * \brief Addresse vers la mémoire SRAM (la mémoire pour la sauvegarde).
  */
-#define GAMEPAK_RAM  ((u8*)0x00E0000)
+#define GAMEPAK_RAM  ((u8*)0x0E000000)
 /**
  * \brief Pointeur vers la mémoire SRAM.
  */
@@ -1491,15 +1491,14 @@ void FAT_data_composer_changeInstrument(u8 line, s8 addedValue) {
  * <b>NON IMPLEMENTE</b> 
  */
 void FAT_data_project_save() {
-    u16 trackSize = sizeof (FAT_tracker);
-    u16 bitCounter = 0;
-    tracker* tracker = &FAT_tracker;
-
-    while (bitCounter < trackSize) {
-        memcpy(pSaveMemory, tracker, 8);
-        bitCounter += 8;
-        tracker += sizeof (u8);
+    u8* tracker = (u8*) &FAT_tracker;
+    u32 trackSize = SIZEOF_8BIT(FAT_tracker) / 8;
+    int counter = 0;
+    while (counter < trackSize){
+        pSaveMemory[counter] = tracker[counter];
+        counter ++;
     }
+    
     ham_DrawText(23, 16, "SAVED  !");
 }
 
@@ -1509,7 +1508,15 @@ void FAT_data_project_save() {
  * <b>NON IMPLEMENTE</b>
  */
 void FAT_data_project_load() {
-    memcpy(&FAT_tracker, pSaveMemory, sizeof (FAT_tracker));
+    
+    u8* tracker = (u8*) &FAT_tracker;
+    u32 trackSize = SIZEOF_8BIT(FAT_tracker) / 8;
+    int counter = 0;
+    while (counter < trackSize){
+        tracker[counter] = pSaveMemory[counter];
+        counter ++;
+    }
+    
     ham_DrawText(23, 16, "LOADED !");
 }
 

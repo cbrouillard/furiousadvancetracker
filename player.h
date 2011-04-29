@@ -26,7 +26,7 @@
 /** \brief Définition d'une valeur pour ralentir le décompte du tempo. */
 #define TEMPO_TIMER_HARDWARE_VALUE 70
 /** \brief Définition du temps d'attente entre 2 appui sur la touche START. */
-#define WAIT_FOR_START 10
+#define WAIT_FOR_START 1
 
 /*
  * Toutes ces variables sont des repères pour le player. Afin de savoir quelle séquence/block/note jouer.
@@ -126,6 +126,7 @@ void FAT_player_timerFunc_iCanPressStart() {
         waitForStart = 0;
         M_TIM0CNT_IRQ_DISABLE
         M_TIM0CNT_TIMER_STOP
+        ham_DrawText (21,16, "START  ON");
     }
 }
 
@@ -211,6 +212,7 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
 void FAT_player_startPlayerFromSequences(u8 startLine) {
 
     if (iCanPressStart) {
+        ham_DrawText (21,16, "START OFF");
         iCanPressStart = 0;
 
         // initialisation des séquences au démarrage
@@ -228,7 +230,7 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
 
         ham_StartIntHandler(INT_TYPE_TIM0, (void*) &FAT_player_timerFunc_iCanPressStart);
 
-        R_TIM0CNT = 3;
+        R_TIM0CNT = 1;
         M_TIM0CNT_IRQ_ENABLE
         M_TIM0CNT_TIMER_START
     }
@@ -264,7 +266,7 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
 
         ham_StartIntHandler(INT_TYPE_TIM0, (void*) &FAT_player_timerFunc_iCanPressStart);
 
-        R_TIM0CNT = 3;
+        R_TIM0CNT = 1;
         M_TIM0CNT_IRQ_ENABLE
         M_TIM0CNT_TIMER_START
     }
@@ -299,7 +301,7 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
 
         ham_StartIntHandler(INT_TYPE_TIM0, (void*) &FAT_player_timerFunc_iCanPressStart);
 
-        R_TIM0CNT = 3;
+        R_TIM0CNT = 1;
         M_TIM0CNT_IRQ_ENABLE
         M_TIM0CNT_TIMER_START
     }
@@ -448,7 +450,7 @@ void FAT_player_stopPlayer() {
 
         ham_StartIntHandler(INT_TYPE_TIM0, (void*) &FAT_player_timerFunc_iCanPressStart);
 
-        R_TIM0CNT = 3;
+        R_TIM0CNT = 1;
         M_TIM0CNT_IRQ_ENABLE
         M_TIM0CNT_TIMER_START
     }
