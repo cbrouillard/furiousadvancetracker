@@ -1510,12 +1510,14 @@ void FAT_data_composer_changeInstrument(u8 line, s8 addedValue) {
  */
 void FAT_data_project_save() {
     u8* tracker = (u8*) &FAT_tracker;
-    u32 trackSize = SIZEOF_8BIT(FAT_tracker) / 8;
+    u32 trackSize = SIZEOF_8BIT(FAT_tracker);
     int counter = 0;
     while (counter < trackSize){
         pSaveMemory[counter] = tracker[counter];
         counter ++;
     }
+    
+    pSaveMemory[counter] = 0x5a;
     
     ham_DrawText(23, 16, "SAVED  !");
 }
@@ -1528,7 +1530,7 @@ void FAT_data_project_save() {
 void FAT_data_project_load() {
     
     u8* tracker = (u8*) &FAT_tracker;
-    u32 trackSize = SIZEOF_8BIT(FAT_tracker) / 8;
+    u32 trackSize = SIZEOF_8BIT(FAT_tracker);
     int counter = 0;
     while (counter < trackSize){
         tracker[counter] = pSaveMemory[counter];

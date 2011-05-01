@@ -8,6 +8,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
 */
+
+/**
+ * \file screen_composer_cursor.h
+ * \brief Ce fichier permet de gérer le curseur sur l'écran COMPOSER.
+ */
+
 #ifndef _SCREEN_COMPOSER_CURSOR_H_
 #define	_SCREEN_COMPOSER_CURSOR_H_
 

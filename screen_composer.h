@@ -66,6 +66,9 @@ void FAT_screenComposer_playAffectedNotes();
 
 #include "screen_composer_cursor.h"
 
+/**
+ * \brief Fonction callback principale pour l'écran COMPOSER.
+ */
 void FAT_screenComposer_mainFunc() {
     if (mutex) {
         speedCounter++;
@@ -74,6 +77,9 @@ void FAT_screenComposer_mainFunc() {
     }
 }
 
+/**
+ * \brief Affiche les informations "dynamiques" dans l'écran COMPOSER (numéro de ligne, ...). 
+ */
 void FAT_screenComposer_printInfos() {
     mutex = 0;
     ham_DrawText(21, 3, "LINE  %.2x", FAT_screenComposer_currentSelectedLine);
@@ -81,6 +87,11 @@ void FAT_screenComposer_printInfos() {
     mutex = 1;
 }
 
+/**
+ * \brief Affiche une seule note sur la grille du COMPOSER. 
+ * 
+ * @param line le numéro de ligne à afficher
+ */
 void FAT_screenComposer_printNote(u8 line) {
     mutex = 0;
     if (!FAT_data_composer_isNoteEmpty(line)) {
@@ -96,6 +107,9 @@ void FAT_screenComposer_printNote(u8 line) {
     mutex = 1;
 }
 
+/**
+ * \brief Affiche toutes les notes du COMPOSER. 
+ */
 void FAT_screenComposer_printAllNote() {
     mutex = 0;
     for (u8 b = 0; b < SCREENCOMPOSER_NB_LINES_ON_SCREEN; b++) {
@@ -104,6 +118,10 @@ void FAT_screenComposer_printAllNote() {
     mutex = 1;
 }
 
+/**
+ * \brief Affiche l'information de locking: si le COMPOSER est UNLOCKED, alors on peut
+ * éditer les notes. Dans le cas contraire, les notes sont jouées lors de l'appui sur les bouttons. 
+ */
 void FAT_screenComposer_printLocking() {
     if (FAT_screenComposer_isLocked) {
         ham_DrawText(8, 16, "  LOCKED");
@@ -112,11 +130,17 @@ void FAT_screenComposer_printLocking() {
     }
 }
 
+/**
+ * \brief Fonction wrapping qui permet d'afficher des choses intéressantes à l'écran. 
+ */
 void FAT_screenComposer_printAllScreenText() {
     FAT_screenComposer_printInfos();
     FAT_screenComposer_printAllNote();
 }
 
+/**
+ * \brief Fonction appelée à l'initialisation afin d'imprimer le numéro des lignes sur l'écran. 
+ */
 void FAT_screenComposer_printColumns() {
     mutex = 0;
     ham_DrawText(8, 7, " L");
@@ -130,6 +154,9 @@ void FAT_screenComposer_printColumns() {
     mutex = 1;
 }
 
+/**
+ * \brief Fonction d'initialisation.
+ */
 void FAT_screenComposer_init() {
     FAT_reinitScreen();
 
@@ -160,6 +187,9 @@ void FAT_screenComposer_init() {
     }
 }
 
+/**
+ * \brief Permet de tester l'appui sur les boutons et de réagir en conséquence. 
+ */
 void FAT_screenComposer_checkButtons() {
     if (F_CTRLINPUT_SELECT_PRESSED) {
         if (!FAT_screenComposer_isPopuped) {
@@ -232,6 +262,9 @@ void FAT_screenComposer_checkButtons() {
     }
 }
 
+/**
+ * \brief Fonction spécialisée dans la gestion de la touche A. 
+ */
 void FAT_screenComposer_pressA() {
     switch (FAT_screenComposer_currentSelectedColumn) {
         case SCREENCOMPOSER_COLUMN_ID_NOTES:
@@ -291,6 +324,9 @@ void FAT_screenComposer_pressA() {
     FAT_screenComposer_printNote(FAT_screenComposer_currentSelectedLine);
 }
 
+/**
+ * \brief Fonction spécialisée dans la gestion de la touche B. 
+ */
 void FAT_screenComposer_pressB() {
     if (FAT_data_composer_isNoteEmpty(FAT_screenComposer_currentSelectedLine)) {
         FAT_data_composer_pasteNote(FAT_screenComposer_currentSelectedLine);
@@ -301,6 +337,9 @@ void FAT_screenComposer_pressB() {
     FAT_screenComposer_printNote(FAT_screenComposer_currentSelectedLine);
 }
 
+/**
+ * \brief Permet de passer du mode UNLOCKED à LOCKED et vice-versa. 
+ */
 void FAT_screenComposer_switchLocking() {
     FAT_screenComposer_isLocked ^= 1;
     FAT_screenComposer_printLocking();
@@ -317,6 +356,10 @@ void FAT_screenComposer_switchLocking() {
     }
 }
 
+/**
+ * \brief Joue la note affecté à un bouton. <b>ATTENTION!</b>, cette fonction
+ * teste elle même l'appui sur les touches.
+ */
 void FAT_screenComposer_playAffectedNotes() {
     if (F_CTRLINPUT_START_PRESSED && speedCounter >= SLOWDOWN_COUNTER) {
         FAT_screenComposer_switchLocking();
