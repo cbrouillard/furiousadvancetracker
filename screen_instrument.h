@@ -8,6 +8,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
 */
+
+/**
+ * \file screen_instrument.h
+ * \brief Ce fichier contient toutes les fonctions relatives à la gestion des instruments.
+ */
+
 #ifndef _SCREEN_INSTRUMENT_H_
 #define	_SCREEN_INSTRUMENT_H_
 
@@ -22,7 +28,6 @@ u8 FAT_instrument_envdir0_obj, FAT_instrument_envdir1_obj;
 u8 FAT_instrument_waveduty0_obj, FAT_instrument_waveduty1_obj, FAT_instrument_waveduty2_obj, FAT_instrument_waveduty3_obj;
 
 #include "screen_instrument_cursor.h"
-#include "data.h"
 
 // prototypes
 void FAT_screenInstrument_init();

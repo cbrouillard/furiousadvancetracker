@@ -199,10 +199,12 @@ void FAT_showIntro() {
     ham_bg[2].ti = ham_InitTileSet((void*) screen_intro_Tiles, SIZEOF_16BIT(screen_intro_Tiles), 1, 1);
     ham_bg[2].mi = ham_InitMapSet((void *) screen_intro_Map, 1024, 0, 0);
     ham_InitBg(2, 1, 3, 0);
-
-    ham_DrawText(0, 1, "SIZE %d octets", (sizeof (tracker)));
-
-    while (!F_CTRLINPUT_START_PRESSED) {
+#ifdef DEBUG_ON
+    ham_DrawText(1, 15, "DEBUG ON");
+    ham_DrawText(1, 16, "SIZE %d octets", (sizeof (tracker)));
+#endif
+    ham_DrawText(1, 19, "version %s", FAT_VERSION);
+    while (!F_CTRLINPUT_START_PRESSED && !F_CTRLINPUT_A_PRESSED && !F_CTRLINPUT_B_PRESSED) {
     }
 
     ham_InitBg(2, 0, 3, 0);

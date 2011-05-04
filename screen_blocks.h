@@ -23,6 +23,8 @@
 #define SCREENBLOCKS_BLOCK_LINE_X 3
 /** \brief Début de l'affichage du paramètre transpose. */
 #define SCREENBLOCKS_TRANSPOSE_LINE_X 6
+/** \brief Début de l'affichage de la commande assignée au block. */
+#define SCREENBLOCKS_EFFECT_LINE_X 8
 /** \brief Début de l'affichage des numéros de lignes. */
 #define SCREENBLOCKS_LINE_X 0
 /** \brief Nombre de blocks visibles à l'écran. */
@@ -58,6 +60,7 @@ void FAT_screenBlocks_pressA();
 void FAT_screenBlocks_pressB();
 
 #include "screen_blocks_cursor.h"
+#include "data.h"
 
 /**
  * \brief Fonction de routine qui affiche les numéros de ligne. 
@@ -132,6 +135,26 @@ void FAT_screenBlocks_printTranspose(u8 line) {
 }
 
 /**
+ * \brief Affiche les informations d'effets pour le block situé à une ligne donnée.
+ *  
+ * @param line le numéro de ligne du block
+ */
+void FAT_screenBlocks_printEffect(u8 line) {
+    mutex = 0;
+    if (!FAT_data_block_isEffectEmpty(FAT_screenBlocks_currentSequenceId, line)) {
+        
+        effect* effect = FAT_data_block_getEffect(FAT_screenBlocks_currentSequenceId, line);
+        
+        ham_DrawText(SCREENBLOCKS_EFFECT_LINE_X, line + SCREENBLOCKS_LINE_START_Y,
+                "%s%.2x\0", blockEffectName[(effect->name&0xfe) >> 1], effect->value);
+    } else {
+        ham_DrawText(SCREENBLOCKS_EFFECT_LINE_X, line + SCREENBLOCKS_LINE_START_Y,
+                "    ");
+    }
+    mutex = 1;
+}
+
+/**
  * \brief Affiche tous les blocks pour la séquence courante.
  */
 void FAT_screenBlocks_printAllBlocks() {
@@ -139,6 +162,7 @@ void FAT_screenBlocks_printAllBlocks() {
     for (u8 b = 0; b < SCREENBLOCKS_NB_LINES_ON_SCREEN; b++) {
         FAT_screenBlocks_printBlock(b);
         FAT_screenBlocks_printTranspose(b);
+        FAT_screenBlocks_printEffect(b);
     }
     mutex = 1;
 }

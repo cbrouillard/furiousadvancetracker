@@ -8,15 +8,27 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
 */
+
+/**
+ * \file screen_effects.h
+ * \brief Ce fichier contient toutes les fonctions utiles pour la gestion de l'écran EFFECTS.
+ * 
+ * Cet écran est globalement similaire à celui des tables dans LSDJ.
+ */
+
 #ifndef _SCREEN_EFFECTS_H_
 #define _SCREEN_EFFECTS_H_
 
+/** \brief Permet de savoir si la popup est affichée au dessus de l'écran ou non. */
 bool FAT_screenEffects_isPopuped = 0;
 
 // prototypes
 void FAT_screenEffects_init ();
 void FAT_screenEffects_checkButtons() ;
 
+/**
+ * \brief Fonction principale de l'écran (callback). 
+ */
 void FAT_screenEffects_mainFunc() {
     if (mutex) {
         speedCounter++;
@@ -25,6 +37,9 @@ void FAT_screenEffects_mainFunc() {
     }
 }
 
+/**
+ * \brief Initialisation de l'écran. 
+ */
 void FAT_screenEffects_init (){
     FAT_reinitScreen();
 
@@ -40,6 +55,9 @@ void FAT_screenEffects_init (){
     ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenEffects_mainFunc);
 }
 
+/**
+ * \brief Cette fonction permet de tester les actions utilisateurs sur l'écran. 
+ */
 void FAT_screenEffects_checkButtons() {
     if (F_CTRLINPUT_SELECT_PRESSED) {
         if (!FAT_screenEffects_isPopuped) {

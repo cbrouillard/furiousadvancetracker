@@ -18,6 +18,7 @@
 #define	_PLAYER_H_
 
 #include "data.h"
+#include "screen_song.h"
 
 // DOC: Délai pour 1/16e de mesure = (60000 / bpm) / 4.
 // BPM 128 -> 1 note = 117,18
@@ -126,7 +127,9 @@ void FAT_player_timerFunc_iCanPressStart() {
         waitForStart = 0;
         M_TIM0CNT_IRQ_DISABLE
         M_TIM0CNT_TIMER_STOP
-        ham_DrawText (21,16, "START  ON");
+#ifdef DEBUG_ON
+        ham_DrawText(21, 16, "START  ON");
+#endif
     }
 }
 
@@ -212,7 +215,9 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
 void FAT_player_startPlayerFromSequences(u8 startLine) {
 
     if (iCanPressStart) {
-        ham_DrawText (21,16, "START OFF");
+#ifdef DEBUG_ON
+        ham_DrawText(21, 16, "START OFF");
+#endif
         iCanPressStart = 0;
 
         // initialisation des séquences au démarrage
@@ -236,6 +241,7 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
     }
 
 }
+
 /**
  * \brief Démarrer la lecture d'une séquence (lit tous les blocks de la séquence).
  * 
@@ -308,6 +314,7 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
 }
 
 // DEJA DOCUMENTEE
+
 void FAT_player_timerFunc_playSequences() {
     tempoReach--;
     if (tempoReach <= 0) {
@@ -365,6 +372,7 @@ void FAT_player_timerFunc_playSequences() {
 }
 
 // DEJA DOCUMENTEE
+
 void FAT_player_timerFunc_playBlocks() {
 
     tempoReach--;
@@ -406,6 +414,7 @@ void FAT_player_timerFunc_playBlocks() {
 }
 
 // DEJA DOCUMENTEE
+
 void FAT_player_timerFunc_playNotes() {
     tempoReach--;
     if (tempoReach <= 0) {
@@ -502,7 +511,8 @@ void FAT_player_moveOrHideCursor(u8 channel) {
         case SCREEN_SONG_ID: // on est dans l'écran SONG !
             FAT_player_hideBlockCursor();
             FAT_player_hideNoteCursor();
-            if (actualSequencesForChannel[channel] != NULL_VALUE) {
+            if (actualSequencesForChannel[channel] != NULL_VALUE
+                    && actualSequencesForChannel[channel] >= FAT_screenSong_currentStartLine) {
                 // la lecture a été lancée depuis l'écran SONG
                 // on dispose du numéro de ligne actuellement jouée dans actualSequencesForChannel[channel]
                 ham_SetObjXY(FAT_cursor_playerSequences_obj[channel],

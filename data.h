@@ -66,9 +66,13 @@
  */
 #define NB_NOTE 12
 /**
- * \brief Définit le nombre d'effet disponibles.
+ * \brief Définit le nombre d'effet disponibles pour les notes.
  */
-#define NB_EFFECT 13
+#define NB_NOTE_EFFECT 13
+/**
+ * \brief Définit le nombre d'effet disponibles pour les blocks.
+ */
+#define NB_BLOCK_EFFECT 5
 /**
  * \brief Taille maximale pour le nom d'une chanson.
  */
@@ -153,15 +157,19 @@
 /**
  * \brief Pointeur vers la mémoire SRAM.
  */
-u8 *pSaveMemory = GAMEPAK_RAM;
+u8 *gamepak = GAMEPAK_RAM;
 /**
  * \brief Tableau constant contenant toutes les notes sous formes de chaînes de caractères.
  */
 const char* noteName[NB_NOTE] = {"C ", "C\"", "D ", "D\"", "E ", "F ", "F\"", "G ", "G\"", "A ", "A\"", "B "};
 /**
- * \brief Tableau constant contenant tous les noms d'effets disponibles.
+ * \brief Tableau constant contenant tous les noms d'effets disponibles pour les notes.
  */
-const char* effectName[NB_EFFECT] = {"C ","EN", "H ", "K ", "L ", "O ", "P ", "RE", "RN", "SW", "TA", "TM", "V "};
+const char* noteEffectName[NB_NOTE_EFFECT] = {"C ", "EN", "H ", "K ", "L ", "O ", "P ", "RE", "RN", "SW", "TA", "TM", "V "};
+/**
+ * \brief Tableau constant contenant tous les noms d'effets disponibles pour les blocks.
+ */
+const char* blockEffectName[NB_BLOCK_EFFECT] = {"EN", "H ", "K ", "SW", "TM"};
 
 /**
  * \brief Nombre total de fréquences de notes.
@@ -184,8 +192,15 @@ bool FAT_data_smartAllocateBlock(u8 sequence, u8 blockLine);
  */
 typedef struct EFFECT {
     u8 name; /*!< Un numéro permettant de pointer vers un tableau de char* afin d'afficher le nom. */
+    // 0x 0000 000     0 
+    // 0x numéro       1=note, 0=block
     u8 value; /*!< La valeur de la commande de 0 à FF. */
 } effect;
+
+/**
+ * \brief Espace mémoire contenant le dernier effet écrit. Par défaut, l'effet est initialisé avec NULL_VALUE.
+ */
+effect FAT_data_lastEffectWritten;
 
 /**
  * \struct TABLE
@@ -259,6 +274,7 @@ typedef struct SEQUENCE {
                                           * une séquence et telle autre valeur dans une autre séquence. De même, au sein de la
                                           * même séquence, on peut ainsi transposer différemment chacun des blocks présent.
                                           */
+    //effect effect[4]; 
 } sequence;
 /**
  * \brief Stocke le dernier numéro de séquence écrit.
@@ -382,6 +398,7 @@ void FAT_data_initData() {
     FAT_data_sequenceClipboard = NULL_VALUE;
     FAT_data_blockClipboard = NULL_VALUE;
     memset(&FAT_data_noteClipboard, NULL_VALUE, sizeof (note));
+    memset(&FAT_data_lastEffectWritten, NULL_VALUE, sizeof (effect));
 }
 
 /**
@@ -505,7 +522,7 @@ void FAT_data_pasteBlockWithNewNumber(u8 sequence, u8 blockLine) {
  * @param sequence l'id de la séquence
  * @param blockLine le numéro de ligne du block dans la séquence
  */
-void FAT_data_removeBlockTranspose (u8 sequence, u8 blockLine){
+void FAT_data_removeBlockTranspose(u8 sequence, u8 blockLine) {
     FAT_tracker.allSequences[sequence].transpose[blockLine] = NULL_VALUE;
 }
 
@@ -909,6 +926,29 @@ void FAT_data_block_changeValue(u8 sequence, u8 blockLine, s8 addedValue) {
 }
 
 /**
+ * \brief Permet de déterminer si un effet est assigné à un block ou pas.
+ *  
+ * @param sequence l'id de la séquence dans lequel le block est installé
+ * @param blockLine 
+ */
+bool FAT_data_block_isEffectEmpty(u8 sequence, u8 blockLine) {
+    //return FAT_tracker.allSequences[sequence].effect[blockLine].name == NULL_VALUE;
+    return 1;
+}
+
+/**
+ * \brief Retourne un pointeur sur un effet définit pour un block dans une séquence.
+ *  
+ * @param sequence le numéro de séquence concernée
+ * @param line la ligne du block dans la séquence
+ * @return un pointeur sur un objet EFFECT
+ */
+effect* FAT_data_block_getEffect(u8 sequence, u8 line) {
+    //return &(FAT_tracker.allSequences[sequence].effect[line]);
+    return 0;
+}
+
+/**
  * \brief Modifie la valeur d'une note. 
  * 
  * Cette méthode permet de changer l'intitulé de la not et donc sa fréquence.
@@ -986,6 +1026,67 @@ void FAT_data_note_changeInstrument(u8 currentChannel, u8 block, u8 noteLine, s8
 }
 
 /**
+ * \brief Modifie le nom d'un effet assigné à une note.
+ *  
+ * @param block le numéro de block dans lequel la note est inscrite
+ * @param noteLine le numéro de ligne de la note dans le block
+ * @param addedValue la valeur à ajouter/retrancher
+ */
+void FAT_data_note_changeEffectName(u8 block, u8 line, s8 addedValue) {
+    u8 effectName = (FAT_tracker.allBlocks[block].notes[line].effect.name & 0xfe) >> 1;
+    if (
+            (addedValue < 0 && effectName > (-addedValue - 1)) ||
+            (addedValue > 0 && effectName < NB_NOTE_EFFECT - addedValue)
+
+            ) {
+        effectName += addedValue;
+        FAT_tracker.allBlocks[block].notes[line].effect.name = (effectName << 1) | 1;
+        FAT_data_lastEffectWritten.name = FAT_tracker.allBlocks[block].notes[line].effect.name;
+    }
+}
+
+/**
+ * \brief Modifie la valeur d'un effet assigné à une note.
+ *  
+ * @param block le numéro de block dans lequel la note est inscrite
+ * @param noteLine le numéro de ligne de la note dans le block
+ * @param addedValue la valeur à ajouter/retrancher
+ */
+void FAT_data_note_changeEffectValue(u8 block, u8 line, s8 addedValue) {
+    if (
+            (addedValue < 0 && FAT_tracker.allBlocks[block].notes[line].effect.value > (-addedValue - 1)) ||
+            (addedValue > 0 && FAT_tracker.allBlocks[block].notes[line].effect.value <= 0xff - addedValue)
+
+            ) {
+        FAT_tracker.allBlocks[block].notes[line].effect.value += addedValue;
+        FAT_data_lastEffectWritten.value = FAT_tracker.allBlocks[block].notes[line].effect.value;
+    }
+}
+
+/**
+ * \brief Colle un effet préalablement stocké en mémoire.
+ * 
+ * @param block le numéro de block dans lequel la note est inscrite
+ * @param line le numéro de ligne de la note
+ */
+void FAT_data_note_pasteEffect(u8 block, u8 line) {
+    FAT_tracker.allBlocks[block].notes[line].effect.name = ((FAT_data_lastEffectWritten.name & 0xfe) >> 1) | 1;
+    FAT_tracker.allBlocks[block].notes[line].effect.value = FAT_data_lastEffectWritten.value;
+}
+
+/**
+ * \brief Coupe un effet et le stocke dans une mémoire spéciale.
+ * 
+ * @param block le numéro de block dans lequel la note est inscrite
+ * @param line le numéro de ligne de la note
+ */
+void FAT_data_note_cutEffect(u8 block, u8 line) {
+    FAT_data_lastEffectWritten.name = FAT_tracker.allBlocks[block].notes[line].effect.name;
+    FAT_data_lastEffectWritten.value = FAT_tracker.allBlocks[block].notes[line].effect.value;
+    memset(&FAT_tracker.allBlocks[block].notes[line].effect, NULL_VALUE, sizeof (effect));
+}
+
+/**
  * \brief Cette méthode permet de changer le numéro d'un instrument alloué à une note par un nouveau disponible.
  * 
  * @param currentChannel le channel (de 0 à 5) utile pour l'initialisation de l'instrument
@@ -1009,6 +1110,38 @@ bool FAT_data_note_smartChangeInstrument(u8 currentChannel, u8 block, u8 noteLin
     }
 
     return 0;
+}
+
+/**
+ * \brief Permet de déterminer si un effet a été assigné à la note.
+ *  
+ * @param block l'id du block dans lequel la note est inscrite
+ * @param line le numéro de ligne de la note
+ * @return 1 si l'effet est vide, 0 sinon
+ */
+bool FAT_data_note_isEffectEmpty(u8 block, u8 line) {
+    return FAT_tracker.allBlocks[block].notes[line].effect.name == NULL_VALUE;
+}
+
+/**
+ * \brief Récupère l'effet actuellement assigné à une note.
+ * 
+ * @param block l'id du block dans lequel la note est inscrite
+ * @param line le numéro de ligne de la note
+ * @return un pointeur sur un objet EFFECT
+ */
+effect* FAT_data_note_getEffect(u8 block, u8 line) {
+    return &(FAT_tracker.allBlocks[block].notes[line].effect);
+}
+
+void FAT_data_note_addDefaultEffect(u8 block, u8 line) {
+    if (FAT_data_lastEffectWritten.name == NULL_VALUE) {
+        FAT_data_lastEffectWritten.name = 1; // 1 = type note et numéro 0 dans le tableau
+        FAT_data_lastEffectWritten.value = 0;
+    }
+
+    FAT_tracker.allBlocks[block].notes[line].effect.name = FAT_data_lastEffectWritten.name;
+    FAT_tracker.allBlocks[block].notes[line].effect.value = FAT_data_lastEffectWritten.value;
 }
 
 /**
@@ -1509,16 +1642,16 @@ void FAT_data_composer_changeInstrument(u8 line, s8 addedValue) {
  * <b>NON IMPLEMENTE</b> 
  */
 void FAT_data_project_save() {
-    u8* tracker = (u8*) &FAT_tracker;
+    u8* tracker = (u8*) & FAT_tracker;
     u32 trackSize = SIZEOF_8BIT(FAT_tracker);
     int counter = 0;
-    while (counter < trackSize){
-        pSaveMemory[counter] = tracker[counter];
-        counter ++;
+    while (counter < trackSize) {
+        gamepak[counter] = tracker[counter];
+        counter++;
     }
-    
-    pSaveMemory[counter] = 0x5a;
-    
+
+    gamepak[counter] = 0x5a;
+
     ham_DrawText(23, 16, "SAVED  !");
 }
 
@@ -1528,15 +1661,15 @@ void FAT_data_project_save() {
  * <b>NON IMPLEMENTE</b>
  */
 void FAT_data_project_load() {
-    
-    u8* tracker = (u8*) &FAT_tracker;
+
+    u8* tracker = (u8*) & FAT_tracker;
     u32 trackSize = SIZEOF_8BIT(FAT_tracker);
     int counter = 0;
-    while (counter < trackSize){
-        tracker[counter] = pSaveMemory[counter];
-        counter ++;
+    while (counter < trackSize) {
+        tracker[counter] = gamepak[counter];
+        counter++;
     }
-    
+
     ham_DrawText(23, 16, "LOADED !");
 }
 

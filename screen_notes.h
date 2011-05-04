@@ -14,6 +14,7 @@
 #define SCREENNOTES_LINE_START_Y 2
 #define SCREENNOTES_NB_LINES_ON_SCREEN 16
 #define SCREENNOTES_LINE_X 0
+#define SCREENNOTES_EFFECT_LINE_X 10
 #define SCREENNOTES_LINE_SIZE_Y 1
 
 #define SCREENNOTES_NOTE_LINE_X 3
@@ -79,10 +80,26 @@ void FAT_screenNotes_printNote(u8 line) {
     mutex = 1;
 }
 
+void FAT_screenNotes_printEffect(u8 line) {
+    mutex = 0;
+    if (!FAT_data_note_isEffectEmpty(FAT_screenNotes_currentBlockId, line)) {
+
+        effect* effect = FAT_data_note_getEffect(FAT_screenNotes_currentBlockId, line);
+
+        ham_DrawText(SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y,
+                "%.2s%.2x\0", noteEffectName[(effect->name & 0xfe) >> 1], effect->value);
+    } else {
+        ham_DrawText(SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y,
+                "    ");
+    }
+    mutex = 1;
+}
+
 void FAT_screenNotes_printAllNotes() {
     mutex = 0;
     for (u8 b = 0; b < SCREENNOTES_NB_LINES_ON_SCREEN; b++) {
         FAT_screenNotes_printNote(b);
+        FAT_screenNotes_printEffect(b);
     }
     mutex = 1;
 }
@@ -242,12 +259,26 @@ void FAT_screenNotes_checkButtons() {
 }
 
 void FAT_screenNotes_pressB() {
-    if (FAT_data_isNoteEmpty(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine)) {
-        FAT_data_pasteNote(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine);
-    } else {
-        FAT_data_cutNote(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine);
+    switch (FAT_screenNotes_currentSelectedColumn) {
+        case SCREENNOTES_COLUMN_ID_NOTES:
+        case SCREENNOTES_COLUMN_ID_INST:
+            if (FAT_data_isNoteEmpty(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine)) {
+                FAT_data_pasteNote(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine);
+            } else {
+                FAT_data_cutNote(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine);
+            }
+            FAT_screenNotes_printNote(FAT_screenNotes_currentSelectedLine);
+            break;
+        case SCREENNOTES_COLUMN_ID_CMD_NAME:
+        case SCREENNOTES_COLUMN_ID_CMD_PARAM:
+            if (FAT_data_note_isEffectEmpty(FAT_screenNotes_currentBlockId, FAT_screenBlocks_currentSelectedLine)){
+                FAT_data_note_pasteEffect (FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine);
+            } else {
+                FAT_data_note_cutEffect (FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine);
+            }
+            FAT_screenNotes_printEffect(FAT_screenNotes_currentSelectedLine);
+            break;
     }
-    FAT_screenNotes_printNote(FAT_screenNotes_currentSelectedLine);
 }
 
 void FAT_screenNotes_pressA() {
@@ -310,9 +341,62 @@ void FAT_screenNotes_pressA() {
                 }
             }
             break;
+
+        case SCREENNOTES_COLUMN_ID_CMD_NAME:
+
+            if (FAT_data_note_isEffectEmpty(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine)) {
+
+                FAT_data_note_addDefaultEffect(FAT_screenNotes_currentBlockId,
+                        FAT_screenNotes_currentSelectedLine);
+
+            }
+
+            if (F_CTRLINPUT_RIGHT_PRESSED) {
+                FAT_data_note_changeEffectName(FAT_screenNotes_currentBlockId,
+                        FAT_screenNotes_currentSelectedLine, 1);
+            }
+
+            if (F_CTRLINPUT_LEFT_PRESSED) {
+                FAT_data_note_changeEffectName(FAT_screenNotes_currentBlockId,
+                        FAT_screenNotes_currentSelectedLine, -1);
+            }
+
+            break;
+
+        case SCREENNOTES_COLUMN_ID_CMD_PARAM:
+
+            if (FAT_data_note_isEffectEmpty(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine)) {
+
+                FAT_data_note_addDefaultEffect(FAT_screenNotes_currentBlockId,
+                        FAT_screenNotes_currentSelectedLine);
+
+            }
+
+            if (F_CTRLINPUT_RIGHT_PRESSED) {
+                FAT_data_note_changeEffectValue(FAT_screenNotes_currentBlockId,
+                        FAT_screenNotes_currentSelectedLine, 1);
+            }
+
+            if (F_CTRLINPUT_LEFT_PRESSED) {
+                 FAT_data_note_changeEffectValue(FAT_screenNotes_currentBlockId,
+                        FAT_screenNotes_currentSelectedLine, -1);
+            }
+
+            if (F_CTRLINPUT_UP_PRESSED) {
+                 FAT_data_note_changeEffectValue(FAT_screenNotes_currentBlockId,
+                        FAT_screenNotes_currentSelectedLine, 16);
+            }
+
+            if (F_CTRLINPUT_DOWN_PRESSED) {
+                 FAT_data_note_changeEffectValue(FAT_screenNotes_currentBlockId,
+                        FAT_screenNotes_currentSelectedLine, -16);
+            }
+
+            break;
     }
 
     FAT_screenNotes_printNote(FAT_screenNotes_currentSelectedLine);
+    FAT_screenNotes_printEffect(FAT_screenNotes_currentSelectedLine);
 
 }
 

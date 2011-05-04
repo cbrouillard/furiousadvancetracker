@@ -26,14 +26,38 @@
  * FAT est gratuit et libre ! Vous pouvez le télécharger, l'utiliser avec un émulateur ou le graver
  * sur une cartouche GBA. Si vous remarquer un bug ou un comportement bizarre, faites un rapport de bug :
  * c'est simple, rapide, et surtout cela permet de faire évoluer le logiciel plus efficacement.<br/>
+ * 
+ * <b>Vous êtes actuellement en train de lire une documentation technique réservé aux développeurs. Si vous n'êtes
+ * pas développeur et souhaitez simplement tester FAT, alors VOUS N'ETES PAS AU BON ENDROIT !. Si c'est le cas, retourner sur 
+ * <a href="http://www.furiousadvancetracker.com">www.furiousadvancetracker.com</a> et téléchargez le manuel utilisateur au format PDF. Merci !</b>
  *
  */
+
+/**
+ * \file main.c 
+ * \brief Fichier code source principal avec la fonction main et l'inclusion de fat.h.
+ */
+
+/**
+ * \brief Si cette variable est positionné à 1, le mode DEBUG pour FAT est activé. Certaines,
+ * informations seront affichées.
+ */
+#define DEBUG_ON "YES_comment_to_disable"
+
+/**
+ * \brief Version actuelle de FAT.
+ */
+#define FAT_VERSION "0-02"
 
 #include <mygba.h>
 
 #include "soundApi/soundApi.h"
 #include "fat.h"
 
+
+/**
+ * \brief Fonction main. Si vous lisez le code source, il est judicieux de commencer par comprendre cette fonction.
+ */
 int main() {
 
     FAT_init();
