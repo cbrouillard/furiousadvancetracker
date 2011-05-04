@@ -1134,6 +1134,12 @@ effect* FAT_data_note_getEffect(u8 block, u8 line) {
     return &(FAT_tracker.allBlocks[block].notes[line].effect);
 }
 
+/**
+ * \brief Inscrit l'effet par défaut et l'assigne à la note voulue.
+ *  
+ * @param block l'id du block concerné
+ * @param line le numéro de ligne de la note dans le block
+ */
 void FAT_data_note_addDefaultEffect(u8 block, u8 line) {
     if (FAT_data_lastEffectWritten.name == NULL_VALUE) {
         FAT_data_lastEffectWritten.name = 1; // 1 = type note et numéro 0 dans le tableau
