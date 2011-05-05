@@ -1,0 +1,175 @@
+.TH "popup.h" 3 "Thu May 5 2011" "Version version 0-02" "FAT FuriousAdvanceTracker" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+popup.h \- 
+.PP
+Ce fichier contient toutes les méthodes utiles pour la gestion de l'écran 'popup' (la barre des tâches permettant de changer d'écran).  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPOPUP_LAYER\fP   0"
+.br
+.RI "\fIDefinit le background utilisé pour afficher la popup. BG0. \fP"
+.ti -1c
+.RI "#define \fBPOPUP_CURSOR_DEFAULT_X\fP   94"
+.br
+.RI "\fIDéfinit la position par défaut du curseur de sélection. \fP"
+.ti -1c
+.RI "#define \fBPOPUP_CURSOR_DEFAULT_Y\fP   64"
+.br
+.RI "\fIDéfinit la position par défaut du curseur de sélection. \fP"
+.ti -1c
+.RI "#define \fBACTUAL_SCREEN_CURSOR_DEFAULT_X\fP   103"
+.br
+.RI "\fIDéfinit la position par défaut du curseur d'affichage de l'écran actuellement sélectionné. \fP"
+.ti -1c
+.RI "#define \fBACTUAL_SCREEN_CURSOR_DEFAULT_Y\fP   60"
+.br
+.RI "\fIDéfinit la position par défaut du curseur d'affichage de l'écran actuellement sélectionné. \fP"
+.ti -1c
+.RI "#define \fBPOPUP_ICON_SIZE_X\fP   24"
+.br
+.RI "\fIDéfinit la taille d'une icone dans la popup. \fP"
+.ti -1c
+.RI "#define \fBPOPUP_ICON_WHITE_SPACE\fP   4"
+.br
+.RI "\fIDéfinit la taille de l'espace blanc qui existe entre chaque icône. \fP"
+.ti -1c
+.RI "#define \fBPOPUP_FIRST_ICON_X\fP   11"
+.br
+.RI "\fIDéfinit les bornes d'affichages pour l'affichage du curseur. \fP"
+.ti -1c
+.RI "#define \fBPOPUP_LAST_ICON_X\fP   206"
+.br
+.RI "\fIDéfinit les bornes d'affichages pour l'affichage du curseur. \fP"
+.in -1c
+.SS "Fonctions"
+
+.in +1c
+.ti -1c
+.RI "void \fBFAT_popup_init\fP ()"
+.br
+.RI "\fIInitialisation de l'écran popup. \fP"
+.ti -1c
+.RI "void \fBFAT_popup_show\fP ()"
+.br
+.RI "\fIAffiche l'écran popup. Cette méthode affiche également les curseurs. \fP"
+.ti -1c
+.RI "void \fBFAT_popup_hide\fP ()"
+.br
+.RI "\fICache l'écran popup. Cette méthode cache aussi les curseurs. \fP"
+.ti -1c
+.RI "void \fBFAT_popup_initCursors\fP ()"
+.br
+.RI "\fIInitialisation des curseurs spécifiques à l'écran popup. \fP"
+.ti -1c
+.RI "void \fBFAT_popup_hideCursors\fP ()"
+.br
+.RI "\fICache les curseurs (tous). \fP"
+.ti -1c
+.RI "void \fBFAT_popup_showCursors\fP ()"
+.br
+.RI "\fIAffiche les curseurs (tous). \fP"
+.ti -1c
+.RI "void \fBFAT_popup_checkButtons\fP ()"
+.br
+.RI "\fICette fonction permet de tester les actions utilisateurs sur la popup. \fP"
+.ti -1c
+.RI "void \fBFAT_popup_moveSelectionCursorRight\fP ()"
+.br
+.RI "\fIDéplace les coordonnées du curseur vers l'icône située à sa droite. \fP"
+.ti -1c
+.RI "void \fBFAT_popup_moveSelectionCursorLeft\fP ()"
+.br
+.RI "\fIDéplace les coordonnées du curseur vers l'icône située à sa gauche. \fP"
+.ti -1c
+.RI "void \fBFAT_popup_commitSelectionCursorMove\fP ()"
+.br
+.RI "\fICommit tous les changements effectués sur les sprites (positionnement, bitmap) pour affichage physique à l'écran. \fP"
+.ti -1c
+.RI "u8 \fBFAT_popup_getSelectedIcon\fP ()"
+.br
+.RI "\fIRécupère l'id de l'écran sélectionné. \fP"
+.ti -1c
+.RI "void \fBFAT_popup_moveSelectedScreenCursor\fP ()"
+.br
+.RI "\fIDéplace le curseur d'indication 'écran actuel' à sa place. \fP"
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "u8 \fBFAT_popup_cursorSelectionObj\fP"
+.br
+.RI "\fIId Sprite pour l'objet curseur de sélection dans l'écran POPUP. \fP"
+.ti -1c
+.RI "u8 \fBFAT_popup_cursorActualScreenObj\fP"
+.br
+.RI "\fIId Sprite pour l'objet curseur d'affichage de l'écran courant. \fP"
+.ti -1c
+.RI "u8 \fBFAT_popup_cursorSelectionX\fP"
+.br
+.RI "\fIPosition actuelle du curseur de selection. \fP"
+.ti -1c
+.RI "u8 \fBFAT_popup_cursorSelectionY\fP"
+.br
+.RI "\fIPosition actuelle du curseur de selection. \fP"
+.ti -1c
+.RI "u8 \fBFAT_popup_cursorActualScreenX\fP"
+.br
+.RI "\fIPosition actuelle du curseur indiquant l'écran courant. \fP"
+.ti -1c
+.RI "u8 \fBFAT_popup_cursorActualScreenY\fP"
+.br
+.RI "\fIPosition actuelle du curseur indiquant l'écran courant. \fP"
+.ti -1c
+.RI "u8 \fBFAT_popup_selectedIcon\fP = SCREEN_SONG_ID"
+.br
+.RI "\fICette variable contient l'id de l'écran sélectionné. \fP"
+.in -1c
+.SH "Description détaillée"
+.PP 
+Ce fichier contient toutes les méthodes utiles pour la gestion de l'écran 'popup' (la barre des tâches permettant de changer d'écran). 
+
+
+.SH "Documentation des macros"
+.PP 
+.SS "#define POPUP_ICON_SIZE_X   24"
+.PP
+Définit la taille d'une icone dans la popup. On ne se déplace que de droite à gauche, donc seul X est nécessaire. 
+.SH "Documentation des fonctions"
+.PP 
+.SS "u8 FAT_popup_getSelectedIcon ()"
+.PP
+Récupère l'id de l'écran sélectionné. Méthode un peu inutile ... héritage de l'objet.
+.PP
+\fBRenvoie:\fP
+.RS 4
+id de l'écran sélectionné 
+.RE
+.PP
+
+.SS "void FAT_popup_init ()"
+.PP
+Initialisation de l'écran popup. Chargement dans la mémoire GBA de l'écran. La popup est cachée par défaut. Les données sont chargées dans le layer POPUP_LAYER, elles le restent jusqu'à extinction du programme. 
+.SS "void FAT_popup_initCursors ()"
+.PP
+Initialisation des curseurs spécifiques à l'écran popup. Chargement des bitmaps + positionnement aux valeurs par défauts. La méthode les cache ensuite. 
+.SS "void FAT_popup_moveSelectedScreenCursor ()"
+.PP
+Déplace le curseur d'indication 'écran actuel' à sa place. Le positionnement est calculé en fonction de l'id de l'écran et de la taille des icônes de l'interface. 
+.SS "void FAT_popup_moveSelectionCursorLeft ()"
+.PP
+Déplace les coordonnées du curseur vers l'icône située à sa gauche. Attention, cette méthode ne fait que changer le positionnement en mémoire: le sprite n'est pas déplacée à l'écran. Pour déplacer l'affichage du sprite, faites appel à la méthode \fBFAT_popup_commitSelectionCursorMove()\fP. 
+.SS "void FAT_popup_moveSelectionCursorRight ()"
+.PP
+Déplace les coordonnées du curseur vers l'icône située à sa droite. Attention, cette méthode ne fait que changer le positionnement en mémoire: le sprite n'est pas déplacée à l'écran. Pour déplacer l'affichage du sprite, faites appel à la méthode \fBFAT_popup_commitSelectionCursorMove()\fP. 
+.SH "Auteur"
+.PP 
+Généré automatiquement par Doxygen pour FAT FuriousAdvanceTracker à partir du code source.

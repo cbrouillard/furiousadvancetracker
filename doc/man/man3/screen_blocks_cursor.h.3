@@ -1,0 +1,127 @@
+.TH "screen_blocks_cursor.h" 3 "Thu May 5 2011" "Version version 0-02" "FAT FuriousAdvanceTracker" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+screen_blocks_cursor.h \- 
+.PP
+Fichier de gestion du curseur pour l'écran BLOCKS.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSCREENBLOCKS_BLOCK_SIZE_X\fP   16"
+.br
+.RI "\fITaille d'un block. \fP"
+.ti -1c
+.RI "#define \fBSCREENBLOCKS_BLOCK_SIZE_Y\fP   8"
+.br
+.RI "\fITaille d'un block. \fP"
+.ti -1c
+.RI "#define \fBSCREENBLOCKS_WHITE_SPACE_X\fP   8"
+.br
+.RI "\fITaille de l'espace entre chaque colonne de l'interface. \fP"
+.ti -1c
+.RI "#define \fBSCREENBLOCKS_LAST_BLOCK_X\fP   143"
+.br
+.RI "\fIPosition du dernier block. \fP"
+.ti -1c
+.RI "#define \fBSCREENBLOCKS_LAST_BLOCK_Y\fP   135"
+.br
+.RI "\fIPosition du dernier block. \fP"
+.ti -1c
+.RI "#define \fBSCREENBLOCKS_FIRST_BLOCK_X\fP   24"
+.br
+.RI "\fIPosition du premier block. \fP"
+.ti -1c
+.RI "#define \fBSCREENBLOCKS_FIRST_BLOCK_Y\fP   16"
+.br
+.RI "\fIPosition du premier block. \fP"
+.in -1c
+.SS "Fonctions"
+
+.in +1c
+.ti -1c
+.RI "void \fBFAT_screenBlocks_initCursor\fP ()"
+.br
+.RI "\fIInitialisation de la position du curseur. \fP"
+.ti -1c
+.RI "void \fBFAT_screenBlocks_moveCursorRight\fP ()"
+.br
+.RI "\fIDéplace le curseur vers la droite. \fP"
+.ti -1c
+.RI "void \fBFAT_screenBlocks_moveCursorLeft\fP ()"
+.br
+.RI "\fIDéplace le curseur vers la gauche. \fP"
+.ti -1c
+.RI "void \fBFAT_screenBlocks_moveCursorDown\fP ()"
+.br
+.RI "\fIDéplace le curseur vers le bas. \fP"
+.ti -1c
+.RI "void \fBFAT_screenBlocks_moveCursorUp\fP ()"
+.br
+.RI "\fIDéplace le curseur vers le haut. \fP"
+.ti -1c
+.RI "void \fBFAT_screenBlocks_commitCursorMove\fP ()"
+.br
+.RI "\fIValide le changement de position du curseur dans la mémoire de la GBA. \fP"
+.ti -1c
+.RI "void \fBFAT_screenBlocks_moveCursorAllUp\fP ()"
+.br
+.RI "\fIDéplace le curseur tout en haut (ligne 0). \fP"
+.ti -1c
+.RI "void \fBFAT_screenBlocks_moveCursorAllDown\fP ()"
+.br
+.RI "\fIDéplace le curseur tout en bas (ligne 16). \fP"
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "u8 \fBFAT_screenBlocks_cursorX\fP"
+.br
+.RI "\fIPosition du curseur. \fP"
+.ti -1c
+.RI "u8 \fBFAT_screenBlocks_cursorY\fP"
+.br
+.RI "\fIPosition du curseur. \fP"
+.ti -1c
+.RI "u8 \fBFAT_screenBlocks_currentSelectedLine\fP"
+.br
+.RI "\fINuméro de la ligne actuellement sélectionné. \fP"
+.ti -1c
+.RI "u8 \fBFAT_screenBlocks_currentSelectedColumn\fP"
+.br
+.RI "\fINuméro de colonne actuellement sélectionné. \fP"
+.in -1c
+.SH "Description détaillée"
+.PP 
+Fichier de gestion du curseur pour l'écran BLOCKS. 
+
+
+.SH "Documentation des fonctions"
+.PP 
+.SS "void FAT_screenBlocks_moveCursorAllDown ()"
+.PP
+Déplace le curseur tout en bas (ligne 16). Attention, la validation du déplacement doit être effectuée avec \fBFAT_screenBlocks_commitCursorMove()\fP. 
+.SS "void FAT_screenBlocks_moveCursorAllUp ()"
+.PP
+Déplace le curseur tout en haut (ligne 0). Attention, la validation du déplacement doit être effectuée avec \fBFAT_screenBlocks_commitCursorMove()\fP. 
+.SS "void FAT_screenBlocks_moveCursorDown ()"
+.PP
+Déplace le curseur vers le bas. Attention, la validation du déplacement doit être effectuée avec \fBFAT_screenBlocks_commitCursorMove()\fP . 
+.SS "void FAT_screenBlocks_moveCursorLeft ()"
+.PP
+Déplace le curseur vers la gauche. Attention, la validation du déplacement doit être effectuée avec \fBFAT_screenBlocks_commitCursorMove()\fP. 
+.SS "void FAT_screenBlocks_moveCursorRight ()"
+.PP
+Déplace le curseur vers la droite. Attention, la validation du déplacement doit être effectuée avec \fBFAT_screenBlocks_commitCursorMove()\fP. 
+.SS "void FAT_screenBlocks_moveCursorUp ()"
+.PP
+Déplace le curseur vers le haut. Attention, la validation du déplacement doit être effectuée avec \fBFAT_screenBlocks_commitCursorMove()\fP . 
+.SH "Auteur"
+.PP 
+Généré automatiquement par Doxygen pour FAT FuriousAdvanceTracker à partir du code source.

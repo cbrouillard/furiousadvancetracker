@@ -1,0 +1,145 @@
+.TH "cursors.h" 3 "Thu May 5 2011" "Version version 0-02" "FAT FuriousAdvanceTracker" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+cursors.h \- 
+.PP
+Définitions de fonctions et variables utiles pour la gestion des objets curseurs.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Fonctions"
+
+.in +1c
+.ti -1c
+.RI "void \fBFAT_initCursor1\fP ()"
+.br
+.RI "\fIInitialisation du curseur taille 1. \fP"
+.ti -1c
+.RI "void \fBFAT_initCursor2\fP ()"
+.br
+.RI "\fIInitialisation du curseur taille 2. \fP"
+.ti -1c
+.RI "void \fBFAT_initCursor3\fP ()"
+.br
+.RI "\fIInitialisation du curseur taille 3. \fP"
+.ti -1c
+.RI "void \fBFAT_initCursorChange\fP ()"
+.br
+.RI "\fIInitialisation du curseur de changement d'onglet dans l'écran instrument. \fP"
+.ti -1c
+.RI "void \fBFAT_cursors_showCursor1\fP ()"
+.br
+.RI "\fIAffiche le curseur 1. \fP"
+.ti -1c
+.RI "void \fBFAT_cursors_showCursor2\fP ()"
+.br
+.RI "\fIAffiche le curseur 2. \fP"
+.ti -1c
+.RI "void \fBFAT_cursors_showCursor3\fP ()"
+.br
+.RI "\fIAffiche le curseur 3. \fP"
+.ti -1c
+.RI "void \fBFAT_cursors_hideCursor1\fP ()"
+.br
+.RI "\fICache le curseur 1. \fP"
+.ti -1c
+.RI "void \fBFAT_cursors_hideCursor2\fP ()"
+.br
+.RI "\fICache le curseur 2. \fP"
+.ti -1c
+.RI "void \fBFAT_cursors_hideCursor3\fP ()"
+.br
+.RI "\fICache le curseur 3. \fP"
+.ti -1c
+.RI "void \fBFAT_cursors_showCursorChange\fP ()"
+.br
+.RI "\fIAffiche le curseur de changement d'onglet. \fP"
+.ti -1c
+.RI "void \fBFAT_cursors_hideCursorChange\fP ()"
+.br
+.RI "\fICache le curseur de changement d'onglet. \fP"
+.ti -1c
+.RI "void \fBFAT_cursors_moveCursorChange\fP (u8 x, u8 y)"
+.br
+.RI "\fIDéplace le curseur de changement d'onglet. \fP"
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "u8 \fBFAT_cursor1_obj\fP"
+.br
+.ti -1c
+.RI "u8 \fBFAT_cursor2_obj\fP"
+.br
+.ti -1c
+.RI "u8 \fBFAT_cursor3_obj\fP"
+.br
+.ti -1c
+.RI "u8 \fBFAT_cursorChange_obj\fP"
+.br
+.in -1c
+.SH "Description détaillée"
+.PP 
+Définitions de fonctions et variables utiles pour la gestion des objets curseurs. 
+
+
+.SH "Documentation des fonctions"
+.PP 
+.SS "void FAT_cursors_hideCursor1 ()"
+.PP
+Cache le curseur 1. Attention ! cette fonction ne s'occupe pas de commiter l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera invisible au prochain commit. 
+.SS "void FAT_cursors_hideCursor2 ()"
+.PP
+Cache le curseur 2. Attention ! cette fonction ne s'occupe pas de commiter l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera invisible au prochain commit. 
+.SS "void FAT_cursors_hideCursor3 ()"
+.PP
+Cache le curseur 3. Attention ! cette fonction ne s'occupe pas de commiter l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera invisible au prochain commit. 
+.SS "void FAT_cursors_hideCursorChange ()"
+.PP
+Cache le curseur de changement d'onglet. Attention ! cette fonction ne s'occupe pas de commiter l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera invisible au prochain commit. 
+.SS "void FAT_cursors_moveCursorChange (u8x, u8y)"
+.PP
+Déplace le curseur de changement d'onglet. \fBParamètres:\fP
+.RS 4
+\fIx\fP abscisse (en px) 
+.br
+\fIy\fP ordonnée (en px) 
+.RE
+.PP
+
+.SS "void FAT_cursors_showCursor1 ()"
+.PP
+Affiche le curseur 1. Attention ! cette fonction ne s'occupe pas de commiter l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera visible au prochain commit. 
+.SS "void FAT_cursors_showCursor2 ()"
+.PP
+Affiche le curseur 2. Attention ! cette fonction ne s'occupe pas de commiter l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera visible au prochain commit. 
+.SS "void FAT_cursors_showCursor3 ()"
+.PP
+Affiche le curseur 3. Attention ! cette fonction ne s'occupe pas de commiter l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera visible au prochain commit. 
+.SS "void FAT_cursors_showCursorChange ()"
+.PP
+Affiche le curseur de changement d'onglet. Attention ! cette fonction ne s'occupe pas de commiter l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera visible au prochain commit. 
+.SS "void FAT_initCursor1 ()"
+.PP
+Initialisation du curseur taille 1. S'occupe de créer le sprite 'curseur 1' en mode transparence. Le sprite est configuré comme invisible par défaut. 
+.SS "void FAT_initCursor2 ()"
+.PP
+Initialisation du curseur taille 2. S'occupe de créer le sprite 'curseur 2' en mode transparence. Le sprite est configuré comme invisible par défaut. 
+.SS "void FAT_initCursor3 ()"
+.PP
+Initialisation du curseur taille 3. S'occupe de créer le sprite 'curseur 3' en mode transparence. Le sprite est configuré comme invisible par défaut. 
+.SS "void FAT_initCursorChange ()"
+.PP
+Initialisation du curseur de changement d'onglet dans l'écran instrument. S'occupe de créer le sprite 'curseur change' en mode transparence. Le sprite est configuré comme invisible par défaut. 
+.SH "Documentation des variables"
+.PP 
+.SS "u8 \fBFAT_cursor1_obj\fP"ID technique HAM pour le cursor de taille 1. 
+.SS "u8 \fBFAT_cursor2_obj\fP"ID technique HAM pour le cursor de taille 2. 
+.SS "u8 \fBFAT_cursor3_obj\fP"ID technique HAM pour le cursor de taille 3. 
+.SS "u8 \fBFAT_cursorChange_obj\fP"ID technique HAM pour le cursor de changement d'onglet (partie instrument). 
+.SH "Auteur"
+.PP 
+Généré automatiquement par Doxygen pour FAT FuriousAdvanceTracker à partir du code source.

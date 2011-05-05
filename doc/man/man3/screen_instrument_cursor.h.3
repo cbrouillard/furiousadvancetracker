@@ -1,0 +1,266 @@
+.TH "screen_instrument_cursor.h" 3 "Thu May 5 2011" "Version version 0-02" "FAT FuriousAdvanceTracker" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+screen_instrument_cursor.h \- 
+.PP
+Fichier dédié à la gestion du curseur pour l'écran \fBINSTRUMENT\fP.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSCREENINSTRUMENT_TABULATION_CURSOR_DEFAULT_X\fP   5"
+.br
+.RI "\fIPosition par défaut du curseur de tabulation. \fP"
+.ti -1c
+.RI "#define \fBSCREENINSTRUMENT_TABULATION_CURSOR_DEFAULT_Y\fP   5"
+.br
+.RI "\fIPosition par défaut du curseur de tabulation. \fP"
+.ti -1c
+.RI "#define \fBSCREENINSTRUMENT_TABULATION_CURSOR_PULSE_X\fP   5"
+.br
+.RI "\fIPosition du curseur de tabulation pour le type d'instrument PULSE. \fP"
+.ti -1c
+.RI "#define \fBSCREENINSTRUMENT_TABULATION_CURSOR_WAVE_X\fP   53"
+.br
+.RI "\fIPosition du curseur de tabulation pour le type d'instrument WAVE. \fP"
+.ti -1c
+.RI "#define \fBSCREENINSTRUMENT_TABULATION_CURSOR_NOISE_X\fP   101"
+.br
+.RI "\fIPosition du curseur de tabulation pour le type d'instrument NOISE. \fP"
+.ti -1c
+.RI "#define \fBSCREENINSTRUMENT_TABULATION_CURSOR_SAMPLE_X\fP   149"
+.br
+.RI "\fIPosition du curseur de tabulation pour le type d'instrument SAMPLE. \fP"
+.ti -1c
+.RI "#define \fBSCREENINSTRUMENTS_FIRST_BLOCK_X\fP   88"
+.br
+.RI "\fIPosition du premier emplacement dans l'écran instrument (ne tient pas compte du type). \fP"
+.ti -1c
+.RI "#define \fBSCREENINSTRUMENTS_FIRST_BLOCK_Y\fP   32"
+.br
+.RI "\fIPosition du premier emplacement dans l'écran instrument (ne tient pas compte du type). \fP"
+.ti -1c
+.RI "#define \fBSCREENINSTRUMENTS_LAST_BLOCK_Y\fP   120"
+.br
+.RI "\fIPosition du dernier emplacement dans l'écran instrument (ne tient pas compte du type). \fP"
+.ti -1c
+.RI "#define \fBSCREENINSTRUMENT_PULSE_NB_LINES_ON_SCREEN\fP   9"
+.br
+.RI "\fINombre de lignes sur l'écran PULSE. \fP"
+.ti -1c
+.RI "#define \fBSCREENINSTRUMENT_NOISE_NB_LINES_ON_SCREEN\fP   8"
+.br
+.RI "\fINombre de lignes sur l'écran NOISE. \fP"
+.ti -1c
+.RI "#define \fBSCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN\fP   7"
+.br
+.RI "\fINombre de lignes sur l'écran WAVE. \fP"
+.in -1c
+.SS "Fonctions"
+
+.in +1c
+.ti -1c
+.RI "void \fBFAT_screenInstrument_hideTabulationCursor\fP ()"
+.br
+.RI "\fICache le curseur de tabulation. \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_showTabulationCursor\fP ()"
+.br
+.RI "\fIAffiche le curseur de tabulation. \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_moveTabulationCursor\fP (u8 instrumentType)"
+.br
+.RI "\fIDéplace le curseur de tabulation. \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_tabCursorInit\fP ()"
+.br
+.RI "\fIInitialisation du curseur de tabulation. \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_pulse_commitCursorMove\fP ()"
+.br
+.RI "\fIValidation du déplacement du curseur d'édition sur l'écran PULSE. \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_wave_commitCursorMove\fP ()"
+.br
+.RI "\fIValidation du déplacement du curseur d'édition sur l'écran WAVE. \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_noise_commitCursorMove\fP ()"
+.br
+.RI "\fIValidation du déplacement du curseur d'édition sur l'écran NOISE. \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_sample_commitCursorMove\fP ()"
+.br
+.RI "\fIValidation du déplacement du curseur d'édition sur l'écran SAMPLEs. \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_commitCursorMove\fP (u8 type)"
+.br
+.RI "\fIValidation du déplacement du curseur d'édition (fonction wrapper). \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_pulse_displayGoodCursor\fP ()"
+.br
+.RI "\fIAffiche le bon curseur (taille) selon sa position sur l'écran PULSE. \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_noise_displayGoodCursor\fP ()"
+.br
+.RI "\fIAffiche le bon curseur (taille) selon sa position sur l'écran NOISE. \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_wave_displayGoodCursor\fP ()"
+.br
+.RI "\fIAffiche le bon curseur (taille) selon sa position sur l'écran WAVE. \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_sample_displayGoodCursor\fP ()"
+.br
+.RI "\fIAffiche le bon curseur (taille) selon sa position sur l'écran SAMPLE. \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_displayGoodCursor\fP (u8 type)"
+.br
+.RI "\fIAffiche le bon curseur (taille) selon sa position (fonction wrapper). \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_initCursor\fP (u8 instrumentType)"
+.br
+.RI "\fIInitialisation du curseur d'édition. \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_moveCursorDown\fP (u8 type)"
+.br
+.RI "\fIDéplace le curseur vers le bas en fonction du type d'instrument édité. \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_moveCursorUp\fP (u8 type)"
+.br
+.RI "\fIDéplace le curseur vers le haut en fonction du type d'instrument édité. \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_moveCursorRight\fP (u8 type)"
+.br
+.RI "\fIDéplace le curseur vers la droite en fonction du type d'instrument édité. \fP"
+.ti -1c
+.RI "void \fBFAT_screenInstrument_moveCursorLeft\fP (u8 type)"
+.br
+.RI "\fIDéplace le curseur vers la gauche en fonction du type d'instrument édité. \fP"
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "u8 \fBFAT_screenInstrument_cursorX\fP"
+.br
+.RI "\fIPosition actuelle du cursor. \fP"
+.ti -1c
+.RI "u8 \fBFAT_screenInstrument_cursorY\fP"
+.br
+.RI "\fIPosition actuelle du cursor. \fP"
+.ti -1c
+.RI "u8 \fBFAT_screenInstruments_currentSelectedLine\fP"
+.br
+.RI "\fILigne actuellement sélectionnée. \fP"
+.ti -1c
+.RI "u8 \fBFAT_screenInstruments_currentSelectedColumn\fP"
+.br
+.RI "\fINuméro de colonne actuellement sélectionné. \fP"
+.ti -1c
+.RI "u8 \fBFAT_screenInstrument_tabCursorX\fP"
+.br
+.RI "\fIPosition actuelle du curseur de tabulation. \fP"
+.ti -1c
+.RI "u8 \fBFAT_screenInstrument_tabCursorY\fP"
+.br
+.RI "\fIPosition actuelle du curseur de tabulation. \fP"
+.ti -1c
+.RI "u8 \fBFAT_screenInstrument_tabCursorObj\fP"
+.br
+.RI "\fIObjet sprite pour le curseur de tabulation. \fP"
+.ti -1c
+.RI "const u8 \fBINST_PULSE_BLOCK_Y\fP [9] = {31, 39, 47, 55, 79, 87, 95, 103, 127}"
+.br
+.RI "\fIPositions des emplacements de paramètre dans l'écran PULSE. \fP"
+.ti -1c
+.RI "const u8 \fBINST_NOISE_BLOCK_Y\fP [8] = {31, 39, 47, 55, 79, 87, 95, 127}"
+.br
+.RI "\fIPositions des emplacements de paramètre dans l'écran NOISE. \fP"
+.ti -1c
+.RI "const u8 \fBINST_WAVE_BLOCK_Y\fP [7] = {31, 55, 63, 71, 79, 87, 111}"
+.br
+.RI "\fIPositions des emplacements de paramètre dans l'écran WAVE. \fP"
+.in -1c
+.SH "Description détaillée"
+.PP 
+Fichier dédié à la gestion du curseur pour l'écran \fBINSTRUMENT\fP. 
+
+
+.SH "Documentation des fonctions"
+.PP 
+.SS "void FAT_screenInstrument_commitCursorMove (u8type)"
+.PP
+Validation du déplacement du curseur d'édition (fonction wrapper). \fBParamètres:\fP
+.RS 4
+\fItype\fP type de l'instrument sur lequel on veut déplacer le curseur 
+.RE
+.PP
+
+.SS "void FAT_screenInstrument_displayGoodCursor (u8type)"
+.PP
+Affiche le bon curseur (taille) selon sa position (fonction wrapper). \fBParamètres:\fP
+.RS 4
+\fItype\fP le type d'instrument en cours d'édition 
+.RE
+.PP
+
+.SS "void FAT_screenInstrument_initCursor (u8instrumentType)"
+.PP
+Initialisation du curseur d'édition. \fBParamètres:\fP
+.RS 4
+\fIinstrumentType\fP le type d'instrument à éditer 
+.RE
+.PP
+
+.SS "void FAT_screenInstrument_moveCursorDown (u8type)"
+.PP
+Déplace le curseur vers le bas en fonction du type d'instrument édité. \fBParamètres:\fP
+.RS 4
+\fItype\fP le type d'instrument 
+.RE
+.PP
+
+.SS "void FAT_screenInstrument_moveCursorLeft (u8type)"
+.PP
+Déplace le curseur vers la gauche en fonction du type d'instrument édité. \fBParamètres:\fP
+.RS 4
+\fItype\fP le type d'instrument 
+.RE
+.PP
+
+.SS "void FAT_screenInstrument_moveCursorRight (u8type)"
+.PP
+Déplace le curseur vers la droite en fonction du type d'instrument édité. \fBParamètres:\fP
+.RS 4
+\fItype\fP le type d'instrument 
+.RE
+.PP
+
+.SS "void FAT_screenInstrument_moveCursorUp (u8type)"
+.PP
+Déplace le curseur vers le haut en fonction du type d'instrument édité. \fBParamètres:\fP
+.RS 4
+\fItype\fP le type d'instrument 
+.RE
+.PP
+
+.SS "void FAT_screenInstrument_moveTabulationCursor (u8instrumentType)"
+.PP
+Déplace le curseur de tabulation. Le type d'instrument détermine les possibilités de mouvements. * 
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIinstrumentType\fP type de l'instrument actuellement en cours d'édition 
+.RE
+.PP
+
+.SS "void FAT_screenInstrument_tabCursorInit ()"
+.PP
+Initialisation du curseur de tabulation. Charge le sprite et le cache. 
+.SH "Auteur"
+.PP 
+Généré automatiquement par Doxygen pour FAT FuriousAdvanceTracker à partir du code source.

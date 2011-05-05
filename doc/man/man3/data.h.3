@@ -1,0 +1,1615 @@
+.TH "data.h" 3 "Thu May 5 2011" "Version version 0-02" "FAT FuriousAdvanceTracker" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+data.h \- 
+.PP
+Ce fichier contient toutes les définitions des types de données et autres structures.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Structures de données"
+
+.in +1c
+.ti -1c
+.RI "struct \fBEFFECT\fP"
+.br
+.RI "\fIDéfinit une commande. \fP"
+.ti -1c
+.RI "struct \fBTABLE\fP"
+.br
+.RI "\fIDéfinit une table d'effets: soit une liste de commandes. \fP"
+.ti -1c
+.RI "struct \fBNOTE\fP"
+.br
+.RI "\fIDéfinit une note. \fP"
+.ti -1c
+.RI "struct \fBCOMPOSER\fP"
+.br
+.RI "\fIDéfinit les données pour le compositeur (écran de composition). \fP"
+.ti -1c
+.RI "struct \fBBLOCK\fP"
+.br
+.RI "\fIUn block représente une mesure et contient un nombre de notes définies. \fP"
+.ti -1c
+.RI "struct \fBSEQUENCE\fP"
+.br
+.RI "\fIUne séquence contient un certain nombre de blocks. \fP"
+.ti -1c
+.RI "struct \fBCHANNEL\fP"
+.br
+.RI "\fIUn channel représente une colonne de séquences: la GBA dispose de 6 channels. \fP"
+.ti -1c
+.RI "struct \fBINSTRUMENT\fP"
+.br
+.RI "\fIL'instrument possède divers paramètres utiles pour modifier la sonorité d'une note: chaque note est attachée à un instrument. \fP"
+.ti -1c
+.RI "struct \fBFAT\fP"
+.br
+.RI "\fIStructure principale: stocke l'intégralité d'une track en cours de composition. \fP"
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBNB_MAX_SEQUENCES\fP   0x80"
+.br
+.RI "\fINombre de séquences disponibles \fBau total\fP en mémoire. 0x80 = 128. \fP"
+.ti -1c
+.RI "#define \fBNB_SEQUENCES_IN_ONE_CHANNEL\fP   0x40"
+.br
+.RI "\fINombre de séquences référençables par canal. 0x40 = 64. \fP"
+.ti -1c
+.RI "#define \fBNB_MAX_BLOCKS\fP   0x70"
+.br
+.RI "\fINombre de blocks disponibles \fBau total\fP en mémoire. 0x70 = 112. \fP"
+.ti -1c
+.RI "#define \fBNB_MAX_INSTRUMENTS\fP   0x3f"
+.br
+.RI "\fINombre d'instruments disponibles \fBau total\fP en mémoire. 0x3f = 63. \fP"
+.ti -1c
+.RI "#define \fBNB_MAX_TABLES\fP   0xF"
+.br
+.RI "\fINombre de tables disponibles \fBau total\fP en mémoire. 0xf = 15. \fP"
+.ti -1c
+.RI "#define \fBNB_NOTES_IN_ONE_BLOCK\fP   16"
+.br
+.RI "\fINombre de notes dans un block (une mesure). \fP"
+.ti -1c
+.RI "#define \fBNB_BLOCKS_IN_SEQUENCE\fP   16"
+.br
+.RI "\fINombre de blocks (mesures) dans une séquence (pattern). \fP"
+.ti -1c
+.RI "#define \fBNB_EFFECTS_IN_ONE_TABLE\fP   16"
+.br
+.RI "\fINombre d'effets référençables par table. \fP"
+.ti -1c
+.RI "#define \fBMIN_OCTAVE\fP   3"
+.br
+.RI "\fIOctave minimale pour une note. \fP"
+.ti -1c
+.RI "#define \fBMAX_OCTAVE\fP   8"
+.br
+.RI "\fIOctave maximale pour une note. \fP"
+.ti -1c
+.RI "#define \fBNB_NOTE\fP   12"
+.br
+.RI "\fINombre total de notes disponibles: de C à B (notation anglo-saxonne). \fP"
+.ti -1c
+.RI "#define \fBNB_NOTE_EFFECT\fP   13"
+.br
+.RI "\fIDéfinit le nombre d'effet disponibles pour les notes. \fP"
+.ti -1c
+.RI "#define \fBNB_BLOCK_EFFECT\fP   5"
+.br
+.RI "\fIDéfinit le nombre d'effet disponibles pour les blocks. \fP"
+.ti -1c
+.RI "#define \fBSONG_NAME_MAX_LETTERS\fP   9"
+.br
+.RI "\fITaille maximale pour le nom d'une chanson. \fP"
+.ti -1c
+.RI "#define \fBINSTRUMENT_TYPE_PULSE\fP   0"
+.br
+.RI "\fIType d'instrument PULSE 1. \fP"
+.ti -1c
+.RI "#define \fBINSTRUMENT_TYPE_PULSE2\fP   1"
+.br
+.RI "\fIType d'instrument PULSE 2. \fP"
+.ti -1c
+.RI "#define \fBINSTRUMENT_TYPE_WAVE\fP   2"
+.br
+.RI "\fIType d'instrument WAVE. \fP"
+.ti -1c
+.RI "#define \fBINSTRUMENT_TYPE_NOISE\fP   3"
+.br
+.RI "\fIType d'instrument NOISE. \fP"
+.ti -1c
+.RI "#define \fBINSTRUMENT_TYPE_SAMPLEA\fP   4"
+.br
+.RI "\fIType d'instrument SAMPLE A. \fP"
+.ti -1c
+.RI "#define \fBINSTRUMENT_TYPE_SAMPLEB\fP   5"
+.br
+.RI "\fIType d'instrument SAMPLE B. \fP"
+.ti -1c
+.RI "#define \fBINSTRUMENT_PULSE_VOLUME_MAX\fP   16"
+.br
+.RI "\fIValeur de volume maximum pour un instrument de type PULSE. \fP"
+.ti -1c
+.RI "#define \fBINSTRUMENT_PULSE_WAVE_MAX\fP   4"
+.br
+.RI "\fIValeur de 'wave' maximum pour un instrument de type PULSE. \fP"
+.ti -1c
+.RI "#define \fBINSTRUMENT_PULSE_STEPTIME_MAX\fP   8"
+.br
+.RI "\fIValeur de 'steptime' maximum pour un instrument de type PULSE. \fP"
+.ti -1c
+.RI "#define \fBINSTRUMENT_PULSE_LENGTH_MAX\fP   64"
+.br
+.RI "\fIValeur de 'soundlength' maximum pour un instrument de type PULSE. \fP"
+.ti -1c
+.RI "#define \fBINSTRUMENT_PULSE_SWEEP_MAX\fP   128"
+.br
+.RI "\fIValeur de 'sweep' maximum pour un instrument de type PULSE. \fP"
+.ti -1c
+.RI "#define \fBINSTRUMENT_WAVE_VOLUME_MAX\fP   5"
+.br
+.RI "\fIValeur de volume maximum pour un instrument de type WAVE. \fP"
+.ti -1c
+.RI "#define \fBINSTRUMENT_WAVE_LENGTH_MAX\fP   256"
+.br
+.RI "\fIValeur de 'soundlength' maximum pour un instrument de type WAVE. \fP"
+.ti -1c
+.RI "#define \fBINSTRUMENT_WAVE_NB_VOICE\fP   0x18"
+.br
+.RI "\fINombre de voix disponibles pour un instrument de type WAVE. \fP"
+.ti -1c
+.RI "#define \fBMAX_TEMPO\fP   255"
+.br
+.RI "\fITempo maximal. \fP"
+.ti -1c
+.RI "#define \fBMAX_TRANSPOSE\fP   256"
+.br
+.RI "\fIValeur de transposition maximale. \fP"
+.ti -1c
+.RI "#define \fBNULL_VALUE\fP   0xff"
+.br
+.RI "\fINULL_VALUE représente la valeur 'interdite'. \fP"
+.ti -1c
+.RI "#define \fBGAMEPAK_RAM\fP   ((u8*)0x0E000000)"
+.br
+.RI "\fIAddresse vers la mémoire SRAM (la mémoire pour la sauvegarde). \fP"
+.ti -1c
+.RI "#define \fBNB_FREQUENCES\fP   72"
+.br
+.RI "\fINombre total de fréquences de notes. \fP"
+.in -1c
+.SS "Définition de type"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBEFFECT\fP \fBeffect\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBTABLE\fP \fBtable\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBNOTE\fP \fBnote\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBCOMPOSER\fP \fBcomposer\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBBLOCK\fP \fBblock\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBSEQUENCE\fP \fBsequence\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBCHANNEL\fP \fBchannel\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBINSTRUMENT\fP \fBinstrument\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBFAT\fP \fBtracker\fP"
+.br
+.in -1c
+.SS "Fonctions"
+
+.in +1c
+.ti -1c
+.RI "void \fBFAT_data_initInstrumentIfNeeded\fP (u8 instId, u8 \fBchannel\fP)"
+.br
+.RI "\fIInitialise un instrument avec des valeurs par défaut uniquement si cet instrument est nouveau et n'a jamais été initialisé auparavant. \fP"
+.ti -1c
+.RI "bool \fBFAT_data_smartAllocateSequence\fP (u8 channelId, u8 line)"
+.br
+.RI "\fIMéthode intelligente permettant d'allouer une nouveau numéro de séquence. \fP"
+.ti -1c
+.RI "bool \fBFAT_data_smartAllocateBlock\fP (u8 \fBsequence\fP, u8 blockLine)"
+.br
+.RI "\fIMéthode intelligente permettant d'allouer un nouveau numéro de block vide. \fP"
+.ti -1c
+.RI "void \fBFAT_data_initData\fP ()"
+.br
+.RI "\fIInitialise les données du tracker. Utile lors de l'allumage de la console. \fP"
+.ti -1c
+.RI "void \fBFAT_data_cutSequence\fP (u8 channelId, u8 line)"
+.br
+.RI "\fIEfface une séquence dans le tableau 'SONG'. \fP"
+.ti -1c
+.RI "void \fBFAT_data_pasteSequence\fP (u8 channelId, u8 line)"
+.br
+.RI "\fIColle la séquence actuellement stockée dans le clipboard. \fP"
+.ti -1c
+.RI "void \fBFAT_data_cloneSequence\fP (u8 channelId, u8 line)"
+.br
+.RI "\fIClone une séquence: change le numéro de la séquence pointée. \fP"
+.ti -1c
+.RI "void \fBFAT_data_pasteSequenceWithNewNumber\fP (u8 channelId, u8 line)"
+.br
+.RI "\fIColle la séquence dans le presse-papier en changeant le numéro. \fP"
+.ti -1c
+.RI "void \fBFAT_data_cutBlock\fP (u8 \fBsequence\fP, u8 blockLine)"
+.br
+.RI "\fICoupe un block depuis une séquence donnée. Le numéro de block est stocké dans le presse-papier. \fP"
+.ti -1c
+.RI "void \fBFAT_data_pasteBlock\fP (u8 \fBsequence\fP, u8 blockLine)"
+.br
+.RI "\fIColle un block depuis le presse-papier dans une séquence donnée. \fP"
+.ti -1c
+.RI "void \fBFAT_data_cloneBlock\fP (u8 \fBsequence\fP, u8 blockLine)"
+.br
+.RI "\fIClone le block: change le numéro du block pointé. \fP"
+.ti -1c
+.RI "void \fBFAT_data_pasteBlockWithNewNumber\fP (u8 \fBsequence\fP, u8 blockLine)"
+.br
+.RI "\fIColle un block depuis le presse-papier en changeant le numéro. \fP"
+.ti -1c
+.RI "void \fBFAT_data_removeBlockTranspose\fP (u8 \fBsequence\fP, u8 blockLine)"
+.br
+.RI "\fISupprime la valeur de transpose pour un block désigné. \fP"
+.ti -1c
+.RI "void \fBFAT_data_cutNote\fP (u8 \fBblock\fP, u8 noteLine)"
+.br
+.RI "\fICoupe une note donnée dans un block et la place dans le presse-papier. \fP"
+.ti -1c
+.RI "void \fBFAT_data_composer_cutNote\fP (u8 line)"
+.br
+.RI "\fICoupe une note donnée dans le composer et la place dans le presse-papier. \fP"
+.ti -1c
+.RI "void \fBFAT_data_pasteNote\fP (u8 \fBblock\fP, u8 noteLine)"
+.br
+.RI "\fIColle une note depuis le presse-papier dans un block. \fP"
+.ti -1c
+.RI "void \fBFAT_data_composer_pasteNote\fP (u8 line)"
+.br
+.RI "\fIColle une note depuis le presse-papier dans le composer. \fP"
+.ti -1c
+.RI "bool \fBFAT_data_isSequenceAllocatable\fP (u8 channelId, u8 line)"
+.br
+.RI "\fIPermet de savoir si une séquence est allouable (séquence vide). \fP"
+.ti -1c
+.RI "bool \fBFAT_data_isBlockAllocatable\fP (u8 \fBsequence\fP, u8 blockLine)"
+.br
+.RI "\fIPermet de savoir si un block est allouable (block vide) \fP"
+.ti -1c
+.RI "bool \fBFAT_data_isNoteEmpty\fP (u8 \fBblock\fP, u8 noteLine)"
+.br
+.RI "\fICette méthode indique si une note est déjà présente un emplacement donné. \fP"
+.ti -1c
+.RI "u8 \fBFAT_data_getSequence\fP (u8 channelId, u8 sequenceLine)"
+.br
+.RI "\fIRetourne un id séquence. \fP"
+.ti -1c
+.RI "u8 \fBFAT_data_getBlock\fP (u8 \fBsequence\fP, u8 blockLine)"
+.br
+.RI "\fIRetourne un id block. \fP"
+.ti -1c
+.RI "\fBnote\fP * \fBFAT_data_getNote\fP (u8 \fBblock\fP, u8 noteLine)"
+.br
+.RI "\fIRetourne un pointeur sur une variable de type 'note'. Ce pointeur donne accès à toute les données présentes dans une note. \fP"
+.ti -1c
+.RI "void \fBFAT_data_allocateSequenceToNextAvailableId\fP (u8 channelId, u8 line)"
+.br
+.RI "\fIRemplit automatiquement un id séquence avec la valeur d'un compteur. \fP"
+.ti -1c
+.RI "bool \fBFAT_data_allocateSequence\fP (u8 channelId, u8 line)"
+.br
+.RI "\fIAlloue une séquence. \fP"
+.ti -1c
+.RI "void \fBFAT_data_allocateBlockToNextAvailableId\fP (u8 \fBsequence\fP, u8 blockLine)"
+.br
+.RI "\fIRemplit automatiquement un id block avec la valeur d'un compteur. \fP"
+.ti -1c
+.RI "bool \fBFAT_data_allocateBlock\fP (u8 \fBsequence\fP, u8 blockLine)"
+.br
+.RI "\fIMéthode intelligente pour l'allocation d'un block dans une séquence. \fP"
+.ti -1c
+.RI "bool \fBFAT_data_isBlockEmpty\fP (u8 blockId)"
+.br
+.RI "\fIIndique si un block est vide ou pas. \fP"
+.ti -1c
+.RI "bool \fBFAT_data_block_isTransposeEmpty\fP (u8 \fBsequence\fP, u8 line)"
+.br
+.RI "\fIIndique si le paramètre de transpose d'un block est renseigné. \fP"
+.ti -1c
+.RI "u8 \fBFAT_data_block_getTranspose\fP (u8 \fBsequence\fP, u8 line)"
+.br
+.RI "\fIDonne la valeur du paramètre transpose pour un block. \fP"
+.ti -1c
+.RI "void \fBFAT_data_block_allocateTranspose\fP (u8 \fBsequence\fP, u8 line)"
+.br
+.RI "\fIAlloue une valeur de paramètre pour la transposition d'un block: 0 par défaut. \fP"
+.ti -1c
+.RI "bool \fBFAT_data_isSequenceEmpty\fP (u8 sequenceId)"
+.br
+.RI "\fIPermet de savoir si un séquence est vide ou non (sans block). \fP"
+.ti -1c
+.RI "bool \fBFAT_data_isInstrumentFree\fP (u8 inst)"
+.br
+.RI "\fIPermet de savoir si un instrument est disponible (non initialisé). \fP"
+.ti -1c
+.RI "void \fBFAT_data_addDefaultNote\fP (u8 \fBblock\fP, u8 noteLine, u8 \fBchannel\fP)"
+.br
+.RI "\fIAjoute la note par défaut sur une ligne dans un block. \fP"
+.ti -1c
+.RI "void \fBFAT_data_sequence_changeValue\fP (u8 channelId, u8 line, s8 addedValue)"
+.br
+.RI "\fIModifie le numéro d'une séquence. \fP"
+.ti -1c
+.RI "void \fBFAT_data_block_changeTransposeValue\fP (u8 \fBsequence\fP, u8 line, s8 addedValue)"
+.br
+.RI "\fIModifie la valeur de transposition pour un block donné. \fP"
+.ti -1c
+.RI "void \fBFAT_data_block_changeValue\fP (u8 \fBsequence\fP, u8 blockLine, s8 addedValue)"
+.br
+.RI "\fIModifie le numéro d'un block. \fP"
+.ti -1c
+.RI "bool \fBFAT_data_block_isEffectEmpty\fP (u8 \fBsequence\fP, u8 blockLine)"
+.br
+.RI "\fIPermet de déterminer si un effet est assigné à un block ou pas. \fP"
+.ti -1c
+.RI "\fBeffect\fP * \fBFAT_data_block_getEffect\fP (u8 \fBsequence\fP, u8 line)"
+.br
+.RI "\fIRetourne un pointeur sur un effet définit pour un block dans une séquence. \fP"
+.ti -1c
+.RI "void \fBFAT_data_note_changeValue\fP (u8 \fBblock\fP, u8 noteLine, s8 addedValue)"
+.br
+.RI "\fIModifie la valeur d'une note. \fP"
+.ti -1c
+.RI "void \fBFAT_data_note_changeOctave\fP (u8 \fBblock\fP, u8 noteLine, s8 addedValue)"
+.br
+.RI "\fIModifie l'octave d'une note. \fP"
+.ti -1c
+.RI "void \fBFAT_data_note_changeInstrument\fP (u8 currentChannel, u8 \fBblock\fP, u8 noteLine, s8 addedValue)"
+.br
+.RI "\fIModifie le numéro d'un instrument pour une note donnée. \fP"
+.ti -1c
+.RI "void \fBFAT_data_note_changeEffectName\fP (u8 \fBblock\fP, u8 line, s8 addedValue)"
+.br
+.RI "\fIModifie le nom d'un effet assigné à une note. \fP"
+.ti -1c
+.RI "void \fBFAT_data_note_changeEffectValue\fP (u8 \fBblock\fP, u8 line, s8 addedValue)"
+.br
+.RI "\fIModifie la valeur d'un effet assigné à une note. \fP"
+.ti -1c
+.RI "void \fBFAT_data_note_pasteEffect\fP (u8 \fBblock\fP, u8 line)"
+.br
+.RI "\fIColle un effet préalablement stocké en mémoire. \fP"
+.ti -1c
+.RI "void \fBFAT_data_note_cutEffect\fP (u8 \fBblock\fP, u8 line)"
+.br
+.RI "\fICoupe un effet et le stocke dans une mémoire spéciale. \fP"
+.ti -1c
+.RI "bool \fBFAT_data_note_smartChangeInstrument\fP (u8 currentChannel, u8 \fBblock\fP, u8 noteLine)"
+.br
+.RI "\fICette méthode permet de changer le numéro d'un instrument alloué à une note par un nouveau disponible. \fP"
+.ti -1c
+.RI "bool \fBFAT_data_note_isEffectEmpty\fP (u8 \fBblock\fP, u8 line)"
+.br
+.RI "\fIPermet de déterminer si un effet a été assigné à la note. \fP"
+.ti -1c
+.RI "\fBeffect\fP * \fBFAT_data_note_getEffect\fP (u8 \fBblock\fP, u8 line)"
+.br
+.RI "\fIRécupère l'effet actuellement assigné à une note. \fP"
+.ti -1c
+.RI "void \fBFAT_data_note_addDefaultEffect\fP (u8 \fBblock\fP, u8 line)"
+.br
+.RI "\fIInscrit l'effet par défaut et l'assigne à la note voulue. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrument_changeType\fP (u8 instrumentId, u8 newType)"
+.br
+.RI "\fIChange le type d'un instrument. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentPulse_changeVolume\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIPermet de changer le volume d'un instrumement de type PULSE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentNoise_changeVolume\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le volume pour un instrument de type NOISE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentWave_changeVolume\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le volume pour un instrument de type WAVE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentPulse_changeEnvelopeDirection\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'envdir' (direction de l'enveloppe) pour un instrument de type PULSE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentNoise_changeEnvelopeDirection\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'envdir' (direction de l'enveloppe) pour un instrument de type NOISE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentPulse_changeSteptime\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'steptime' (pas de l'enveloppe) pour un instrument de type PULSE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentNoise_changeSteptime\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'steptime' (pas de l'enveloppe) pour un instrument de type NOISE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentPulse_changeWaveduty\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'waveduty' (forme de l'onde) pour un instrument de type PULSE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentNoise_changePolystep\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'polystep' (polynomial step) pour un instrument de type NOISE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentPulse_changeOutput\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'output' (sortie droite/gauche) pour un instrument de type PULSE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentNoise_changeOutput\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'output' (sortie droite/gauche) pour un instrument de type NOISE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentPulse_changeSoundLength\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'soundlength' (durée du son) pour un instrument de type PULSE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentNoise_changeSoundLength\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'soundlength' (durée du son) pour un instrument de type NOISE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentWave_changeSoundLength\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'soundlength' (durée du son) pour un instrument de type WAVE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentPulse_changeSweep\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'sweep' (effet sweep) pour un instrument de type PULSE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentPulse_changeLoopmode\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'loopmode' (mode son) pour un instrument de type PULSE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentWave_changeLoopmode\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'loopmode' (mode son) pour un instrument de type WAVE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentNoise_changeLoopmode\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'loopmode' (mode son) pour un instrument de type NOISE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentWave_changeVoice\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'voice' (les patterns stockés dans les banks) pour un instrument de type WAVE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentWave_changeBank\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'bank' (le numéro de la bank à jouer) pour un instrument de type WAVE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_instrumentWave_changeBankmode\fP (u8 instrumentId, s8 value)"
+.br
+.RI "\fIChange le paramètre 'bankmode' (le mode bank) pour un instrument de type WAVE. \fP"
+.ti -1c
+.RI "void \fBFAT_data_project_changeTempo\fP (s8 addedValue)"
+.br
+.RI "\fIModifie le tempo pour le projet en cours. \fP"
+.ti -1c
+.RI "void \fBFAT_data_project_changeTranspose\fP (s8 addedValue)"
+.br
+.RI "\fIChange la valeur du transpose pour le projet entier. \fP"
+.ti -1c
+.RI "bool \fBFAT_data_composer_isNoteEmpty\fP (u8 line)"
+.br
+.RI "\fIPermet de savoir si une note a été écrite sur le composer. \fP"
+.ti -1c
+.RI "void \fBFAT_data_composer_addDefaultNote\fP (u8 line)"
+.br
+.RI "\fIAjoute la dernière note connue sur le composer. \fP"
+.ti -1c
+.RI "\fBnote\fP * \fBFAT_data_composer_getNote\fP (u8 line)"
+.br
+.RI "\fIRetourne un pointeur sur un objet de type \fBNOTE\fP sur le composer. \fP"
+.ti -1c
+.RI "void \fBFAT_data_composer_changeValue\fP (u8 line, s8 addedValue)"
+.br
+.RI "\fIChange l'intitulé d'une note dans le composer. \fP"
+.ti -1c
+.RI "void \fBFAT_data_composer_changeOctave\fP (u8 line, s8 addedValue)"
+.br
+.RI "\fIModifie l'octave d'une note. \fP"
+.ti -1c
+.RI "bool \fBFAT_data_composer_smartChangeInstrument\fP (u8 line)"
+.br
+.RI "\fIPermet de changer le numéro d'instrument assigné à une note dans le composer en cherchant le premier numéro disponible. \fP"
+.ti -1c
+.RI "void \fBFAT_data_composer_changeInstrument\fP (u8 line, s8 addedValue)"
+.br
+.RI "\fIChange le numéro d'instrument assigné à une note dans le composer. \fP"
+.ti -1c
+.RI "void \fBFAT_data_project_save\fP ()"
+.br
+.RI "\fIFonction de sauvegarde d'un track. \fP"
+.ti -1c
+.RI "void \fBFAT_data_project_load\fP ()"
+.br
+.RI "\fIFonction de chargement d'une track. \fP"
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "u8 * \fBgamepak\fP = GAMEPAK_RAM"
+.br
+.RI "\fIPointeur vers la mémoire SRAM. \fP"
+.ti -1c
+.RI "const char * \fBnoteName\fP [NB_NOTE] = {'C ', 'C\\'', 'D ', 'D\\'', 'E ', 'F ', 'F\\'', 'G ', 'G\\'', 'A ', 'A\\'', 'B '}"
+.br
+.RI "\fITableau constant contenant toutes les notes sous formes de chaînes de caractères. \fP"
+.ti -1c
+.RI "const char * \fBnoteEffectName\fP [NB_NOTE_EFFECT] = {'C ', 'EN', 'H ', 'K ', 'L ', 'O ', 'P ', 'RE', 'RN', 'SW', 'TA', 'TM', 'V '}"
+.br
+.RI "\fITableau constant contenant tous les noms d'effets disponibles pour les notes. \fP"
+.ti -1c
+.RI "const char * \fBblockEffectName\fP [NB_BLOCK_EFFECT] = {'EN', 'H ', 'K ', 'SW', 'TM'}"
+.br
+.RI "\fITableau constant contenant tous les noms d'effets disponibles pour les blocks. \fP"
+.ti -1c
+.RI "\fBeffect\fP \fBFAT_data_lastEffectWritten\fP"
+.br
+.RI "\fIEspace mémoire contenant le dernier effet écrit. Par défaut, l'effet est initialisé avec NULL_VALUE. \fP"
+.ti -1c
+.RI "\fBnote\fP \fBFAT_data_lastNoteWritten\fP"
+.br
+.RI "\fIEspace mémoire contenant la dernière note écrite. Par défaut, cette note est initialisée à 'C 3'. \fP"
+.ti -1c
+.RI "\fBnote\fP \fBFAT_data_noteClipboard\fP"
+.br
+.RI "\fIPresse-papier pour couper/coller une note. \fP"
+.ti -1c
+.RI "u8 \fBFAT_data_lastBlockWritten\fP"
+.br
+.RI "\fICette variable permet de stocker le dernier numéro de block écrit. \fP"
+.ti -1c
+.RI "u8 \fBFAT_data_blockClipboard\fP"
+.br
+.RI "\fIPresse-papier pour couper/coller des numéros de blocks. \fP"
+.ti -1c
+.RI "u8 \fBFAT_data_lastSequenceWritten\fP"
+.br
+.RI "\fIStocke le dernier numéro de séquence écrit. \fP"
+.ti -1c
+.RI "u8 \fBFAT_data_sequenceClipboard\fP"
+.br
+.RI "\fIPresse-papier pour couper/coller des séquences. \fP"
+.ti -1c
+.RI "\fBtracker\fP \fBFAT_tracker\fP"
+.br
+.RI "\fIContient toutes les données déjà instanciées. \fP"
+.ti -1c
+.RI "u8 \fBFAT_nextAvailableSequenceId\fP = 0"
+.br
+.RI "\fIStocke le numéro de la prochaine séquence disponible. \fP"
+.ti -1c
+.RI "u8 \fBFAT_nextAvailableBlockId\fP = 0"
+.br
+.RI "\fIStocke le numéro du prochain block disponible. \fP"
+.ti -1c
+.RI "u8 \fBFAT_nextAvailableInstrumentId\fP = 0"
+.br
+.RI "\fIStocke le numéro du prochain instrument disponible. \fP"
+.ti -1c
+.RI "u8 \fBFAT_lastUsedInstrumentId\fP = 0"
+.br
+.RI "\fIStocke le dernier numéro d'instrument utilisé. \fP"
+.in -1c
+.SH "Description détaillée"
+.PP 
+Ce fichier contient toutes les définitions des types de données et autres structures. 
+
+Il contient également un set de fonctions utiles pour les modifications et récupérations sur toutes les données techniques du tracker. 
+.SH "Documentation des macros"
+.PP 
+.SS "#define NB_FREQUENCES   72"
+.PP
+Nombre total de fréquences de notes. F(Hz)=4194304/(32*(2048-register value)). The minimum frequency is 64Hz and the maximum is 131Khz. Voir \fChttp://jeanjacques.dialo.free.fr/frequenc.htm\fP 
+.SS "#define NULL_VALUE   0xff"
+.PP
+NULL_VALUE représente la valeur 'interdite'. Au démarrage de l'appli, toutes les données dans FAT_tracker sont initialisées avec NULL_VALUE. \fBNE PAS TOUCHER !\fP 
+.SH "Documentation des fonctions"
+.PP 
+.SS "void FAT_data_addDefaultNote (u8block, u8noteLine, u8channel)"
+.PP
+Ajoute la note par défaut sur une ligne dans un block. \fBParamètres:\fP
+.RS 4
+\fIblock\fP le numéro de block 
+.br
+\fInoteLine\fP le numéro de ligne de la note à ajouter 
+.RE
+.PP
+
+.SS "bool FAT_data_allocateBlock (u8sequence, u8blockLine)"
+.PP
+Méthode intelligente pour l'allocation d'un block dans une séquence. .IP "\(bu" 2
+si le block est vide, alors on pose le même block que le dernier posé
+.IP "\(bu" 2
+si le block n'est pas vide alors on ne fait rien (on pourra afficher un message plus tard)
+.PP
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIsequence\fP le numéro de séquence 
+.br
+\fIblockLine\fP le numéro de ligne du block dans la séquence 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+1 si un nouveau block a été écrit, 0 si rien n'a été fait 
+.RE
+.PP
+
+.SS "void FAT_data_allocateBlockToNextAvailableId (u8sequence, u8blockLine)"
+.PP
+Remplit automatiquement un id block avec la valeur d'un compteur. Attention, pour le moment cette méthode est stupide et ne vérifie pas si la valeur du compteur ne correspond pas déjà à un block déjà alloué (manuellement)
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIsequence\fP le numéro de la séquence 
+.br
+\fIblockLine\fP le numéro de ligne du block dans la séquence 
+.RE
+.PP
+
+.SS "bool FAT_data_allocateSequence (u8channelId, u8line)"
+.PP
+Alloue une séquence. Si la séquence est allouable, alors on y place par défaut le dernier numéro de séquence écrit.
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIchannelId\fP le numéro de channel (0 à 5) 
+.br
+\fIline\fP le numéro de ligne de la séquence dans le tableau 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+1 si la séquence a été allouée, 0 si échec 
+.RE
+.PP
+
+.SS "void FAT_data_allocateSequenceToNextAvailableId (u8channelId, u8line)"
+.PP
+Remplit automatiquement un id séquence avec la valeur d'un compteur. Attention, pour le moment cette méthode est stupide et ne vérifie pas si la valeur du compteur ne correspond pas déjà à une séquence déjà allouée (manuellement)
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIchannelId\fP le canal 
+.br
+\fIline\fP le numéro de ligne de la séquence dans le tableau SONG 
+.RE
+.PP
+
+.SS "void FAT_data_block_allocateTranspose (u8sequence, u8line)"
+.PP
+Alloue une valeur de paramètre pour la transposition d'un block: 0 par défaut. \fBParamètres:\fP
+.RS 4
+\fIsequence\fP le numéro de séquence concernée 
+.br
+\fIline\fP le numéro de ligne du block dans la séquence 
+.RE
+.PP
+
+.SS "void FAT_data_block_changeTransposeValue (u8sequence, u8line, s8addedValue)"
+.PP
+Modifie la valeur de transposition pour un block donné. \fBParamètres:\fP
+.RS 4
+\fIsequence\fP le numéro de séquence 
+.br
+\fIline\fP le numéro de ligne du block dans la séquence 
+.br
+\fIaddedValue\fP la valeur à ajouter/retrancher (+1 ajouter, -1 retrancher) 
+.RE
+.PP
+
+.SS "void FAT_data_block_changeValue (u8sequence, u8blockLine, s8addedValue)"
+.PP
+Modifie le numéro d'un block. Cette méthode ajoute la valeur de 'addedValue'. Passer +1 comme valeur ajoute, -1 pour retirer.
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIsequence\fP numéro de séquence 
+.br
+\fIblockLine\fP le numéro de ligne du block à modifier 
+.br
+\fIaddedValue\fP la valeur à ajouter/retirer 
+.RE
+.PP
+
+.SS "\fBeffect\fP* FAT_data_block_getEffect (u8sequence, u8line)"
+.PP
+Retourne un pointeur sur un effet définit pour un block dans une séquence. \fBParamètres:\fP
+.RS 4
+\fIsequence\fP le numéro de séquence concernée 
+.br
+\fIline\fP la ligne du block dans la séquence 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+un pointeur sur un objet \fBEFFECT\fP 
+.RE
+.PP
+
+.SS "u8 FAT_data_block_getTranspose (u8sequence, u8line)"
+.PP
+Donne la valeur du paramètre transpose pour un block. \fBParamètres:\fP
+.RS 4
+\fIsequence\fP le numéro de séquence 
+.br
+\fIline\fP la ligne du block dans la séquence 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+la valeur du parametre transpose pour le block désigné 
+.RE
+.PP
+
+.SS "bool FAT_data_block_isEffectEmpty (u8sequence, u8blockLine)"
+.PP
+Permet de déterminer si un effet est assigné à un block ou pas. \fBParamètres:\fP
+.RS 4
+\fIsequence\fP l'id de la séquence dans lequel le block est installé 
+.br
+\fIblockLine\fP 
+.RE
+.PP
+
+.SS "bool FAT_data_block_isTransposeEmpty (u8sequence, u8line)"
+.PP
+Indique si le paramètre de transpose d'un block est renseigné. \fBParamètres:\fP
+.RS 4
+\fIsequence\fP le numéro de séquence 
+.br
+\fIline\fP la ligne du block dans la séquence 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+1 si vide, 0 si initialisé 
+.RE
+.PP
+
+.SS "void FAT_data_cloneBlock (u8sequence, u8blockLine)"
+.PP
+Clone le block: change le numéro du block pointé. Cette méthode permet de changer le numéro d'un block tout en conservant son contenu. Le nouveau numéro est le premier numéro de block vide disponible.
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIsequence\fP le numéro de la séquence de 0 à NB_MAX_SEQUENCES 
+.br
+\fIblockLine\fP le numéro de ligne du block à effacer dans la séquence 
+.RE
+.PP
+
+.SS "void FAT_data_cloneSequence (u8channelId, u8line)"
+.PP
+Clone une séquence: change le numéro de la séquence pointée. Le nouveau numéro est le suivant disponible. La fonction copie égalements les éventuels ids de blocks se trouvant dans la séquence à cloner (elle ne clone pas les blocks).
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIchannelId\fP le numéro du channel (de 0 à 5) 
+.br
+\fIline\fP le numéro de ligne ou se situe la séquence dans le tableau 
+.RE
+.PP
+
+.SS "void FAT_data_composer_addDefaultNote (u8line)"
+.PP
+Ajoute la dernière note connue sur le composer. \fBParamètres:\fP
+.RS 4
+\fIline\fP le numéro de ligne sur le composer 
+.RE
+.PP
+
+.SS "void FAT_data_composer_changeInstrument (u8line, s8addedValue)"
+.PP
+Change le numéro d'instrument assigné à une note dans le composer. \fBParamètres:\fP
+.RS 4
+\fIline\fP numéro de ligne de la note dans le composer 
+.br
+\fIaddedValue\fP valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_composer_changeOctave (u8line, s8addedValue)"
+.PP
+Modifie l'octave d'une note. Cette méthode permet de changer l'octave de la note et donc sa fréquence. ex. si j'ai un C 3 et que j'utilise cette méthode avec 'addedValue=1' alors ma note sera modifiée en 'C 4'.
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIline\fP le numéro de ligne de la note dans le composer 
+.br
+\fIaddedValue\fP la valeur à ajouter/retirer (1 ou -1 généralement) 
+.RE
+.PP
+
+.SS "void FAT_data_composer_changeValue (u8line, s8addedValue)"
+.PP
+Change l'intitulé d'une note dans le composer. Cette méthode permet de changer l'intitulé de la note et donc sa fréquence. ex. si j'ai un C 3 et que j'utilise cette méthode avec 'addedValue=1' alors ma note sera modifiée en 'C#3'.
+.PP
+\fBTODO cette méthode ne permet pas de passer à l'octave supérieure pour enchainer les gammes.\fP
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIline\fP le numéro de la ligne dans le composer 
+.br
+\fIaddedValue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_composer_cutNote (u8line)"
+.PP
+Coupe une note donnée dans le composer et la place dans le presse-papier. Attention cette méthode EFFACE POUR DE VRAI la note ! Elle est cependant copiée dans le presse-papier avant suppression. 
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIline\fP le numéro de ligne de la note dans le composer 
+.RE
+.PP
+
+.SS "\fBnote\fP* FAT_data_composer_getNote (u8line)"
+.PP
+Retourne un pointeur sur un objet de type \fBNOTE\fP sur le composer. \fBParamètres:\fP
+.RS 4
+\fIline\fP le numéro de ligne de la note dans le composer 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+un pointeur sur un objet \fBNOTE\fP 
+.RE
+.PP
+
+.SS "bool FAT_data_composer_isNoteEmpty (u8line)"
+.PP
+Permet de savoir si une note a été écrite sur le composer. \fBParamètres:\fP
+.RS 4
+\fIline\fP la ligne à vérifier sur le composer 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+1 si la ligne est vide, 0 sinon 
+.RE
+.PP
+
+.SS "void FAT_data_composer_pasteNote (u8line)"
+.PP
+Colle une note depuis le presse-papier dans le composer. \fBParamètres:\fP
+.RS 4
+\fIline\fP le numéro de ligne de la note dans le composer 
+.RE
+.PP
+
+.SS "bool FAT_data_composer_smartChangeInstrument (u8line)"
+.PP
+Permet de changer le numéro d'instrument assigné à une note dans le composer en cherchant le premier numéro disponible. \fBParamètres:\fP
+.RS 4
+\fIline\fP le numéro de ligne de la note dans le composer 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+1 si un instrument a été trouvé et assigné, 0 sinon 
+.RE
+.PP
+
+.SS "void FAT_data_cutBlock (u8sequence, u8blockLine)"
+.PP
+Coupe un block depuis une séquence donnée. Le numéro de block est stocké dans le presse-papier. Attention, cette méthode n'efface pas le contenu du block, seulement la référence dans la séquence. 
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIsequence\fP le numéro de la séquence de 0 à NB_MAX_SEQUENCES 
+.br
+\fIblockLine\fP le numéro de ligne du block à effacer dans la séquence 
+.RE
+.PP
+
+.SS "void FAT_data_cutNote (u8block, u8noteLine)"
+.PP
+Coupe une note donnée dans un block et la place dans le presse-papier. Attention cette méthode EFFACE POUR DE VRAI la note ! Elle est cependant copiée dans le presse-papier avant suppression. 
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIblock\fP le numéro de block 
+.br
+\fInoteLine\fP le numéro de ligne de la note dans le block 
+.RE
+.PP
+
+.SS "void FAT_data_cutSequence (u8channelId, u8line)"
+.PP
+Efface une séquence dans le tableau 'SONG'. Attention ! cette méthode n'efface pas le contenu de la séquence. Seulement, la référence dans le tableau ! 
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIchannelId\fP le numéro du channel (de 0 à 5) 
+.br
+\fIline\fP le numéro de ligne ou se situe la séquence dans le tableau 
+.RE
+.PP
+
+.SS "u8 FAT_data_getBlock (u8sequence, u8blockLine)"
+.PP
+Retourne un id block. \fBParamètres:\fP
+.RS 4
+\fIsequence\fP le numéro de séquence 
+.br
+\fIblockLine\fP le numéro de ligne du block dans la séquence 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+l'id du block de 0 à NB_MAX_BLOCKS ou NULL_VALUE si le block n'est pas alloué 
+.RE
+.PP
+
+.SS "\fBnote\fP* FAT_data_getNote (u8block, u8noteLine)"
+.PP
+Retourne un pointeur sur une variable de type 'note'. Ce pointeur donne accès à toute les données présentes dans une note. Cf \fBNOTE\fP
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIblock\fP le numéro du block 
+.br
+\fInoteLine\fP le numéro de la ligne dans le block 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+le pointeur sur une variable note 
+.RE
+.PP
+
+.SS "u8 FAT_data_getSequence (u8channelId, u8sequenceLine)"
+.PP
+Retourne un id séquence. \fBParamètres:\fP
+.RS 4
+\fIchannelId\fP le canal 
+.br
+\fIsequenceLine\fP le numéro de ligne de la séquence dans le tableau SONG 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+l'id de la séquence de 0 à NB_MAX_SEQUENCES ou NULL_VALUE si la séquence n'est pas allouée 
+.RE
+.PP
+
+.SS "void FAT_data_initInstrumentIfNeeded (u8instId, u8channel)"
+.PP
+Initialise un instrument avec des valeurs par défaut uniquement si cet instrument est nouveau et n'a jamais été initialisé auparavant. Attention, pour déterminer si un instru doit être initialisé, cette méthode se sert d'une donnée (sweep) et teste si celle-ci est égale à NULL_VALUE. 
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIinstId\fP l'id de l'instrument à initialiser 
+.RE
+.PP
+
+.SS "void FAT_data_instrument_changeType (u8instrumentId, u8newType)"
+.PP
+Change le type d'un instrument. \fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fInewType\fP le nouveau type de l'instrument PULSE1, PULSE2, WAVE, NOISE, SAMPLEA, SAMPLEB 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentNoise_changeEnvelopeDirection (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'envdir' (direction de l'enveloppe) pour un instrument de type NOISE. \fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentNoise_changeLoopmode (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'loopmode' (mode son) pour un instrument de type NOISE. 0 = continuous, 1 = timed
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentNoise_changeOutput (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'output' (sortie droite/gauche) pour un instrument de type NOISE. TODO à implémenter
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentNoise_changePolystep (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'polystep' (polynomial step) pour un instrument de type NOISE. cf \fChttp://belogic.com/gba/channel4.shtml\fP
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentNoise_changeSoundLength (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'soundlength' (durée du son) pour un instrument de type NOISE. \fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentNoise_changeSteptime (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'steptime' (pas de l'enveloppe) pour un instrument de type NOISE. \fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentNoise_changeVolume (u8instrumentId, s8value)"
+.PP
+Change le volume pour un instrument de type NOISE. \fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentPulse_changeEnvelopeDirection (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'envdir' (direction de l'enveloppe) pour un instrument de type PULSE. \fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentPulse_changeLoopmode (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'loopmode' (mode son) pour un instrument de type PULSE. 0 = continuous, 1 = timed
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentPulse_changeOutput (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'output' (sortie droite/gauche) pour un instrument de type PULSE. TODO à implémenter
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentPulse_changeSoundLength (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'soundlength' (durée du son) pour un instrument de type PULSE. \fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentPulse_changeSteptime (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'steptime' (pas de l'enveloppe) pour un instrument de type PULSE. \fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentPulse_changeSweep (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'sweep' (effet sweep) pour un instrument de type PULSE. \fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentPulse_changeVolume (u8instrumentId, s8value)"
+.PP
+Permet de changer le volume d'un instrumement de type PULSE. \fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentPulse_changeWaveduty (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'waveduty' (forme de l'onde) pour un instrument de type PULSE. \fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentWave_changeBank (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'bank' (le numéro de la bank à jouer) pour un instrument de type WAVE. \fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP -1 bank = 0, +1 bank = 1 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentWave_changeBankmode (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'bankmode' (le mode bank) pour un instrument de type WAVE. \fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP -1 bankmode = SINGLE, +1 bank = DUAL 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentWave_changeLoopmode (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'loopmode' (mode son) pour un instrument de type WAVE. 0 = continuous, 1 = timed
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentWave_changeSoundLength (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'soundlength' (durée du son) pour un instrument de type WAVE. \fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentWave_changeVoice (u8instrumentId, s8value)"
+.PP
+Change le paramètre 'voice' (les patterns stockés dans les banks) pour un instrument de type WAVE. \fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_instrumentWave_changeVolume (u8instrumentId, s8value)"
+.PP
+Change le volume pour un instrument de type WAVE. \fBParamètres:\fP
+.RS 4
+\fIinstrumentId\fP l'id de l'instrument à modifier 
+.br
+\fIvalue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "bool FAT_data_isBlockAllocatable (u8sequence, u8blockLine)"
+.PP
+Permet de savoir si un block est allouable (block vide) \fBParamètres:\fP
+.RS 4
+\fIsequence\fP le numéro de séquence 
+.br
+\fIblockLine\fP le numéro de ligne du block dans la séquence 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+vrai si le block est disponible (non déjà utilisé) 
+.RE
+.PP
+
+.SS "bool FAT_data_isBlockEmpty (u8blockId)"
+.PP
+Indique si un block est vide ou pas. \fBParamètres:\fP
+.RS 4
+\fIblockId\fP l'id de block à vérifier 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+1 si vide, 0 si au moins une note est trouvée 
+.RE
+.PP
+
+.SS "bool FAT_data_isInstrumentFree (u8inst)"
+.PP
+Permet de savoir si un instrument est disponible (non initialisé). \fBParamètres:\fP
+.RS 4
+\fIinst\fP le numéro d'instrument à tester 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+1 si l'instrument est disponible, 0 sinon 
+.RE
+.PP
+
+.SS "bool FAT_data_isNoteEmpty (u8block, u8noteLine)"
+.PP
+Cette méthode indique si une note est déjà présente un emplacement donné. \fBParamètres:\fP
+.RS 4
+\fIblock\fP le numéro de block concerné 
+.br
+\fInoteLine\fP le numéro de ligne de la note dans le block 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+vrai si aucune note n'est présente à cet endroit. 
+.RE
+.PP
+
+.SS "bool FAT_data_isSequenceAllocatable (u8channelId, u8line)"
+.PP
+Permet de savoir si une séquence est allouable (séquence vide). \fBParamètres:\fP
+.RS 4
+\fIchannelId\fP le channel de 0 à 5 
+.br
+\fIline\fP le numéro de ligne de la séquence dans le tableau SONG 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+vrai si la séquence est disponible (non déjà utilisée) 
+.RE
+.PP
+
+.SS "bool FAT_data_isSequenceEmpty (u8sequenceId)"
+.PP
+Permet de savoir si un séquence est vide ou non (sans block). \fBParamètres:\fP
+.RS 4
+\fIsequenceId\fP l'id de la séquence à tester 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+0 si la séquence n'est pas vide, 1 si elle est vide 
+.RE
+.PP
+
+.SS "void FAT_data_note_addDefaultEffect (u8block, u8line)"
+.PP
+Inscrit l'effet par défaut et l'assigne à la note voulue. \fBParamètres:\fP
+.RS 4
+\fIblock\fP l'id du block concerné 
+.br
+\fIline\fP le numéro de ligne de la note dans le block 
+.RE
+.PP
+
+.SS "void FAT_data_note_changeEffectName (u8block, u8line, s8addedValue)"
+.PP
+Modifie le nom d'un effet assigné à une note. \fBParamètres:\fP
+.RS 4
+\fIblock\fP le numéro de block dans lequel la note est inscrite 
+.br
+\fInoteLine\fP le numéro de ligne de la note dans le block 
+.br
+\fIaddedValue\fP la valeur à ajouter/retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_note_changeEffectValue (u8block, u8line, s8addedValue)"
+.PP
+Modifie la valeur d'un effet assigné à une note. \fBParamètres:\fP
+.RS 4
+\fIblock\fP le numéro de block dans lequel la note est inscrite 
+.br
+\fInoteLine\fP le numéro de ligne de la note dans le block 
+.br
+\fIaddedValue\fP la valeur à ajouter/retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_note_changeInstrument (u8currentChannel, u8block, u8noteLine, s8addedValue)"
+.PP
+Modifie le numéro d'un instrument pour une note donnée. \fBParamètres:\fP
+.RS 4
+\fIblock\fP le numéro de block 
+.br
+\fInoteLine\fP le numéro de ligne de la note dans le block 
+.br
+\fIaddedValue\fP la valeur à ajouter/retirer (1 ou -1 généralement voire 16/-16) 
+.RE
+.PP
+
+.SS "void FAT_data_note_changeOctave (u8block, u8noteLine, s8addedValue)"
+.PP
+Modifie l'octave d'une note. Cette méthode permet de changer l'octave de la note et donc sa fréquence. ex. si j'ai un C 3 et que j'utilise cette méthode avec 'addedValue=1' alors ma note sera modifiée en 'C 4'.
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIblock\fP le numéro de block 
+.br
+\fInoteLine\fP le numéro de ligne de la note dans le block 
+.br
+\fIaddedValue\fP la valeur à ajouter/retirer (1 ou -1 généralement) 
+.RE
+.PP
+
+.SS "void FAT_data_note_changeValue (u8block, u8noteLine, s8addedValue)"
+.PP
+Modifie la valeur d'une note. Cette méthode permet de changer l'intitulé de la not et donc sa fréquence. ex. si j'ai un C 3 et que j'utilise cette méthode avec 'addedValue=1' alors ma note sera modifiée en 'C#3'.
+.PP
+\fBTODO cette méthode ne permet pas de passer à l'octave supérieure pour enchainer les gammes.\fP 
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIblock\fP le numéro de block 
+.br
+\fInoteLine\fP le numéro de ligne de la note dans le block 
+.br
+\fIaddedValue\fP la valeur à ajouter/retirer (1 ou -1 généralement) 
+.RE
+.PP
+
+.SS "void FAT_data_note_cutEffect (u8block, u8line)"
+.PP
+Coupe un effet et le stocke dans une mémoire spéciale. \fBParamètres:\fP
+.RS 4
+\fIblock\fP le numéro de block dans lequel la note est inscrite 
+.br
+\fIline\fP le numéro de ligne de la note 
+.RE
+.PP
+
+.SS "\fBeffect\fP* FAT_data_note_getEffect (u8block, u8line)"
+.PP
+Récupère l'effet actuellement assigné à une note. \fBParamètres:\fP
+.RS 4
+\fIblock\fP l'id du block dans lequel la note est inscrite 
+.br
+\fIline\fP le numéro de ligne de la note 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+un pointeur sur un objet \fBEFFECT\fP 
+.RE
+.PP
+
+.SS "bool FAT_data_note_isEffectEmpty (u8block, u8line)"
+.PP
+Permet de déterminer si un effet a été assigné à la note. \fBParamètres:\fP
+.RS 4
+\fIblock\fP l'id du block dans lequel la note est inscrite 
+.br
+\fIline\fP le numéro de ligne de la note 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+1 si l'effet est vide, 0 sinon 
+.RE
+.PP
+
+.SS "void FAT_data_note_pasteEffect (u8block, u8line)"
+.PP
+Colle un effet préalablement stocké en mémoire. \fBParamètres:\fP
+.RS 4
+\fIblock\fP le numéro de block dans lequel la note est inscrite 
+.br
+\fIline\fP le numéro de ligne de la note 
+.RE
+.PP
+
+.SS "bool FAT_data_note_smartChangeInstrument (u8currentChannel, u8block, u8noteLine)"
+.PP
+Cette méthode permet de changer le numéro d'un instrument alloué à une note par un nouveau disponible. \fBParamètres:\fP
+.RS 4
+\fIcurrentChannel\fP le channel (de 0 à 5) utile pour l'initialisation de l'instrument 
+.br
+\fIblock\fP le numéro de block 
+.br
+\fInoteLine\fP le numéro de ligne de la note dans le block 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+1 si un nouveau numéro a été trouvé, 0 sinon 
+.RE
+.PP
+
+.SS "void FAT_data_pasteBlock (u8sequence, u8blockLine)"
+.PP
+Colle un block depuis le presse-papier dans une séquence donnée. \fBParamètres:\fP
+.RS 4
+\fIsequence\fP le numéro de la séquence de 0 à NB_MAX_SEQUENCES 
+.br
+\fIblockLine\fP le numéro de ligne du block à effacer dans la séquence 
+.RE
+.PP
+
+.SS "void FAT_data_pasteBlockWithNewNumber (u8sequence, u8blockLine)"
+.PP
+Colle un block depuis le presse-papier en changeant le numéro. Le nouveau numéro est le premier numéro de block vide disponible.
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIsequence\fP 
+.br
+\fIblockLine\fP 
+.RE
+.PP
+
+.SS "void FAT_data_pasteNote (u8block, u8noteLine)"
+.PP
+Colle une note depuis le presse-papier dans un block. \fBParamètres:\fP
+.RS 4
+\fIblock\fP le numéro de block 
+.br
+\fInoteLine\fP la ligne de la note dans le block 
+.RE
+.PP
+
+.SS "void FAT_data_pasteSequence (u8channelId, u8line)"
+.PP
+Colle la séquence actuellement stockée dans le clipboard. \fBParamètres:\fP
+.RS 4
+\fIchannelId\fP le numéro du channel (de 0 à 5) 
+.br
+\fIline\fP le numéro de ligne ou se situe la séquence dans le tableau 
+.RE
+.PP
+
+.SS "void FAT_data_pasteSequenceWithNewNumber (u8channelId, u8line)"
+.PP
+Colle la séquence dans le presse-papier en changeant le numéro. Le numéro est déterminé automatiquement: c'est le premier numéro de séquence vide.
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIchannelId\fP le numéro du channel (de 0 à 5) 
+.br
+\fIline\fP le numéro de ligne ou se situe la séquence dans le tableau 
+.RE
+.PP
+
+.SS "void FAT_data_project_changeTempo (s8addedValue)"
+.PP
+Modifie le tempo pour le projet en cours. \fBParamètres:\fP
+.RS 4
+\fIaddedValue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_project_changeTranspose (s8addedValue)"
+.PP
+Change la valeur du transpose pour le projet entier. \fBParamètres:\fP
+.RS 4
+\fIaddedValue\fP la valeur à ajouter ou retrancher 
+.RE
+.PP
+
+.SS "void FAT_data_project_load ()"
+.PP
+Fonction de chargement d'une track. \fBNON IMPLEMENTE\fP 
+.SS "void FAT_data_project_save ()"
+.PP
+Fonction de sauvegarde d'un track. \fBNON IMPLEMENTE\fP 
+.SS "void FAT_data_removeBlockTranspose (u8sequence, u8blockLine)"
+.PP
+Supprime la valeur de transpose pour un block désigné. \fBParamètres:\fP
+.RS 4
+\fIsequence\fP l'id de la séquence 
+.br
+\fIblockLine\fP le numéro de ligne du block dans la séquence 
+.RE
+.PP
+
+.SS "void FAT_data_sequence_changeValue (u8channelId, u8line, s8addedValue)"
+.PP
+Modifie le numéro d'une séquence. Cette méthode ajoute la valeur de 'addedValue'. Passer +1 comme valeur ajoute, -1 pour retirer.
+.PP
+\fBParamètres:\fP
+.RS 4
+\fIchannelId\fP le canal 
+.br
+\fIline\fP le numéro de ligne de la séquence à modifier 
+.br
+\fIaddedValue\fP la valeur à ajouter/retirer 
+.RE
+.PP
+
+.SS "bool FAT_data_smartAllocateBlock (u8sequence, u8blockLine)"
+.PP
+Méthode intelligente permettant d'allouer un nouveau numéro de block vide. \fBParamètres:\fP
+.RS 4
+\fIsequence\fP le numéro de séquence 
+.br
+\fIblockLine\fP le numéro de ligne du block 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+1 si le block a été alloué, 0 sinon 
+.RE
+.PP
+
+.SS "bool FAT_data_smartAllocateSequence (u8channelId, u8line)"
+.PP
+Méthode intelligente permettant d'allouer une nouveau numéro de séquence. \fBParamètres:\fP
+.RS 4
+\fIchannelId\fP le numéro du channel (0 à 5) 
+.br
+\fIline\fP le numéro de ligne sur laquelle écrire la séquence 
+.RE
+.PP
+\fBRenvoie:\fP
+.RS 4
+1 si la séquence a été allouée, 0 sinon 
+.RE
+.PP
+
+.SH "Documentation des variables"
+.PP 
+.SS "\fBtracker\fP \fBFAT_tracker\fP"
+.PP
+Contient toutes les données déjà instanciées. C'est cette variable qui est utilisée (écrite sur la ram) lors de la sauvegarde et vice versa pour le chargement. 
+.SH "Auteur"
+.PP 
+Généré automatiquement par Doxygen pour FAT FuriousAdvanceTracker à partir du code source.

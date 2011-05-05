@@ -1,0 +1,34 @@
+.TH "BLOCK" 3 "Thu May 5 2011" "Version version 0-02" "FAT FuriousAdvanceTracker" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+BLOCK \- 
+.PP
+Un block représente une mesure et contient un nombre de notes définies.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <data.h>\fP
+.SS "Champs de données"
+
+.in +1c
+.ti -1c
+.RI "\fBnote\fP \fBnotes\fP [NB_NOTES_IN_ONE_BLOCK]"
+.br
+.ti -1c
+.RI "\fBeffect\fP \fBeffect\fP"
+.br
+.in -1c
+.SH "Description détaillée"
+.PP 
+Un block représente une mesure et contient un nombre de notes définies. 
+.SH "Documentation des champs"
+.PP 
+.SS "\fBeffect\fP \fBeffect\fP"Chaque block peut se voir attribuer un effet. Cet effet sera calculé sur chacune des notes présente dans le block. 
+.SS "\fBnote\fP \fBnotes\fP[NB_NOTES_IN_ONE_BLOCK]"Un tableau contenant les notes. 
+
+.SH "Auteur"
+.PP 
+Généré automatiquement par Doxygen pour FAT FuriousAdvanceTracker à partir du code source.

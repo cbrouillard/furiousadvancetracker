@@ -1,0 +1,42 @@
+.TH "NOTE" 3 "Thu May 5 2011" "Version version 0-02" "FAT FuriousAdvanceTracker" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+NOTE \- 
+.PP
+Définit une note.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <data.h>\fP
+.SS "Champs de données"
+
+.in +1c
+.ti -1c
+.RI "u8 \fBnote\fP"
+.br
+.ti -1c
+.RI "u8 \fBfreq\fP"
+.br
+.ti -1c
+.RI "u8 \fBinstrument\fP"
+.br
+.ti -1c
+.RI "\fBeffect\fP \fBeffect\fP"
+.br
+.in -1c
+.SH "Description détaillée"
+.PP 
+Définit une note. 
+.SH "Documentation des champs"
+.PP 
+.SS "\fBeffect\fP \fBeffect\fP"L'effet (ou commande) assigné à la note. 
+.SS "u8 \fBfreq\fP"Le numéro de fréquence assigné à la note. Cf: const u16 freqs[NB_FREQUENCES] 
+.SS "u8 \fBinstrument\fP"Le numéro d'instrument assigné à la note. 
+.SS "u8 \fBnote\fP"Cette variable contient le nom de la note et son octave. 
+
+.SH "Auteur"
+.PP 
+Généré automatiquement par Doxygen pour FAT FuriousAdvanceTracker à partir du code source.

@@ -1,0 +1,134 @@
+.TH "soundApi/register.h" 3 "Thu May 5 2011" "Version version 0-02" "FAT FuriousAdvanceTracker" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+soundApi/register.h \- 
+.PP
+Définit un certain nombres d'addresses hexadécimales en vu d'accéder à certains registres et espaces mémoires.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBREG_BASE\fP   0x04000000"
+.br
+.ti -1c
+.RI "#define \fBREG_SOUNDCNT_L\fP   (*((u16 volatile *) (REG_BASE + 0x080)))"
+.br
+.ti -1c
+.RI "#define \fBREG_SOUNDCNT_H\fP   (*((u16 volatile *) (REG_BASE + 0x082)))"
+.br
+.ti -1c
+.RI "#define \fBREG_SOUNDCNT_X\fP   (*((u16 volatile *) (REG_BASE + 0x084)))"
+.br
+.ti -1c
+.RI "#define \fBSOUNDINIT\fP   0x8000"
+.br
+.ti -1c
+.RI "#define \fBREG_SOUND1CNT_L\fP   (*((u16 volatile *) (REG_BASE + 0x060)))"
+.br
+.ti -1c
+.RI "#define \fBREG_SOUND1CNT_H\fP   (*((u16 volatile *) (REG_BASE + 0x062)))"
+.br
+.ti -1c
+.RI "#define \fBREG_SOUND1CNT_X\fP   (*((u16 volatile *) (REG_BASE + 0x064)))"
+.br
+.ti -1c
+.RI "#define \fBSOUND1INIT\fP   0x8000"
+.br
+.ti -1c
+.RI "#define \fBREG_SOUND2CNT_L\fP   (*((u16 volatile *) (REG_BASE + 0x068)))"
+.br
+.ti -1c
+.RI "#define \fBREG_SOUND2CNT_H\fP   (*((u16 volatile *) (REG_BASE + 0x06C)))"
+.br
+.ti -1c
+.RI "#define \fBSOUND2INIT\fP   0x8000"
+.br
+.ti -1c
+.RI "#define \fBREG_SOUND3CNT_L\fP   (*((u16 volatile *) (REG_BASE + 0x070)))"
+.br
+.ti -1c
+.RI "#define \fBREG_SOUND3CNT_H\fP   (*((u16 volatile *) (REG_BASE + 0x072)))"
+.br
+.ti -1c
+.RI "#define \fBREG_SOUND3CNT_X\fP   (*((u16 volatile *) (REG_BASE + 0x074)))"
+.br
+.ti -1c
+.RI "#define \fBSOUND3INIT\fP   0x8000"
+.br
+.ti -1c
+.RI "#define \fBSOUND3PLAYONCE\fP   0x4000"
+.br
+.ti -1c
+.RI "#define \fBSOUND3PLAYLOOP\fP   0x0000"
+.br
+.ti -1c
+.RI "#define \fBSOUND3OUTPUT0\fP   0x0000"
+.br
+.ti -1c
+.RI "#define \fBSOUND3OUTPUT1\fP   0x2000"
+.br
+.ti -1c
+.RI "#define \fBSOUND3OUTPUT12\fP   0x4000"
+.br
+.ti -1c
+.RI "#define \fBSOUND3OUTPUT14\fP   0x6000"
+.br
+.ti -1c
+.RI "#define \fBSOUND3OUTPUT34\fP   0x8000"
+.br
+.ti -1c
+.RI "#define \fBSOUND3PLAY\fP   0x0080"
+.br
+.ti -1c
+.RI "#define \fBREG_SOUND4CNT_L\fP   (*((u16 volatile *) (REG_BASE + 0x078)))"
+.br
+.ti -1c
+.RI "#define \fBREG_SOUND4CNT_H\fP   (*((u16 volatile *) (REG_BASE + 0x07C)))"
+.br
+.ti -1c
+.RI "#define \fBREG_WAVE_RAM0\fP   *(u32 volatile*)0x4000090"
+.br
+.ti -1c
+.RI "#define \fBSOUND3SETBANK0\fP   0x0000"
+.br
+.ti -1c
+.RI "#define \fBSOUND3SETBANK1\fP   0x0040"
+.br
+.ti -1c
+.RI "#define \fBSOUND3BANK32\fP   0x0000"
+.br
+.ti -1c
+.RI "#define \fBSOUND3BANK64\fP   0x0020"
+.br
+.ti -1c
+.RI "#define \fBSOUND4INIT\fP   0x8000"
+.br
+.ti -1c
+.RI "#define \fBREG_DMA3SAD\fP   (*((u32 volatile *) (REG_BASE + 0x0D4)))"
+.br
+.ti -1c
+.RI "#define \fBREG_DMA3DAD\fP   (*((u32 volatile *) (REG_BASE + 0x0D8)))"
+.br
+.ti -1c
+.RI "#define \fBREG_DMA3CNT_L\fP   (*((u16 volatile *) (REG_BASE + 0x0DC)))"
+.br
+.ti -1c
+.RI "#define \fBREG_DMA3CNT_H\fP   (*((u16 volatile *) (REG_BASE + 0x0DE)))"
+.br
+.ti -1c
+.RI "#define \fBECRAN\fP   (*((u16 volatile *) (0x6000000)));"
+.br
+.in -1c
+.SH "Description détaillée"
+.PP 
+Définit un certain nombres d'addresses hexadécimales en vu d'accéder à certains registres et espaces mémoires. 
+
+
+.SH "Auteur"
+.PP 
+Généré automatiquement par Doxygen pour FAT FuriousAdvanceTracker à partir du code source.

@@ -1,0 +1,36 @@
+.TH "EFFECT" 3 "Thu May 5 2011" "Version version 0-02" "FAT FuriousAdvanceTracker" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+EFFECT \- 
+.PP
+Définit une commande.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <data.h>\fP
+.SS "Champs de données"
+
+.in +1c
+.ti -1c
+.RI "u8 \fBname\fP"
+.br
+.ti -1c
+.RI "u8 \fBvalue\fP"
+.br
+.in -1c
+.SH "Description détaillée"
+.PP 
+Définit une commande. 
+
+La structure \fBEFFECT\fP permet de stocker une commande : son nom et sa valeur. 
+.SH "Documentation des champs"
+.PP 
+.SS "u8 \fBname\fP"Un numéro permettant de pointer vers un tableau de char* afin d'afficher le nom. 
+.SS "u8 \fBvalue\fP"La valeur de la commande de 0 à FF. 
+
+.SH "Auteur"
+.PP 
+Généré automatiquement par Doxygen pour FAT FuriousAdvanceTracker à partir du code source.
