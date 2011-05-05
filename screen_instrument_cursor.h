@@ -8,6 +8,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
 */
+
+/**
+ * \file screen_instrument_cursor.h
+ * \brief Fichier dédié à la gestion du curseur pour l'écran INSTRUMENT.
+ */
+
 #ifndef _SCREEN_INSTRUMENT_CURSOR_H_
 #define	_SCREEN_INSTRUMENT_CURSOR_H_
 

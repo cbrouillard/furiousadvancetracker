@@ -18,14 +18,28 @@
 #define	_SCREEN_INSTRUMENT_H_
 
 // Variables permettant de savoir l'état de l'écran (popup affichée, onglet affiché)
-bool FAT_screenInstrument_isPopuped = 0, FAT_screenInstrument_isTabulating = 0;
+/** \brief Permet de savoir si la popup de déplacement est affichée au dessus de l'écran. */
+bool FAT_screenInstrument_isPopuped = 0; 
+/** \brief Permet de savoir si l'utilisateur est en train de changer d'onglet (type d'instrument). */
+u8 FAT_screenInstrument_isTabulating = 0;
 
 // quel instrument est en cours d'édition ?
+/** \brief L'id de l'instrument en cours d'édition. */
 u8 FAT_screenInstrument_currentInstrumentId;
 
 // sprites utiles à l'affichage de certaines données
-u8 FAT_instrument_envdir0_obj, FAT_instrument_envdir1_obj;
-u8 FAT_instrument_waveduty0_obj, FAT_instrument_waveduty1_obj, FAT_instrument_waveduty2_obj, FAT_instrument_waveduty3_obj;
+/** \brief Sprite pour la direction de l'enveloppe: valeur 0. */
+u8 FAT_instrument_envdir0_obj; 
+/** \brief Sprite pour la direction de l'enveloppe: valeur 1. */
+u8 FAT_instrument_envdir1_obj;
+/** \brief Sprite pour le paramètre waveduty: valeur 0. */
+u8 FAT_instrument_waveduty0_obj; 
+/** \brief Sprite pour le paramètre waveduty: valeur 1. */
+u8 FAT_instrument_waveduty1_obj; 
+/** \brief Sprite pour le paramètre waveduty: valeur 2. */
+u8 FAT_instrument_waveduty2_obj; 
+/** \brief Sprite pour le paramètre waveduty: valeur 3. */
+u8 FAT_instrument_waveduty3_obj;
 
 #include "screen_instrument_cursor.h"
 
@@ -39,6 +53,9 @@ void FAT_screenInstrument_showEnvdir(u8 envdirValue, u8 spriteX, u8 spriteY);
 void FAT_screenInstrument_hideAllEnvdirSprites();
 void FAT_screenInstrument_hideAllWavedutySprite();
 
+/**
+ * \brief Fonction principale de l'écran (callback). 
+ */
 void FAT_screenInstrument_mainFunc() {
     if (mutex) {
         speedCounter++;
@@ -47,12 +64,20 @@ void FAT_screenInstrument_mainFunc() {
     }
 }
 
+/**
+ * \brief Affiche le numéro de l'écran en cours d'édition dans le cadre en haut à droite. 
+ */
 void FAT_screenInstrument_printInstrumentNumber() {
     mutex = 0;
     ham_DrawText(16, 3, "INSTRUMENT %.2x", FAT_screenInstrument_currentInstrumentId);
     mutex = 1;
 }
 
+/**
+ * \brief Affiche toutes les valeurs des paramètres de l'instrument selon son type.
+ * 
+ * @param type le type de l'instrument
+ */
 void FAT_screenInstrument_printAllText(u8 type) {
     mutex = 0;
     switch (type) {
@@ -119,6 +144,9 @@ void FAT_screenInstrument_printAllText(u8 type) {
     mutex = 1;
 }
 
+/**
+ * \brief Initialisation de l'écran instrument. 
+ */
 void FAT_screenInstrument_init() {
     // quel instrument est en cours d'édition ?
     note* FAT_screenInstrument_currentNote = FAT_data_getNote(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine);
@@ -143,8 +171,9 @@ void FAT_screenInstrument_init() {
 }
 
 /**
- * Utilisez cette méthode pour changer d'écran selon le type d'instrument
+ * \brief Utilisez cette méthode pour changer d'écran selon le type d'instrument
  * édité. 
+ * 
  * @param type le type d'instru à éditer cf. #define INSTRUMENT_TYPE_*
  */
 void FAT_screenInstrument_switchScreen(u8 type) {
@@ -192,7 +221,8 @@ void FAT_screenInstrument_switchScreen(u8 type) {
 }
 
 /**
- * Cette fonction permet de changer le type de l'instrument en cours d'édition.
+ * \brief Cette fonction permet de changer le type de l'instrument en cours d'édition.
+ * 
  * Elle gère le déplacement du sprite onglet et permet le switchscreen.
  * @param move +1 -> type vers la droite, -1 type vers la gauche
  */
@@ -232,8 +262,9 @@ void FAT_screenInstrument_changeInstrumentType(s8 move) {
 }
 
 /**
- * Tester l'appui sur les boutons.
- * TODO cette méthode est trop grosse et difficilement maintenable. A refactorer. 
+ * \brief Tester l'appui sur les boutons.
+ * 
+ * <b>TODO cette méthode est trop grosse et difficilement maintenable. A refactorer. </b>
  */
 void FAT_screenInstrument_checkButtons() {
     if (F_CTRLINPUT_SELECT_PRESSED) {
@@ -362,7 +393,8 @@ void FAT_screenInstrument_checkButtons() {
 }
 
 /**
- * Cette méthode charge les sprites utilisés dans l'écran de gestion des instruments
+ * \brief Cette méthode charge les sprites utilisés dans l'écran de gestion des instruments.
+ * 
  * Attention, ne faire appel à cette méthode qu'une seule fois !
  */
 void FAT_screenInstrument_initSpritesForInstrument() {
@@ -384,11 +416,17 @@ void FAT_screenInstrument_initSpritesForInstrument() {
     FAT_screenInstrument_hideAllWavedutySprite();
 }
 
+/**
+ * \brief Cache tous les sprites relatifs à l'affiche de la direction de l'enveloppe. 
+ */
 void FAT_screenInstrument_hideAllEnvdirSprites() {
     ham_SetObjVisible(FAT_instrument_envdir0_obj, 0);
     ham_SetObjVisible(FAT_instrument_envdir1_obj, 0);
 }
 
+/**
+ * \brief Cache tous les sprites relatifs à l'affiche du paramètre waveduty. 
+ */
 void FAT_screenInstrument_hideAllWavedutySprite() {
     ham_SetObjVisible(FAT_instrument_waveduty0_obj, 0);
     ham_SetObjVisible(FAT_instrument_waveduty1_obj, 0);
@@ -396,6 +434,13 @@ void FAT_screenInstrument_hideAllWavedutySprite() {
     ham_SetObjVisible(FAT_instrument_waveduty3_obj, 0);
 }
 
+/**
+ * \brief Affiche le bon sprite pour la valeur de la direction de l'enveloppe.
+ *  
+ * @param envdirValue la valeur du paramètre
+ * @param spriteX position en X pour l'affichage
+ * @param spriteY position en Y pour l'affichage
+ */
 void FAT_screenInstrument_showEnvdir(u8 envdirValue, u8 spriteX, u8 spriteY) {
     FAT_screenInstrument_hideAllEnvdirSprites();
     if (envdirValue == 1) {
@@ -408,6 +453,13 @@ void FAT_screenInstrument_showEnvdir(u8 envdirValue, u8 spriteX, u8 spriteY) {
 
 }
 
+/**
+ * \brief Affiche le bon sprite pour la valeur du waveduty.
+ * 
+ * @param wavedutyValue la valeur du paramètre
+ * @param spriteX position en X pour l'affichage
+ * @param spriteY position en Y pour l'affichage
+ */
 void FAT_screenInstrument_showWaveduty(u8 wavedutyValue, u8 spriteX, u8 spriteY) {
     FAT_screenInstrument_hideAllWavedutySprite();
 
@@ -426,6 +478,11 @@ void FAT_screenInstrument_showWaveduty(u8 wavedutyValue, u8 spriteX, u8 spriteY)
     }
 }
 
+/**
+ * \brief Fonction outil permettant de demander une valeur en fonction d'une touche appuyée.
+ *  
+ * @return Droite: 1, Gauche: -1, Haut: 16, Bas: -16
+ */
 s8 FAT_screenInstrument_giveMeAddedValue() {
     s8 addedValue = 0;
     if (F_CTRLINPUT_RIGHT_PRESSED) {
@@ -447,6 +504,9 @@ s8 FAT_screenInstrument_giveMeAddedValue() {
     return addedValue;
 }
 
+/**
+ * \brief Cette fonction permet de gérer l'appui sur la touche A pour un instrument de type PULSE.
+ */
 void FAT_screenInstrument_pulse_pressA() {
 
     s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
@@ -483,6 +543,9 @@ void FAT_screenInstrument_pulse_pressA() {
     FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
 }
 
+/**
+ * \brief Cette fonction permet de gérer l'appui sur la touche A pour un instrument de type WAVE.
+ */
 void FAT_screenInstrument_wave_pressA() {
     s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
 
@@ -512,6 +575,9 @@ void FAT_screenInstrument_wave_pressA() {
     FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
 }
 
+/**
+ * \brief Cette fonction permet de gérer l'appui sur la touche A pour un instrument de type NOISE.
+ */
 void FAT_screenInstrument_noise_pressA() {
     s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
 
@@ -544,10 +610,16 @@ void FAT_screenInstrument_noise_pressA() {
     FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
 }
 
+/**
+ * \brief Cette fonction permet de gérer l'appui sur la touche A pour un instrument de type SAMPLE.
+ */
 void FAT_screenInstrument_sample_pressA() {
 
 }
 
+/**
+ * \brief Fonction wrapper pour gérer l'appui sur la touche A.
+ */
 void FAT_screenInstrument_pressA() {
     u8 currentType = FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type;
 

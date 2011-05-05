@@ -232,17 +232,18 @@ void snd_stopAllSounds() {
 void snd_effect_kill(u8 channelId, u8 value) {
     switch(channelId){
         case 0:
-            REG_SOUND1CNT_H &= value;
+            REG_SOUND1CNT_H &= value == 0 ? 0x3f : value;
             REG_SOUND1CNT_H |= (1 << 14);
             break;
         case 1:
-            REG_SOUND2CNT_H &= value;
+            REG_SOUND2CNT_H &= value == 0 ? 0x3f : value;
             REG_SOUND2CNT_H |= (1 << 14);
             break;
         case 2:
+            REG_SOUND3CNT_H &= value == 0 ? 0xff : value;
             break;
         case 3:
-            REG_SOUND4CNT_L &= value;
+            REG_SOUND4CNT_L &= value == 0 ? 0x3f : value;
             REG_SOUND4CNT_H |= (1 << 14);
             break;
         case 4:
