@@ -19,6 +19,7 @@
 
 #include "data.h"
 #include "screen_song.h"
+#include "soundApi/soundApi.h"
 
 // DOC: Délai pour 1/16e de mesure = (60000 / bpm) / 4.
 // BPM 128 -> 1 note = 117,18
@@ -128,7 +129,7 @@ void FAT_player_timerFunc_iCanPressStart() {
         M_TIM0CNT_IRQ_DISABLE
         M_TIM0CNT_TIMER_STOP
 #ifdef DEBUG_ON
-        ham_DrawText(21, 16, "START  ON");
+                ham_DrawText(21, 16, "START  ON");
 #endif
     }
 }
@@ -169,6 +170,7 @@ void FAT_player_playNote(note* note, u8 channel) {
  */
 void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
     if (note->freq != NULL_VALUE) {
+        // TODO un effet à appliquer sur la note ?
         instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
         u16 sweepshifts = (inst->sweep & 0x70) >> 4;
         u16 sweeptime = (inst->sweep & 0x0F);
@@ -206,6 +208,8 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                 break;
         }
 
+    } else if (note->effect.name != NULL_VALUE){
+        snd_tryToApplyEffect(channel, 3, note->effect.value);
     }
 }
 
@@ -333,6 +337,7 @@ void FAT_player_timerFunc_playSequences() {
                     FAT_player_moveOrHideCursor(i);
 
                     // TODO BUFFERISER
+                    // TODO un effet à appliquer sur la note ?
                     FAT_player_playNoteWithTsp
                             (&(block->notes[actualNotesForChannel[i]]), i, seq->transpose[actualBlocksForChannel[i]]);
 
@@ -389,6 +394,7 @@ void FAT_player_timerFunc_playBlocks() {
                 FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);
 
                 // TODO BUFFERISER
+                // TODO un effet à appliquer sur la note ?
                 FAT_player_playNoteWithTsp(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]), FAT_currentPlayedChannel,
                         seq->transpose[actualBlocksForChannel[FAT_currentPlayedChannel]]);
 
@@ -425,6 +431,7 @@ void FAT_player_timerFunc_playNotes() {
             FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);
 
             // TODO BUFFERISER
+            // TODO un effet à appliquer sur la note ?
             FAT_player_playNote(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]),
                     FAT_currentPlayedChannel);
 

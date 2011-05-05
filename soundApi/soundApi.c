@@ -7,18 +7,17 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
-typedef     unsigned char           u8;
-typedef     unsigned short int      u16;
-typedef     unsigned int            u32;
+ */
+typedef unsigned char u8;
+typedef unsigned short int u16;
+typedef unsigned int u32;
 
 #include "soundApi.h"
 
 #define NULL_VALUE 0xff
 
 #define NB_FREQUENCES 72
-const u16 freqs[NB_FREQUENCES] = 
-   {44, 156, 262, 363, 457, 547, 631, 710, 786, 854, 923, 986,
+const u16 freqs[NB_FREQUENCES] ={44, 156, 262, 363, 457, 547, 631, 710, 786, 854, 923, 986,
     1046, 1102, 1155, 1205, 1253, 1297, 1339, 1379, 1417, 1452, 1486, 1517,
     1546, 1575, 1602, 1627, 1650, 1673, 1694, 1714, 1732, 1750, 1767, 1783,
     1798, 1812, 1825, 1837, 1849, 1860, 1871, 1881, 1890, 1899, 1907, 1915,
@@ -84,9 +83,9 @@ void snd_loadWav(u8 inst) {
     REG_SOUND3CNT_L ^= 0x0040;
 }
 
-u16 snd_calculateTransposedFrequency (u16 freq, u8 transpose){
+u16 snd_calculateTransposedFrequency(u16 freq, u8 transpose) {
     freq += transpose;
-    if (freq >= NB_FREQUENCES){
+    if (freq >= NB_FREQUENCES) {
         // 32 + 244 = 276 
         freq /= NB_FREQUENCES;
         // 276 / 72 = 8 reste 0,6
@@ -117,11 +116,11 @@ void snd_playSoundOnChannel1(
     if (loopmode == 0) {
         soundlength = 0;
     }
-    
-    if (transpose!= NULL_VALUE){
+
+    if (transpose != NULL_VALUE) {
         sfreq = snd_calculateTransposedFrequency(sfreq, transpose);
     }
-    
+
     REG_SOUND1CNT_L = (sweeptime << 4) | (sweepdir << 3) | sweepshifts;
     REG_SOUND1CNT_H = (volume << 12) | (envdirection << 11) | (envsteptime << 8) | (waveduty << 6) | soundlength;
 
@@ -143,8 +142,8 @@ void snd_playSoundOnChannel2(u16 volume,
     if (loopmode == 0) {
         soundlength = 0;
     }
-    
-    if (transpose!= NULL_VALUE){
+
+    if (transpose != NULL_VALUE) {
         sfreq = snd_calculateTransposedFrequency(sfreq, transpose);
     }
 
@@ -198,10 +197,10 @@ void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voic
             break;
     }
 
-    if (transpose!= NULL_VALUE){
+    if (transpose != NULL_VALUE) {
         freq = snd_calculateTransposedFrequency(freq, transpose);
     }
-    
+
     if (loopmode == 0) {
         REG_SOUND3CNT_X = freqs[freq] | SOUND3PLAYLOOP | SOUND3INIT;
     } else {
@@ -226,4 +225,39 @@ void snd_stopAllSounds() {
     //REG_SOUND4CNT_H = 0x8000;
 
     snd_init_soundApi();
+}
+
+#define EFFECT_KILL 3
+
+void snd_effect_kill(u8 channelId, u8 value) {
+    switch(channelId){
+        case 0:
+            REG_SOUND1CNT_H &= value;
+            REG_SOUND1CNT_H |= (1 << 14);
+            break;
+        case 1:
+            REG_SOUND2CNT_H &= value;
+            REG_SOUND2CNT_H |= (1 << 14);
+            break;
+        case 2:
+            break;
+        case 3:
+            REG_SOUND4CNT_L &= value;
+            REG_SOUND4CNT_H |= (1 << 14);
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+    }
+}
+
+void snd_tryToApplyEffect(u8 channelId, u8 effectNumber, u8 effectValue) {
+    switch (effectNumber) {
+
+        case EFFECT_KILL:
+            snd_effect_kill (channelId, effectValue);
+            break;
+
+    }
 }

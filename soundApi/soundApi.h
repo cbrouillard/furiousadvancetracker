@@ -82,6 +82,15 @@ void snd_playSoundOnChannel2(u16 volume,
         u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
         u16 loopmode, u16 sfreq, u8 transpose);
 
+/**
+ * \brief Méthode simplifiée pour jouer un son sur le channel 2. <b>NON IMPLEMENTE!</b>
+ * 
+ * @param envelope
+ * @param mode
+ * @param length
+ * @param noteFreq
+ * @param transpose
+ */
 void snd_simple_playSoundOnChannel2(u16 envelope,
         u8 mode, u8 length, u8 noteFreq, u8 transpose);
 
@@ -100,6 +109,9 @@ void snd_simple_playSoundOnChannel2(u16 envelope,
 void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voice,
         u16 bank, u16 bankMode, u16 freq, u8 transpose);
 
+/**
+ * \brief Méthode simplifiée pour jouer un son sur le channel 3. <b>NON IMPLEMENTE!</b>
+ */
 void snd_simple_playSoundOnChannel3();
 
 /**
@@ -118,11 +130,24 @@ void snd_simple_playSoundOnChannel3();
 void snd_playSoundOnChannel4(u16 volume, u16 envdir, u16 envsteptime, u16 soundlength,
         u16 loopmode, u16 shiftFreq, u16 stepping, u16 freqRatio, u8 transpose);
 
+/**
+ * \brief Méthode simplifiée pour jouer un son sur le channel 4. <b>NON IMPLEMENTE!</b>
+ */
 void snd_simple_playSoundOnChannel4(u16 envelope, u8 mode, u8 length);
 
 /**
  * \brief Eteint tout les sons en cours de lecture. 
  */
 void snd_stopAllSounds();
+
+/**
+ * \brief Cette fonction essaie d'appliquer en effet en dehors du contexte "note": la commande sera appliquée
+ * sans jouer de note.
+ * 
+ * @param channelId le numéro de channel sur lequel appliquer l'effet
+ * @param effectNumber le numéro d'effet à appliquer
+ * @param effectValue la valeur de l'effet
+ */
+void snd_tryToApplyEffect (u8 channelId, u8 effectNumber, u8 effectValue);
 
 #endif
