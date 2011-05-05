@@ -8,15 +8,25 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
 */
+
+/**
+ * \file screen_live.h
+ * \brief Fichier contenant toutes les fonctions pour gérer l'écran LIVE.
+ */
+
 #ifndef _SCREEN_LIVE_H_
 #define _SCREEN_LIVE_H_
 
+/** \brief Permet de savoir si la popup de déplacement est affichée au dessus de l'écran. */
 bool FAT_screenLive_isPopuped = 0;
 
 // prototypes
 void FAT_screenLive_init ();
 void FAT_screenLive_checkButtons() ;
 
+/**
+ * \brief Fonction principale de l'écran (callback). 
+ */
 void FAT_screenLive_mainFunc() {
     if (mutex) {
         speedCounter++;
@@ -25,6 +35,9 @@ void FAT_screenLive_mainFunc() {
     }
 }
 
+/**
+ * \brief Initialisation de l'écran. 
+ */
 void FAT_screenLive_init (){
     FAT_reinitScreen();
 
@@ -40,6 +53,9 @@ void FAT_screenLive_init (){
     ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenLive_mainFunc);
 }
 
+/**
+ * \brief Teste les actions utilisateurs. 
+ */
 void FAT_screenLive_checkButtons() {
     if (F_CTRLINPUT_SELECT_PRESSED) {
         if (!FAT_screenLive_isPopuped) {
