@@ -14,3 +14,4 @@ gfx/img
 doc/html
 doc/latex
 doc/man
+deploy_doc.sh
