@@ -7,25 +7,33 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
+
+/**
+ * \file screen_song.h
+ * \brief Ce fichier définit toutes les fonctions pour gérer l'écran SONG.
+ */
+
 #ifndef _SCREEN_SONG_H_
 #define _SCREEN_SONG_H_
 
-// le nombre maximal de ligne affichées à l'écran
+/** \brief Le nombre maximal de ligne affichées à l'écran. */
 #define SCREENSONG_NB_LINES_ON_SCREEN 16
-// définition interface : numéro de la tile pour début de l'affichage (Y)
+/** \brief Définition interface : numéro de la tile pour début de l'affichage (Y). */
 #define SCREENSONG_LINE_START_Y 2
-// définition interface : numéro de la tile pour début de l'affichage des lignes ! (X)
+/** \brief Définition interface : numéro de la tile pour début de l'affichage des lignes ! (X). */
 #define SCREENSONG_LINE_X 0
-//// définition interface : taille que prend une ligne en tile (1)
+/** \brief Définition interface : taille que prend une ligne en tile (1). */
 #define SCREENSONG_LINE_SIZE_Y 1
-// définition interface : numéro de la tile pour début de l'affichage des séquences (X)
+/** \brief Définition interface : numéro de la tile pour début de l'affichage des séquences (X). */
 #define SCREENSONG_SEQUENCE_LINE_X 3
 
-// cette variable contient le numéro de la première ligne actuellement affichée
+/** \brief Cette variable contient le numéro de la première ligne actuellement affichée. */
 u8 FAT_screenSong_currentStartLine = 0;
-// cette variable permet de savoir si l'écran song est actuellement sous la popup
-// todo cette variable pourrait etre mutualisée pour tous les écrans ?
+/** 
+ * \brief cette variable permet de savoir si l'écran song est actuellement sous la popup. 
+ * \todo cette variable pourrait etre mutualisée pour tous les écrans ?
+ */
 bool FAT_screenSong_isPopuped = 0;
 
 // prototypes
@@ -41,8 +49,12 @@ void FAT_screenSong_pressB();
 
 #include "screen_song_cursor.h"
 
+/** \brief Stocke tous les noms des channels (afin de pouvoir les afficher). */
 const char* CHANNEL_NAME[6] = {"PU1\0", "PU2\0", "WAV\0", "NOI\0", "SNA\0", "SNB\0"};
 
+/**
+ * \brief Fonction principale de l'écran (callback).
+ */
 void FAT_screenSong_mainFunc() {
     speedCounter++;
     if (mutex) {
@@ -51,6 +63,9 @@ void FAT_screenSong_mainFunc() {
     }
 }
 
+/**
+ * \brief Cette fonction permet d'initialiser l'écran.
+ */
 void FAT_screenSong_init() {
 
     FAT_reinitScreen();
@@ -66,13 +81,17 @@ void FAT_screenSong_init() {
     // démarrage du cycle pour l'écran
     ham_StopIntHandler(INT_TYPE_VBL);
     ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenSong_mainFunc);
-    
+
     // affichage du curseur
     FAT_cursors_hideCursor2();
     FAT_screenSong_commitCursorMove();
     FAT_cursors_showCursor2();
 }
 
+/**
+ * \brief Affiche quelques infos (nom du projet, ligne actuellement sélectionnée et nom du channel)
+ * sur l'écran. 
+ */
 void FAT_screenSong_printInfos() {
     mutex = 0;
     ham_DrawText(21, 3, "%s", FAT_tracker.songName);
@@ -81,6 +100,11 @@ void FAT_screenSong_printInfos() {
     mutex = 1;
 }
 
+/**
+ * \brief Imprime les numéros de lignes. 
+ * 
+ * L'impression démarre depuis la valeur de FAT_screenSong_currentStartLine jusqu'à FAT_screenSong_currentStartLine + SCREENSONG_NB_LINES_ON_SCREEN
+ */
 void FAT_screenSong_printLineColumns() {
     u8 y = SCREENSONG_LINE_START_Y;
     mutex = 0;
@@ -91,6 +115,9 @@ void FAT_screenSong_printLineColumns() {
     mutex = 1;
 }
 
+/**
+ * \brief Affiche toutes les séquences actuellement visibles.  
+ */
 void FAT_screenSong_printSequences() {
     u8 c;
     mutex = 0;
@@ -111,6 +138,13 @@ void FAT_screenSong_printSequences() {
     mutex = 1;
 }
 
+/**
+ * \brief Affiche une seule séquence. 
+ *  
+ * @param channel le numéro de channel sur lequel la séquence est inscrite
+ * @param lineOnScreen le numéro de ligne à l'écran, compris entre 0 et SCREENSONG_NB_LINES_ON_SCREEN
+ * @param realLine le vrai numéro de ligne dans le tracker ou la séquence a été inscrite
+ */
 void FAT_screenSong_printSequence(u8 channel, u8 lineOnScreen, u8 realLine) {
     mutex = 0;
     if (FAT_tracker.channels[channel].sequences[realLine] != NULL_VALUE) {
@@ -124,12 +158,18 @@ void FAT_screenSong_printSequence(u8 channel, u8 lineOnScreen, u8 realLine) {
     mutex = 1;
 }
 
+/**
+ * \brief Affiche tout le texte à l'écran (numéros de lignes, séquences et infos).
+ */
 void FAT_screenSong_printAllScreenText() {
     FAT_screenSong_printLineColumns();
     FAT_screenSong_printSequences();
     FAT_screenSong_printInfos();
 }
 
+/**
+ * \brief Cette fonction s'occupe de tester les interactions utilisateurs. 
+ */
 void FAT_screenSong_checkButtons() {
 
     if (F_CTRLINPUT_SELECT_PRESSED) {
@@ -210,6 +250,9 @@ void FAT_screenSong_checkButtons() {
 
 }
 
+/**
+ * \brief Cette fonction est dédiée à l'interaction avec la touche B. 
+ */
 void FAT_screenSong_pressB() {
     if (F_CTRLINPUT_L_PRESSED) {
 
@@ -235,6 +278,9 @@ void FAT_screenSong_pressB() {
     FAT_screenSong_printSequence(FAT_screenSong_currentSelectedColumn, FAT_screenSong_currentSelectedLine - FAT_screenSong_currentStartLine, FAT_screenSong_currentSelectedLine);
 }
 
+/**
+ * \brief Cette fonction est dédiée à l'interaction avec la touche A. 
+ */
 void FAT_screenSong_pressA() {
     if (F_CTRLINPUT_L_PRESSED) {
         FAT_data_smartAllocateSequence(FAT_screenSong_currentSelectedColumn,

@@ -60,7 +60,6 @@ void FAT_screenBlocks_pressA();
 void FAT_screenBlocks_pressB();
 
 #include "screen_blocks_cursor.h"
-#include "data.h"
 
 /**
  * \brief Fonction de routine qui affiche les numéros de ligne. 

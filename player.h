@@ -12,18 +12,17 @@
 /**
  * \file player.h
  * \brief Contient toutes les fonctions nécessaires pour la lecture "sonore" du projet en cours de composition.
+
+ * DOC: Délai pour 1/16e de mesure = (60000 / bpm) / 4.<br/>
+ * BPM 128 -> 1 note = 117,18<br/>
+ * BPM 255 -> 1 note = 58,82<br/>
  */
 
 #ifndef _PLAYER_H_
 #define	_PLAYER_H_
 
 #include "data.h"
-#include "screen_song.h"
-#include "soundApi/soundApi.h"
 
-// DOC: Délai pour 1/16e de mesure = (60000 / bpm) / 4.
-// BPM 128 -> 1 note = 117,18
-// BPM 255 -> 1 note = 58,82
 
 /** \brief Définition d'une valeur pour ralentir le décompte du tempo. */
 #define TEMPO_TIMER_HARDWARE_VALUE 70

@@ -8,20 +8,36 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+
+/**
+ * \file screen_notes.h
+ * \brief Ce fichier contient toutes les fonctions utiles pour gérer l'écran NOTE. 
+ */
+
 #ifndef _SCREEN_NOTES_H_
 #define _SCREEN_NOTES_H_
 
+/** \brief Numéro de case ou l'affichage des notes démarre. */
 #define SCREENNOTES_LINE_START_Y 2
+/** \brief Nombre total de notes affichées sur l'écran. */
 #define SCREENNOTES_NB_LINES_ON_SCREEN 16
+/** \brief Numéro de case ou l'affichage des numéros de ligne démarre. */
 #define SCREENNOTES_LINE_X 0
+/** \brief Numéro de case pour l'affichage des effets assignés aux notes. */
 #define SCREENNOTES_EFFECT_LINE_X 10
+/** \brief Taille d'une ligne. */
 #define SCREENNOTES_LINE_SIZE_Y 1
 
+/** \brief Numéro de case ou l'affichage des notes démarre. */
 #define SCREENNOTES_NOTE_LINE_X 3
 
+/** \brief Numéro de colonne représentant les notes. */
 #define SCREENNOTES_COLUMN_ID_NOTES 0
+/** \brief Numéro de colonne représentant les instruments. */
 #define SCREENNOTES_COLUMN_ID_INST 1
+/** \brief Numéro de colonne représentant les noms de commandes (effets). */
 #define SCREENNOTES_COLUMN_ID_CMD_NAME 2
+/** \brief Numéro de colonne représentant les valeurs de commandes (effets). */
 #define SCREENNOTES_COLUMN_ID_CMD_PARAM 3
 
 // prototypes
@@ -32,14 +48,14 @@ void FAT_screenNotes_pressA();
 void FAT_screenNotes_pressB();
 void FAT_screenNotes_printInfos();
 
+/** \brief Cette variable permet de savoir si la popup est affichée au dessus de l'écran. */
 bool FAT_screenNotes_isPopuped = 0;
+/** \brief Id de block en cours d'édition. */
 u8 FAT_screenNotes_currentBlockId;
 
 #include "screen_notes_cursor.h"
-#include "screen_song_cursor.h"
-#include "data.h"
-#include "cursors.h"
 
+/** \brief Fonction principale pour l'écran NOTE (callback). */
 void FAT_screenNotes_mainFunc() {
     if (mutex) {
         speedCounter++;
@@ -48,6 +64,10 @@ void FAT_screenNotes_mainFunc() {
     }
 }
 
+/**
+ * \brief Cette fonction se content d'imprimer le numéro de ligne sur la partie
+ * gauche de l'interface. 
+ */
 void FAT_screenNotes_printLineColumns() {
     mutex = 0;
     u8 y = SCREENNOTES_LINE_START_Y;
@@ -58,6 +78,10 @@ void FAT_screenNotes_printLineColumns() {
     mutex = 1;
 }
 
+/**
+ * \brief Affiche des informations dynamiques (le numéro de ligne actuellement 
+ * séléctionné). 
+ */
 void FAT_screenNotes_printInfos() {
     mutex = 0;
     ham_DrawText(18, 4, "LINE     %.2x", FAT_screenNotes_currentSelectedLine);
@@ -65,6 +89,12 @@ void FAT_screenNotes_printInfos() {
     mutex = 1;
 }
 
+/**
+ * \brief Affiche une note (nom, octave et instrument) située à la ligne donnée
+ * sur le block en cours d'édition.
+ * 
+ * @param line le numéro de ligne de la note
+ */
 void FAT_screenNotes_printNote(u8 line) {
     mutex = 0;
     if (!FAT_data_isNoteEmpty(FAT_screenNotes_currentBlockId, line)) {
@@ -80,6 +110,12 @@ void FAT_screenNotes_printNote(u8 line) {
     mutex = 1;
 }
 
+/**
+ * \brief Affiche l'effet assigné à la note (nom et valeur): un effet peut être
+ * assigné à une note vide.
+ * 
+ * @param line le numéro de ligne de la note
+ */
 void FAT_screenNotes_printEffect(u8 line) {
     mutex = 0;
     if (!FAT_data_note_isEffectEmpty(FAT_screenNotes_currentBlockId, line)) {
@@ -95,6 +131,9 @@ void FAT_screenNotes_printEffect(u8 line) {
     mutex = 1;
 }
 
+/**
+ * \brief Affiche toutes les notes et leurs effets.
+ */
 void FAT_screenNotes_printAllNotes() {
     mutex = 0;
     for (u8 b = 0; b < SCREENNOTES_NB_LINES_ON_SCREEN; b++) {
@@ -104,18 +143,27 @@ void FAT_screenNotes_printAllNotes() {
     mutex = 1;
 }
 
+/**
+ * \brief Affiche le numéro de block actuellement en cours d'édition. 
+ */
 void FAT_screenNotes_printBlockNumber() {
     mutex = 0;
     ham_DrawText(18, 3, "BLOCK    %.2x", FAT_screenNotes_currentBlockId);
     mutex = 1;
 }
 
+/**
+ * \brief Affiche tous le texte sur l'écran (lignes, notes, infos). 
+ */
 void FAT_screenNotes_printAllScreenText() {
     FAT_screenNotes_printLineColumns();
     FAT_screenNotes_printAllNotes();
     FAT_screenNotes_printInfos();
 }
 
+/**
+ * \brief Initialisation de l'écran. 
+ */
 void FAT_screenNotes_init() {
     FAT_reinitScreen();
 
@@ -148,6 +196,9 @@ void FAT_screenNotes_init() {
     FAT_cursors_moveCursorChange(INPUT_R_CURSOR_CHANGE_X, INPUT_R_CURSOR_CHANGE_Y);
 }
 
+/**
+ * \brief Test des actions utilisateurs sur les touches. 
+ */
 void FAT_screenNotes_checkButtons() {
     if (F_CTRLINPUT_SELECT_PRESSED) {
         if (!FAT_screenNotes_isPopuped) {
@@ -258,6 +309,9 @@ void FAT_screenNotes_checkButtons() {
     }
 }
 
+/**
+ * \brief Cette fonction est dédiée aux interactions avec la touche B. 
+ */
 void FAT_screenNotes_pressB() {
     switch (FAT_screenNotes_currentSelectedColumn) {
         case SCREENNOTES_COLUMN_ID_NOTES:
@@ -281,6 +335,9 @@ void FAT_screenNotes_pressB() {
     }
 }
 
+/**
+ * \brief Cette fonction est dédiée aux interactions avec la touche A. 
+ */
 void FAT_screenNotes_pressA() {
     switch (FAT_screenNotes_currentSelectedColumn) {
         case SCREENNOTES_COLUMN_ID_NOTES:

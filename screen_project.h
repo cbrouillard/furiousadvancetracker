@@ -7,18 +7,31 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
+
+/**
+ * \file screen_project.h 
+ * \brief Ce fichier contient toutes les fonctions utiles pour la gestion de l'écran 
+ * project.
+ */
+
 #ifndef _SCREEN_PROJECT_H_
 #define _SCREEN_PROJECT_H_
 
 #include "screen_project_cursor.h"
 
+/**
+ * \brief Permet de savoir si la popup est affichée au dessus de l'écran.
+ */
 bool FAT_screenProject_isPopuped = 0;
 
 // prototypes
 void FAT_screenProject_checkButtons();
 void FAT_screenProject_pressA();
 
+/**
+ * \brief Fonction principale de l'écran (callback). 
+ */
 void FAT_screenProject_mainFunc() {
     if (mutex) {
         speedCounter++;
@@ -27,7 +40,10 @@ void FAT_screenProject_mainFunc() {
     }
 }
 
-void FAT_screenProject_printInfos (){
+/**
+ * \brief Affiche les infos du projet sur l'écran. 
+ */
+void FAT_screenProject_printInfos() {
     mutex = 0;
     ham_DrawText(1, 4, "TEMPO     %3d", FAT_tracker.tempo);
     ham_DrawText(1, 5, "TRANSPOSE %.2x", FAT_tracker.transpose);
@@ -37,6 +53,9 @@ void FAT_screenProject_printInfos (){
     mutex = 1;
 }
 
+/**
+ * \brief Fonction d'initialisation de l'écran. 
+ */
 void FAT_screenProject_init() {
     FAT_reinitScreen();
 
@@ -57,6 +76,9 @@ void FAT_screenProject_init() {
     ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenProject_mainFunc);
 }
 
+/**
+ * \brief Teste les actions utilisateurs sur l'écran. 
+ */
 void FAT_screenProject_checkButtons() {
     if (F_CTRLINPUT_SELECT_PRESSED) {
         if (!FAT_screenProject_isPopuped) {
@@ -88,15 +110,15 @@ void FAT_screenProject_checkButtons() {
             if (F_CTRLINPUT_A_PRESSED) {
                 FAT_screenProject_pressA();
             } else {
-                
+
                 if (F_CTRLINPUT_START_PRESSED) {
                     if (!FAT_isCurrentlyPlaying) {
                         FAT_player_startPlayerFromSequences(FAT_screenSong_currentSelectedLine);
                     } else {
                         FAT_player_stopPlayer();
                     }
-                } 
-                
+                }
+
                 if (F_CTRLINPUT_RIGHT_PRESSED) {
                 }
 
@@ -119,6 +141,9 @@ void FAT_screenProject_checkButtons() {
     }
 }
 
+/**
+ * \brief Cette fonction est dédiée à la gestion de l'interaction avec la touche A. 
+ */
 void FAT_screenProject_pressA() {
     s8 addedValue = 0;
     if (F_CTRLINPUT_LEFT_PRESSED) {
@@ -129,26 +154,26 @@ void FAT_screenProject_pressA() {
         addedValue = 1;
     }
 
-    if (F_CTRLINPUT_UP_PRESSED){
+    if (F_CTRLINPUT_UP_PRESSED) {
         addedValue = 16;
     }
-    
-    if (F_CTRLINPUT_DOWN_PRESSED){
+
+    if (F_CTRLINPUT_DOWN_PRESSED) {
         addedValue = -16;
     }
-    
+
     switch (FAT_screenProject_currentSelectedLine) {
         case 0:
-            FAT_data_project_changeTempo (addedValue);
-            FAT_screenProject_printInfos ();
+            FAT_data_project_changeTempo(addedValue);
+            FAT_screenProject_printInfos();
             break;
         case 1:
-            FAT_data_project_changeTranspose (addedValue);
-            FAT_screenProject_printInfos ();
+            FAT_data_project_changeTranspose(addedValue);
+            FAT_screenProject_printInfos();
             break;
         case 2:
-            FAT_data_project_save ();
-            break;            
+            FAT_data_project_save();
+            break;
         case 3:
             FAT_data_project_load();
             break;
