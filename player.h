@@ -208,7 +208,7 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
         }
 
     } else if (note->effect.name != NULL_VALUE){
-        snd_tryToApplyEffect(channel, 3, note->effect.value);
+        snd_tryToApplyEffect(channel, noteEffectNum[note->effect.name >> 1], note->effect.value);
     }
 }
 

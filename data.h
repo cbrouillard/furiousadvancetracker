@@ -68,11 +68,11 @@
 /**
  * \brief Définit le nombre d'effet disponibles pour les notes.
  */
-#define NB_NOTE_EFFECT 13
+#define NB_NOTE_EFFECT 1
 /**
  * \brief Définit le nombre d'effet disponibles pour les blocks.
  */
-#define NB_BLOCK_EFFECT 5
+#define NB_BLOCK_EFFECT 1
 /**
  * \brief Taille maximale pour le nom d'une chanson.
  */
@@ -165,11 +165,15 @@ const char* noteName[NB_NOTE] = {"C ", "C\"", "D ", "D\"", "E ", "F ", "F\"", "G
 /**
  * \brief Tableau constant contenant tous les noms d'effets disponibles pour les notes.
  */
-const char* noteEffectName[NB_NOTE_EFFECT] = {"C ", "EN", "H ", "K ", "L ", "O ", "P ", "RE", "RN", "SW", "TA", "TM", "V "};
+const char* noteEffectName[NB_NOTE_EFFECT] = {"K "};
+/**
+ * \brief Mapping entre le nom de l'effet et son numéro dans la soundApi.
+ */
+const u8 noteEffectNum[NB_NOTE_EFFECT] = { 0 };
 /**
  * \brief Tableau constant contenant tous les noms d'effets disponibles pour les blocks.
  */
-const char* blockEffectName[NB_BLOCK_EFFECT] = {"EN", "H ", "K ", "SW", "TM"};
+const char* blockEffectName[NB_BLOCK_EFFECT] = {"K "};
 
 /**
  * \brief Nombre total de fréquences de notes.

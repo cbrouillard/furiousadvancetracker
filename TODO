@@ -1,4 +1,9 @@
 - stabiliser les instruments WAV
+- design de l'écran effets
 
-- commande K (Kill)
-- design de l'écran effets (+ ajout dans les datas)
+- commande H (Hop)
+- commande SW (Sweep)
+- commande EN (Enveloppe)
+
+- réfléchir à la commande C , V , P (les commandes qui sont actives sur toute la durée
+de la note en cours de lecture)
