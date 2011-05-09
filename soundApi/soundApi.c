@@ -227,7 +227,7 @@ void snd_stopAllSounds() {
     snd_init_soundApi();
 }
 
-#define EFFECT_KILL 3
+#define EFFECT_KILL 0
 
 void snd_effect_kill(u8 channelId, u8 value) {
     switch(channelId){
