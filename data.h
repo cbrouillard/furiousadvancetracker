@@ -1657,7 +1657,7 @@ void FAT_data_project_save() {
     int counter = 0;
     while (counter < trackSize) {
         gamepak[counter] = tracker[counter];
-        counter++;
+        counter+=8;
     }
 
     gamepak[counter] = 0x5a;
@@ -1677,7 +1677,7 @@ void FAT_data_project_load() {
     int counter = 0;
     while (counter < trackSize) {
         tracker[counter] = gamepak[counter];
-        counter++;
+        counter+=8;
     }
 
     ham_DrawText(23, 16, "LOADED !");
