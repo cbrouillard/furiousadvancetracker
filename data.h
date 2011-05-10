@@ -247,6 +247,7 @@ note FAT_data_noteClipboard;
 typedef struct COMPOSER {
     note notes[8]; /*!< Un compositeur contient un certain nombre de notes. */
     u8 transpose; /*!< Définit la valeur de transposition pour le compositeur entier <b>NON IMPLEMENTE</b>. */
+    u8 keyRepeat; /*!< Définit le temps à attendre entre chaque appui de note. */
 } composer;
 
 /**
@@ -389,6 +390,10 @@ void FAT_data_initData() {
     FAT_tracker.tempo = 128;
     FAT_tracker.transpose = 0;
     strcpy(FAT_tracker.songName, "SONGNAME\0");
+    
+    // init des variables du composer
+    FAT_tracker.composer.transpose = 0;
+    FAT_tracker.composer.keyRepeat = 0;
 
     // note par défaut
     FAT_data_lastNoteWritten.freq = 0;
@@ -1649,11 +1654,11 @@ void FAT_data_composer_changeInstrument(u8 line, s8 addedValue) {
 /**
  * \brief Fonction de sauvegarde d'un track.
  * 
- * <b>NON IMPLEMENTE</b> 
  */
 void FAT_data_project_save() {
+    mutex = 0;
     u8* tracker = (u8*) & FAT_tracker;
-    u32 trackSize = SIZEOF_8BIT(FAT_tracker)/8;
+    u32 trackSize = SIZEOF_8BIT(FAT_tracker);
     int counter = 0;
     while (counter < trackSize) {
         gamepak[counter] = tracker[counter];
@@ -1663,17 +1668,17 @@ void FAT_data_project_save() {
     gamepak[counter] = 0x5a;
 
     ham_DrawText(23, 16, "SAVED  !");
+    mutex = 1;
 }
 
 /**
  *  \brief Fonction de chargement d'une track.
  * 
- * <b>NON IMPLEMENTE</b>
  */
 void FAT_data_project_load() {
-
+    mutex = 0;
     u8* tracker = (u8*) & FAT_tracker;
-    u32 trackSize = SIZEOF_8BIT(FAT_tracker)/8;
+    u32 trackSize = SIZEOF_8BIT(FAT_tracker);
     int counter = 0;
     while (counter < trackSize) {
         tracker[counter] = gamepak[counter];
@@ -1681,6 +1686,7 @@ void FAT_data_project_load() {
     }
 
     ham_DrawText(23, 16, "LOADED !");
+    mutex = 1;
 }
 
 #endif	/* DATA_H */

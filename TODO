@@ -1,9 +1,19 @@
-- stabiliser les instruments WAV
-- design de l'écran effets
+- stabiliser les instruments WAV (version 0-02)
+- design de l'écran effets (version 0-03)
 
-- commande H (Hop)
-- commande SW (Sweep)
-- commande EN (Enveloppe)
+- commande H (Hop) (version 0-02)
+- commande SW (Sweep) (version 0-02)
+- commande EN (Enveloppe) (version 0-02)
+
+- documentation: faire un tableau comparatif des cartouches
+- documentation: compléter la section technique
+
+- composer: appliquer le transpose (version 0-02)
+- composer: gérer le key-repeat
+
+- interface: gérer un key-repeat global (étendre ce qui est fait sur le start)
+
+- dessin de la mascotte "Furicat" (version 0-02)
 
 - réfléchir à la commande C , V , P (les commandes qui sont actives sur toute la durée
-de la note en cours de lecture)
+de la note en cours de lecture) (version 0-0x (x>2))

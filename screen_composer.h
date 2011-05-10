@@ -82,8 +82,12 @@ void FAT_screenComposer_mainFunc() {
  */
 void FAT_screenComposer_printInfos() {
     mutex = 0;
-    ham_DrawText(21, 3, "LINE  %.2x", FAT_screenComposer_currentSelectedLine);
+    ham_DrawText(19, 3, "COMPOSER %.1x", 0);
+    ham_DrawText(19, 4, "LINE    %.2x", FAT_screenComposer_currentSelectedLine);
     //ham_DrawText(21, 4, "CHAN %2x", FAT_screenSong_currentSelectedColumn+1);
+
+    ham_DrawText(1, 3, "TRANSPOSE  %.2x", FAT_tracker.composer.transpose);
+    ham_DrawText(1, 4, "KEY REPEAT %.2x", FAT_tracker.composer.keyRepeat);
     mutex = 1;
 }
 
@@ -99,7 +103,7 @@ void FAT_screenComposer_printNote(u8 line) {
 
         ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
                 line + SCREENCOMPOSER_LINE_START_Y,
-                "%s%1x %.2x\0", noteName[(actualNote->note & 0xf0)>>4], actualNote->note & 0x0f, actualNote->instrument);
+                "%s%1x %.2x\0", noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument);
     } else {
         ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
                 line + SCREENCOMPOSER_LINE_START_Y, "      \0");
