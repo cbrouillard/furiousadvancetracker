@@ -195,7 +195,7 @@ void FAT_screenSong_checkButtons() {
         }
 
         if (F_CTRLINPUT_A_PRESSED) {
-            iCanPressAKey = 0;
+            
             FAT_screenSong_pressA();
 
         } else {
@@ -286,6 +286,7 @@ void FAT_screenSong_pressB() {
  */
 void FAT_screenSong_pressA() {
     if (F_CTRLINPUT_L_PRESSED) {
+        iCanPressAKey = 0;
         FAT_data_smartAllocateSequence(FAT_screenSong_currentSelectedColumn,
                 FAT_screenSong_currentSelectedLine);
     } else {
@@ -295,21 +296,25 @@ void FAT_screenSong_pressA() {
     }
 
     if (F_CTRLINPUT_RIGHT_PRESSED) {
+        iCanPressAKey = 0;
         FAT_data_sequence_changeValue(FAT_screenSong_currentSelectedColumn,
                 FAT_screenSong_currentSelectedLine, 1); // ajout de 1
     }
 
     if (F_CTRLINPUT_LEFT_PRESSED) {
+        iCanPressAKey = 0;
         FAT_data_sequence_changeValue(FAT_screenSong_currentSelectedColumn,
                 FAT_screenSong_currentSelectedLine, -1); // retrait de 1
     }
 
     if (F_CTRLINPUT_UP_PRESSED) {
+        iCanPressAKey = 0;
         FAT_data_sequence_changeValue(FAT_screenSong_currentSelectedColumn,
                 FAT_screenSong_currentSelectedLine, 16);
     }
 
     if (F_CTRLINPUT_DOWN_PRESSED) {
+        iCanPressAKey = 0;
         FAT_data_sequence_changeValue(FAT_screenSong_currentSelectedColumn,
                 FAT_screenSong_currentSelectedLine, -16);
     }
@@ -321,3 +326,4 @@ void FAT_screenSong_pressA() {
 }
 
 #endif
+

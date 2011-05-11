@@ -27,6 +27,9 @@
 #define SCREENCOMPOSER_COLUMN_ID_CMD_PARAM 3
 /** \brief Nombre de lignes affichées dans le composer. */
 #define SCREENCOMPOSER_NB_LINES_ON_SCREEN 8
+/** \brief Définit le nombre de paramètre modifiables dans l'écran. */
+#define SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN 2
+
 /** \brief Numéro de case tile ou commence l'affichage des notes. */
 #define SCREENCOMPOSER_NOTE_LINE_X 11
 /** \brief Numéro de case tile ou commence l'affichage des notes. */
@@ -85,7 +88,8 @@ void FAT_screenComposer_mainFunc() {
 void FAT_screenComposer_printInfos() {
     mutex = 0;
     ham_DrawText(19, 3, "COMPOSER %.1x", 0);
-    ham_DrawText(19, 4, "LINE    %.2x", FAT_screenComposer_currentSelectedLine);
+    ham_DrawText(19, 4, "LINE    %.2x",
+            FAT_screenComposer_currentSelectedLine);
     //ham_DrawText(21, 4, "CHAN %2x", FAT_screenSong_currentSelectedColumn+1);
 
     ham_DrawText(1, 3, "TRANSPOSE  %.2x", FAT_tracker.composer.transpose);
@@ -230,7 +234,6 @@ void FAT_screenComposer_checkButtons() {
 
         } else {
             if (F_CTRLINPUT_A_PRESSED) {
-                iCanPressAKey = 0;
                 FAT_screenComposer_pressA();
             } else {
 
@@ -277,75 +280,133 @@ void FAT_screenComposer_checkButtons() {
  * \brief Fonction spécialisée dans la gestion de la touche A. 
  */
 void FAT_screenComposer_pressA() {
-    switch (FAT_screenComposer_currentSelectedColumn) {
-        case SCREENCOMPOSER_COLUMN_ID_NOTES:
-            if (FAT_data_composer_isNoteEmpty(FAT_screenComposer_currentSelectedLine)) {
-                // espace libre
-                FAT_data_composer_addDefaultNote(FAT_screenComposer_currentSelectedLine);
-            }
 
-            if (F_CTRLINPUT_RIGHT_PRESSED) {
-                FAT_data_composer_changeValue(FAT_screenComposer_currentSelectedLine, 1); // ajout de 1
-            }
-
-            if (F_CTRLINPUT_LEFT_PRESSED) {
-                FAT_data_composer_changeValue(FAT_screenComposer_currentSelectedLine, -1);
-            }
-
-            if (F_CTRLINPUT_UP_PRESSED) {
-                FAT_data_composer_changeOctave(FAT_screenComposer_currentSelectedLine, 1); // ajout de 1
-            }
-
-            if (F_CTRLINPUT_DOWN_PRESSED) {
-                FAT_data_composer_changeOctave(FAT_screenComposer_currentSelectedLine, -1);
-            }
-
-            break;
-        case SCREENCOMPOSER_COLUMN_ID_INST:
-            if (F_CTRLINPUT_L_PRESSED) {
-                FAT_data_composer_smartChangeInstrument(FAT_screenComposer_currentSelectedLine);
-            } else {
+    if (FAT_screenComposer_currentSelectedLine >= SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN) {
+        u8 realLine = FAT_screenComposer_currentSelectedLine - SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN;
+        switch (FAT_screenComposer_currentSelectedColumn) {
+            case SCREENCOMPOSER_COLUMN_ID_NOTES:
+                if (FAT_data_composer_isNoteEmpty(realLine)) {
+                    // espace libre
+                    FAT_data_composer_addDefaultNote(realLine);
+                }
 
                 if (F_CTRLINPUT_RIGHT_PRESSED) {
-                    FAT_data_composer_changeInstrument(FAT_screenComposer_currentSelectedLine, 1);
+                    iCanPressAKey = 0;
+                    FAT_data_composer_changeValue(realLine, 1); // ajout de 1
                 }
 
                 if (F_CTRLINPUT_LEFT_PRESSED) {
-                    FAT_data_composer_changeInstrument(FAT_screenComposer_currentSelectedLine, -1);
+                    iCanPressAKey = 0;
+                    FAT_data_composer_changeValue(realLine, -1);
                 }
 
                 if (F_CTRLINPUT_UP_PRESSED) {
-                    FAT_data_composer_changeInstrument(FAT_screenComposer_currentSelectedLine, 16);
+                    iCanPressAKey = 0;
+                    FAT_data_composer_changeOctave(realLine, 1); // ajout de 1
                 }
 
                 if (F_CTRLINPUT_DOWN_PRESSED) {
-                    FAT_data_composer_changeInstrument(FAT_screenComposer_currentSelectedLine, -16);
+                    iCanPressAKey = 0;
+                    FAT_data_composer_changeOctave(realLine, -1);
                 }
-            }
-            break;
-        case SCREENCOMPOSER_COLUMN_ID_CMD_NAME:
 
-            break;
-        case SCREENCOMPOSER_COLUMN_ID_CMD_PARAM:
+                break;
+            case SCREENCOMPOSER_COLUMN_ID_INST:
+                if (F_CTRLINPUT_L_PRESSED) {
+                    iCanPressAKey = 0;
+                    FAT_data_composer_smartChangeInstrument(realLine);
+                } else {
 
-            break;
+                    if (F_CTRLINPUT_RIGHT_PRESSED) {
+                        iCanPressAKey = 0;
+                        FAT_data_composer_changeInstrument(realLine, 1);
+                    }
 
+                    if (F_CTRLINPUT_LEFT_PRESSED) {
+                        iCanPressAKey = 0;
+                        FAT_data_composer_changeInstrument(realLine, -1);
+                    }
+
+                    if (F_CTRLINPUT_UP_PRESSED) {
+                        iCanPressAKey = 0;
+                        FAT_data_composer_changeInstrument(realLine, 16);
+                    }
+
+                    if (F_CTRLINPUT_DOWN_PRESSED) {
+                        iCanPressAKey = 0;
+                        FAT_data_composer_changeInstrument(realLine, -16);
+                    }
+                }
+                break;
+            case SCREENCOMPOSER_COLUMN_ID_CMD_NAME:
+
+                break;
+            case SCREENCOMPOSER_COLUMN_ID_CMD_PARAM:
+
+                break;
+
+        }
+
+        FAT_screenComposer_printNote(realLine);
+    } else {
+        // on joue avec les paramètres
+        switch (FAT_screenComposer_currentSelectedLine) {
+            case 0: // param transpose
+                if (F_CTRLINPUT_RIGHT_PRESSED) {
+                    iCanPressAKey = 0;
+                    FAT_data_composer_changeTranspose(0, 1);
+                }
+                if (F_CTRLINPUT_UP_PRESSED) {
+                    iCanPressAKey = 0;
+                    FAT_data_composer_changeTranspose(0, 16);
+                }
+                if (F_CTRLINPUT_LEFT_PRESSED) {
+                    iCanPressAKey = 0;
+                    FAT_data_composer_changeTranspose(0, -1);
+                }
+                if (F_CTRLINPUT_DOWN_PRESSED) {
+                    iCanPressAKey = 0;
+                    FAT_data_composer_changeTranspose(0, -16);
+                }
+                break;
+            case 1: // param key repeat
+                if (F_CTRLINPUT_RIGHT_PRESSED) {
+                    iCanPressAKey = 0;
+                    FAT_data_composer_changeKeyRepeat(0, 1);
+                }
+                if (F_CTRLINPUT_UP_PRESSED) {
+                    iCanPressAKey = 0;
+                    FAT_data_composer_changeKeyRepeat(0, 16);
+                }
+                if (F_CTRLINPUT_LEFT_PRESSED) {
+                    iCanPressAKey = 0;
+                    FAT_data_composer_changeKeyRepeat(0, -1);
+                }
+                if (F_CTRLINPUT_DOWN_PRESSED) {
+                    iCanPressAKey = 0;
+                    FAT_data_composer_changeKeyRepeat(0, -16);
+                }
+                break;
+        }
+
+        FAT_screenComposer_printInfos();
     }
-
-    FAT_screenComposer_printNote(FAT_screenComposer_currentSelectedLine);
 }
 
 /**
  * \brief Fonction spécialisée dans la gestion de la touche B. 
  */
 void FAT_screenComposer_pressB() {
-    if (FAT_data_composer_isNoteEmpty(FAT_screenComposer_currentSelectedLine)) {
-        FAT_data_composer_pasteNote(FAT_screenComposer_currentSelectedLine);
-    } else {
-        FAT_data_composer_cutNote(FAT_screenComposer_currentSelectedLine);
-    }
+    if (FAT_screenComposer_currentSelectedLine >= SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN) {
+        u8 realLine = FAT_screenComposer_currentSelectedLine - SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN;
+        if (FAT_data_composer_isNoteEmpty(realLine)) {
+            FAT_data_composer_pasteNote(realLine);
+        } else {
+            FAT_data_composer_cutNote(realLine);
+        }
 
-    FAT_screenComposer_printNote(FAT_screenComposer_currentSelectedLine);
+        FAT_screenComposer_printNote(realLine);
+    }
 }
 
 /**
@@ -372,6 +433,8 @@ void FAT_screenComposer_switchLocking() {
  * teste elle même l'appui sur les touches.
  */
 void FAT_screenComposer_playAffectedNotes() {
+    iCanPressAKey = 0;
+
     if (F_CTRLINPUT_START_PRESSED) {
         FAT_screenComposer_switchLocking();
     }
@@ -394,7 +457,6 @@ void FAT_screenComposer_playAffectedNotes() {
 
     if (F_CTRLINPUT_UP_PRESSED) {
         FAT_player_playComposerNote(SCREENCOMPOSER_BTN_UP);
-
     }
 
     if (F_CTRLINPUT_RIGHT_PRESSED) {
@@ -408,6 +470,8 @@ void FAT_screenComposer_playAffectedNotes() {
     if (F_CTRLINPUT_LEFT_PRESSED) {
         FAT_player_playComposerNote(SCREENCOMPOSER_BTN_LEFT);
     }
+
+    FAT_keys_waitForAnotherKeyTouch();
 }
 
 #endif	/* SCREEN_COMPOSER_H */

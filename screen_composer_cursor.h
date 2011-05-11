@@ -7,7 +7,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
 
 /**
  * \file screen_composer_cursor.h
@@ -18,11 +18,11 @@
 #define	_SCREEN_COMPOSER_CURSOR_H_
 
 /** \brief Position actuelle du curseur pour le composeur. */
-u8 FAT_screenComposer_cursorX; 
+u8 FAT_screenComposer_cursorX;
 /** \brief Position actuelle du curseur pour le composeur. */
 u8 FAT_screenComposer_cursorY;
 /** \brief Numéro de ligne actuellement sélectionné par le curseur. */
-u8 FAT_screenComposer_currentSelectedLine; 
+u8 FAT_screenComposer_currentSelectedLine;
 /** \brief Numéro de colonne actuellement sélectionné par le curseur. */
 u8 FAT_screenComposer_currentSelectedColumn;
 
@@ -43,6 +43,8 @@ u8 FAT_screenComposer_currentSelectedColumn;
 #define SCREENCOMPOSER_FIRST_BLOCK_X 88
 /** \brief Position Y du premier block (en pixels). */
 #define SCREENCOMPOSER_FIRST_BLOCK_Y 56
+/** \brief Position des blocks de paramètres. */
+#define SCREENCOMPOSER_PARAMETER_BLOCK_X 95
 
 // prototypes
 void FAT_screenComposer_initCursor();
@@ -52,6 +54,8 @@ void FAT_screenComposer_moveCursorDown();
 void FAT_screenComposer_moveCursorUp();
 void FAT_screenComposer_commitCursorMove();
 
+const u8 screenComposer_parametersCursorsPositions [SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN] = {23, 31};
+
 /**
  * \brief Initialise le curseur pour le COMPOSER.
  */
@@ -59,7 +63,7 @@ void FAT_screenComposer_initCursor() {
     FAT_screenComposer_cursorX = SCREENCOMPOSER_FIRST_BLOCK_X - 1;
     FAT_screenComposer_cursorY = SCREENCOMPOSER_FIRST_BLOCK_Y - 1;
 
-    FAT_screenComposer_currentSelectedLine = 0;
+    FAT_screenComposer_currentSelectedLine = 2;
     FAT_screenComposer_currentSelectedColumn = 0;
 }
 
@@ -67,10 +71,16 @@ void FAT_screenComposer_initCursor() {
  * \brief Valide le déplacement du curseur et l'écrit dans la mémoire de la GBA. 
  */
 void FAT_screenComposer_commitCursorMove() {
-    if (FAT_screenComposer_currentSelectedColumn == 0) {
-        ham_SetObjXY(FAT_cursor3_obj, FAT_screenComposer_cursorX, FAT_screenComposer_cursorY);
+    if (FAT_screenComposer_currentSelectedLine < 2) {
+        // affichage du curseur dans les paramètres transpose ou key repeat
+        ham_SetObjXY(FAT_cursor2_obj, SCREENCOMPOSER_PARAMETER_BLOCK_X, FAT_screenComposer_cursorY);
     } else {
-        ham_SetObjXY(FAT_cursor2_obj, FAT_screenComposer_cursorX, FAT_screenComposer_cursorY);
+
+        if (FAT_screenComposer_currentSelectedColumn == 0) {
+            ham_SetObjXY(FAT_cursor3_obj, FAT_screenComposer_cursorX, FAT_screenComposer_cursorY);
+        } else {
+            ham_SetObjXY(FAT_cursor2_obj, FAT_screenComposer_cursorX, FAT_screenComposer_cursorY);
+        }
     }
 }
 
@@ -80,11 +90,37 @@ void FAT_screenComposer_commitCursorMove() {
  * Attention, la validation du déplacement doit être effectuée avec FAT_screenComposer_commitCursorMove() .
  */
 void FAT_screenComposer_moveCursorDown() {
-    if (FAT_screenComposer_currentSelectedLine < SCREENCOMPOSER_NB_LINES_ON_SCREEN) {
-        if (!(FAT_screenComposer_cursorY >= SCREENCOMPOSER_LAST_BLOCK_Y - 1)) {
-            FAT_screenComposer_cursorY += SCREENCOMPOSER_BLOCK_SIZE_Y;
-            FAT_screenComposer_currentSelectedLine++;
-            FAT_screenComposer_printInfos();
+    if (FAT_screenComposer_currentSelectedLine < SCREENCOMPOSER_NB_LINES_ON_SCREEN + SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN) {
+        if (FAT_screenComposer_currentSelectedLine >= 1) {
+            if (FAT_screenComposer_currentSelectedLine == 1) {
+                FAT_cursors_hideCursor2();
+                FAT_cursors_showCursor3();
+            }
+
+            if (!(FAT_screenComposer_cursorY >= SCREENCOMPOSER_LAST_BLOCK_Y - 1)) {
+                FAT_screenComposer_currentSelectedLine++;
+                FAT_screenComposer_cursorY =
+                        (SCREENCOMPOSER_FIRST_BLOCK_Y-1) + 
+                        ((FAT_screenComposer_currentSelectedLine-2) * SCREENCOMPOSER_BLOCK_SIZE_Y);
+                FAT_screenComposer_printInfos();
+            }
+        } else {
+
+            if (FAT_screenComposer_currentSelectedLine < 2) {
+                FAT_screenComposer_currentSelectedLine++;
+                FAT_screenComposer_printInfos();
+                FAT_screenComposer_cursorY =
+                        screenComposer_parametersCursorsPositions[FAT_screenComposer_currentSelectedLine];
+
+                if (FAT_screenComposer_currentSelectedLine < 2) {
+                    FAT_cursors_hideCursor3();
+                    FAT_cursors_showCursor2();
+                } else {
+                    FAT_cursors_hideCursor2();
+                    FAT_cursors_showCursor3();
+                }
+            }
+
         }
     }
 }
@@ -96,12 +132,23 @@ void FAT_screenComposer_moveCursorDown() {
  */
 void FAT_screenComposer_moveCursorUp() {
 
-    if (FAT_screenComposer_currentSelectedLine > 0) {
+    if (FAT_screenComposer_currentSelectedLine > 2) {
         if (!(FAT_screenComposer_cursorY <= SCREENCOMPOSER_FIRST_BLOCK_Y - 1)) {
             FAT_screenComposer_cursorY -= SCREENCOMPOSER_BLOCK_SIZE_Y;
             FAT_screenComposer_currentSelectedLine--;
             FAT_screenComposer_printInfos();
         }
+    } else {
+
+        if (FAT_screenComposer_currentSelectedLine > 0) {
+            FAT_screenComposer_currentSelectedLine--;
+            FAT_screenComposer_printInfos();
+            FAT_screenComposer_cursorY =
+                    screenComposer_parametersCursorsPositions[FAT_screenComposer_currentSelectedLine];
+            FAT_cursors_hideCursor3();
+            FAT_cursors_showCursor2();
+        }
+
     }
 
 }
@@ -111,26 +158,27 @@ void FAT_screenComposer_moveCursorUp() {
  * 
  * Attention, la validation du déplacement doit être effectuée avec FAT_screenComposer_commitCursorMove() .
  */
-void FAT_screenComposer_moveCursorRight(){
-    
-    if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_NOTES){
-        
-        FAT_screenComposer_cursorX += SCREENCOMPOSER_BLOCK3_SIZE_X + SCREENCOMPOSER_WHITE_SPACE_X;
-        FAT_screenComposer_currentSelectedColumn = SCREENCOMPOSER_COLUMN_ID_INST;
-        FAT_cursors_hideCursor3();
-        FAT_cursors_showCursor2();
-    
-    } else  if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_INST){
-        
-        FAT_screenComposer_cursorX += SCREENCOMPOSER_BLOCK2_SIZE_X + SCREENCOMPOSER_WHITE_SPACE_X;
-        FAT_screenComposer_currentSelectedColumn = SCREENCOMPOSER_COLUMN_ID_CMD_NAME;
-    
-    } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CMD_NAME){
-        
-        FAT_screenComposer_cursorX += SCREENCOMPOSER_BLOCK2_SIZE_X;
-        FAT_screenComposer_currentSelectedColumn = SCREENCOMPOSER_COLUMN_ID_CMD_PARAM;
+void FAT_screenComposer_moveCursorRight() {
+    if (FAT_screenComposer_currentSelectedLine >= 2) {
+        if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_NOTES) {
+
+            FAT_screenComposer_cursorX += SCREENCOMPOSER_BLOCK3_SIZE_X + SCREENCOMPOSER_WHITE_SPACE_X;
+            FAT_screenComposer_currentSelectedColumn = SCREENCOMPOSER_COLUMN_ID_INST;
+            FAT_cursors_hideCursor3();
+            FAT_cursors_showCursor2();
+
+        } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_INST) {
+
+            FAT_screenComposer_cursorX += SCREENCOMPOSER_BLOCK2_SIZE_X + SCREENCOMPOSER_WHITE_SPACE_X;
+            FAT_screenComposer_currentSelectedColumn = SCREENCOMPOSER_COLUMN_ID_CMD_NAME;
+
+        } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CMD_NAME) {
+
+            FAT_screenComposer_cursorX += SCREENCOMPOSER_BLOCK2_SIZE_X;
+            FAT_screenComposer_currentSelectedColumn = SCREENCOMPOSER_COLUMN_ID_CMD_PARAM;
+        }
     }
-    
+
 }
 
 /**
@@ -138,22 +186,24 @@ void FAT_screenComposer_moveCursorRight(){
  * 
  * Attention, la validation du déplacement doit être effectuée avec FAT_screenComposer_commitCursorMove() .
  */
-void FAT_screenComposer_moveCursorLeft(){
-    if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_INST){
-        
-        FAT_screenComposer_cursorX -= SCREENCOMPOSER_BLOCK3_SIZE_X + SCREENCOMPOSER_WHITE_SPACE_X;
-        FAT_screenComposer_currentSelectedColumn = SCREENCOMPOSER_COLUMN_ID_NOTES;
-        FAT_cursors_hideCursor2();
-        FAT_cursors_showCursor3();
-    
-    } else  if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CMD_NAME){
-    
-        FAT_screenComposer_cursorX -= SCREENCOMPOSER_BLOCK2_SIZE_X + SCREENCOMPOSER_WHITE_SPACE_X;
-        FAT_screenComposer_currentSelectedColumn = SCREENCOMPOSER_COLUMN_ID_INST;
-    
-    } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CMD_PARAM){
-        FAT_screenComposer_cursorX -= SCREENCOMPOSER_BLOCK2_SIZE_X;
-        FAT_screenComposer_currentSelectedColumn = SCREENCOMPOSER_COLUMN_ID_CMD_NAME;
+void FAT_screenComposer_moveCursorLeft() {
+    if (FAT_screenComposer_currentSelectedLine >= 2) {
+        if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_INST) {
+
+            FAT_screenComposer_cursorX -= SCREENCOMPOSER_BLOCK3_SIZE_X + SCREENCOMPOSER_WHITE_SPACE_X;
+            FAT_screenComposer_currentSelectedColumn = SCREENCOMPOSER_COLUMN_ID_NOTES;
+            FAT_cursors_hideCursor2();
+            FAT_cursors_showCursor3();
+
+        } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CMD_NAME) {
+
+            FAT_screenComposer_cursorX -= SCREENCOMPOSER_BLOCK2_SIZE_X + SCREENCOMPOSER_WHITE_SPACE_X;
+            FAT_screenComposer_currentSelectedColumn = SCREENCOMPOSER_COLUMN_ID_INST;
+
+        } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CMD_PARAM) {
+            FAT_screenComposer_cursorX -= SCREENCOMPOSER_BLOCK2_SIZE_X;
+            FAT_screenComposer_currentSelectedColumn = SCREENCOMPOSER_COLUMN_ID_CMD_NAME;
+        }
     }
 }
 

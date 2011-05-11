@@ -1,7 +1,7 @@
 V0-02:
 - stabiliser les instruments WAV (version 0-02)
 
-- refactoring pour les types d'effets : structure, ponctuel, long
+- refactoring pour les types d'effets : structure, ponctuel, long (refactoring_effects)
 - commande H (Hop) (version 0-02)
 - commande SW (Sweep) (version 0-02)
 - commande EN (Enveloppe) (version 0-02)
@@ -12,7 +12,8 @@ V0-02:
 - composer: appliquer le transpose (version 0-02)
 - composer: gérer le key-repeat (version 0-02)
 
-- interface: gérer un key-repeat global (étendre ce qui est fait sur le start) (refactoring branche)
+- A TESTER ! interface: gérer un key-repeat global (étendre ce qui est fait sur le start) (refactoring_keys)
+- brancher l'interface de modification du key repeat global.
 
 
 v0-03:

@@ -251,17 +251,16 @@ void FAT_screenBlocks_checkButtons() {
         }
 
         if (F_CTRLINPUT_A_PRESSED) {
-            iCanPressAKey = 0;
             // on agit selon la colonne actuellement séléctionné
             FAT_screenBlocks_pressA();
 
         } else {
 
             if (F_CTRLINPUT_R_PRESSED) {
-                iCanPressAKey = 0;
                 FAT_cursors_showCursorChange();
 
                 if (F_CTRLINPUT_RIGHT_PRESSED) {
+                    iCanPressAKey = 0;
                     if (FAT_screenBlocks_currentSequenceId < NB_MAX_SEQUENCES - 1) {
                         FAT_screenBlocks_currentSequenceId++;
                         FAT_screenBlocks_printSequenceNumber();
@@ -270,6 +269,7 @@ void FAT_screenBlocks_checkButtons() {
                 }
 
                 if (F_CTRLINPUT_LEFT_PRESSED) {
+                    iCanPressAKey = 0;
                     if (FAT_screenBlocks_currentSequenceId > 0) {
                         FAT_screenBlocks_currentSequenceId--;
                         FAT_screenBlocks_printSequenceNumber();
@@ -278,10 +278,12 @@ void FAT_screenBlocks_checkButtons() {
                 }
 
                 if (F_CTRLINPUT_DOWN_PRESSED) {
+                    iCanPressAKey = 0;
                     // TODO passer à la séquence qui suit si elle existe
                 }
 
                 if (F_CTRLINPUT_UP_PRESSED) {
+                    iCanPressAKey = 0;
                     // TODO passer à la séquence précédente si elle existe
                 }
 
@@ -346,7 +348,6 @@ void FAT_screenBlocks_pressB() {
     switch (FAT_screenBlocks_currentSelectedColumn) {
         case SCREENBLOCKS_COLUMN_ID_BLK:
             if (F_CTRLINPUT_L_PRESSED) {
-
                 if (FAT_data_isBlockAllocatable(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine)) {
                     // espace libre
@@ -358,7 +359,6 @@ void FAT_screenBlocks_pressB() {
                 }
 
             } else {
-
                 if (FAT_data_isBlockAllocatable(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine)) {
                     // espace libre
@@ -390,6 +390,7 @@ void FAT_screenBlocks_pressA() {
         case SCREENBLOCKS_COLUMN_ID_BLK:
 
             if (F_CTRLINPUT_L_PRESSED) {
+                iCanPressAKey = 0;
                 FAT_data_smartAllocateBlock(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine);
             } else {
@@ -398,21 +399,25 @@ void FAT_screenBlocks_pressA() {
             }
 
             if (F_CTRLINPUT_RIGHT_PRESSED) {
+                iCanPressAKey = 0;
                 FAT_data_block_changeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, 1); // ajout de 1
             }
 
             if (F_CTRLINPUT_LEFT_PRESSED) {
+                iCanPressAKey = 0;
                 FAT_data_block_changeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, -1); // retrait de 1
             }
 
             if (F_CTRLINPUT_UP_PRESSED) {
+                iCanPressAKey = 0;
                 FAT_data_block_changeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, 16);
             }
 
             if (F_CTRLINPUT_DOWN_PRESSED) {
+                iCanPressAKey = 0;
                 FAT_data_block_changeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, -16);
             }
@@ -425,21 +430,25 @@ void FAT_screenBlocks_pressA() {
                     FAT_screenBlocks_currentSelectedLine);
 
             if (F_CTRLINPUT_LEFT_PRESSED) {
+                iCanPressAKey = 0;
                 FAT_data_block_changeTransposeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, -1);
             }
 
             if (F_CTRLINPUT_RIGHT_PRESSED) {
+                iCanPressAKey = 0;
                 FAT_data_block_changeTransposeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, 1);
             }
 
             if (F_CTRLINPUT_DOWN_PRESSED) {
+                iCanPressAKey = 0;
                 FAT_data_block_changeTransposeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, -16);
             }
 
             if (F_CTRLINPUT_UP_PRESSED) {
+                iCanPressAKey = 0;
                 FAT_data_block_changeTransposeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, 16);
             }

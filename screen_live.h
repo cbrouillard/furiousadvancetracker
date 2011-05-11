@@ -17,9 +17,6 @@
 #ifndef _SCREEN_LIVE_H_
 #define _SCREEN_LIVE_H_
 
-#include "fat.h"
-
-
 /** \brief Permet de savoir si la popup de déplacement est affichée au dessus de l'écran. */
 bool FAT_screenLive_isPopuped = 0;
 

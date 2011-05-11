@@ -143,6 +143,10 @@
  */
 #define MAX_TRANSPOSE 256
 /**
+ * \brief Valeur maximum pour le paramètre "Key Repeat".
+ */
+#define MAX_KEYREPEAT 256
+/**
  * \brief NULL_VALUE représente la valeur "interdite".
  * 
  * Au démarrage de l'appli, toutes les données dans FAT_tracker sont initialisées
@@ -1650,6 +1654,53 @@ void FAT_data_composer_changeInstrument(u8 line, s8 addedValue) {
 
         FAT_data_initInstrumentIfNeeded(FAT_tracker.composer.notes[line].instrument,
                 0);
+    }
+}
+
+/**
+ * \brief Modifie la valeur du transpose affecté à un composer.
+ * 
+ * @param composer le numéro du composer (unused pour le moment)
+ * @param value la value à ajouter ou retrancher
+ */
+void FAT_data_composer_changeTranspose (u8 composer, s8 value){
+    if (
+            (value < 0 && FAT_tracker.composer.transpose > (-value - 1)) ||
+            (value > 0 && FAT_tracker.composer.transpose < MAX_TRANSPOSE - value)
+            
+            ){
+        FAT_tracker.composer.transpose += value;
+    }
+}
+
+/**
+ * \brief Modifie la valeur du paramètre "key repeat" sur le composer.
+ *  
+ * @param composer le numéro du composer (unused pour le moment)
+ * @param value la valeur à ajouter ou retrancher
+ */
+void FAT_data_composer_changeKeyRepeat(u8 composer, s8 value){
+    if (
+            (value < 0 && FAT_tracker.composer.keyRepeat > (-value - 1)) ||
+            (value > 0 && FAT_tracker.composer.keyRepeat < MAX_KEYREPEAT - value)
+            
+            ){
+        FAT_tracker.composer.keyRepeat += value;
+    }
+}
+
+/**
+ * \brief Modifie la valeur du paramètre "key repeat" pour le projet.
+ * 
+ * @param addedValue la valeur a ajouter ou retrancher
+ */
+void FAT_data_project_changeKeyRepeat(s8 addedValue){
+    if (
+            (addedValue < 0 && FAT_tracker.keyRepeat > (-addedValue - 1)) ||
+            (addedValue > 0 && FAT_tracker.keyRepeat < MAX_KEYREPEAT - addedValue)
+            
+            ){
+        FAT_tracker.keyRepeat += addedValue;
     }
 }
 

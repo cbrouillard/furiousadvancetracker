@@ -42,7 +42,6 @@ u8 FAT_instrument_waveduty2_obj;
 u8 FAT_instrument_waveduty3_obj;
 
 #include "screen_instrument_cursor.h"
-#include "fat.h"
 
 // prototypes
 void FAT_screenInstrument_init();
@@ -298,17 +297,18 @@ void FAT_screenInstrument_checkButtons() {
 
 
         if (F_CTRLINPUT_L_PRESSED) {
-            iCanPressAKey = 0;
             if (!FAT_screenInstrument_isTabulating) {
                 FAT_screenInstrument_isTabulating = 1;
                 FAT_screenInstrument_showTabulationCursor();
             }
 
             if (F_CTRLINPUT_LEFT_PRESSED) {
+                iCanPressAKey = 0;
                 FAT_screenInstrument_changeInstrumentType(-1);
             }
 
             if (F_CTRLINPUT_RIGHT_PRESSED) {
+                iCanPressAKey = 0;
                 FAT_screenInstrument_changeInstrumentType(1);
             }
 
@@ -321,10 +321,10 @@ void FAT_screenInstrument_checkButtons() {
             }
 
             if (F_CTRLINPUT_R_PRESSED) {
-                iCanPressAKey = 0;
                 FAT_cursors_showCursorChange();
 
                 if (F_CTRLINPUT_RIGHT_PRESSED) {
+                    iCanPressAKey = 0;
                     if (FAT_screenInstrument_currentInstrumentId < NB_MAX_INSTRUMENTS - 1) {
                         u8 type = FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type;
                         FAT_screenInstrument_currentInstrumentId++;
@@ -336,6 +336,7 @@ void FAT_screenInstrument_checkButtons() {
                 }
 
                 if (F_CTRLINPUT_LEFT_PRESSED) {
+                    iCanPressAKey = 0;
                     if (FAT_screenInstrument_currentInstrumentId > 0) {
                         u8 type = FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type;
                         FAT_screenInstrument_currentInstrumentId--;
@@ -351,7 +352,6 @@ void FAT_screenInstrument_checkButtons() {
                 FAT_cursors_hideCursorChange();
 
                 if (F_CTRLINPUT_A_PRESSED) {
-                    iCanPressAKey = 0;
                     FAT_screenInstrument_pressA();
 
                 } else {
@@ -488,18 +488,22 @@ void FAT_screenInstrument_showWaveduty(u8 wavedutyValue, u8 spriteX, u8 spriteY)
 s8 FAT_screenInstrument_giveMeAddedValue() {
     s8 addedValue = 0;
     if (F_CTRLINPUT_RIGHT_PRESSED) {
+        iCanPressAKey = 0;
         addedValue = 1;
     }
 
     if (F_CTRLINPUT_LEFT_PRESSED) {
+        iCanPressAKey = 0;
         addedValue = -1;
     }
 
     if (F_CTRLINPUT_UP_PRESSED) {
+        iCanPressAKey = 0;
         addedValue = 16;
     }
 
     if (F_CTRLINPUT_DOWN_PRESSED) {
+        iCanPressAKey = 0;
         addedValue = -16;
     }
 

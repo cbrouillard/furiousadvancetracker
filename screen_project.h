@@ -19,7 +19,6 @@
 #define _SCREEN_PROJECT_H_
 
 #include "screen_project_cursor.h"
-#include "fat.h"
 
 /**
  * \brief Permet de savoir si la popup est affichée au dessus de l'écran.
@@ -51,6 +50,7 @@ void FAT_screenProject_printInfos() {
     ham_DrawText(1, 5, "TRANSPOSE %.2x", FAT_tracker.transpose);
     ham_DrawText(1, 8, "SAVE PRJ  OK");
     ham_DrawText(1, 9, "LOAD PRJ  OK");
+    ham_DrawText(1,12, "KEYREPEAT %.2x", FAT_tracker.keyRepeat);
     ham_DrawText(1, 1, "PROJECT: %s", FAT_tracker.songName);
     mutex = 1;
 }
@@ -106,7 +106,6 @@ void FAT_screenProject_checkButtons() {
         }
 
         if (F_CTRLINPUT_A_PRESSED) {
-            iCanPressAKey = 0;
             FAT_screenProject_pressA();
         } else {
 
@@ -150,18 +149,22 @@ void FAT_screenProject_checkButtons() {
 void FAT_screenProject_pressA() {
     s8 addedValue = 0;
     if (F_CTRLINPUT_LEFT_PRESSED) {
+        iCanPressAKey = 0;
         addedValue = -1;
     }
 
     if (F_CTRLINPUT_RIGHT_PRESSED) {
+        iCanPressAKey = 0;
         addedValue = 1;
     }
 
     if (F_CTRLINPUT_UP_PRESSED) {
+        iCanPressAKey = 0;
         addedValue = 16;
     }
 
     if (F_CTRLINPUT_DOWN_PRESSED) {
+        iCanPressAKey = 0;
         addedValue = -16;
     }
 
@@ -179,6 +182,10 @@ void FAT_screenProject_pressA() {
             break;
         case 3:
             FAT_data_project_load();
+            break;
+        case 4:
+            FAT_data_project_changeKeyRepeat(addedValue);
+            FAT_screenProject_printInfos();
             break;
     }
 

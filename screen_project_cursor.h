@@ -25,7 +25,7 @@
 #define SCREENPROJECT_LAST_BLOCK_Y 120
 
 /** \brief Nombre de lignes affichées à l'écran. */
-#define SCREENPROJECT_NB_LINES_ON_SCREEN 4
+#define SCREENPROJECT_NB_LINES_ON_SCREEN 5
 
 /** \brief Position actuelle du curseur de sélection. */
 u8 FAT_screenProject_cursorX; 
@@ -39,7 +39,7 @@ u8  FAT_screenProject_currentSelectedColumn;
 /**
  * \brief Tableau constant des positions des blocs de données sur l'écran. 
  */
-const u8 PROJECT_PULSE_BLOCK_Y[SCREENPROJECT_NB_LINES_ON_SCREEN] = {31, 39, 63, 71};
+const u8 PROJECT_PULSE_BLOCK_Y[SCREENPROJECT_NB_LINES_ON_SCREEN] = {31, 39, 63, 71, 95};
 
 /**
  * \brief Cette fonction permet de valider le déplacement du curseur de sélection sur l'écran. 
@@ -51,6 +51,7 @@ void FAT_screenProject_commitCursorMove() {
         case 1:
         case 2:
         case 3:
+        case 4:
             ham_SetObjXY(FAT_cursor2_obj, FAT_screenProject_cursorX, FAT_screenProject_cursorY);
             break;
 
@@ -69,6 +70,7 @@ void FAT_screenProject_displayGoodCursor() {
         case 1:
         case 2:
         case 3:
+        case 4:
             FAT_cursors_hideCursor3();
             FAT_cursors_showCursor2();
             break;
