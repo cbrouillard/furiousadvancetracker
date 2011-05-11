@@ -277,7 +277,7 @@ void FAT_screenNotes_checkButtons() {
                     iCanPressAKey = 0;
                     if (!FAT_isCurrentlyPlaying) {
                         FAT_player_startPlayerFromNotes(FAT_screenNotes_currentBlockId,
-                                FAT_screenNotes_currentSelectedLine, FAT_screenSong_currentSelectedColumn);
+                                0, FAT_screenSong_currentSelectedColumn);
                     } else {
                         FAT_player_stopPlayer();
                     }
