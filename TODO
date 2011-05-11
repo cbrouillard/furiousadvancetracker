@@ -1,6 +1,7 @@
+V0-02:
 - stabiliser les instruments WAV (version 0-02)
-- design de l'écran effets (version 0-03)
 
+- refactoring pour les types d'effets : structure, ponctuel, long
 - commande H (Hop) (version 0-02)
 - commande SW (Sweep) (version 0-02)
 - commande EN (Enveloppe) (version 0-02)
@@ -9,11 +10,16 @@
 - documentation: compléter la section technique
 
 - composer: appliquer le transpose (version 0-02)
-- composer: gérer le key-repeat
+- composer: gérer le key-repeat (version 0-02)
 
-- interface: gérer un key-repeat global (étendre ce qui est fait sur le start)
+- interface: gérer un key-repeat global (étendre ce qui est fait sur le start) (refactoring branche)
 
-- dessin de la mascotte "Furicat" (version 0-02)
 
+v0-03:
+- design de l'écran effets (version 0-03)
+- jouer des samples sur les deux channels qui reste
+
+
+v0-0x:
 - réfléchir à la commande C , V , P (les commandes qui sont actives sur toute la durée
 de la note en cours de lecture) (version 0-0x (x>2))
