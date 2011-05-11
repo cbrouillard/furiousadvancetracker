@@ -9,9 +9,7 @@ V0-02:
 - documentation: faire un tableau comparatif des cartouches
 - documentation: compléter la section technique
 
-- composer: appliquer le transpose (version 0-02)
-- composer: gérer le key-repeat (version 0-02)
-
+- A TESTER composer: appliquer le transpose (version 0-02)
 - A TESTER ! interface: gérer un key-repeat global (étendre ce qui est fait sur le start) (refactoring_keys)
 - brancher l'interface de modification du key repeat global.
 
