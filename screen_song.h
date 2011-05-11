@@ -56,10 +56,11 @@ const char* CHANNEL_NAME[6] = {"PU1\0", "PU2\0", "WAV\0", "NOI\0", "SNA\0", "SNB
  * \brief Fonction principale de l'écran (callback).
  */
 void FAT_screenSong_mainFunc() {
-    speedCounter++;
     if (mutex) {
         ham_CopyObjToOAM();
-        FAT_screenSong_checkButtons();
+        if (iCanPressStart) {
+            FAT_screenSong_checkButtons();
+        }
     }
 }
 
@@ -179,10 +180,7 @@ void FAT_screenSong_checkButtons() {
             FAT_screenSong_isPopuped = 1;
         }
 
-        if (speedCounter >= SLOWDOWN_COUNTER) {
-            FAT_popup_checkButtons();
-            speedCounter = 0;
-        }
+        FAT_popup_checkButtons();
 
     } else {
         if (FAT_screenSong_isPopuped) {
@@ -196,56 +194,61 @@ void FAT_screenSong_checkButtons() {
             }
         }
 
-        if (speedCounter >= SLOWDOWN_COUNTER) {
-            if (F_CTRLINPUT_A_PRESSED) {
+        if (F_CTRLINPUT_A_PRESSED) {
+            iCanPressStart = 0;
+            FAT_screenSong_pressA();
 
-                FAT_screenSong_pressA();
+        } else {
 
-            } else {
-
-                if (F_CTRLINPUT_START_PRESSED) {
-                    if (!FAT_isCurrentlyPlaying) {
-                        FAT_player_startPlayerFromSequences(FAT_screenSong_currentSelectedLine);
-                    } else {
-                        FAT_player_stopPlayer();
-                    }
+            if (F_CTRLINPUT_START_PRESSED) {
+                iCanPressStart = 0;
+                if (!FAT_isCurrentlyPlaying) {
+                    FAT_player_startPlayerFromSequences(FAT_screenSong_currentSelectedLine);
+                } else {
+                    FAT_player_stopPlayer();
                 }
-
-                if (F_CTRLINPUT_B_PRESSED) {
-                    FAT_screenSong_pressB();
-                }
-
-                if (F_CTRLINPUT_RIGHT_PRESSED) {
-                    FAT_screenSong_moveCursorRight();
-                }
-
-                if (F_CTRLINPUT_LEFT_PRESSED) {
-                    FAT_screenSong_moveCursorLeft();
-                }
-
-                if (F_CTRLINPUT_DOWN_PRESSED) {
-                    if (F_CTRLINPUT_R_PRESSED) {
-                        FAT_screenSong_movePageDown();
-                    } else if (F_CTRLINPUT_L_PRESSED) {
-                        FAT_screenSong_moveCursorAllDown();
-                    } else {
-                        FAT_screenSong_moveCursorDown();
-                    }
-                }
-
-                if (F_CTRLINPUT_UP_PRESSED) {
-                    if (F_CTRLINPUT_R_PRESSED) {
-                        FAT_screenSong_movePageUp();
-                    } else if (F_CTRLINPUT_L_PRESSED) {
-                        FAT_screenSong_moveCursorAllUp();
-                    } else {
-                        FAT_screenSong_moveCursorUp();
-                    }
-                }
-                FAT_screenSong_commitCursorMove();
             }
-            speedCounter = 0;
+
+            if (F_CTRLINPUT_B_PRESSED) {
+                iCanPressStart = 0;
+                FAT_screenSong_pressB();
+            }
+
+            if (F_CTRLINPUT_RIGHT_PRESSED) {
+                iCanPressStart = 0;
+                FAT_screenSong_moveCursorRight();
+            }
+
+            if (F_CTRLINPUT_LEFT_PRESSED) {
+                iCanPressStart = 0;
+                FAT_screenSong_moveCursorLeft();
+            }
+
+            if (F_CTRLINPUT_DOWN_PRESSED) {
+                iCanPressStart = 0;
+                if (F_CTRLINPUT_R_PRESSED) {
+                    FAT_screenSong_movePageDown();
+                } else if (F_CTRLINPUT_L_PRESSED) {
+                    FAT_screenSong_moveCursorAllDown();
+                } else {
+                    FAT_screenSong_moveCursorDown();
+                }
+            }
+
+            if (F_CTRLINPUT_UP_PRESSED) {
+                iCanPressStart = 0;
+                if (F_CTRLINPUT_R_PRESSED) {
+                    FAT_screenSong_movePageUp();
+                } else if (F_CTRLINPUT_L_PRESSED) {
+                    FAT_screenSong_moveCursorAllUp();
+                } else {
+                    FAT_screenSong_moveCursorUp();
+                }
+            }
+            FAT_screenSong_commitCursorMove();
         }
+
+        FAT_keys_waitForAnotherKeyTouch();
     }
 
 }

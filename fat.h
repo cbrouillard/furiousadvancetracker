@@ -70,11 +70,11 @@ bool mutex = 1;
  * - 4 pour la GBA hard
  * - 5~7 pour l'émulateur
  */
-u8 speedCounter = 0;
+//u8 speedCounter = 0;
 /**
  * \brief Définit la valeur à atteindre par le speedcounter avant de tester les actions utilisateurs.
  */
-#define SLOWDOWN_COUNTER 4
+//#define SLOWDOWN_COUNTER 1
 
 /** \brief Définition globale du format d'affichage des numéros de lignes. */
 #define FAT_FORMAT_LINE "%.2x\0"
@@ -95,6 +95,11 @@ void FAT_blockCPU(u16 time);
 #include "data.h"
 #include "cursors.h"
 
+/**
+ * \brief Permet de savoir si l'utilisateur a le droit d'appuyer sur une touche
+ */
+u8 iCanPressStart = 1;
+
 /** \brief Prototype. Fonction définie dans player.h. */
 void FAT_player_startPlayerFromSequences(u8 startLine);
 /** \brief Prototype. Fonction définie dans player.h. */
@@ -105,6 +110,18 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel);
 void FAT_player_stopPlayer();
 /** \brief Prototype. Fonction définie dans player.h. */
 void FAT_player_playComposerNote(u8 noteLine);
+
+/**
+ * \brief Fonction attachée à un timer permettant de resetter la possibilités d'appuyer
+ * sur une touche. 
+ */
+void FAT_player_timerFunc_iCanPressStart();
+
+/**
+ * \brief Cette fonction déclanche le timer permettant d'attendre élégamment un temps
+ * donné avant d'autoriser la répétition d'une touche. 
+ */
+void FAT_keys_waitForAnotherKeyTouch();
 
 /**
  * \brief Permet de savoir si le player est en train de jouer la chanson.
@@ -122,6 +139,20 @@ bool FAT_isCurrentlyPlaying = 0;
 #include "screen_effects.h"
 
 #include "player.h"
+
+/**
+ * \brief Cette fonction déclanche le timer permettant d'attendre élégamment un temps
+ * donné avant d'autoriser la répétition d'une touche. 
+ */
+void FAT_keys_waitForAnotherKeyTouch() {
+    if (!iCanPressStart) {
+        ham_StartIntHandler(INT_TYPE_TIM0, (void*) &FAT_player_timerFunc_iCanPressStart);
+
+        R_TIM0CNT = 1;
+        M_TIM0CNT_IRQ_ENABLE
+        M_TIM0CNT_TIMER_START
+    }
+}
 
 /**
  * \brief Initialisation de HAM et d'autres données propres à FAT. 
@@ -242,6 +273,7 @@ void FAT_forceClearTextLayer() {
 void FAT_initSpritePalette() {
     ham_LoadObjPal((void*) sprite_Palette, 256);
 }
+
 /**
  * \brief Charge la palette pour les écrans: les sprites sont exclus. 
  */
@@ -293,6 +325,7 @@ void FAT_waitVSync() {
     while (F_VCNT_CURRENT_SCANLINE < 160) {
     }
 }
+
 /**
  * \brief Permet de patienter un certain nombre de cycle de balayage vertical.
  * @param nbFrames le nombre de balayage à attendre.
@@ -302,6 +335,7 @@ void FAT_wait(u32 nbFrames) {
     while (i++ < nbFrames)
         FAT_waitVSync();
 }
+
 /**
  * \brief Bloque le cpu un certain temps. 
  * 

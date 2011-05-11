@@ -7,7 +7,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
 
 /**
  * \file screen_effects.h
@@ -19,28 +19,33 @@
 #ifndef _SCREEN_EFFECTS_H_
 #define _SCREEN_EFFECTS_H_
 
+#include "fat.h"
+
+
+
 /** \brief Permet de savoir si la popup est affichée au dessus de l'écran ou non. */
 bool FAT_screenEffects_isPopuped = 0;
 
 // prototypes
-void FAT_screenEffects_init ();
-void FAT_screenEffects_checkButtons() ;
+void FAT_screenEffects_init();
+void FAT_screenEffects_checkButtons();
 
 /**
  * \brief Fonction principale de l'écran (callback). 
  */
 void FAT_screenEffects_mainFunc() {
     if (mutex) {
-        speedCounter++;
         ham_CopyObjToOAM();
-        FAT_screenEffects_checkButtons();
+        if (iCanPressStart) {
+            FAT_screenEffects_checkButtons();
+        }
     }
 }
 
 /**
  * \brief Initialisation de l'écran. 
  */
-void FAT_screenEffects_init (){
+void FAT_screenEffects_init() {
     FAT_reinitScreen();
 
     // initialisation du fond (interface)
@@ -66,10 +71,7 @@ void FAT_screenEffects_checkButtons() {
             FAT_screenEffects_isPopuped = 1;
         }
 
-        if (speedCounter >= SLOWDOWN_COUNTER) {
-            FAT_popup_checkButtons();
-            speedCounter = 0;
-        }
+        FAT_popup_checkButtons();
 
     } else {
         if (FAT_screenEffects_isPopuped) {
@@ -83,26 +85,28 @@ void FAT_screenEffects_checkButtons() {
             }
         }
 
-        if (speedCounter >= SLOWDOWN_COUNTER) {
-            if (F_CTRLINPUT_RIGHT_PRESSED) {
-            }
-
-            if (F_CTRLINPUT_LEFT_PRESSED) {
-            }
-
-            if (F_CTRLINPUT_DOWN_PRESSED) {
-            }
-
-            if (F_CTRLINPUT_UP_PRESSED) {
-            }
-
-            if (F_CTRLINPUT_A_PRESSED) {
-
-            }
-
-            // TODO commit project cursor move
-            speedCounter = 0;
+        if (F_CTRLINPUT_RIGHT_PRESSED) {
+            iCanPressStart = 0;
         }
+
+        if (F_CTRLINPUT_LEFT_PRESSED) {
+            iCanPressStart = 0;
+        }
+
+        if (F_CTRLINPUT_DOWN_PRESSED) {
+            iCanPressStart = 0;
+        }
+
+        if (F_CTRLINPUT_UP_PRESSED) {
+            iCanPressStart = 0;
+        }
+
+        if (F_CTRLINPUT_A_PRESSED) {
+            iCanPressStart = 0;
+        }
+
+        // TODO commit project cursor move
+        FAT_keys_waitForAnotherKeyTouch();
     }
 }
 

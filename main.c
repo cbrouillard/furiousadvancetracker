@@ -42,9 +42,7 @@
  * \brief Si cette variable est positionné à 1, le mode DEBUG pour FAT est activé. Certaines,
  * informations seront affichées.
  */
-/*
 #define DEBUG_ON "YES_comment_to_disable"
-*/
 
 /**
  * \brief Version actuelle de FAT.

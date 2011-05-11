@@ -19,6 +19,7 @@
 #define _SCREEN_PROJECT_H_
 
 #include "screen_project_cursor.h"
+#include "fat.h"
 
 /**
  * \brief Permet de savoir si la popup est affichée au dessus de l'écran.
@@ -34,9 +35,10 @@ void FAT_screenProject_pressA();
  */
 void FAT_screenProject_mainFunc() {
     if (mutex) {
-        speedCounter++;
         ham_CopyObjToOAM();
-        FAT_screenProject_checkButtons();
+        if (iCanPressStart) {
+            FAT_screenProject_checkButtons();
+        }
     }
 }
 
@@ -88,10 +90,7 @@ void FAT_screenProject_checkButtons() {
             FAT_screenProject_isPopuped = 1;
         }
 
-        if (speedCounter >= SLOWDOWN_COUNTER) {
-            FAT_popup_checkButtons();
-            speedCounter = 0;
-        }
+        FAT_popup_checkButtons();
 
     } else {
         if (FAT_screenProject_isPopuped) {
@@ -106,38 +105,42 @@ void FAT_screenProject_checkButtons() {
             }
         }
 
-        if (speedCounter >= SLOWDOWN_COUNTER) {
-            if (F_CTRLINPUT_A_PRESSED) {
-                FAT_screenProject_pressA();
-            } else {
+        if (F_CTRLINPUT_A_PRESSED) {
+            iCanPressStart = 0;
+            FAT_screenProject_pressA();
+        } else {
 
-                if (F_CTRLINPUT_START_PRESSED) {
-                    if (!FAT_isCurrentlyPlaying) {
-                        FAT_player_startPlayerFromSequences(FAT_screenSong_currentSelectedLine);
-                    } else {
-                        FAT_player_stopPlayer();
-                    }
+            if (F_CTRLINPUT_START_PRESSED) {
+                iCanPressStart = 0;
+                if (!FAT_isCurrentlyPlaying) {
+                    FAT_player_startPlayerFromSequences(FAT_screenSong_currentSelectedLine);
+                } else {
+                    FAT_player_stopPlayer();
                 }
-
-                if (F_CTRLINPUT_RIGHT_PRESSED) {
-                }
-
-                if (F_CTRLINPUT_LEFT_PRESSED) {
-                }
-
-                if (F_CTRLINPUT_DOWN_PRESSED) {
-                    FAT_screenProject_moveCursorDown();
-                }
-
-                if (F_CTRLINPUT_UP_PRESSED) {
-                    FAT_screenProject_moveCursorUp();
-                }
-
-                FAT_screenProject_commitCursorMove();
             }
 
-            speedCounter = 0;
+            if (F_CTRLINPUT_RIGHT_PRESSED) {
+                iCanPressStart = 0;
+            }
+
+            if (F_CTRLINPUT_LEFT_PRESSED) {
+                iCanPressStart = 0;
+            }
+
+            if (F_CTRLINPUT_DOWN_PRESSED) {
+                iCanPressStart = 0;
+                FAT_screenProject_moveCursorDown();
+            }
+
+            if (F_CTRLINPUT_UP_PRESSED) {
+                iCanPressStart = 0;
+                FAT_screenProject_moveCursorUp();
+            }
+
+            FAT_screenProject_commitCursorMove();
         }
+
+        FAT_keys_waitForAnotherKeyTouch();
     }
 }
 

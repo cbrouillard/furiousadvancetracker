@@ -65,15 +65,17 @@ void FAT_screenComposer_switchLocking();
 void FAT_screenComposer_playAffectedNotes();
 
 #include "screen_composer_cursor.h"
+#include "fat.h"
 
 /**
  * \brief Fonction callback principale pour l'écran COMPOSER.
  */
 void FAT_screenComposer_mainFunc() {
     if (mutex) {
-        speedCounter++;
         ham_CopyObjToOAM();
-        FAT_screenComposer_checkButtons();
+        if (iCanPressStart) {
+            FAT_screenComposer_checkButtons();
+        }
     }
 }
 
@@ -203,10 +205,7 @@ void FAT_screenComposer_checkButtons() {
             FAT_screenComposer_isPopuped = 1;
         }
 
-        if (speedCounter >= SLOWDOWN_COUNTER) {
-            FAT_popup_checkButtons();
-            speedCounter = 0;
-        }
+        FAT_popup_checkButtons();
 
     } else {
         if (FAT_screenComposer_isPopuped) {
@@ -229,39 +228,47 @@ void FAT_screenComposer_checkButtons() {
 
             FAT_screenComposer_playAffectedNotes();
 
-        } else if (speedCounter >= SLOWDOWN_COUNTER) {
+        } else {
             if (F_CTRLINPUT_A_PRESSED) {
+                iCanPressStart = 0;
                 FAT_screenComposer_pressA();
             } else {
 
                 if (F_CTRLINPUT_B_PRESSED) {
+                    iCanPressStart = 0;
                     FAT_screenComposer_pressB();
                 }
 
                 if (F_CTRLINPUT_START_PRESSED) {
                     // lock/unlock le compositeur
+                    iCanPressStart = 0;
                     FAT_screenComposer_switchLocking();
                 }
 
                 if (F_CTRLINPUT_RIGHT_PRESSED) {
+                    iCanPressStart = 0;
                     FAT_screenComposer_moveCursorRight();
                 }
 
                 if (F_CTRLINPUT_LEFT_PRESSED) {
+                    iCanPressStart = 0;
                     FAT_screenComposer_moveCursorLeft();
                 }
 
                 if (F_CTRLINPUT_DOWN_PRESSED) {
+                    iCanPressStart = 0;
                     FAT_screenComposer_moveCursorDown();
                 }
 
                 if (F_CTRLINPUT_UP_PRESSED) {
+                    iCanPressStart = 0;
                     FAT_screenComposer_moveCursorUp();
 
                 }
                 FAT_screenComposer_commitCursorMove();
             }
-            speedCounter = 0;
+
+            FAT_keys_waitForAnotherKeyTouch();
         }
     }
 }
@@ -365,9 +372,8 @@ void FAT_screenComposer_switchLocking() {
  * teste elle même l'appui sur les touches.
  */
 void FAT_screenComposer_playAffectedNotes() {
-    if (F_CTRLINPUT_START_PRESSED && speedCounter >= SLOWDOWN_COUNTER) {
+    if (F_CTRLINPUT_START_PRESSED) {
         FAT_screenComposer_switchLocking();
-        speedCounter = 0;
     }
 
     if (F_CTRLINPUT_A_PRESSED) {
@@ -401,10 +407,6 @@ void FAT_screenComposer_playAffectedNotes() {
 
     if (F_CTRLINPUT_LEFT_PRESSED) {
         FAT_player_playComposerNote(SCREENCOMPOSER_BTN_LEFT);
-    }
-
-    if (speedCounter >= SLOWDOWN_COUNTER) {
-        speedCounter = 0;
     }
 }
 

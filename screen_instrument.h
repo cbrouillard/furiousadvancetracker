@@ -7,7 +7,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
 
 /**
  * \file screen_instrument.h
@@ -19,7 +19,7 @@
 
 // Variables permettant de savoir l'état de l'écran (popup affichée, onglet affiché)
 /** \brief Permet de savoir si la popup de déplacement est affichée au dessus de l'écran. */
-bool FAT_screenInstrument_isPopuped = 0; 
+bool FAT_screenInstrument_isPopuped = 0;
 /** \brief Permet de savoir si l'utilisateur est en train de changer d'onglet (type d'instrument). */
 u8 FAT_screenInstrument_isTabulating = 0;
 
@@ -29,19 +29,20 @@ u8 FAT_screenInstrument_currentInstrumentId;
 
 // sprites utiles à l'affichage de certaines données
 /** \brief Sprite pour la direction de l'enveloppe: valeur 0. */
-u8 FAT_instrument_envdir0_obj; 
+u8 FAT_instrument_envdir0_obj;
 /** \brief Sprite pour la direction de l'enveloppe: valeur 1. */
 u8 FAT_instrument_envdir1_obj;
 /** \brief Sprite pour le paramètre waveduty: valeur 0. */
-u8 FAT_instrument_waveduty0_obj; 
+u8 FAT_instrument_waveduty0_obj;
 /** \brief Sprite pour le paramètre waveduty: valeur 1. */
-u8 FAT_instrument_waveduty1_obj; 
+u8 FAT_instrument_waveduty1_obj;
 /** \brief Sprite pour le paramètre waveduty: valeur 2. */
-u8 FAT_instrument_waveduty2_obj; 
+u8 FAT_instrument_waveduty2_obj;
 /** \brief Sprite pour le paramètre waveduty: valeur 3. */
 u8 FAT_instrument_waveduty3_obj;
 
 #include "screen_instrument_cursor.h"
+#include "fat.h"
 
 // prototypes
 void FAT_screenInstrument_init();
@@ -58,9 +59,10 @@ void FAT_screenInstrument_hideAllWavedutySprite();
  */
 void FAT_screenInstrument_mainFunc() {
     if (mutex) {
-        speedCounter++;
         ham_CopyObjToOAM();
-        FAT_screenInstrument_checkButtons();
+        if (iCanPressStart) {
+            FAT_screenInstrument_checkButtons();
+        }
     }
 }
 
@@ -87,7 +89,7 @@ void FAT_screenInstrument_printAllText(u8 type) {
             ham_DrawText(1, 5, "DIRECTION");
             FAT_screenInstrument_showEnvdir((FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0x10) >> 4,
                     88, 40);
-            ham_DrawText(1, 6, "STEPTIME  %.1x", (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0xe0) >> 5 );
+            ham_DrawText(1, 6, "STEPTIME  %.1x", (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0xe0) >> 5);
             ham_DrawText(1, 7, "WAVE");
             FAT_screenInstrument_showWaveduty(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].wavedutyOrPolynomialStep,
                     88, 56);
@@ -111,9 +113,9 @@ void FAT_screenInstrument_printAllText(u8 type) {
             }
 
             ham_DrawText(1, 9, "VOICE     %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank & 0x1f);
-            ham_DrawText(1, 10, "BANK      %.1x", (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank & 0x20)>>5);
+            ham_DrawText(1, 10, "BANK      %.1x", (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank & 0x20) >> 5);
 
-            if ( (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank & 0x40)>>6 == 0) {
+            if ((FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank & 0x40) >> 6 == 0) {
                 ham_DrawText(1, 11, "BANKMODE  SIN");
             } else {
                 ham_DrawText(1, 11, "BANKMODE  DUA");
@@ -125,7 +127,7 @@ void FAT_screenInstrument_printAllText(u8 type) {
             ham_DrawText(1, 5, "DIRECTION");
             FAT_screenInstrument_showEnvdir((FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0x10) >> 4,
                     88, 40);
-            ham_DrawText(1, 6, "STEPTIME  %.1x", (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0xe0) >> 5 );
+            ham_DrawText(1, 6, "STEPTIME  %.1x", (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0xe0) >> 5);
             ham_DrawText(1, 7, "POLYSTEP  %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].wavedutyOrPolynomialStep);
 
             ham_DrawText(1, 10, "TIMED     %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
@@ -276,10 +278,7 @@ void FAT_screenInstrument_checkButtons() {
             FAT_screenInstrument_isPopuped = 1;
         }
 
-        if (speedCounter >= SLOWDOWN_COUNTER) {
-            FAT_popup_checkButtons();
-            speedCounter = 0;
-        }
+        FAT_popup_checkButtons();
 
     } else {
         if (FAT_screenInstrument_isPopuped) {
@@ -297,98 +296,102 @@ void FAT_screenInstrument_checkButtons() {
             }
         }
 
-        if (speedCounter >= SLOWDOWN_COUNTER) {
 
-            if (F_CTRLINPUT_L_PRESSED) {
+        if (F_CTRLINPUT_L_PRESSED) {
+            iCanPressStart = 0;
+            if (!FAT_screenInstrument_isTabulating) {
+                FAT_screenInstrument_isTabulating = 1;
+                FAT_screenInstrument_showTabulationCursor();
+            }
 
-                if (!FAT_screenInstrument_isTabulating) {
-                    FAT_screenInstrument_isTabulating = 1;
-                    FAT_screenInstrument_showTabulationCursor();
+            if (F_CTRLINPUT_LEFT_PRESSED) {
+                FAT_screenInstrument_changeInstrumentType(-1);
+            }
+
+            if (F_CTRLINPUT_RIGHT_PRESSED) {
+                FAT_screenInstrument_changeInstrumentType(1);
+            }
+
+        } else {
+            if (FAT_screenInstrument_isTabulating) {
+                // relachement du L
+                FAT_screenInstrument_isTabulating = 0;
+                FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                FAT_screenInstrument_hideTabulationCursor();
+            }
+
+            if (F_CTRLINPUT_R_PRESSED) {
+                iCanPressStart = 0;
+                FAT_cursors_showCursorChange();
+
+                if (F_CTRLINPUT_RIGHT_PRESSED) {
+                    if (FAT_screenInstrument_currentInstrumentId < NB_MAX_INSTRUMENTS - 1) {
+                        u8 type = FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type;
+                        FAT_screenInstrument_currentInstrumentId++;
+                        FAT_data_initInstrumentIfNeeded(FAT_screenInstrument_currentInstrumentId, type);
+                        //FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                        FAT_screenInstrument_printInstrumentNumber();
+                        FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                    }
                 }
 
                 if (F_CTRLINPUT_LEFT_PRESSED) {
-                    FAT_screenInstrument_changeInstrumentType(-1);
-                }
-
-                if (F_CTRLINPUT_RIGHT_PRESSED) {
-                    FAT_screenInstrument_changeInstrumentType(1);
+                    iCanPressStart = 0;
+                    if (FAT_screenInstrument_currentInstrumentId > 0) {
+                        u8 type = FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type;
+                        FAT_screenInstrument_currentInstrumentId--;
+                        FAT_data_initInstrumentIfNeeded(FAT_screenInstrument_currentInstrumentId, type);
+                        //FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                        FAT_screenInstrument_printInstrumentNumber();
+                        FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                    }
                 }
 
             } else {
-                if (FAT_screenInstrument_isTabulating) {
-                    // relachement du L
-                    FAT_screenInstrument_isTabulating = 0;
-                    FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-                    FAT_screenInstrument_hideTabulationCursor();
-                }
 
-                if (F_CTRLINPUT_R_PRESSED) {
+                FAT_cursors_hideCursorChange();
 
-                    FAT_cursors_showCursorChange();
-
-                    if (F_CTRLINPUT_RIGHT_PRESSED) {
-                        if (FAT_screenInstrument_currentInstrumentId < NB_MAX_INSTRUMENTS - 1) {
-                            u8 type = FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type;
-                            FAT_screenInstrument_currentInstrumentId++;
-                            FAT_data_initInstrumentIfNeeded(FAT_screenInstrument_currentInstrumentId, type);
-                            //FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-                            FAT_screenInstrument_printInstrumentNumber();
-                            FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-                        }
-                    }
-
-                    if (F_CTRLINPUT_LEFT_PRESSED) {
-                        if (FAT_screenInstrument_currentInstrumentId > 0) {
-                            u8 type = FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type;
-                            FAT_screenInstrument_currentInstrumentId--;
-                            FAT_data_initInstrumentIfNeeded(FAT_screenInstrument_currentInstrumentId, type);
-                            //FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-                            FAT_screenInstrument_printInstrumentNumber();
-                            FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-                        }
-                    }
+                if (F_CTRLINPUT_A_PRESSED) {
+                    iCanPressStart = 0;
+                    FAT_screenInstrument_pressA();
 
                 } else {
 
-                    FAT_cursors_hideCursorChange();
-
-                    if (F_CTRLINPUT_A_PRESSED) {
-
-                        FAT_screenInstrument_pressA();
-
-                    } else {
-
-                        if (F_CTRLINPUT_START_PRESSED) {
-                            if (!FAT_isCurrentlyPlaying) {
-                                FAT_player_startPlayerFromNotes(FAT_screenNotes_currentBlockId,
-                                        FAT_screenNotes_currentSelectedLine, FAT_screenSong_currentSelectedColumn);
-                            } else {
-                                FAT_player_stopPlayer();
-                            }
+                    if (F_CTRLINPUT_START_PRESSED) {
+                        iCanPressStart = 0;
+                        if (!FAT_isCurrentlyPlaying) {
+                            FAT_player_startPlayerFromNotes(FAT_screenNotes_currentBlockId,
+                                    FAT_screenNotes_currentSelectedLine, FAT_screenSong_currentSelectedColumn);
+                        } else {
+                            FAT_player_stopPlayer();
                         }
+                    }
 
-                        if (F_CTRLINPUT_RIGHT_PRESSED) {
-                            FAT_screenInstrument_moveCursorRight(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-                        }
+                    if (F_CTRLINPUT_RIGHT_PRESSED) {
+                        iCanPressStart = 0;
+                        FAT_screenInstrument_moveCursorRight(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                    }
 
-                        if (F_CTRLINPUT_LEFT_PRESSED) {
-                            FAT_screenInstrument_moveCursorLeft(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-                        }
+                    if (F_CTRLINPUT_LEFT_PRESSED) {
+                        iCanPressStart = 0;
+                        FAT_screenInstrument_moveCursorLeft(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                    }
 
-                        if (F_CTRLINPUT_DOWN_PRESSED) {
-                            FAT_screenInstrument_moveCursorDown(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-                        }
+                    if (F_CTRLINPUT_DOWN_PRESSED) {
+                        iCanPressStart = 0;
+                        FAT_screenInstrument_moveCursorDown(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                    }
 
-                        if (F_CTRLINPUT_UP_PRESSED) {
-                            FAT_screenInstrument_moveCursorUp(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-                        }
+                    if (F_CTRLINPUT_UP_PRESSED) {
+                        iCanPressStart = 0;
+                        FAT_screenInstrument_moveCursorUp(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
                     }
                 }
             }
-
-            FAT_screenInstrument_commitCursorMove(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-            speedCounter = 0;
         }
+
+        FAT_screenInstrument_commitCursorMove(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+        FAT_keys_waitForAnotherKeyTouch();
     }
 }
 

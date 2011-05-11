@@ -60,6 +60,7 @@ void FAT_screenBlocks_pressA();
 void FAT_screenBlocks_pressB();
 
 #include "screen_blocks_cursor.h"
+#include "fat.h"
 
 /**
  * \brief Fonction de routine qui affiche les numéros de ligne. 
@@ -141,11 +142,11 @@ void FAT_screenBlocks_printTranspose(u8 line) {
 void FAT_screenBlocks_printEffect(u8 line) {
     mutex = 0;
     if (!FAT_data_block_isEffectEmpty(FAT_screenBlocks_currentSequenceId, line)) {
-        
+
         effect* effect = FAT_data_block_getEffect(FAT_screenBlocks_currentSequenceId, line);
-        
+
         ham_DrawText(SCREENBLOCKS_EFFECT_LINE_X, line + SCREENBLOCKS_LINE_START_Y,
-                "%s%.2x\0", blockEffectName[(effect->name&0xfe) >> 1], effect->value);
+                "%s%.2x\0", blockEffectName[(effect->name & 0xfe) >> 1], effect->value);
     } else {
         ham_DrawText(SCREENBLOCKS_EFFECT_LINE_X, line + SCREENBLOCKS_LINE_START_Y,
                 "    ");
@@ -180,9 +181,10 @@ void FAT_screenBlocks_printAllScreenText() {
  */
 void FAT_screenBlocks_mainFunc() {
     if (mutex) {
-        speedCounter++;
         ham_CopyObjToOAM();
-        FAT_screenBlocks_checkButtons();
+        if (iCanPressStart) {
+            FAT_screenBlocks_checkButtons();
+        }
     }
 }
 
@@ -234,10 +236,7 @@ void FAT_screenBlocks_checkButtons() {
             FAT_screenBlocks_isPopuped = 1;
         }
 
-        if (speedCounter >= SLOWDOWN_COUNTER) {
-            FAT_popup_checkButtons();
-            speedCounter = 0;
-        }
+        FAT_popup_checkButtons();
 
     } else {
         if (FAT_screenBlocks_isPopuped) {
@@ -251,88 +250,92 @@ void FAT_screenBlocks_checkButtons() {
             }
         }
 
-        if (speedCounter >= SLOWDOWN_COUNTER) {
-            if (F_CTRLINPUT_A_PRESSED) {
+        if (F_CTRLINPUT_A_PRESSED) {
+            iCanPressStart = 0;
+            // on agit selon la colonne actuellement séléctionné
+            FAT_screenBlocks_pressA();
 
-                // on agit selon la colonne actuellement séléctionné
-                FAT_screenBlocks_pressA();
+        } else {
+
+            if (F_CTRLINPUT_R_PRESSED) {
+                iCanPressStart = 0;
+                FAT_cursors_showCursorChange();
+
+                if (F_CTRLINPUT_RIGHT_PRESSED) {
+                    if (FAT_screenBlocks_currentSequenceId < NB_MAX_SEQUENCES - 1) {
+                        FAT_screenBlocks_currentSequenceId++;
+                        FAT_screenBlocks_printSequenceNumber();
+                        FAT_screenBlocks_printAllScreenText();
+                    }
+                }
+
+                if (F_CTRLINPUT_LEFT_PRESSED) {
+                    if (FAT_screenBlocks_currentSequenceId > 0) {
+                        FAT_screenBlocks_currentSequenceId--;
+                        FAT_screenBlocks_printSequenceNumber();
+                        FAT_screenBlocks_printAllScreenText();
+                    }
+                }
+
+                if (F_CTRLINPUT_DOWN_PRESSED) {
+                    // TODO passer à la séquence qui suit si elle existe
+                }
+
+                if (F_CTRLINPUT_UP_PRESSED) {
+                    // TODO passer à la séquence précédente si elle existe
+                }
 
             } else {
+                FAT_cursors_hideCursorChange();
 
-                if (F_CTRLINPUT_R_PRESSED) {
-
-                    FAT_cursors_showCursorChange();
-
-                    if (F_CTRLINPUT_RIGHT_PRESSED) {
-                        if (FAT_screenBlocks_currentSequenceId < NB_MAX_SEQUENCES - 1) {
-                            FAT_screenBlocks_currentSequenceId++;
-                            FAT_screenBlocks_printSequenceNumber();
-                            FAT_screenBlocks_printAllScreenText();
-                        }
+                if (F_CTRLINPUT_START_PRESSED) {
+                    iCanPressStart = 0;
+                    if (!FAT_isCurrentlyPlaying) {
+                        FAT_player_startPlayerFromBlocks(FAT_screenBlocks_currentSequenceId,
+                                FAT_screenBlocks_currentSelectedLine, FAT_screenSong_currentSelectedColumn);
+                    } else {
+                        FAT_player_stopPlayer();
                     }
-
-                    if (F_CTRLINPUT_LEFT_PRESSED) {
-                        if (FAT_screenBlocks_currentSequenceId > 0) {
-                            FAT_screenBlocks_currentSequenceId--;
-                            FAT_screenBlocks_printSequenceNumber();
-                            FAT_screenBlocks_printAllScreenText();
-                        }
-                    }
-
-                    if (F_CTRLINPUT_DOWN_PRESSED) {
-                        // TODO passer à la séquence qui suit si elle existe
-                    }
-
-                    if (F_CTRLINPUT_UP_PRESSED) {
-                        // TODO passer à la séquence précédente si elle existe
-                    }
-
-                } else {
-                    FAT_cursors_hideCursorChange();
-
-                    if (F_CTRLINPUT_START_PRESSED) {
-                        if (!FAT_isCurrentlyPlaying) {
-                            FAT_player_startPlayerFromBlocks(FAT_screenBlocks_currentSequenceId,
-                                    FAT_screenBlocks_currentSelectedLine, FAT_screenSong_currentSelectedColumn);
-                        } else {
-                            FAT_player_stopPlayer();
-                        }
-                    }
-
-                    if (F_CTRLINPUT_B_PRESSED) {
-                        FAT_screenBlocks_pressB();
-                    }
-
-                    if (F_CTRLINPUT_RIGHT_PRESSED) {
-                        FAT_screenBlocks_moveCursorRight();
-                    }
-
-                    if (F_CTRLINPUT_LEFT_PRESSED) {
-                        FAT_screenBlocks_moveCursorLeft();
-                    }
-
-                    if (F_CTRLINPUT_DOWN_PRESSED) {
-                        if (F_CTRLINPUT_L_PRESSED) {
-                            FAT_screenBlocks_moveCursorAllDown();
-                        } else {
-                            FAT_screenBlocks_moveCursorDown();
-                        }
-
-                    }
-
-                    if (F_CTRLINPUT_UP_PRESSED) {
-                        if (F_CTRLINPUT_L_PRESSED) {
-                            FAT_screenBlocks_moveCursorAllUp();
-                        } else {
-                            FAT_screenBlocks_moveCursorUp();
-                        }
-                    }
-
-                    FAT_screenBlocks_commitCursorMove();
                 }
+
+                if (F_CTRLINPUT_B_PRESSED) {
+                    iCanPressStart = 0;
+                    FAT_screenBlocks_pressB();
+                }
+
+                if (F_CTRLINPUT_RIGHT_PRESSED) {
+                    iCanPressStart = 0;
+                    FAT_screenBlocks_moveCursorRight();
+                }
+
+                if (F_CTRLINPUT_LEFT_PRESSED) {
+                    iCanPressStart = 0;
+                    FAT_screenBlocks_moveCursorLeft();
+                }
+
+                if (F_CTRLINPUT_DOWN_PRESSED) {
+                    iCanPressStart = 0;
+                    if (F_CTRLINPUT_L_PRESSED) {
+                        FAT_screenBlocks_moveCursorAllDown();
+                    } else {
+                        FAT_screenBlocks_moveCursorDown();
+                    }
+
+                }
+
+                if (F_CTRLINPUT_UP_PRESSED) {
+                    iCanPressStart = 0;
+                    if (F_CTRLINPUT_L_PRESSED) {
+                        FAT_screenBlocks_moveCursorAllUp();
+                    } else {
+                        FAT_screenBlocks_moveCursorUp();
+                    }
+                }
+
+                FAT_screenBlocks_commitCursorMove();
             }
-            speedCounter = 0;
         }
+        FAT_keys_waitForAnotherKeyTouch();
     }
 }
 

@@ -7,7 +7,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
 
 /**
  * \file popup.h
@@ -17,6 +17,9 @@
 
 #ifndef _POPUP_H_
 #define _POPUP_H_
+
+#include "fat.h"
+
 
 /**
  * \brief Definit le background utilisé pour afficher la popup. BG0
@@ -103,15 +106,20 @@ void FAT_popup_moveSelectedScreenCursor() {
  * \brief Cette fonction permet de tester les actions utilisateurs sur la popup.
  */
 void FAT_popup_checkButtons() {
-    if (F_CTRLINPUT_RIGHT_PRESSED) {
-        FAT_popup_moveSelectionCursorRight();
-    }
+    if (iCanPressStart) {
+        if (F_CTRLINPUT_RIGHT_PRESSED) {
+            iCanPressStart = 0;
+            FAT_popup_moveSelectionCursorRight();
+        }
 
-    if (F_CTRLINPUT_LEFT_PRESSED) {
-        FAT_popup_moveSelectionCursorLeft();
-    }
+        if (F_CTRLINPUT_LEFT_PRESSED) {
+            iCanPressStart = 0;
+            FAT_popup_moveSelectionCursorLeft();
+        }
 
-    FAT_popup_commitSelectionCursorMove();
+        FAT_popup_commitSelectionCursorMove();
+        FAT_keys_waitForAnotherKeyTouch();
+    }
 }
 
 /**

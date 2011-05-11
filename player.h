@@ -21,7 +21,7 @@
 #ifndef _PLAYER_H_
 #define	_PLAYER_H_
 
-#include "data.h"
+#include "fat.h"
 
 
 /** \brief Définition d'une valeur pour ralentir le décompte du tempo. */
@@ -63,10 +63,6 @@ u8 FAT_cursor_playerSequences_obj[6];
  */
 u32 tempoReach = TEMPO_TIMER_HARDWARE_VALUE;
 
-/**
- * \brief Permet de savoir si l'utilisateur a le droit d'appuyer sur la touche START.
- */
-u8 iCanPressStart = 1;
 /**
  * \brief Compteur pour décompter le temps d'attente entre 2 appuis de la touche START.
  */
@@ -207,7 +203,7 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                 break;
         }
 
-    } else if (note->effect.name != NULL_VALUE){
+    } else if (note->effect.name != NULL_VALUE) {
         snd_tryToApplyEffect(channel, noteEffectNum[note->effect.name >> 1], note->effect.value);
     }
 }
@@ -217,31 +213,24 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
  */
 void FAT_player_startPlayerFromSequences(u8 startLine) {
 
-    if (iCanPressStart) {
 #ifdef DEBUG_ON
-        ham_DrawText(21, 16, "START OFF");
+    ham_DrawText(21, 16, "START OFF");
 #endif
-        iCanPressStart = 0;
 
-        // initialisation des séquences au démarrage
-        memset(actualSequencesForChannel, startLine, sizeof (u8)*6);
-        memset(actualBlocksForChannel, 0, sizeof (u8)*6);
-        memset(actualNotesForChannel, 0, sizeof (u8)*6);
+    // initialisation des séquences au démarrage
+    memset(actualSequencesForChannel, startLine, sizeof (u8)*6);
+    memset(actualBlocksForChannel, 0, sizeof (u8)*6);
+    memset(actualNotesForChannel, 0, sizeof (u8)*6);
 
-        tempoReach = ((60000 / FAT_tracker.tempo) / 4) - TEMPO_TIMER_HARDWARE_VALUE;
-        FAT_isCurrentlyPlaying = 1;
-        ham_StartIntHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc_playSequences);
+    tempoReach = ((60000 / FAT_tracker.tempo) / 4) - TEMPO_TIMER_HARDWARE_VALUE;
+    FAT_isCurrentlyPlaying = 1;
+    ham_StartIntHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc_playSequences);
 
-        R_TIM3CNT = 0;
-        M_TIM3CNT_IRQ_ENABLE
-        M_TIM3CNT_TIMER_START
+    R_TIM3CNT = 0;
+    M_TIM3CNT_IRQ_ENABLE
+    M_TIM3CNT_TIMER_START
 
-        ham_StartIntHandler(INT_TYPE_TIM0, (void*) &FAT_player_timerFunc_iCanPressStart);
-
-        R_TIM0CNT = 1;
-        M_TIM0CNT_IRQ_ENABLE
-        M_TIM0CNT_TIMER_START
-    }
+    FAT_keys_waitForAnotherKeyTouch();
 
 }
 
@@ -254,31 +243,23 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
  */
 void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
 
-    if (iCanPressStart) {
-        iCanPressStart = 0;
+    // initialisation 
+    memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
+    memset(actualBlocksForChannel, 0, sizeof (u8)*6);
+    memset(actualNotesForChannel, 0, sizeof (u8)*6);
+    actualBlocksForChannel[channel] = startLine;
+    FAT_currentPlayedSequence = sequenceId;
+    FAT_currentPlayedChannel = channel;
 
-        // initialisation 
-        memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
-        memset(actualBlocksForChannel, 0, sizeof (u8)*6);
-        memset(actualNotesForChannel, 0, sizeof (u8)*6);
-        actualBlocksForChannel[channel] = startLine;
-        FAT_currentPlayedSequence = sequenceId;
-        FAT_currentPlayedChannel = channel;
+    tempoReach = ((60000 / FAT_tracker.tempo) / 4) - TEMPO_TIMER_HARDWARE_VALUE;
+    FAT_isCurrentlyPlaying = 1;
+    ham_StartIntHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc_playBlocks);
 
-        tempoReach = ((60000 / FAT_tracker.tempo) / 4) - TEMPO_TIMER_HARDWARE_VALUE;
-        FAT_isCurrentlyPlaying = 1;
-        ham_StartIntHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc_playBlocks);
+    R_TIM3CNT = 0;
+    M_TIM3CNT_IRQ_ENABLE
+    M_TIM3CNT_TIMER_START
 
-        R_TIM3CNT = 0;
-        M_TIM3CNT_IRQ_ENABLE
-        M_TIM3CNT_TIMER_START
-
-        ham_StartIntHandler(INT_TYPE_TIM0, (void*) &FAT_player_timerFunc_iCanPressStart);
-
-        R_TIM0CNT = 1;
-        M_TIM0CNT_IRQ_ENABLE
-        M_TIM0CNT_TIMER_START
-    }
+    FAT_keys_waitForAnotherKeyTouch();
 }
 
 /**
@@ -290,30 +271,23 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
  */
 void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
 
-    if (iCanPressStart) {
-        iCanPressStart = 0;
 
-        memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
-        memset(actualBlocksForChannel, NULL_VALUE, sizeof (u8)*6);
-        memset(actualNotesForChannel, 0, sizeof (u8)*6);
-        actualNotesForChannel[channel] = startLine;
-        FAT_currentPlayedBlock = blockId;
-        FAT_currentPlayedChannel = channel;
+    memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
+    memset(actualBlocksForChannel, NULL_VALUE, sizeof (u8)*6);
+    memset(actualNotesForChannel, 0, sizeof (u8)*6);
+    actualNotesForChannel[channel] = startLine;
+    FAT_currentPlayedBlock = blockId;
+    FAT_currentPlayedChannel = channel;
 
-        tempoReach = ((60000 / FAT_tracker.tempo) / 4) - TEMPO_TIMER_HARDWARE_VALUE;
-        FAT_isCurrentlyPlaying = 1;
-        ham_StartIntHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc_playNotes);
+    tempoReach = ((60000 / FAT_tracker.tempo) / 4) - TEMPO_TIMER_HARDWARE_VALUE;
+    FAT_isCurrentlyPlaying = 1;
+    ham_StartIntHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc_playNotes);
 
-        R_TIM3CNT = 0;
-        M_TIM3CNT_IRQ_ENABLE
-        M_TIM3CNT_TIMER_START
+    R_TIM3CNT = 0;
+    M_TIM3CNT_IRQ_ENABLE
+    M_TIM3CNT_TIMER_START
 
-        ham_StartIntHandler(INT_TYPE_TIM0, (void*) &FAT_player_timerFunc_iCanPressStart);
-
-        R_TIM0CNT = 1;
-        M_TIM0CNT_IRQ_ENABLE
-        M_TIM0CNT_TIMER_START
-    }
+    FAT_keys_waitForAnotherKeyTouch();
 }
 
 // DEJA DOCUMENTEE
@@ -448,27 +422,20 @@ void FAT_player_timerFunc_playNotes() {
  * \brief Arrète la lecture de la track.
  */
 void FAT_player_stopPlayer() {
-    if (iCanPressStart) {
-        iCanPressStart = 0;
 
-        M_TIM3CNT_TIMER_STOP
-        M_TIM3CNT_IRQ_DISABLE
+    M_TIM3CNT_TIMER_STOP
+    M_TIM3CNT_IRQ_DISABLE
 
-        // stop le son
-        snd_stopAllSounds();
+    // stop le son
+    snd_stopAllSounds();
 
-        // cache tous les curseurs de lecture
-        FAT_player_hideAllCursors();
+    // cache tous les curseurs de lecture
+    FAT_player_hideAllCursors();
 
-        // la lecture est terminée.
-        FAT_isCurrentlyPlaying = 0;
+    // la lecture est terminée.
+    FAT_isCurrentlyPlaying = 0;
 
-        ham_StartIntHandler(INT_TYPE_TIM0, (void*) &FAT_player_timerFunc_iCanPressStart);
-
-        R_TIM0CNT = 1;
-        M_TIM0CNT_IRQ_ENABLE
-        M_TIM0CNT_TIMER_START
-    }
+    FAT_keys_waitForAnotherKeyTouch();
 }
 
 /**
