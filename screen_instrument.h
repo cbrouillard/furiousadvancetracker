@@ -60,7 +60,7 @@ void FAT_screenInstrument_hideAllWavedutySprite();
 void FAT_screenInstrument_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressStart) {
+        if (iCanPressAKey) {
             FAT_screenInstrument_checkButtons();
         }
     }
@@ -298,7 +298,7 @@ void FAT_screenInstrument_checkButtons() {
 
 
         if (F_CTRLINPUT_L_PRESSED) {
-            iCanPressStart = 0;
+            iCanPressAKey = 0;
             if (!FAT_screenInstrument_isTabulating) {
                 FAT_screenInstrument_isTabulating = 1;
                 FAT_screenInstrument_showTabulationCursor();
@@ -321,7 +321,7 @@ void FAT_screenInstrument_checkButtons() {
             }
 
             if (F_CTRLINPUT_R_PRESSED) {
-                iCanPressStart = 0;
+                iCanPressAKey = 0;
                 FAT_cursors_showCursorChange();
 
                 if (F_CTRLINPUT_RIGHT_PRESSED) {
@@ -336,7 +336,6 @@ void FAT_screenInstrument_checkButtons() {
                 }
 
                 if (F_CTRLINPUT_LEFT_PRESSED) {
-                    iCanPressStart = 0;
                     if (FAT_screenInstrument_currentInstrumentId > 0) {
                         u8 type = FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type;
                         FAT_screenInstrument_currentInstrumentId--;
@@ -352,13 +351,13 @@ void FAT_screenInstrument_checkButtons() {
                 FAT_cursors_hideCursorChange();
 
                 if (F_CTRLINPUT_A_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     FAT_screenInstrument_pressA();
 
                 } else {
 
                     if (F_CTRLINPUT_START_PRESSED) {
-                        iCanPressStart = 0;
+                        iCanPressAKey = 0;
                         if (!FAT_isCurrentlyPlaying) {
                             FAT_player_startPlayerFromNotes(FAT_screenNotes_currentBlockId,
                                     FAT_screenNotes_currentSelectedLine, FAT_screenSong_currentSelectedColumn);
@@ -368,22 +367,22 @@ void FAT_screenInstrument_checkButtons() {
                     }
 
                     if (F_CTRLINPUT_RIGHT_PRESSED) {
-                        iCanPressStart = 0;
+                        iCanPressAKey = 0;
                         FAT_screenInstrument_moveCursorRight(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
                     }
 
                     if (F_CTRLINPUT_LEFT_PRESSED) {
-                        iCanPressStart = 0;
+                        iCanPressAKey = 0;
                         FAT_screenInstrument_moveCursorLeft(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
                     }
 
                     if (F_CTRLINPUT_DOWN_PRESSED) {
-                        iCanPressStart = 0;
+                        iCanPressAKey = 0;
                         FAT_screenInstrument_moveCursorDown(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
                     }
 
                     if (F_CTRLINPUT_UP_PRESSED) {
-                        iCanPressStart = 0;
+                        iCanPressAKey = 0;
                         FAT_screenInstrument_moveCursorUp(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
                     }
                 }

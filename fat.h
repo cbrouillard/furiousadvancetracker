@@ -44,6 +44,10 @@
 /** \brief Position par défaut du curseur de changement d'onglet (partie instrument).*/
 #define INPUT_R_CURSOR_CHANGE_Y 24
 
+/** \brief Définition du temps d'attente MINIMUM entre 2 appui sur la touche START. Ce chiffre peut 
+ être pondéré avec une valeur paramétrable. */
+#define WAIT_FOR_START 50
+
 /**
  * \brief Cette variable sert à gérer les contextes conflictuels (notamment dans les
  * boucles affichant du texte à gogo). 
@@ -60,21 +64,6 @@
  * <b>NE PAS TOUCHER !</b>
  */
 bool mutex = 1;
-
-
-/**
- * \brief Cette variable sert à compter le nombre de rafraichissement nécessaire avant
- * de prendre en considération les actions utilisateurs.
- * 
- * Valeurs optimales:
- * - 4 pour la GBA hard
- * - 5~7 pour l'émulateur
- */
-//u8 speedCounter = 0;
-/**
- * \brief Définit la valeur à atteindre par le speedcounter avant de tester les actions utilisateurs.
- */
-//#define SLOWDOWN_COUNTER 1
 
 /** \brief Définition globale du format d'affichage des numéros de lignes. */
 #define FAT_FORMAT_LINE "%.2x\0"
@@ -98,7 +87,7 @@ void FAT_blockCPU(u16 time);
 /**
  * \brief Permet de savoir si l'utilisateur a le droit d'appuyer sur une touche
  */
-u8 iCanPressStart = 1;
+u8 iCanPressAKey = 1;
 
 /** \brief Prototype. Fonction définie dans player.h. */
 void FAT_player_startPlayerFromSequences(u8 startLine);
@@ -112,10 +101,15 @@ void FAT_player_stopPlayer();
 void FAT_player_playComposerNote(u8 noteLine);
 
 /**
+ * \brief Compteur pour décompter le temps d'attente entre 2 appuis de la touche START.
+ */
+u16 waitForStart = 0;
+
+/**
  * \brief Fonction attachée à un timer permettant de resetter la possibilités d'appuyer
  * sur une touche. 
  */
-void FAT_player_timerFunc_iCanPressStart();
+void FAT_player_timerFunc_iCanPressAKey();
 
 /**
  * \brief Cette fonction déclanche le timer permettant d'attendre élégamment un temps
@@ -141,14 +135,34 @@ bool FAT_isCurrentlyPlaying = 0;
 #include "player.h"
 
 /**
+ * \brief Fonction callback associée avec un TIMER: permet de décompter le temps
+ * d'attente pour l'appui sur une touche. 
+ */
+void FAT_player_timerFunc_iCanPressAKey() {
+    waitForStart++;
+    if (waitForStart >= ( WAIT_FOR_START + FAT_tracker.keyRepeat ) && !iCanPressAKey) {
+        iCanPressAKey = 1;
+        waitForStart = 0;
+        M_TIM0CNT_IRQ_DISABLE
+        M_TIM0CNT_TIMER_STOP
+#ifdef DEBUG_ON
+        ham_DrawText(21, 16, "KEY ON ");
+#endif
+    }
+}
+
+/**
  * \brief Cette fonction déclanche le timer permettant d'attendre élégamment un temps
  * donné avant d'autoriser la répétition d'une touche. 
  */
 void FAT_keys_waitForAnotherKeyTouch() {
-    if (!iCanPressStart) {
-        ham_StartIntHandler(INT_TYPE_TIM0, (void*) &FAT_player_timerFunc_iCanPressStart);
+#ifdef DEBUG_ON
+    ham_DrawText(21, 16, "KEY OFF");
+#endif
+    if (!iCanPressAKey) {
+        ham_StartIntHandler(INT_TYPE_TIM0, (void*) &FAT_player_timerFunc_iCanPressAKey);
 
-        R_TIM0CNT = 1;
+        R_TIM0CNT = 0;
         M_TIM0CNT_IRQ_ENABLE
         M_TIM0CNT_TIMER_START
     }

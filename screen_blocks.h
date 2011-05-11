@@ -182,7 +182,7 @@ void FAT_screenBlocks_printAllScreenText() {
 void FAT_screenBlocks_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressStart) {
+        if (iCanPressAKey) {
             FAT_screenBlocks_checkButtons();
         }
     }
@@ -251,14 +251,14 @@ void FAT_screenBlocks_checkButtons() {
         }
 
         if (F_CTRLINPUT_A_PRESSED) {
-            iCanPressStart = 0;
+            iCanPressAKey = 0;
             // on agit selon la colonne actuellement séléctionné
             FAT_screenBlocks_pressA();
 
         } else {
 
             if (F_CTRLINPUT_R_PRESSED) {
-                iCanPressStart = 0;
+                iCanPressAKey = 0;
                 FAT_cursors_showCursorChange();
 
                 if (F_CTRLINPUT_RIGHT_PRESSED) {
@@ -289,7 +289,7 @@ void FAT_screenBlocks_checkButtons() {
                 FAT_cursors_hideCursorChange();
 
                 if (F_CTRLINPUT_START_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     if (!FAT_isCurrentlyPlaying) {
                         FAT_player_startPlayerFromBlocks(FAT_screenBlocks_currentSequenceId,
                                 FAT_screenBlocks_currentSelectedLine, FAT_screenSong_currentSelectedColumn);
@@ -299,22 +299,22 @@ void FAT_screenBlocks_checkButtons() {
                 }
 
                 if (F_CTRLINPUT_B_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     FAT_screenBlocks_pressB();
                 }
 
                 if (F_CTRLINPUT_RIGHT_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     FAT_screenBlocks_moveCursorRight();
                 }
 
                 if (F_CTRLINPUT_LEFT_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     FAT_screenBlocks_moveCursorLeft();
                 }
 
                 if (F_CTRLINPUT_DOWN_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     if (F_CTRLINPUT_L_PRESSED) {
                         FAT_screenBlocks_moveCursorAllDown();
                     } else {
@@ -324,7 +324,7 @@ void FAT_screenBlocks_checkButtons() {
                 }
 
                 if (F_CTRLINPUT_UP_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     if (F_CTRLINPUT_L_PRESSED) {
                         FAT_screenBlocks_moveCursorAllUp();
                     } else {

@@ -26,8 +26,6 @@
 
 /** \brief Définition d'une valeur pour ralentir le décompte du tempo. */
 #define TEMPO_TIMER_HARDWARE_VALUE 70
-/** \brief Définition du temps d'attente entre 2 appui sur la touche START. */
-#define WAIT_FOR_START 1
 
 /*
  * Toutes ces variables sont des repères pour le player. Afin de savoir quelle séquence/block/note jouer.
@@ -62,11 +60,6 @@ u8 FAT_cursor_playerSequences_obj[6];
  * Dans le cas contraire, on attend sans jouer de note.
  */
 u32 tempoReach = TEMPO_TIMER_HARDWARE_VALUE;
-
-/**
- * \brief Compteur pour décompter le temps d'attente entre 2 appuis de la touche START.
- */
-u8 waitForStart = 0;
 
 /**
  * \brief Function temporisée qui lit toutes les séquences. (callback)
@@ -112,22 +105,6 @@ void FAT_player_initCursors() {
     }
 }
 
-/**
- * \brief Fonction callback associée avec un TIMER: permet de décompter le temps
- * d'attente pour l'appui sur la touche START. 
- */
-void FAT_player_timerFunc_iCanPressStart() {
-    waitForStart++;
-    if (waitForStart >= WAIT_FOR_START && !iCanPressStart) {
-        iCanPressStart = 1;
-        waitForStart = 0;
-        M_TIM0CNT_IRQ_DISABLE
-        M_TIM0CNT_TIMER_STOP
-#ifdef DEBUG_ON
-                ham_DrawText(21, 16, "START  ON");
-#endif
-    }
-}
 
 /**
  * \brief Joue une note écrite dans le composer.
@@ -212,10 +189,6 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
  * \brief Lance la lecture de toute la track.
  */
 void FAT_player_startPlayerFromSequences(u8 startLine) {
-
-#ifdef DEBUG_ON
-    ham_DrawText(21, 16, "START OFF");
-#endif
 
     // initialisation des séquences au démarrage
     memset(actualSequencesForChannel, startLine, sizeof (u8)*6);

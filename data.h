@@ -352,6 +352,7 @@ typedef struct FAT {
 
     u8 tempo; /*!< Tempo pour la track en cours de composition. */
     u8 transpose; /*!< Valeur de transposition pour la track en cours de composition. */
+    u8 keyRepeat; /*!< Valeur permettant de régler la vélocité de l'interface. FF = lent 00 = rapide */
     char songName[SONG_NAME_MAX_LETTERS]; /*!< Nom de la track en cours de composition. */
 
     table tables[NB_MAX_TABLES]; /*!< Tableau (physique) contenant toutes les tables. */
@@ -389,6 +390,7 @@ void FAT_data_initData() {
     memset(&FAT_tracker, NULL_VALUE, sizeof (tracker));
     FAT_tracker.tempo = 128;
     FAT_tracker.transpose = 0;
+    FAT_tracker.keyRepeat = 0;
     strcpy(FAT_tracker.songName, "SONGNAME\0");
     
     // init des variables du composer

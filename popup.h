@@ -106,14 +106,14 @@ void FAT_popup_moveSelectedScreenCursor() {
  * \brief Cette fonction permet de tester les actions utilisateurs sur la popup.
  */
 void FAT_popup_checkButtons() {
-    if (iCanPressStart) {
+    if (iCanPressAKey) {
         if (F_CTRLINPUT_RIGHT_PRESSED) {
-            iCanPressStart = 0;
+            iCanPressAKey = 0;
             FAT_popup_moveSelectionCursorRight();
         }
 
         if (F_CTRLINPUT_LEFT_PRESSED) {
-            iCanPressStart = 0;
+            iCanPressAKey = 0;
             FAT_popup_moveSelectionCursorLeft();
         }
 

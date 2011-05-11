@@ -36,7 +36,7 @@ void FAT_screenProject_pressA();
 void FAT_screenProject_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressStart) {
+        if (iCanPressAKey) {
             FAT_screenProject_checkButtons();
         }
     }
@@ -106,12 +106,12 @@ void FAT_screenProject_checkButtons() {
         }
 
         if (F_CTRLINPUT_A_PRESSED) {
-            iCanPressStart = 0;
+            iCanPressAKey = 0;
             FAT_screenProject_pressA();
         } else {
 
             if (F_CTRLINPUT_START_PRESSED) {
-                iCanPressStart = 0;
+                iCanPressAKey = 0;
                 if (!FAT_isCurrentlyPlaying) {
                     FAT_player_startPlayerFromSequences(FAT_screenSong_currentSelectedLine);
                 } else {
@@ -120,20 +120,20 @@ void FAT_screenProject_checkButtons() {
             }
 
             if (F_CTRLINPUT_RIGHT_PRESSED) {
-                iCanPressStart = 0;
+                iCanPressAKey = 0;
             }
 
             if (F_CTRLINPUT_LEFT_PRESSED) {
-                iCanPressStart = 0;
+                iCanPressAKey = 0;
             }
 
             if (F_CTRLINPUT_DOWN_PRESSED) {
-                iCanPressStart = 0;
+                iCanPressAKey = 0;
                 FAT_screenProject_moveCursorDown();
             }
 
             if (F_CTRLINPUT_UP_PRESSED) {
-                iCanPressStart = 0;
+                iCanPressAKey = 0;
                 FAT_screenProject_moveCursorUp();
             }
 

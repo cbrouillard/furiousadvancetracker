@@ -73,7 +73,7 @@ void FAT_screenComposer_playAffectedNotes();
 void FAT_screenComposer_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressStart) {
+        if (iCanPressAKey) {
             FAT_screenComposer_checkButtons();
         }
     }
@@ -230,38 +230,38 @@ void FAT_screenComposer_checkButtons() {
 
         } else {
             if (F_CTRLINPUT_A_PRESSED) {
-                iCanPressStart = 0;
+                iCanPressAKey = 0;
                 FAT_screenComposer_pressA();
             } else {
 
                 if (F_CTRLINPUT_B_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     FAT_screenComposer_pressB();
                 }
 
                 if (F_CTRLINPUT_START_PRESSED) {
                     // lock/unlock le compositeur
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     FAT_screenComposer_switchLocking();
                 }
 
                 if (F_CTRLINPUT_RIGHT_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     FAT_screenComposer_moveCursorRight();
                 }
 
                 if (F_CTRLINPUT_LEFT_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     FAT_screenComposer_moveCursorLeft();
                 }
 
                 if (F_CTRLINPUT_DOWN_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     FAT_screenComposer_moveCursorDown();
                 }
 
                 if (F_CTRLINPUT_UP_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     FAT_screenComposer_moveCursorUp();
 
                 }

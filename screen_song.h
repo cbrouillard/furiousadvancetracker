@@ -58,7 +58,7 @@ const char* CHANNEL_NAME[6] = {"PU1\0", "PU2\0", "WAV\0", "NOI\0", "SNA\0", "SNB
 void FAT_screenSong_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressStart) {
+        if (iCanPressAKey) {
             FAT_screenSong_checkButtons();
         }
     }
@@ -195,13 +195,13 @@ void FAT_screenSong_checkButtons() {
         }
 
         if (F_CTRLINPUT_A_PRESSED) {
-            iCanPressStart = 0;
+            iCanPressAKey = 0;
             FAT_screenSong_pressA();
 
         } else {
 
             if (F_CTRLINPUT_START_PRESSED) {
-                iCanPressStart = 0;
+                iCanPressAKey = 0;
                 if (!FAT_isCurrentlyPlaying) {
                     FAT_player_startPlayerFromSequences(FAT_screenSong_currentSelectedLine);
                 } else {
@@ -210,22 +210,22 @@ void FAT_screenSong_checkButtons() {
             }
 
             if (F_CTRLINPUT_B_PRESSED) {
-                iCanPressStart = 0;
+                iCanPressAKey = 0;
                 FAT_screenSong_pressB();
             }
 
             if (F_CTRLINPUT_RIGHT_PRESSED) {
-                iCanPressStart = 0;
+                iCanPressAKey = 0;
                 FAT_screenSong_moveCursorRight();
             }
 
             if (F_CTRLINPUT_LEFT_PRESSED) {
-                iCanPressStart = 0;
+                iCanPressAKey = 0;
                 FAT_screenSong_moveCursorLeft();
             }
 
             if (F_CTRLINPUT_DOWN_PRESSED) {
-                iCanPressStart = 0;
+                iCanPressAKey = 0;
                 if (F_CTRLINPUT_R_PRESSED) {
                     FAT_screenSong_movePageDown();
                 } else if (F_CTRLINPUT_L_PRESSED) {
@@ -236,7 +236,7 @@ void FAT_screenSong_checkButtons() {
             }
 
             if (F_CTRLINPUT_UP_PRESSED) {
-                iCanPressStart = 0;
+                iCanPressAKey = 0;
                 if (F_CTRLINPUT_R_PRESSED) {
                     FAT_screenSong_movePageUp();
                 } else if (F_CTRLINPUT_L_PRESSED) {

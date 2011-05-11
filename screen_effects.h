@@ -36,7 +36,7 @@ void FAT_screenEffects_checkButtons();
 void FAT_screenEffects_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressStart) {
+        if (iCanPressAKey) {
             FAT_screenEffects_checkButtons();
         }
     }
@@ -86,23 +86,23 @@ void FAT_screenEffects_checkButtons() {
         }
 
         if (F_CTRLINPUT_RIGHT_PRESSED) {
-            iCanPressStart = 0;
+            iCanPressAKey = 0;
         }
 
         if (F_CTRLINPUT_LEFT_PRESSED) {
-            iCanPressStart = 0;
+            iCanPressAKey = 0;
         }
 
         if (F_CTRLINPUT_DOWN_PRESSED) {
-            iCanPressStart = 0;
+            iCanPressAKey = 0;
         }
 
         if (F_CTRLINPUT_UP_PRESSED) {
-            iCanPressStart = 0;
+            iCanPressAKey = 0;
         }
 
         if (F_CTRLINPUT_A_PRESSED) {
-            iCanPressStart = 0;
+            iCanPressAKey = 0;
         }
 
         // TODO commit project cursor move

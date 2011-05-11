@@ -60,7 +60,7 @@ u8 FAT_screenNotes_currentBlockId;
 void FAT_screenNotes_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressStart) {
+        if (iCanPressAKey) {
             FAT_screenNotes_checkButtons();
         }
     }
@@ -231,13 +231,13 @@ void FAT_screenNotes_checkButtons() {
 
 
         if (F_CTRLINPUT_A_PRESSED) {
-            iCanPressStart = 0;
+            iCanPressAKey = 0;
             FAT_screenNotes_pressA();
 
         } else {
 
             if (F_CTRLINPUT_R_PRESSED) {
-                iCanPressStart = 0;
+                iCanPressAKey = 0;
                 FAT_cursors_showCursorChange();
 
                 if (F_CTRLINPUT_RIGHT_PRESSED) {
@@ -258,12 +258,12 @@ void FAT_screenNotes_checkButtons() {
 
                 if (F_CTRLINPUT_DOWN_PRESSED) {
                     // TODO passer au block suivant dans la séquence
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                 }
 
                 if (F_CTRLINPUT_UP_PRESSED) {
                     // TODO passer au block précédent dans la séquence
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                 }
 
             } else {
@@ -271,12 +271,12 @@ void FAT_screenNotes_checkButtons() {
                 FAT_cursors_hideCursorChange();
 
                 if (F_CTRLINPUT_B_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     FAT_screenNotes_pressB();
                 }
 
                 if (F_CTRLINPUT_START_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     if (!FAT_isCurrentlyPlaying) {
                         FAT_player_startPlayerFromNotes(FAT_screenNotes_currentBlockId,
                                 FAT_screenNotes_currentSelectedLine, FAT_screenSong_currentSelectedColumn);
@@ -286,22 +286,22 @@ void FAT_screenNotes_checkButtons() {
                 }
 
                 if (F_CTRLINPUT_RIGHT_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     FAT_screenNotes_moveCursorRight();
                 }
 
                 if (F_CTRLINPUT_LEFT_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     FAT_screenNotes_moveCursorLeft();
                 }
 
                 if (F_CTRLINPUT_DOWN_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     FAT_screenNotes_moveCursorDown();
                 }
 
                 if (F_CTRLINPUT_UP_PRESSED) {
-                    iCanPressStart = 0;
+                    iCanPressAKey = 0;
                     FAT_screenNotes_moveCursorUp();
                 }
 
