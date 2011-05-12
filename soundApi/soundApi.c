@@ -17,7 +17,7 @@ typedef unsigned int u32;
 #define NULL_VALUE 0xff
 
 #define NB_FREQUENCES 72
-const u16 freqs[NB_FREQUENCES] ={44, 156, 262, 363, 457, 547, 631, 710, 786, 854, 923, 986,
+const u16 freqs[NB_FREQUENCES] = {44, 156, 262, 363, 457, 547, 631, 710, 786, 854, 923, 986,
     1046, 1102, 1155, 1205, 1253, 1297, 1339, 1379, 1417, 1452, 1486, 1517,
     1546, 1575, 1602, 1627, 1650, 1673, 1694, 1714, 1732, 1750, 1767, 1783,
     1798, 1812, 1825, 1837, 1849, 1860, 1871, 1881, 1890, 1899, 1907, 1915,
@@ -103,6 +103,7 @@ void snd_init_soundApi() {
     REG_SOUNDCNT_H = 2;
 
     REG_SOUND3CNT_L = SOUND3BANK32 | SOUND3SETBANK1;
+    
     snd_loadWav(0);
 
 }
@@ -156,56 +157,57 @@ void snd_playSoundOnChannel2(u16 volume,
 void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voice,
         u16 bank, u16 bankMode, u16 freq, u8 transpose) {
 
-    REG_SOUND3CNT_L |= SOUND3PLAY;
-    REG_SOUND3CNT_X |= SOUND3INIT;
+    REG_SOUND3CNT_L = SOUND3PLAY;
+    REG_SOUND3CNT_X = SOUND3INIT;
     REG_SOUND3CNT_H = SOUND3OUTPUT1;
+    
+    if (transpose != NULL_VALUE) {
+        freq = snd_calculateTransposedFrequency(freq, transpose);
+    }
 
-    if (bankMode == 1) { // SINGLE MODE 
+    REG_SOUND3CNT_H = soundLength;
+    //REG_SOUNDCNT_L|=0x4400;
+    if (bankMode == 0) { // SINGLE MODE 
         REG_SOUND3CNT_L &= ~SOUND3PLAY; //stop sound
         snd_loadWav(voice);
         snd_loadWav(voice + 2);
-        REG_SOUND3CNT_L |= SOUND3PLAY;
-        REG_SOUND3CNT_X |= SOUND3INIT;
 
-        REG_SOUND3CNT_L |= SOUND3BANK32;
+        REG_SOUND3CNT_L = SOUND3PLAY | SOUND3BANK32;
     } else { // DUAL MODE
         snd_loadWav(voice);
-        REG_SOUND3CNT_L |= SOUND3BANK64;
+        //REG_SOUND3CNT_L |= SOUND3BANK64;
     }
 
     if (bank == 1) {
         REG_SOUND3CNT_L |= SOUND3SETBANK1;
     } else {
-        REG_SOUND3CNT_L &= 0xffbf;
+        //REG_SOUND3CNT_L &= 0xffbf;
     }
 
     switch (volume) {
         case 0:
-            REG_SOUND3CNT_H = SOUND3OUTPUT0 | soundLength;
+            REG_SOUND3CNT_H |= SOUND3OUTPUT0;
             break;
         case 1:
-            REG_SOUND3CNT_H = SOUND3OUTPUT14 | soundLength;
+            REG_SOUND3CNT_H |= SOUND3OUTPUT14;
             break;
         case 2:
-            REG_SOUND3CNT_H = SOUND3OUTPUT12 | soundLength;
+            REG_SOUND3CNT_H |= SOUND3OUTPUT12;
             break;
         case 3:
-            REG_SOUND3CNT_H = SOUND3OUTPUT34 | soundLength;
+            REG_SOUND3CNT_H |= SOUND3OUTPUT34;
             break;
         case 4:
-            REG_SOUND3CNT_H = SOUND3OUTPUT1 | soundLength;
+            REG_SOUND3CNT_H |= SOUND3OUTPUT1;
             break;
     }
-
-    if (transpose != NULL_VALUE) {
-        freq = snd_calculateTransposedFrequency(freq, transpose);
-    }
-
+    
     if (loopmode == 0) {
         REG_SOUND3CNT_X = freqs[freq] | SOUND3PLAYLOOP | SOUND3INIT;
     } else {
         REG_SOUND3CNT_X = freqs[freq] | SOUND3PLAYONCE | SOUND3INIT;
     }
+
 }
 
 void snd_playSoundOnChannel4(u16 volume, u16 envdir, u16 envsteptime, u16 soundlength,
@@ -230,7 +232,7 @@ void snd_stopAllSounds() {
 #define EFFECT_KILL 0
 
 void snd_effect_kill(u8 channelId, u8 value) {
-    switch(channelId){
+    switch (channelId) {
         case 0:
             REG_SOUND1CNT_H &= value == 0 ? 0x3f : value;
             REG_SOUND1CNT_H |= (1 << 14);
@@ -257,7 +259,7 @@ void snd_tryToApplyEffect(u8 channelId, u8 effectNumber, u8 effectValue) {
     switch (effectNumber) {
 
         case EFFECT_KILL:
-            snd_effect_kill (channelId, effectValue);
+            snd_effect_kill(channelId, effectValue);
             break;
 
     }
