@@ -1,17 +1,19 @@
+CONTACTER l'auteur de HAM pour lui demander la permission d'utiliser HAM release.
+
 V0-02:
-- stabiliser les instruments WAV (version 0-02)
+- A TESTER stabiliser les instruments WAV (version 0-02)
 
 - refactoring pour les types d'effets : structure, ponctuel, long (refactoring_effects)
 - commande H (Hop) (version 0-02)
 - commande SW (Sweep) (version 0-02)
 - commande EN (Enveloppe) (version 0-02)
 
-- documentation: faire un tableau comparatif des cartouches
+- OK documentation: faire un tableau comparatif des cartouches
 - documentation: compléter la section technique
 
 - A TESTER composer: appliquer le transpose (version 0-02)
-- A TESTER ! interface: gérer un key-repeat global (étendre ce qui est fait sur le start) (refactoring_keys)
-- brancher l'interface de modification du key repeat global.
+- A TESTER ! interface: gérer un key-repeat global
+- brancher le key repeat sur le composer.
 
 
 v0-03:

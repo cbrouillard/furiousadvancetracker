@@ -104,7 +104,7 @@ void FAT_screenSong_movePageDown() {
 void FAT_screenSong_moveCursorAllDown() {
     FAT_screenSong_cursorY = SCREENSONG_LAST_BLOCK_Y;
     FAT_screenSong_currentStartLine = NB_SEQUENCES_IN_ONE_CHANNEL - SCREENSONG_NB_LINES_ON_SCREEN;
-    FAT_screenSong_currentSelectedLine = NB_SEQUENCES_IN_ONE_CHANNEL;
+    FAT_screenSong_currentSelectedLine = NB_SEQUENCES_IN_ONE_CHANNEL - 1;
     FAT_screenSong_printAllScreenText();
 }
 

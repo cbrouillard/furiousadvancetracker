@@ -70,7 +70,7 @@ INSTRUMENTS:
 --------------------------------------------------------
 START: lancer la lecture des notes / stopper la lecture
 A+DIRECTION: modifier la valeur sous le curseur (OK)
-R+DROITE/GAUCHE: changer le numéro d'instru en cours d'édition KO -> BUG sur le switchScreen :(
+R+DROITE/GAUCHE: changer le numéro d'instru en cours d'édition OK (version HAM release 2.80)
 L+DROITE/GAUCHE: changer le type d'instrument (changer d'onglet) (OK)
 
 EFFECTS:

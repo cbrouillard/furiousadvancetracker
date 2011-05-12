@@ -89,7 +89,7 @@
 \pagestyle{fancy}
 
 % Titre du document
-\title{\bf Manuel utilisateur}
+\title{\bf \SimpleImage{images/screen_title}{1.0} \\ Manuel utilisateur}
 %\date{2011}
 \author{\fatversion}
 
@@ -176,14 +176,85 @@
     
     Mais l'avantage d'une Gameboy, c'est la portabilité ! D'autant plus qu'un son émulé n'égalera jamais l'original. Pour exécuter \FAT sur une vraie Gameboy Advance, il vous faudra:
     \begin{itemize}
-        \item{une vraie Gameboy (scoop!)}
+        \item{une vraie Gameboy Advance(scoop!)}
         \item{une cartouche EZ-Flash, SuperCardToSD, ou autre ... par exemple ici: \href{http://www.r4i-r4.co.uk/products/EZ-Flash-iV-GBA-Mini-Card-for-Nintendo-GBA-and-DS-Lite.html}{www.r4i-r4.co.uk}}
         \item{une carte SD qui va bien avec la cartouche} 
     \end{itemize}\medskip
     
-    Après avoir investi dans tout ce petit matériel, il suffira de copier le fichier fat.gba sur la carte SD: direction la GBA !\medskip
+    Après avoir investi dans tout ce petit matériel, il suffira de copier le fichier fat.gba sur la carte SD: direction la GBA !
     
     \ColoredAnnotation{Attention ! Cette version de \FAT est expérimentale. Il est inutile d'investir trop d'argent dans le but de tester sur GBA. Patience !}
+    
+    Si vous tenez à acheter votre propre cartouche, alors référez vous au tableau ci-dessous, il devrait vous aider à faire votre choix.
+    
+    \subsection{Tableau de comparatif des cartouches pour GameboyAdvance}
+    
+    Il existe un certain nombres de cartouches permettant d'exécuter des programmes dits "homebrew" (amateur) ... comme \FAT ! Voici les quelques cartouches déjà testées avec \FAT :
+
+    % Configuration du tableau
+    %\tablefirsthead{\hline \rowcolor{blue} {\bf Cartouche} & {\bf "Gravure"} & {\bf Démarrage} & {\bf Sauvegarde} \\ \hline}
+    \tablehead{\hline \rowcolor{headertab} {\bf Cartouche} & {\bf "Gravure"} & {\bf Démarrage} & {\bf Sauvegarde} \\ \hline}
+    \tabletail{\hline \multicolumn{4}{|l|} {\small ...} \\ \hline}
+    \tablelasttail{\hline}
+    \begin{supertabular}{|p{3.5cm}|l|l|l|}
+        \hline
+            \begin{minipage}[c]{3cm}
+            \vspace{0.5cm}
+            \SimpleImage{images/supercardsd_djangofeet_sd}{0.2} 
+            \end{minipage} & 
+            \begin{minipage}{3cm}
+            Utilisez le logiciel officiel
+            \end{minipage} &
+            \begin{minipage}{2cm}
+            \textcolor{vert}{OK}
+            \end{minipage} &
+            \begin{minipage}{7cm}
+            La sauvegarde fonctionne mais il faut faire une manipulation supplémentaire: après avoir sauvegardé {\bf pressez R+L+A+START et validez}
+            \end{minipage} \\
+        \hline
+            \begin{minipage}[c]{3cm}
+            \vspace{0.5cm}
+            \SimpleImage{images/ezflash1}{0.2} 
+            \end{minipage} & 
+            \begin{minipage}{3cm}
+            Utilisez le logiciel officiel (et son linker USB)
+            \end{minipage} &
+            \begin{minipage}{2cm}
+            \textcolor{vert}{OK}
+            \end{minipage} &
+            \begin{minipage}{7cm}
+            Rien à signaler. Tout fonctionne ! C'est le meilleur choix.
+            \end{minipage} \\
+        \hline
+            \begin{minipage}[c]{3cm}
+            \vspace{0.5cm}
+            \SimpleImage{images/ultraflash2advance}{0.2} 
+            \end{minipage} & 
+            \begin{minipage}{3cm}
+            Utilisez les drivers officiels (la GBA fait office de linker)
+            \end{minipage} & 
+            \begin{minipage}{2cm}
+            \textcolor{vert}{OK}
+            \end{minipage} &
+            \begin{minipage}{7cm}
+            La sauvegarde fonctionne.
+            \end{minipage} \\
+        \hline
+            \begin{minipage}[c]{3cm}
+            \vspace{0.5cm}
+            \SimpleImage{images/supercardsd_sd}{0.2} 
+            \end{minipage} & 
+            \begin{minipage}{3cm}
+            ???
+            \end{minipage} & 
+            \begin{minipage}{2cm}
+            \textcolor{rouge}{KO}
+            \end{minipage} &
+            \begin{minipage}{7cm}
+            Non testé. Certaines personnes rapportent que cette cartouche ne permet pas de faire tourner \FAT :(
+            \end{minipage} \\
+    \hline
+    \end{supertabular}
     
     \subsection{Premier son}
 
@@ -236,7 +307,11 @@
     
         \subsubsection{Commandes}
         
-        \begin{tabular}{|l|l|}
+        % Configuration du tableau
+        \tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+        \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+        \tablelasttail{\hline}
+        \begin{supertabular}{|l|l|}
         \hline
             {\bf SELECT} (enfoncé) & Afficher la popup \\
             \hline
@@ -244,7 +319,7 @@
             \hline
             {\bf DROITE/GAUCHE} & Déplacer le curseur de pointage \\
         \hline
-        \end{tabular}
+        \end{supertabular}
   
     \subsection{L'écran SONG}
     
@@ -254,7 +329,11 @@
     
         \subsubsection{Commandes}
         
-        \begin{tabular}{|l|p{11cm}|}
+        % Configuration du tableau
+        \tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+        \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+        \tablelasttail{\hline}
+        \begin{supertabular}{|l|p{11cm}|}
         \hline
             {\bf SELECT} & Passer en mode popup \\
             \hline
@@ -284,7 +363,7 @@
             \hline
             {\bf L+B} & SI CASE NON VIDE | Changer le numéro de la séquence en copiant son contenu \\
         \hline
-        \end{tabular}
+        \end{supertabular}
         
     \subsection{L'écran BLOCKS}
 
@@ -296,7 +375,11 @@
     
         \subsubsection{Commandes}
         
-        \begin{tabular}{|l|p{11cm}|}
+        % Configuration du tableau
+        \tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+        \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+        \tablelasttail{\hline}
+        \begin{supertabular}{|l|p{11cm}|}
         \hline
             {\bf SELECT} & Passer en mode popup \\
             \hline
@@ -326,7 +409,7 @@
             \hline
             {\bf R+HAUT/BAS} & Sauter à la séquence précédente/suivante dans le séquenceur \\
         \hline
-        \end{tabular}
+        \end{supertabular}
         
     
     \subsection{L'écran NOTES}
@@ -337,7 +420,11 @@
     
     %\begin{figure}
         \begin{center}
-            \begin{tabular}{|l|l|}
+        % Configuration du tableau
+            \tablehead{\hline \rowcolor{headertab} {\bf FR} & {\bf EN} \\ \hline}
+            \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+            \tablelasttail{\hline}
+            \begin{supertabular}{|l|l|}
             \hline
                 {\bf DO} & C \\
                 \hline
@@ -353,7 +440,7 @@
                 \hline
                 {\bf SI} & B \\
             \hline    
-            \end{tabular}
+            \end{supertabular}
         \end{center}
     %\end{figure}
     
@@ -364,7 +451,11 @@
     
         \subsubsection{Commandes}
         
-        \begin{tabular}{|l|p{11cm}|}
+        % Configuration du tableau
+        \tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+        \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+        \tablelasttail{\hline}
+        \begin{supertabular}{|l|p{11cm}|}
         \hline
             {\bf SELECT} & Passer en mode popup \\
             \hline
@@ -396,7 +487,7 @@
             \hline
             {\bf B} & SI CASE VIDE | Coller la note préalablement coupée \\
         \hline
-        \end{tabular}
+        \end{supertabular}
     
     \subsection{L'écran INSTRUMENT}
     
@@ -419,10 +510,16 @@
         \item{les instrument NOISE sont, eux, prévus pour le canal 4: le canal NOI}
         \item{enfin, les instruments de type SAMPLE officient sur le canal 5 et 5: le SNA et SNB}
      \end{itemize}\medskip
+     
+     Mais \FAT est suffisamment souple pour permettre l'utilisation d'un instrument dans un canal qui ne lui est pas dédié: le comportement peut cependant être surprenant (voire carrément "hallucinant"). A vous de voir ce que vous souhaitez produire comme sonorités.
 
         \subsubsection{Commandes}
         
-        \begin{tabular}{|l|p{11cm}|}
+        % Configuration du tableau
+        \tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+        \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+        \tablelasttail{\hline}
+        \begin{supertabular}{|l|p{11cm}|}
         \hline
             {\bf SELECT} & Passer en mode popup \\
             \hline
@@ -434,7 +531,7 @@
             \hline
             {\bf L+DROITE/GAUCHE} & Changer le type d'instrument \\
         \hline
-        \end{tabular}
+        \end{supertabular}
     
         \subsubsection{Instrument de type PULSE}
         
@@ -555,9 +652,12 @@
     
     \Image{images/screen_project}{1.0}{L'écran PROJECT - pas grand chose pour le moment}
     
-        \subsubsection{Commandes}
-        
-        \begin{tabular}{|l|p{11cm}|}
+        \subsubsection{Commandes}        
+        % Configuration du tableau
+        \tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+        \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+        \tablelasttail{\hline}
+        \begin{supertabular}{|l|p{11cm}|}
         \hline
             {\bf SELECT} & Passer en mode popup \\
             \hline
@@ -565,7 +665,7 @@
             \hline
             {\bf START} & Lancer/stopper la lecture depuis le séquenceur \\ 
         \hline
-        \end{tabular}
+        \end{supertabular}
     
     \subsection{L'écran EFFECTS}
     
@@ -589,11 +689,26 @@
     
     Notez aussi que ces données seront enregistrées dans chacune de vos chansons. Vous pourrez préparer votre set de note à la maison et improviser en live sans forcer !\medskip
     
-    Essayez ! composez quelques séquences puis essayez de jouer avec le COMPOSER en même temps !
+    Essayez ! composez quelques séquences puis essayez de jouer avec le COMPOSER en même temps !\medskip
+    
+    \subsubsection{Paramétrage}
+    
+    Le composer peut également être paramétré:
+    
+    \Image{images/parameters_composer}{1.0}{Les paramètres de l'écran COMPOSER}
+    
+        \paragraph{Transpose} de 0 à FF. Ajoute une valeur de transpose. Cette valeur s'ajoutera à celle configurée pour le projet dans sa globalité. Notez que toutes les notes du composer seront transposées avec cette valeur.
+        
+        \paragraph{Key repeat} de 0 à FF. Règle le temps d'attente entre chaque lecture d'une note du composer. Plus cette valeur est élevée, plus le temps d'attente entre l'appui de deux touches sera grand. Laissez cette valeur à zéro pour désactiver le temps d'attente.
+    
     
         \subsubsection{Commandes}
         
-        \begin{tabular}{|l|p{11cm}|}
+        % Configuration du tableau
+        \tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+        \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+        \tablelasttail{\hline}
+        \begin{supertabular}{|l|p{11cm}|}
         \hline
             {\bf SELECT} & Passer en mode popup \\
             \hline
@@ -603,7 +718,7 @@
             \hline
             {\bf A+DIRECTION} & UNLOCKED | Changer la valeur de la note/instrument \\ 
         \hline
-        \end{tabular}
+        \end{supertabular}
     
   \section{Effets et commandes}
   

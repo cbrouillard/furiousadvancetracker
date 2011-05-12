@@ -433,7 +433,9 @@ void FAT_screenComposer_switchLocking() {
  * teste elle même l'appui sur les touches.
  */
 void FAT_screenComposer_playAffectedNotes() {
-    iCanPressAKey = 0;
+    if (FAT_tracker.composer.keyRepeat) {
+        iCanPressAKey = 0;
+    }
 
     if (F_CTRLINPUT_START_PRESSED) {
         FAT_screenComposer_switchLocking();
@@ -471,7 +473,9 @@ void FAT_screenComposer_playAffectedNotes() {
         FAT_player_playComposerNote(SCREENCOMPOSER_BTN_LEFT);
     }
 
-    FAT_keys_waitForAnotherKeyTouch();
+    if (FAT_tracker.composer.keyRepeat) {
+        FAT_keys_waitForAnotherKeyTouch();
+    }
 }
 
 #endif	/* SCREEN_COMPOSER_H */
