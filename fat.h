@@ -140,13 +140,13 @@ bool FAT_isCurrentlyPlaying = 0;
  */
 void FAT_player_timerFunc_iCanPressAKey() {
     waitForStart++;
-    if (waitForStart >= ( WAIT_FOR_START + FAT_tracker.keyRepeat ) && !iCanPressAKey) {
+    if (waitForStart >= (WAIT_FOR_START + FAT_tracker.keyRepeat) && !iCanPressAKey) {
         iCanPressAKey = 1;
         waitForStart = 0;
         M_TIM0CNT_IRQ_DISABLE
         M_TIM0CNT_TIMER_STOP
 #ifdef DEBUG_ON
-        ham_DrawText(21, 16, "KEY ON ");
+                ham_DrawText(21, 16, "KEY ON ");
 #endif
     }
 }
