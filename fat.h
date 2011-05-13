@@ -100,6 +100,7 @@ void FAT_player_stopPlayer();
 /** \brief Prototype. Fonction définie dans player.h. */
 void FAT_player_playComposerNote(u8 noteLine);
 
+
 /**
  * \brief Compteur pour décompter le temps d'attente entre 2 appuis de la touche START.
  */

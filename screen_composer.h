@@ -68,7 +68,6 @@ void FAT_screenComposer_switchLocking();
 void FAT_screenComposer_playAffectedNotes();
 
 #include "screen_composer_cursor.h"
-#include "fat.h"
 
 /**
  * \brief Fonction callback principale pour l'écran COMPOSER.
@@ -289,7 +288,7 @@ void FAT_screenComposer_pressA() {
                     // espace libre
                     FAT_data_composer_addDefaultNote(realLine);
                 }
-
+                
                 if (F_CTRLINPUT_RIGHT_PRESSED) {
                     iCanPressAKey = 0;
                     FAT_data_composer_changeValue(realLine, 1); // ajout de 1
@@ -309,6 +308,8 @@ void FAT_screenComposer_pressA() {
                     iCanPressAKey = 0;
                     FAT_data_composer_changeOctave(realLine, -1);
                 }
+                
+                FAT_data_composer_previewNote (realLine);
 
                 break;
             case SCREENCOMPOSER_COLUMN_ID_INST:
@@ -336,6 +337,8 @@ void FAT_screenComposer_pressA() {
                         iCanPressAKey = 0;
                         FAT_data_composer_changeInstrument(realLine, -16);
                     }
+                    
+                    FAT_data_composer_previewNote (realLine);
                 }
                 break;
             case SCREENCOMPOSER_COLUMN_ID_CMD_NAME:
@@ -438,6 +441,7 @@ void FAT_screenComposer_playAffectedNotes() {
     }
 
     if (F_CTRLINPUT_START_PRESSED) {
+        iCanPressAKey = 0;
         FAT_screenComposer_switchLocking();
     }
 
@@ -473,7 +477,7 @@ void FAT_screenComposer_playAffectedNotes() {
         FAT_player_playComposerNote(SCREENCOMPOSER_BTN_LEFT);
     }
 
-    if (FAT_tracker.composer.keyRepeat) {
+    if (FAT_tracker.composer.keyRepeat || iCanPressAKey == 0) {
         FAT_keys_waitForAnotherKeyTouch();
     }
 }
