@@ -183,9 +183,6 @@ void FAT_init() {
     // HAM !
     ham_Init();
 
-    //ham_InitRAM (RAM_TYPE_SRAM_256K);
-    //ham_ResetRAM ();
-
     ham_InitText(1);
     ham_SetBgMode(0);
     ham_SetTextCol(TEXT_COLOR, 0);
@@ -249,7 +246,10 @@ void FAT_showIntro() {
     ham_DrawText(1, 16, "SIZE %d octets", (sizeof (tracker)));
 #endif
     ham_DrawText(1, 19, "version %s", FAT_VERSION);
-    while (!F_CTRLINPUT_START_PRESSED && !F_CTRLINPUT_A_PRESSED && !F_CTRLINPUT_B_PRESSED) {
+    while (!F_CTRLINPUT_START_PRESSED && !F_CTRLINPUT_A_PRESSED && !F_CTRLINPUT_B_PRESSED
+            && !F_CTRLINPUT_DOWN_PRESSED && !F_CTRLINPUT_LEFT_PRESSED && !F_CTRLINPUT_RIGHT_PRESSED && !F_CTRLINPUT_UP_PRESSED
+            && !F_CTRLINPUT_L_PRESSED && !F_CTRLINPUT_R_PRESSED
+            && !F_CTRLINPUT_SELECT_PRESSED) {
     }
 
     ham_InitBg(2, 0, 3, 0);
@@ -276,9 +276,11 @@ void FAT_reinitScreen() {
  * Performance warning ! Afficher du texte via HAM est lent !
  */
 void FAT_forceClearTextLayer() {
+    mutex = 0;
     for (u8 l = 1; l < 20; l++) {
         ham_DrawText(0, l, "                              ");
     }
+    mutex = 1;
 }
 
 /**

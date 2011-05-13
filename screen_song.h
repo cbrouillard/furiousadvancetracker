@@ -48,7 +48,6 @@ void FAT_screenSong_pressB();
 ////////////////////////////////////////////////////
 
 #include "screen_song_cursor.h"
-#include "screen_blocks.h"
 
 /** \brief Stocke tous les noms des channels (afin de pouvoir les afficher). */
 const char* CHANNEL_NAME[6] = {"PU1\0", "PU2\0", "WAV\0", "NOI\0", "SNA\0", "SNB\0"};
