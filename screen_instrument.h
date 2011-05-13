@@ -100,7 +100,8 @@ void FAT_screenInstrument_printAllText(u8 type) {
             }
             ham_DrawText(1, 12, "OUTPUT    RL");
             ham_DrawText(1, 13, "SWEEP     %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].sweep);
-            ham_DrawText(1, 16, "TEST IT   C 4");
+            ham_DrawText(1, 16,  "TEST IT   %s%1x\0", 
+                    noteName[(FAT_data_simulator.note & 0xf0) >> 4], FAT_data_simulator.note & 0x0f);
             break;
         case INSTRUMENT_TYPE_WAVE:
             ham_DrawText(1, 4, "VOLUME    %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].volumeRatio);
@@ -119,7 +120,8 @@ void FAT_screenInstrument_printAllText(u8 type) {
             } else {
                 ham_DrawText(1, 11, "BANKMODE  DUA");
             }
-            ham_DrawText(1, 14, "TEST IT   C 4");
+            ham_DrawText(1, 14,  "TEST IT   %s%1x\0", 
+                    noteName[(FAT_data_simulator.note & 0xf0) >> 4], FAT_data_simulator.note & 0x0f);
             break;
         case INSTRUMENT_TYPE_NOISE:
             ham_DrawText(1, 4, "VOLUME    %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0x0f);
@@ -136,7 +138,8 @@ void FAT_screenInstrument_printAllText(u8 type) {
                 ham_DrawText(1, 11, "LENGTH    NA");
             }
             ham_DrawText(1, 12, "OUTPUT    RL");
-            ham_DrawText(1, 16, "TEST IT   C 4");
+            ham_DrawText(1, 16,  "TEST IT   %s%1x\0", 
+                    noteName[(FAT_data_simulator.note & 0xf0) >> 4], FAT_data_simulator.note & 0x0f);
             break;
         case INSTRUMENT_TYPE_SAMPLEA:
         case INSTRUMENT_TYPE_SAMPLEB:
@@ -543,6 +546,8 @@ void FAT_screenInstrument_pulse_pressA() {
             FAT_data_instrumentPulse_changeSweep(FAT_screenInstrument_currentInstrumentId, addedValue);
             break;
         case 8: // SIMULATOR
+            FAT_data_instrument_changeSimulator (FAT_screenInstrument_currentInstrumentId, addedValue);
+            FAT_data_instrument_playSimulator (FAT_screenInstrument_currentInstrumentId);
             break;
     }
 
@@ -575,6 +580,8 @@ void FAT_screenInstrument_wave_pressA() {
             FAT_data_instrumentWave_changeBankmode(FAT_screenInstrument_currentInstrumentId, addedValue);
             break;
         case 6: // SIMULATOR
+            FAT_data_instrument_changeSimulator (FAT_screenInstrument_currentInstrumentId, addedValue);
+            FAT_data_instrument_playSimulator (FAT_screenInstrument_currentInstrumentId);
             break;
     }
 
@@ -610,6 +617,8 @@ void FAT_screenInstrument_noise_pressA() {
             FAT_data_instrumentNoise_changeOutput(FAT_screenInstrument_currentInstrumentId, addedValue);
             break;
         case 7: // SIMULATOR
+            FAT_data_instrument_changeSimulator (FAT_screenInstrument_currentInstrumentId, addedValue);
+            FAT_data_instrument_playSimulator (FAT_screenInstrument_currentInstrumentId);
             break;
     }
 

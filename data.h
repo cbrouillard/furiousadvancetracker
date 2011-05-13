@@ -174,7 +174,7 @@ const char* noteEffectName[NB_NOTE_EFFECT] = {"K ", "H "};
  * \brief Mapping entre le nom de l'effet et son numéro dans la soundApi. Si le mapping 
  * a pour valeur NULL_VALUE, alors l'effet n'est pas géré par la soundAPI.
  */
-const u8 noteEffectNum[NB_NOTE_EFFECT] = { 0 , NULL_VALUE };
+const u8 noteEffectNum[NB_NOTE_EFFECT] = {0, NULL_VALUE};
 /**
  * \brief Tableau constant contenant tous les noms d'effets disponibles pour les blocks.
  */
@@ -240,6 +240,10 @@ typedef struct NOTE {
  * à "C 3".
  */
 note FAT_data_lastNoteWritten;
+/**
+ * \brief Espace mémoire dédié à la fonctionnalité simulator de l'écran INSTRUMENT.
+ */
+note FAT_data_simulator;
 /**
  * \brief Presse-papier pour couper/coller une note.
  */
@@ -353,7 +357,7 @@ typedef struct FAT {
     u8 tempo; /*!< Tempo pour la track en cours de composition. */
     u8 transpose; /*!< Valeur de transposition pour la track en cours de composition. */
     u8 keyRepeat; /*!< Valeur permettant de régler la vélocité de l'interface. FF = lent 00 = rapide */
-    
+
     channel channels[6]; /*!< Définition des channels: la GBA en dispose de 6. */
     sequence allSequences [NB_MAX_SEQUENCES]; /*!< Tableau (physique) contenant toutes les séquence. */
     block allBlocks [NB_MAX_BLOCKS]; /*!< Tableau (physique) contenant tous les blocks. */
@@ -400,7 +404,7 @@ void FAT_data_initData() {
     FAT_tracker.transpose = 0;
     FAT_tracker.keyRepeat = 0;
     strcpy(FAT_tracker.songName, "SONGNAME\0");
-    
+
     // init des variables du composer
     FAT_tracker.composer.transpose = 0;
     FAT_tracker.composer.keyRepeat = 0;
@@ -409,6 +413,11 @@ void FAT_data_initData() {
     FAT_data_lastNoteWritten.freq = 0;
     FAT_data_lastNoteWritten.instrument = 0;
     FAT_data_lastNoteWritten.note = 0x03;
+    FAT_data_lastNoteWritten.effect.name = NULL_VALUE;
+    FAT_data_simulator.freq = 0;
+    FAT_data_simulator.instrument = 0;
+    FAT_data_simulator.note = 0x03;
+    FAT_data_simulator.effect.name = NULL_VALUE;
 
     // block par défaut
     FAT_data_lastBlockWritten = 0;
@@ -814,7 +823,7 @@ bool FAT_data_isInstrumentFree(u8 inst) {
  * @param inst l'id de l'instrument
  * @return le type d'instrument demandé
  */
-u8 FAT_data_getInstrumentType (u8 inst){
+u8 FAT_data_getInstrumentType(u8 inst) {
     return FAT_tracker.allInstruments[inst].type;
 }
 
@@ -1190,6 +1199,54 @@ void FAT_data_instrument_changeType(u8 instrumentId, u8 newType) {
 }
 
 /**
+ * \brief Change la valeur de la note dans le simulator tout instrument confondus.
+ *  
+ * @param addedValue la valeur à ajouter/retrancher
+ */
+void FAT_data_instrument_changeSimulator(u8 inst, s8 addedValue) {
+    FAT_data_simulator.instrument = inst;
+
+    u8 noteName = (FAT_data_simulator.note & 0xf0) >> 4;
+    u8 noteOctave = FAT_data_simulator.note & 0x0f;
+    if (addedValue == 16 || addedValue == -16) {
+        // octave
+        if (addedValue == 16) addedValue = 1;
+        if (addedValue == -16) addedValue = -1;
+        if (
+                (addedValue < 0 && noteOctave > MIN_OCTAVE) ||
+                (addedValue > 0 && noteOctave < MAX_OCTAVE)
+
+                ) {
+            FAT_data_simulator.freq += addedValue * NB_NOTE;
+            FAT_data_simulator.note += addedValue;
+        }
+    } else {
+        // note
+        if (
+                (addedValue < 0 && noteName > 0) ||
+                (addedValue > 0 && noteName < NB_NOTE - 1)
+
+                ) {
+            FAT_data_simulator.freq += addedValue;
+            noteName += addedValue;
+            FAT_data_simulator.note = (noteName << 4) + noteOctave;
+        }
+    }
+}
+
+/**
+ * \brief Joue la note présente dans le simulator en fonction de l'instrument en cours d'édition.
+ *  
+ * @param inst l'instrument a utiliser
+ */
+void FAT_data_instrument_playSimulator(u8 inst) {
+    u8 mem_loopMode = FAT_tracker.allInstruments[inst].loopmode;
+    FAT_tracker.allInstruments[inst].loopmode = 1;
+    FAT_player_playNote(&FAT_data_simulator, FAT_tracker.allInstruments[inst].type);
+    FAT_tracker.allInstruments[inst].loopmode = mem_loopMode;            
+}
+
+/**
  * \brief Permet de changer le volume d'un instrumement de type PULSE.
  * 
  * @param instrumentId l'id de l'instrument à modifier
@@ -1548,19 +1605,19 @@ bool FAT_data_composer_isNoteEmpty(u8 line) {
  * 
  * @param line la ligne à jouer
  */
-void FAT_data_composer_previewNote (u8 line){
+void FAT_data_composer_previewNote(u8 line) {
     // copie en mémoire de l'instruemnt -> on doit modifier certaines données pour la preview comme la durée.
     u8 instId = FAT_tracker.composer.notes[line].instrument;
-    
+
     // se souvenir des vrais paramètres
     u8 mem_loopMode = FAT_tracker.allInstruments[instId].loopmode;
     u8 mem_soundLength = FAT_tracker.allInstruments[instId].soundlength;
-    
+
     FAT_tracker.allInstruments[instId].loopmode = 1;
     FAT_tracker.allInstruments[instId].soundlength = 0x20;
-    
+
     FAT_player_playNote(&FAT_tracker.composer.notes[line], FAT_tracker.allInstruments[instId].type);
-    
+
     FAT_tracker.allInstruments[instId].loopmode = mem_loopMode;
     FAT_tracker.allInstruments[instId].soundlength = mem_soundLength;
 }
@@ -1699,12 +1756,12 @@ void FAT_data_composer_changeInstrument(u8 line, s8 addedValue) {
  * @param composer le numéro du composer (unused pour le moment)
  * @param value la value à ajouter ou retrancher
  */
-void FAT_data_composer_changeTranspose (u8 composer, s8 value){
+void FAT_data_composer_changeTranspose(u8 composer, s8 value) {
     if (
             (value < 0 && FAT_tracker.composer.transpose > (-value - 1)) ||
             (value > 0 && FAT_tracker.composer.transpose < MAX_TRANSPOSE - value)
-            
-            ){
+
+            ) {
         FAT_tracker.composer.transpose += value;
     }
 }
@@ -1715,12 +1772,12 @@ void FAT_data_composer_changeTranspose (u8 composer, s8 value){
  * @param composer le numéro du composer (unused pour le moment)
  * @param value la valeur à ajouter ou retrancher
  */
-void FAT_data_composer_changeKeyRepeat(u8 composer, s8 value){
+void FAT_data_composer_changeKeyRepeat(u8 composer, s8 value) {
     if (
             (value < 0 && FAT_tracker.composer.keyRepeat > (-value - 1)) ||
             (value > 0 && FAT_tracker.composer.keyRepeat < MAX_KEYREPEAT - value)
-            
-            ){
+
+            ) {
         FAT_tracker.composer.keyRepeat += value;
     }
 }
@@ -1730,12 +1787,12 @@ void FAT_data_composer_changeKeyRepeat(u8 composer, s8 value){
  * 
  * @param addedValue la valeur a ajouter ou retrancher
  */
-void FAT_data_project_changeKeyRepeat(s8 addedValue){
+void FAT_data_project_changeKeyRepeat(s8 addedValue) {
     if (
             (addedValue < 0 && FAT_tracker.keyRepeat > (-addedValue - 1)) ||
             (addedValue > 0 && FAT_tracker.keyRepeat < MAX_KEYREPEAT - addedValue)
-            
-            ){
+
+            ) {
         FAT_tracker.keyRepeat += addedValue;
     }
 }
