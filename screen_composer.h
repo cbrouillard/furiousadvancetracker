@@ -25,13 +25,15 @@
 #define SCREENCOMPOSER_COLUMN_ID_CMD_NAME 2
 /** \brief Id de la colonne de la valeur de la commande. Utile pour la gestion du curseur. */
 #define SCREENCOMPOSER_COLUMN_ID_CMD_PARAM 3
+/** \brief Id de la colonne channel. Utile pour la gestion du curseur. */
+#define SCREENCOMPOSER_COLUMN_ID_CHANNEL 4
 /** \brief Nombre de lignes affichées dans le composer. */
 #define SCREENCOMPOSER_NB_LINES_ON_SCREEN 8
 /** \brief Définit le nombre de paramètre modifiables dans l'écran. */
 #define SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN 2
 
 /** \brief Numéro de case tile ou commence l'affichage des notes. */
-#define SCREENCOMPOSER_NOTE_LINE_X 11
+#define SCREENCOMPOSER_NOTE_LINE_X 10
 /** \brief Numéro de case tile ou commence l'affichage des notes. */
 #define SCREENCOMPOSER_LINE_START_Y 7
 /** \brief Numéro de touche L: utile pour la lecture de la note associée. */
@@ -108,10 +110,13 @@ void FAT_screenComposer_printNote(u8 line) {
 
         ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
                 line + SCREENCOMPOSER_LINE_START_Y,
-                "%s%1x %.2x\0", noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument);
+                "%s%1x %.2x      %.1x\0", 
+                noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument,
+                FAT_data_getInstrumentType (actualNote->instrument) + 1
+                );
     } else {
         ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
-                line + SCREENCOMPOSER_LINE_START_Y, "      \0");
+                line + SCREENCOMPOSER_LINE_START_Y, "             \0");
     }
     mutex = 1;
 }
@@ -152,14 +157,14 @@ void FAT_screenComposer_printAllScreenText() {
  */
 void FAT_screenComposer_printColumns() {
     mutex = 0;
-    ham_DrawText(8, 7, " L");
-    ham_DrawText(8, 8, " R");
-    ham_DrawText(8, 9, " A");
-    ham_DrawText(8, 10, " B");
-    ham_DrawText(8, 11, "UP");
-    ham_DrawText(8, 12, "RT");
-    ham_DrawText(8, 13, "DW");
-    ham_DrawText(8, 14, "LF");
+    ham_DrawText(7, 7, " L");
+    ham_DrawText(7, 8, " R");
+    ham_DrawText(7, 9, " A");
+    ham_DrawText(7, 10, " B");
+    ham_DrawText(7, 11, "UP");
+    ham_DrawText(7, 12, "RT");
+    ham_DrawText(7, 13, "DW");
+    ham_DrawText(7, 14, "LF");
     mutex = 1;
 }
 

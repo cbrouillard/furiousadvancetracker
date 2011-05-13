@@ -806,6 +806,16 @@ bool FAT_data_isInstrumentFree(u8 inst) {
 }
 
 /**
+ * \brief Retourne le type d'instrument (le channel sur lequel il sera spécialisé).
+ *  
+ * @param inst l'id de l'instrument
+ * @return le type d'instrument demandé
+ */
+u8 FAT_data_getInstrumentType (u8 inst){
+    return FAT_tracker.allInstruments[inst].type;
+}
+
+/**
  * \brief Méthode intelligente permettant d'allouer un nouveau numéro de block vide.
  * 
  * @param sequence le numéro de séquence

@@ -40,7 +40,7 @@ u8 FAT_screenComposer_currentSelectedColumn;
 /** \brief Position Y du dernier block (en pixels). */
 #define SCREENCOMPOSER_LAST_BLOCK_Y 111
 /** \brief Position X du premier block (en pixels). */
-#define SCREENCOMPOSER_FIRST_BLOCK_X 88
+#define SCREENCOMPOSER_FIRST_BLOCK_X 80
 /** \brief Position Y du premier block (en pixels). */
 #define SCREENCOMPOSER_FIRST_BLOCK_Y 56
 /** \brief Position des blocks de paramètres. */
@@ -92,7 +92,8 @@ void FAT_screenComposer_commitCursorMove() {
 void FAT_screenComposer_moveCursorDown() {
     if (FAT_screenComposer_currentSelectedLine < SCREENCOMPOSER_NB_LINES_ON_SCREEN + SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN) {
         if (FAT_screenComposer_currentSelectedLine >= 1) {
-            if (FAT_screenComposer_currentSelectedLine == 1) {
+            if (FAT_screenComposer_currentSelectedLine == 1 
+                    && FAT_screenComposer_currentSelectedColumn == 0) {
                 FAT_cursors_hideCursor2();
                 FAT_cursors_showCursor3();
             }
@@ -100,8 +101,8 @@ void FAT_screenComposer_moveCursorDown() {
             if (!(FAT_screenComposer_cursorY >= SCREENCOMPOSER_LAST_BLOCK_Y - 1)) {
                 FAT_screenComposer_currentSelectedLine++;
                 FAT_screenComposer_cursorY =
-                        (SCREENCOMPOSER_FIRST_BLOCK_Y-1) + 
-                        ((FAT_screenComposer_currentSelectedLine-2) * SCREENCOMPOSER_BLOCK_SIZE_Y);
+                        (SCREENCOMPOSER_FIRST_BLOCK_Y - 1) +
+                        ((FAT_screenComposer_currentSelectedLine - 2) * SCREENCOMPOSER_BLOCK_SIZE_Y);
                 FAT_screenComposer_printInfos();
             }
         } else {
