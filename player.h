@@ -105,7 +105,6 @@ void FAT_player_initCursors() {
     }
 }
 
-
 /**
  * \brief Joue une note écrite dans le composer.
  * 
@@ -142,7 +141,6 @@ void FAT_player_playNote(note* note, u8 channel) {
  */
 void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
     if (note->freq != NULL_VALUE) {
-        // TODO un effet à appliquer sur la note ?
         instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
         u16 sweepshifts = (inst->sweep & 0x70) >> 4;
         u16 sweeptime = (inst->sweep & 0x0F);
@@ -180,7 +178,9 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                 break;
         }
 
-    } else if (note->effect.name != NULL_VALUE) {
+    }
+    
+    if (note->effect.name != NULL_VALUE) {
         snd_tryToApplyEffect(channel, noteEffectNum[note->effect.name >> 1], note->effect.value);
     }
 }

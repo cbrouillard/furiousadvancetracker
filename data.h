@@ -68,7 +68,7 @@
 /**
  * \brief Définit le nombre d'effet disponibles pour les notes.
  */
-#define NB_NOTE_EFFECT 1
+#define NB_NOTE_EFFECT 2
 /**
  * \brief Définit le nombre d'effet disponibles pour les blocks.
  */
@@ -169,11 +169,12 @@ const char* noteName[NB_NOTE] = {"C ", "C\"", "D ", "D\"", "E ", "F ", "F\"", "G
 /**
  * \brief Tableau constant contenant tous les noms d'effets disponibles pour les notes.
  */
-const char* noteEffectName[NB_NOTE_EFFECT] = {"K "};
+const char* noteEffectName[NB_NOTE_EFFECT] = {"K ", "H "};
 /**
- * \brief Mapping entre le nom de l'effet et son numéro dans la soundApi.
+ * \brief Mapping entre le nom de l'effet et son numéro dans la soundApi. Si le mapping 
+ * a pour valeur NULL_VALUE, alors l'effet n'est pas géré par la soundAPI.
  */
-const u8 noteEffectNum[NB_NOTE_EFFECT] = { 0 };
+const u8 noteEffectNum[NB_NOTE_EFFECT] = { 0 , NULL_VALUE };
 /**
  * \brief Tableau constant contenant tous les noms d'effets disponibles pour les blocks.
  */
@@ -348,16 +349,16 @@ typedef struct INSTRUMENT {
  * Cette structure définit le tracker: toutes les données sont référencés dans cette espace.
  */
 typedef struct FAT {
+    char songName[SONG_NAME_MAX_LETTERS]; /*!< Nom de la track en cours de composition. */
+    u8 tempo; /*!< Tempo pour la track en cours de composition. */
+    u8 transpose; /*!< Valeur de transposition pour la track en cours de composition. */
+    u8 keyRepeat; /*!< Valeur permettant de régler la vélocité de l'interface. FF = lent 00 = rapide */
+    
     channel channels[6]; /*!< Définition des channels: la GBA en dispose de 6. */
     sequence allSequences [NB_MAX_SEQUENCES]; /*!< Tableau (physique) contenant toutes les séquence. */
     block allBlocks [NB_MAX_BLOCKS]; /*!< Tableau (physique) contenant tous les blocks. */
     instrument allInstruments[NB_MAX_INSTRUMENTS]; /*!< Tableau (physique) contenant tous les instruments. */
     composer composer; /*!< Données pour l'écran de composition. */
-
-    u8 tempo; /*!< Tempo pour la track en cours de composition. */
-    u8 transpose; /*!< Valeur de transposition pour la track en cours de composition. */
-    u8 keyRepeat; /*!< Valeur permettant de régler la vélocité de l'interface. FF = lent 00 = rapide */
-    char songName[SONG_NAME_MAX_LETTERS]; /*!< Nom de la track en cours de composition. */
 
     table tables[NB_MAX_TABLES]; /*!< Tableau (physique) contenant toutes les tables. */
 } tracker;
