@@ -388,6 +388,9 @@ u8 FAT_nextAvailableInstrumentId = 0;
  */
 u8 FAT_lastUsedInstrumentId = 0;
 
+/** \brief Prototype. Définit dans player.h. */
+void FAT_player_playNote(note* note, u8 channel);
+
 /**
  * \brief Initialise les données du tracker. Utile lors de l'allumage de la console.
  */
