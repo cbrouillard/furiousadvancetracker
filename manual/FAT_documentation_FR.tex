@@ -89,7 +89,7 @@
 \pagestyle{fancy}
 
 % Titre du document
-\title{\bf \SimpleImage{images/screen_title}{1.0} \\ Manuel utilisateur}
+\title{\bf \SimpleImage{images/furicat_color}{0.3} \\ Manuel utilisateur}
 %\date{2011}
 \author{\fatversion}
 
@@ -255,6 +255,19 @@
             \end{minipage} \\
     \hline
     \end{supertabular}
+    
+    \subsection{Changements pour la \fatversion}
+    
+    Liste des changements pour cette version de \FAT: \medskip
+    \begin{itemize}
+        \item{premiers tatonnements sur la sauvegarde et le chargement : 1 seule chanson pour le moment}
+        \item{première commande: la commande K (KILL)}
+        \item{la gestion des touches est meilleure (plus précise)}
+        \item{les instruments de type WAVE ont été stabilisés}
+        \item{la gestion du mode de sortie du son a été ajoutée (droite/gauche/les deux/rien}
+        \item{ajout du paramètrage sur l'écran COMPOSER (Transpose et KeyRepeat)}
+        \item{corrections de bugs divers (curseur écran instrument, ...)}
+    \end{itemize}
     
     \subsection{Premier son}
 
@@ -567,15 +580,19 @@
                 \item{3f: le son est très (très... voire trop) court}
             \end{itemize}
             
-            \paragraph{Paramètre : "Output"} Ce paramètre n'est actuellement pas disponible.
+            \paragraph{Paramètre : "Output"} Choisissez le mode de sortie du son.
+            \begin{itemize}
+                \item{L: le son sort à gauche (LEFT)}
+                \item{R: le son sort à droite (RIGHT)}
+                \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
+                \item{VIDE: le son ne sort plus (muet)}
+            \end{itemize}
             
             \paragraph{Paramètre : "Sweep"} de 0 à 7F. Ajoute un effet particulier sur la note (le mieux est encore de tester).
 
             \paragraph{Simulator} Cette fonctionnalité n'est pas encore prête: l'objectif sera de permettre de tester directement une note jouée avec les paramètres de l'instrument en cours. Cet espace permettra de changer la note de test.
         
         \subsubsection{Instrument de type WAVE}
-        
-        \ColoredAnnotation{Ce type d'instrument n'est pas encore suffisamment stable: il peut donner des résultats encore aléatoires. Tout ceci sera corrigé dans les versions futures.}
         
         \Image{images/screen_instrument_wave}{1.0}{Type WAVE}
         
@@ -599,6 +616,14 @@
         \paragraph{Paramètre : "Bank"} 0 ou 1. Le canal WAV de la GBA est capable de charger 2 banks dans sa mémoire. Vous pouvez décider quelle bank sera jouée. Sachant que la bank est directement chargée depuis le paramètre "Voice" juste au dessus (chaque "Voice" possède 2 banks).
         
         \paragraph{Paramètre : "Bankmode"} "SIN" ou "DUA". Le canal WAV est capable de faire une synthèse des 2 banks chargées en mémoire (le mode DUA = Dual) ou bien de n'en jouer qu'une seule (le mode SIN = Single). Notez que si vous réglez ce paramètre avec SIN, \FAT jouera la bank sélectionnée avec le paramètre "Bank".
+        
+        \paragraph{Paramètre : "Output"} Choisissez le mode de sortie du son.
+            \begin{itemize}
+                \item{L: le son sort à gauche (LEFT)}
+                \item{R: le son sort à droite (RIGHT)}
+                \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
+                \item{VIDE: le son ne sort plus (muet)}
+            \end{itemize}
         
         \paragraph{Simulator} Cette fonctionnalité n'est pas encore prète: l'objectif sera de permettre de tester directement une note jouée avec les paramètres de l'instrument en cours. Cet espace sera donc dédié au changement de la note à tester.
         
@@ -636,7 +661,13 @@
                 \item{3f: le son est très (très... voire trop) court}
             \end{itemize}
         
-        \paragraph{Paramètre : "Output"} Ce paramètre n'est actuellement pas disponible.
+        \paragraph{Paramètre : "Output"} Choisissez le mode de sortie du son.
+            \begin{itemize}
+                \item{L: le son sort à gauche (LEFT)}
+                \item{R: le son sort à droite (RIGHT)}
+                \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
+                \item{VIDE: le son ne sort plus (muet)}
+            \end{itemize}
         
         \paragraph{Simulator} Cette fonctionnalité n'est pas encore prête: l'objectif sera de permettre de tester directement une note jouée avec les paramètres de l'instrument en cours. Cet espace sera donc dédié au changement de la note à tester.
         
