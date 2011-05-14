@@ -41,6 +41,11 @@ u8 FAT_instrument_waveduty2_obj;
 /** \brief Sprite pour le paramètre waveduty: valeur 3. */
 u8 FAT_instrument_waveduty3_obj;
 
+/**
+ * \brief Tableau constant de chaines utiles à l'affichage du paramètre output d'un instrument.
+ */
+const char* outputText [4] = {"  ", "L ", " R", "LR"};
+
 #include "screen_instrument_cursor.h"
 
 // prototypes
@@ -48,6 +53,7 @@ void FAT_screenInstrument_init();
 void FAT_screenInstrument_checkButtons();
 void FAT_screenInstrument_switchScreen(u8 type);
 void FAT_screenInstrument_pressA();
+void FAT_screenInstrument_showOutput (u8 x, u8 y, u8 output);
 void FAT_screenInstrument_showWaveduty(u8 wavedutyValue, u8 spriteX, u8 spriteY);
 void FAT_screenInstrument_showEnvdir(u8 envdirValue, u8 spriteX, u8 spriteY);
 void FAT_screenInstrument_hideAllEnvdirSprites();
@@ -98,7 +104,7 @@ void FAT_screenInstrument_printAllText(u8 type) {
             } else {
                 ham_DrawText(1, 11, "LENGTH    NA");
             }
-            ham_DrawText(1, 12, "OUTPUT    RL");
+            FAT_screenInstrument_showOutput (1, 12, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
             ham_DrawText(1, 13, "SWEEP     %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].sweep);
             ham_DrawText(1, 16,  "TEST IT   %s%1x\0", 
                     noteName[(FAT_data_simulator.note & 0xf0) >> 4], FAT_data_simulator.note & 0x0f);
@@ -120,7 +126,8 @@ void FAT_screenInstrument_printAllText(u8 type) {
             } else {
                 ham_DrawText(1, 11, "BANKMODE  DUA");
             }
-            ham_DrawText(1, 14,  "TEST IT   %s%1x\0", 
+            FAT_screenInstrument_showOutput (1, 12, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
+            ham_DrawText(1, 15,  "TEST IT   %s%1x\0", 
                     noteName[(FAT_data_simulator.note & 0xf0) >> 4], FAT_data_simulator.note & 0x0f);
             break;
         case INSTRUMENT_TYPE_NOISE:
@@ -137,7 +144,7 @@ void FAT_screenInstrument_printAllText(u8 type) {
             } else {
                 ham_DrawText(1, 11, "LENGTH    NA");
             }
-            ham_DrawText(1, 12, "OUTPUT    RL");
+            FAT_screenInstrument_showOutput (1, 12, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
             ham_DrawText(1, 16,  "TEST IT   %s%1x\0", 
                     noteName[(FAT_data_simulator.note & 0xf0) >> 4], FAT_data_simulator.note & 0x0f);
             break;
@@ -196,6 +203,7 @@ void FAT_screenInstrument_switchScreen(u8 type) {
             ham_bg[2].mi = ham_InitMapSet((void *) screen_instrument_pulse_Map, 1024, 0, 0);
             FAT_screenInstrument_printInstrumentNumber();
             FAT_screenInstrument_printAllText(type);
+            FAT_screenInstrument_initCursor(type);
             FAT_screenInstrument_displayGoodCursor(type);
             break;
         case INSTRUMENT_TYPE_WAVE:
@@ -203,6 +211,7 @@ void FAT_screenInstrument_switchScreen(u8 type) {
             ham_bg[2].mi = ham_InitMapSet((void *) screen_instrument_wave_Map, 1024, 0, 0);
             FAT_screenInstrument_printInstrumentNumber();
             FAT_screenInstrument_printAllText(type);
+            FAT_screenInstrument_initCursor(type);
             FAT_screenInstrument_displayGoodCursor(type);
             break;
         case INSTRUMENT_TYPE_NOISE:
@@ -210,12 +219,14 @@ void FAT_screenInstrument_switchScreen(u8 type) {
             ham_bg[2].mi = ham_InitMapSet((void *) screen_instrument_noise_Map, 1024, 0, 0);
             FAT_screenInstrument_printInstrumentNumber();
             FAT_screenInstrument_printAllText(type);
+            FAT_screenInstrument_initCursor(type);
             FAT_screenInstrument_displayGoodCursor(type);
             break;
         case INSTRUMENT_TYPE_SAMPLEA:
         case INSTRUMENT_TYPE_SAMPLEB:
             ham_bg[2].ti = ham_InitTileSet((void*) screen_instrument_sample_Tiles, SIZEOF_16BIT(screen_instrument_sample_Tiles), 1, 1);
             ham_bg[2].mi = ham_InitMapSet((void *) screen_instrument_sample_Map, 1024, 0, 0);
+            
             FAT_screenInstrument_printInstrumentNumber();
             FAT_screenInstrument_printAllText(type);
             FAT_screenInstrument_displayGoodCursor(type);
@@ -459,6 +470,17 @@ void FAT_screenInstrument_showEnvdir(u8 envdirValue, u8 spriteX, u8 spriteY) {
 }
 
 /**
+ * \brief Affiche la valeur de l'output.
+ *  
+ * @param x la position du texte (en tiles)
+ * @param y la position du texte (en tiles)
+ * @param output la valeur de paramètre (0,1,2 ou 3)
+ */
+void FAT_screenInstrument_showOutput (u8 x, u8 y, u8 output){
+    ham_DrawText(x, y, "OUTPUT    %.2s", outputText[output]);
+}
+
+/**
  * \brief Affiche le bon sprite pour la valeur du waveduty.
  * 
  * @param wavedutyValue la valeur du paramètre
@@ -579,7 +601,10 @@ void FAT_screenInstrument_wave_pressA() {
         case 5: // BANKMODE
             FAT_data_instrumentWave_changeBankmode(FAT_screenInstrument_currentInstrumentId, addedValue);
             break;
-        case 6: // SIMULATOR
+        case 6: // OUTPUT
+            FAT_data_instrumentWave_changeOutput(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 7: // SIMULATOR
             FAT_data_instrument_changeSimulator (FAT_screenInstrument_currentInstrumentId, addedValue);
             FAT_data_instrument_playSimulator (FAT_screenInstrument_currentInstrumentId);
             break;

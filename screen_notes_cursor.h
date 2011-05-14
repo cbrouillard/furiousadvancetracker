@@ -151,5 +151,27 @@ void FAT_screenNotes_moveCursorLeft(){
     }
 }
 
+/**
+ * \brief Déplace le curseur tout en haut (ligne 0).
+ * 
+ * Attention, la validation du déplacement doit être effectuée avec FAT_screenNotes_commitCursorMove(). 
+ */
+void FAT_screenNotes_moveCursorAllUp (){
+    FAT_screenNotes_currentSelectedLine = 0;
+    FAT_screenNotes_cursorY = SCREENNOTES_FIRST_BLOCK_Y - 1;
+    FAT_screenNotes_printInfos();
+}
+
+/**
+ * \brief Déplace le curseur tout en bas (ligne 16).
+ * 
+ * Attention, la validation du déplacement doit être effectuée avec FAT_screenNotes_commitCursorMove(). 
+ */
+void FAT_screenNotes_moveCursorAllDown (){
+    FAT_screenNotes_currentSelectedLine = SCREENNOTES_NB_LINES_ON_SCREEN - 1;
+    FAT_screenNotes_cursorY = SCREENNOTES_LAST_BLOCK_Y;
+    FAT_screenNotes_printInfos();
+}
+
 #endif	/* SCREEN_NOTES_CURSOR_H */
 

@@ -295,12 +295,20 @@ void FAT_screenNotes_checkButtons() {
 
                 if (F_CTRLINPUT_DOWN_PRESSED) {
                     iCanPressAKey = 0;
-                    FAT_screenNotes_moveCursorDown();
+                    if (F_CTRLINPUT_L_PRESSED) {
+                        FAT_screenNotes_moveCursorAllDown();
+                    } else {
+                        FAT_screenNotes_moveCursorDown();
+                    }
                 }
 
                 if (F_CTRLINPUT_UP_PRESSED) {
                     iCanPressAKey = 0;
-                    FAT_screenNotes_moveCursorUp();
+                    if (F_CTRLINPUT_L_PRESSED) {
+                        FAT_screenNotes_moveCursorAllUp();
+                    } else {
+                        FAT_screenNotes_moveCursorUp();
+                    }
                 }
 
                 FAT_screenNotes_commitCursorMove();

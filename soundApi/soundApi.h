@@ -49,7 +49,7 @@ void snd_init_soundApi();
 void snd_playSoundOnChannel1(
         u16 sweeptime, u16 sweepdir, u16 sweepshifts, u16 volume,
         u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
-        u16 loopmode, u16 sfreq, u8 transpose);
+        u16 loopmode, u8 output, u16 sfreq, u8 transpose);
 
 /**
  * \brief Joue un son sur le channel 1.
@@ -80,7 +80,7 @@ void snd_simple_playSoundOnChannel1(u8 sweep, u16 envelope, u8 mode,
  */
 void snd_playSoundOnChannel2(u16 volume,
         u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
-        u16 loopmode, u16 sfreq, u8 transpose);
+        u16 loopmode, u8 output, u16 sfreq, u8 transpose);
 
 /**
  * \brief Méthode simplifiée pour jouer un son sur le channel 2. <b>NON IMPLEMENTE!</b>
@@ -107,7 +107,7 @@ void snd_simple_playSoundOnChannel2(u16 envelope,
  * @param transpose le paramètre de transposition
  */
 void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voice,
-        u16 bank, u16 bankMode, u16 freq, u8 transpose);
+        u16 bank, u16 bankMode, u8 output, u16 freq, u8 transpose);
 
 /**
  * \brief Méthode simplifiée pour jouer un son sur le channel 3. <b>NON IMPLEMENTE!</b>
@@ -128,7 +128,7 @@ void snd_simple_playSoundOnChannel3();
  * @param transpose
  */
 void snd_playSoundOnChannel4(u16 volume, u16 envdir, u16 envsteptime, u16 soundlength,
-        u16 loopmode, u16 shiftFreq, u16 stepping, u16 freqRatio, u8 transpose);
+        u16 loopmode, u8 output, u16 shiftFreq, u16 stepping, u16 freqRatio, u8 transpose);
 
 /**
  * \brief Méthode simplifiée pour jouer un son sur le channel 4. <b>NON IMPLEMENTE!</b>

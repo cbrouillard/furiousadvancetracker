@@ -157,6 +157,7 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                         sweeptime, sweepdir, sweepshifts,
                         inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->wavedutyOrPolynomialStep,
                         inst->soundlength, inst->loopmode,
+                        inst->output,
                         note->freq, transpose + FAT_tracker.transpose);
                 break;
             case 1: // PU2
@@ -164,17 +165,20 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                 snd_playSoundOnChannel2(inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5,
                         inst->wavedutyOrPolynomialStep,
                         inst->soundlength, inst->loopmode,
+                        inst->output,
                         note->freq, transpose + FAT_tracker.transpose);
                 break;
 
             case 2: // WAV
                 snd_playSoundOnChannel3(inst->volumeRatio, inst->soundlength, inst->loopmode, inst->voiceAndBank & 0x1f,
-                        (inst->voiceAndBank & 0x20) >> 5, (inst->voiceAndBank & 0x40) >> 6, note->freq, transpose + FAT_tracker.transpose);
+                        (inst->voiceAndBank & 0x20) >> 5, (inst->voiceAndBank & 0x40) >> 6, 
+                        inst->output,note->freq, transpose + FAT_tracker.transpose);
                 break;
             case 3: // NOISE
                 //ham_DrawText (23, 16, "NOI");
                 snd_playSoundOnChannel4(inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->soundlength,
-                        inst->loopmode, note->note & 0x0f, inst->wavedutyOrPolynomialStep, note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
+                        inst->loopmode, inst->output, note->note & 0x0f, inst->wavedutyOrPolynomialStep, 
+                        note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
                 break;
         }
 

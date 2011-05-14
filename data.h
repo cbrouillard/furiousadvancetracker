@@ -342,6 +342,7 @@ typedef struct INSTRUMENT {
 
     // supprimer cette variable -> volume existe !
     u8 volumeRatio; /*!< Stocke le volume pour un instrument de type WAVE. */
+    u8 output; /*!< Stocke la sortie d'un son : gauche ou droite. 0 __ / 1 L_ / 2 R_ / 3 RL */
 
     u8 table; /*!< Numéro de table de commandes à appliquer pour chaque note assignée à cet instrument. */
 } instrument;
@@ -904,6 +905,7 @@ void FAT_data_initInstrumentIfNeeded(u8 instId, u8 channel) {
         FAT_tracker.allInstruments[instId].soundlength = 0;
         FAT_tracker.allInstruments[instId].loopmode = 0;
         FAT_tracker.allInstruments[instId].voiceAndBank = 0;
+        FAT_tracker.allInstruments[instId].output = 3; //LR
 
         FAT_tracker.allInstruments[instId].type = channel;
     }
@@ -1385,26 +1387,46 @@ void FAT_data_instrumentNoise_changePolystep(u8 instrumentId, s8 value) {
 /**
  * \brief Change le paramètre "output" (sortie droite/gauche) pour un instrument de type PULSE.
  *  
- * TODO à implémenter
- * 
  * @param instrumentId l'id de l'instrument à modifier
  * @param value la valeur à ajouter ou retrancher
  */
 void FAT_data_instrumentPulse_changeOutput(u8 instrumentId, s8 value) {
-
+    switch (value){
+        case -1: // touche LEFT
+            FAT_tracker.allInstruments[instrumentId].output = 1;
+            break;
+        case 1: // touche DROITE
+            FAT_tracker.allInstruments[instrumentId].output = 2;
+            break;
+        case -16: // touche BAS
+            FAT_tracker.allInstruments[instrumentId].output = 0;
+            break;
+        case 16: // touche HAUT
+            FAT_tracker.allInstruments[instrumentId].output = 3;
+            break;
+    }
 }
 
 /**
  * \brief Change le paramètre "output" (sortie droite/gauche) pour un instrument de type NOISE.
  *  
- * TODO à implémenter
- * 
  * @param instrumentId l'id de l'instrument à modifier
  * @param value la valeur à ajouter ou retrancher
  */
 void FAT_data_instrumentNoise_changeOutput(u8 instrumentId, s8 value) {
     FAT_data_instrumentPulse_changeOutput(instrumentId, value);
 }
+
+/**
+ * \brief Change le paramètre "output" (sortie droite/gauche) pour un instrument de type WAVE.
+ *  
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
+void FAT_data_instrumentWave_changeOutput(u8 instrumentId, s8 value) {
+    FAT_data_instrumentPulse_changeOutput(instrumentId, value);
+}
+
 
 /**
  * \brief Change le paramètre "soundlength" (durée du son) pour un instrument de type PULSE.
