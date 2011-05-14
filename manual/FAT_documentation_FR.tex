@@ -540,7 +540,7 @@
             \hline
             {\bf A+DIRECTION} & Modifier la valeur sous le curseur \\
             \hline
-            {\bf R+DROITE/GAUCHE} & Changer le numéro d'instrument en cours d'édition {\bf ATTENTION BUG POUR LE MOMENT} \\
+            {\bf R+DROITE/GAUCHE} & Changer le numéro d'instrument en cours d'édition \\
             \hline
             {\bf L+DROITE/GAUCHE} & Changer le type d'instrument \\
         \hline
@@ -590,7 +590,7 @@
             
             \paragraph{Paramètre : "Sweep"} de 0 à 7F. Ajoute un effet particulier sur la note (le mieux est encore de tester).
 
-            \paragraph{Simulator} Cette fonctionnalité n'est pas encore prête: l'objectif sera de permettre de tester directement une note jouée avec les paramètres de l'instrument en cours. Cet espace permettra de changer la note de test.
+            \paragraph{Simulator} Changez la note inscrite dans cet espace: celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.
         
         \subsubsection{Instrument de type WAVE}
         
@@ -625,7 +625,7 @@
                 \item{VIDE: le son ne sort plus (muet)}
             \end{itemize}
         
-        \paragraph{Simulator} Cette fonctionnalité n'est pas encore prète: l'objectif sera de permettre de tester directement une note jouée avec les paramètres de l'instrument en cours. Cet espace sera donc dédié au changement de la note à tester.
+        \paragraph{Simulator} Changez la note inscrite dans cet espace: celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.
         
         \subsubsection{Instrument de type NOISE}
         
@@ -669,7 +669,7 @@
                 \item{VIDE: le son ne sort plus (muet)}
             \end{itemize}
         
-        \paragraph{Simulator} Cette fonctionnalité n'est pas encore prête: l'objectif sera de permettre de tester directement une note jouée avec les paramètres de l'instrument en cours. Cet espace sera donc dédié au changement de la note à tester.
+        \paragraph{Simulator} Changez la note inscrite dans cet espace: celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.
         
         \subsubsection{Instrument de type SAMPLE}
         
@@ -679,9 +679,21 @@
     
     \subsection{L'écran PROJECT}
     
-    L'écran PROJECT fait office de gestionnaire de propriétés pour votre chanson. A l'heure actuelle, seules les propriétés de "Transpose" et de "Tempo" sont fonctionnelles.
+    L'écran PROJECT fait office de gestionnaire de propriétés pour votre chanson. 
     
     \Image{images/screen_project}{1.0}{L'écran PROJECT - pas grand chose pour le moment}
+
+        \subsubsection{Paramètres}
+        
+        \paragraph{Tempo} Le tempo du projet. Ce tempo n'est pour le moment pas correct (même s'il semble accélerer et ralentir le rythme de la chanson, il est encore mal calculé et ne correspond pas aux standards).
+
+        \paragraph{Transpose} Réglez la transposition de tout le projet.
+
+        \paragraph{"Save PRJ" (sauvegarder)}  Sauvegarde le projet en cours. ATTENTION ! Il n'y a pour le moment qu'un seul emplacement pour la sauvegarde !
+        
+        \paragraph{"Load PRJ" (charger)} Charge un projet depuis la sauvegarde. ATTENTION ! Il n'y a pour le moment qu'un seul emplacement pour la sauvegarde ! Votre travail en cours sera impitoyablement écrasé.
+        
+        \paragraph{"Keyrepeat" (temps de répétition)} Ce paramètre permet de régler le temps d'attente entre chaque appui d'une touche. Plus cette valeur est grande, plus l'interface est lente :)
     
         \subsubsection{Commandes}        
         % Configuration du tableau
@@ -753,6 +765,11 @@
     
   \section{Effets et commandes}
   
-  \ColoredAnnotation{Désolé ! pas d'effets ni de commandes pour cette version. Il va falloir se débrouiller avec les paramètres d'instruments.}
+  \ColoredAnnotation{Désolé ! Pas beaucoup d'effets pour le moment: il va falloir s'en contenter pour l'heure. Plusieurs commandes sont aux programme et débarqueront dans les versions suivantes. Patience !}
+  
+  \subsection{K (KILL)}
+  
+  Cette commande permet de stopper (kill = tuer) le son. 
+  \ColoredAnnotation{La valeur pour ce paramètre n'est pas encore prise en compte}
 	
 \end{document}
