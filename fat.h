@@ -19,6 +19,8 @@
 #ifndef _FAT_H_
 #define _FAT_H_
 
+#define SCREEN_LAYER 3
+
 /** \brief Id écran projet */
 #define SCREEN_PROJECT_ID 0
 /** \brief Id écran live */
@@ -124,6 +126,7 @@ void FAT_keys_waitForAnotherKeyTouch();
 bool FAT_isCurrentlyPlaying = 0;
 
 #include "popup.h"
+#include "yesno_dialog.h"
 #include "screen_song.h"
 #include "screen_project.h"
 #include "screen_live.h"
@@ -184,8 +187,8 @@ void FAT_init() {
     // HAM !
     ham_Init();
 
-    ham_InitText(1);
     ham_SetBgMode(0);
+    ham_InitText(1);
     ham_SetTextCol(TEXT_COLOR, 0);
 
     ham_SetFxMode(FX_LAYER_SELECT(0, 0, 0, 0, 1, 0),
@@ -199,6 +202,7 @@ void FAT_init() {
 
     // initialisation de l'écran "Popup" (la map de déplacement)
     FAT_popup_init();
+    // initialisation du layer Dialog
 
     // initialisation des curseurs
     FAT_initCursor1();
@@ -239,12 +243,12 @@ void FAT_showIntro() {
 
     // jouer un petit son d'exemple
     snd_tmp_playSampleTest();
-    
+
     FAT_initIntroPalette();
 
-    ham_bg[2].ti = ham_InitTileSet((void*) screen_intro_Tiles, SIZEOF_16BIT(screen_intro_Tiles), 1, 1);
-    ham_bg[2].mi = ham_InitMapSet((void *) screen_intro_Map, 1024, 0, 0);
-    ham_InitBg(2, 1, 3, 0);
+    ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_intro_Tiles, SIZEOF_16BIT(screen_intro_Tiles), 1, 1);
+    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_intro_Map, 1024, 0, 0);
+    ham_InitBg(SCREEN_LAYER, 1, 0, 0);
 #ifdef DEBUG_ON
     ham_DrawText(1, 15, "DEBUG ON");
     ham_DrawText(1, 16, "SIZE %d octets", (sizeof (tracker)));
@@ -256,7 +260,7 @@ void FAT_showIntro() {
             && !F_CTRLINPUT_SELECT_PRESSED) {
     }
 
-    ham_InitBg(2, 0, 3, 0);
+    ham_InitBg(SCREEN_LAYER, 0, 3, 0);
     FAT_initScreenPalette();
 }
 
@@ -266,10 +270,10 @@ void FAT_showIntro() {
  * <b>NE PAS TOUCHER !  </b>
  */
 void FAT_reinitScreen() {
-    if (ham_bg[2].ti) {
+    if (ham_bg[SCREEN_LAYER].ti) {
         //        ham_InitBg(2, 0, 3, 0);
-        ham_DeInitTileSet(ham_bg[2].ti);
-        ham_DeInitMapSet(ham_bg[2].mi);
+        ham_DeInitTileSet(ham_bg[SCREEN_LAYER].ti);
+        ham_DeInitMapSet(ham_bg[SCREEN_LAYER].mi);
     }
     FAT_forceClearTextLayer();
 }

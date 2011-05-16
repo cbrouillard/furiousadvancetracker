@@ -1879,8 +1879,6 @@ void FAT_data_project_save() {
     }
 
     gamepak[counter] = 0x5a;
-
-    ham_DrawText(23, 16, "SAVED  !");
     mutex = 1;
 }
 
@@ -1897,8 +1895,6 @@ void FAT_data_project_load() {
         tracker[counter] = gamepak[counter];
         counter++;
     }
-
-    ham_DrawText(23, 16, "LOADED !");
     mutex = 1;
 }
 

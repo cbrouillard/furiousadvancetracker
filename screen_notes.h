@@ -383,7 +383,7 @@ void FAT_screenNotes_pressA() {
                         FAT_screenNotes_currentSelectedLine, -1);
             }
 
-            if (FAT_data_isPreviewEnabled()) {
+            if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying) {
                 FAT_data_note_previewNote(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine);
             }
@@ -422,12 +422,12 @@ void FAT_screenNotes_pressA() {
                             FAT_screenNotes_currentSelectedLine, -16);
                 }
             }
-            
-            if (FAT_data_isPreviewEnabled()) {
+
+            if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying) {
                 FAT_data_note_previewNote(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine);
             }
-            
+
             break;
 
         case SCREENNOTES_COLUMN_ID_CMD_NAME:

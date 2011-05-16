@@ -18,9 +18,6 @@
 #ifndef _POPUP_H_
 #define _POPUP_H_
 
-#include "fat.h"
-
-
 /**
  * \brief Definit le background utilisé pour afficher la popup. BG0
  */
@@ -130,14 +127,24 @@ void FAT_popup_checkButtons() {
  * jusqu'à extinction du programme. 
  */
 void FAT_popup_init() {
-    map_fragment_info_ptr popup;
+    //    map_fragment_info_ptr popup;
+    //
+    //    // initialisation de la popup de déplacement (cachée)
+    //    ham_bg[POPUP_LAYER].ti = ham_InitTileSet((void*) popup_Tiles, SIZEOF_16BIT(popup_Tiles), 1, 1);
+    //    ham_bg[POPUP_LAYER].mi = ham_InitMapEmptySet(0, 0);
+    //    popup = ham_InitMapFragment((void*) popup_Map, 30, 20, 0, 0, 30, 20, 0);
+    //    ham_InsertMapFragment(popup, POPUP_LAYER, 0, 0);
+    //    ham_InitBg(POPUP_LAYER, 1, 0, 0);
+    if (ham_bg[POPUP_LAYER].ti) {
+        //        ham_InitBg(2, 0, 3, 0);
+        ham_DeInitTileSet(ham_bg[POPUP_LAYER].ti);
+        ham_DeInitMapSet(ham_bg[POPUP_LAYER].mi);
+    }
 
-    // initialisation de la popup de déplacement (cachée)
     ham_bg[POPUP_LAYER].ti = ham_InitTileSet((void*) popup_Tiles, SIZEOF_16BIT(popup_Tiles), 1, 1);
-    ham_bg[POPUP_LAYER].mi = ham_InitMapEmptySet(0, 0);
-    popup = ham_InitMapFragment((void*) popup_Map, 30, 20, 0, 0, 30, 20, 0);
-    ham_InsertMapFragment(popup, POPUP_LAYER, 0, 0);
+    ham_bg[POPUP_LAYER].mi = ham_InitMapSet((void *) popup_Map, 1024, 0, 0);
     ham_InitBg(POPUP_LAYER, 1, 0, 0);
+
     FAT_popup_hide();
 }
 
@@ -184,7 +191,7 @@ void FAT_popup_showCursors() {
  * \brief Affiche l'écran popup. Cette méthode affiche également les curseurs. 
  */
 void FAT_popup_show() {
-    ham_SetBgVisible(0, 1);
+    ham_SetBgVisible(POPUP_LAYER, 1);
     FAT_popup_showCursors();
 }
 
@@ -192,7 +199,7 @@ void FAT_popup_show() {
  * \brief Cache l'écran popup. Cette méthode cache aussi les curseurs. 
  */
 void FAT_popup_hide() {
-    ham_SetBgVisible(0, 0);
+    ham_SetBgVisible(POPUP_LAYER, 0);
     FAT_popup_hideCursors();
 }
 

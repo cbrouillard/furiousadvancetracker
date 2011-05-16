@@ -19,6 +19,7 @@
 #define _SCREEN_PROJECT_H_
 
 #include "screen_project_cursor.h"
+#include "yesno_dialog.h"
 
 /** \brief Petit tableau pour stocker les chaines YES et NOP. */
 const char* yesOrNo[2] = {"NOP\0", "YES\0"};
@@ -53,8 +54,8 @@ void FAT_screenProject_printInfos() {
     ham_DrawText(1, 5, "TRANSPOSE %.2x", FAT_tracker.transpose);
     ham_DrawText(1, 8, "SAVE PRJ  OK");
     ham_DrawText(1, 9, "LOAD PRJ  OK");
-    ham_DrawText(1,12, "KEYREPEAT %.2x", FAT_tracker.keyRepeat);
-    ham_DrawText(1,13, "PREVIEW   %.3s", yesOrNo[FAT_tracker.previewEnable!=0]);
+    ham_DrawText(1, 12, "KEYREPEAT %.2x", FAT_tracker.keyRepeat);
+    ham_DrawText(1, 13, "PREVIEW   %.3s", yesOrNo[FAT_tracker.previewEnable != 0]);
     ham_DrawText(1, 1, "PROJECT: %s", FAT_tracker.songName);
     mutex = 1;
 }
@@ -183,18 +184,20 @@ void FAT_screenProject_pressA() {
             break;
         case 2:
             // TODO afficher la boite de dialogue
-            FAT_data_project_save();
+            FAT_yesno_show(DIALOG_SAVE);
+            //FAT_data_project_save();
             break;
         case 3:
             // TODO afficher la boite de dialogue
-            FAT_data_project_load();
+            FAT_yesno_show(DIALOG_LOAD);
+            //            FAT_data_project_load();
             break;
         case 4:
             FAT_data_project_changeKeyRepeat(addedValue);
             FAT_screenProject_printInfos();
             break;
         case 5:
-            FAT_data_project_changePreview (addedValue);
+            FAT_data_project_changePreview(addedValue);
             FAT_screenProject_printInfos();
             break;
     }

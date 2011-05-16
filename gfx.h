@@ -63,6 +63,13 @@
 #include "gfx/screen_effects.raw.c"
 #include "gfx/screen_effects.map.c"
 
+// DIALOGUES
+#include "gfx/screen_dialog_save.raw.c"
+#include "gfx/screen_dialog_save.map.c"
+
+#include "gfx/screen_dialog_load.raw.c"
+#include "gfx/screen_dialog_load.map.c"
+
 // SPRITES
 #include "gfx/actual_screen_popup.raw.c"
 #include "gfx/cursor_popup.raw.c"

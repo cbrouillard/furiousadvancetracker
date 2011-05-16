@@ -66,9 +66,8 @@ int main() {
     snd_init_soundApi();
 
     FAT_showIntro();
-
     FAT_screenSong_init();
-
+    
     while (1) {
     }
     return 0;
