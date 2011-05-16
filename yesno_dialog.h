@@ -18,13 +18,13 @@
 #ifndef _YESNO_DIALOG_H_
 #define	_YESNO_DIALOG_H_
 
-#include "fat.h"
-
-
 #define DIALOG_LAYER 0
 
 #define DIALOG_SAVE 0
 #define DIALOG_LOAD 1
+
+// Prototypes
+void FAT_yesno_close ();
 
 
 /**
@@ -78,6 +78,9 @@ void FAT_yesno_close (){
     FAT_switchToScreen(FAT_currentScreen);
 }
 
+/**
+ * \brief Ouvre la boite de dialogue (modale) permettant la sauvegarde du projet.
+ */
 void FAT_yesno_dialogSave (){
  
     ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*) screen_dialog_save_Tiles, SIZEOF_16BIT(screen_dialog_save_Tiles), 1, 1);
@@ -89,6 +92,9 @@ void FAT_yesno_dialogSave (){
     
 }
 
+/**
+ * \brief Ouvre la boite de dialogue (modale) pour le chargement du projet.
+ */
 void FAT_yesno_dialogLoad (){
  
     ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*) screen_dialog_load_Tiles, SIZEOF_16BIT(screen_dialog_load_Tiles), 1, 1);
@@ -100,9 +106,13 @@ void FAT_yesno_dialogLoad (){
     
 }
 
+/**
+ * \brief Fonction wrapper permettant l'ouverture de toutes les boites de dialogues définies.
+ *
+ * @param idDialog l'id de la boite de dialogue
+ */
 void FAT_yesno_show (u8 idDialog){
     if (ham_bg[POPUP_LAYER].ti) {
-        //        ham_InitBg(2, 0, 3, 0);
         ham_DeInitTileSet(ham_bg[POPUP_LAYER].ti);
         ham_DeInitMapSet(ham_bg[POPUP_LAYER].mi);
     }
