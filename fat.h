@@ -144,8 +144,8 @@ void FAT_player_timerFunc_iCanPressAKey() {
     if (waitForStart >= (WAIT_FOR_START + FAT_tracker.keyRepeat) && !iCanPressAKey) {
         iCanPressAKey = 1;
         waitForStart = 0;
-        M_TIM0CNT_IRQ_DISABLE
-        M_TIM0CNT_TIMER_STOP
+        M_TIM2CNT_IRQ_DISABLE
+        M_TIM2CNT_TIMER_STOP
 #ifdef DEBUG_ON
                 ham_DrawText(21, 16, "KEY ON ");
 #endif
@@ -161,11 +161,11 @@ void FAT_keys_waitForAnotherKeyTouch() {
     ham_DrawText(21, 16, "KEY OFF");
 #endif
     if (!iCanPressAKey) {
-        ham_StartIntHandler(INT_TYPE_TIM0, (void*) &FAT_player_timerFunc_iCanPressAKey);
+        ham_StartIntHandler(INT_TYPE_TIM2, (void*) &FAT_player_timerFunc_iCanPressAKey);
 
-        R_TIM0CNT = 0;
-        M_TIM0CNT_IRQ_ENABLE
-        M_TIM0CNT_TIMER_START
+        R_TIM2CNT = 0;
+        M_TIM2CNT_IRQ_ENABLE
+        M_TIM2CNT_TIMER_START
     }
 }
 
@@ -237,6 +237,9 @@ void FAT_initIntroPalette() {
 void FAT_showIntro() {
     FAT_reinitScreen();
 
+    // jouer un petit son d'exemple
+    snd_tmp_playSampleTest();
+    
     FAT_initIntroPalette();
 
     ham_bg[2].ti = ham_InitTileSet((void*) screen_intro_Tiles, SIZEOF_16BIT(screen_intro_Tiles), 1, 1);

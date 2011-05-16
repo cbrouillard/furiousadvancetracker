@@ -150,4 +150,6 @@ void snd_stopAllSounds();
  */
 void snd_tryToApplyEffect (u8 channelId, u8 effectNumber, u8 effectValue);
 
+void snd_tmp_playSampleTest ();
+
 #endif
