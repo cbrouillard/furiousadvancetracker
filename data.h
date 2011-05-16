@@ -358,7 +358,7 @@ typedef struct FAT {
     u8 tempo; /*!< Tempo pour la track en cours de composition. */
     u8 transpose; /*!< Valeur de transposition pour la track en cours de composition. */
     u8 keyRepeat; /*!< Valeur permettant de régler la vélocité de l'interface. FF = lent 00 = rapide */
-
+    u8 previewEnable; /*!< Paramètre pour l'activation de la preview dans l'écran NOTE. */
     channel channels[6]; /*!< Définition des channels: la GBA en dispose de 6. */
     sequence allSequences [NB_MAX_SEQUENCES]; /*!< Tableau (physique) contenant toutes les séquence. */
     block allBlocks [NB_MAX_BLOCKS]; /*!< Tableau (physique) contenant tous les blocks. */
@@ -428,6 +428,15 @@ void FAT_data_initData() {
     FAT_data_blockClipboard = NULL_VALUE;
     memset(&FAT_data_noteClipboard, NULL_VALUE, sizeof (note));
     memset(&FAT_data_lastEffectWritten, NULL_VALUE, sizeof (effect));
+}
+
+/**
+ * \brief Permet de savoir si la preview est activé lors de la pose d'une note. 
+ * 
+ * @return 1 si activé, 0 sinon
+ */
+bool FAT_data_isPreviewEnabled (){
+    return FAT_tracker.previewEnable != 0;
 }
 
 /**
@@ -986,6 +995,29 @@ bool FAT_data_block_isEffectEmpty(u8 sequence, u8 blockLine) {
 effect* FAT_data_block_getEffect(u8 sequence, u8 line) {
     //return &(FAT_tracker.allSequences[sequence].effect[line]);
     return 0;
+}
+
+/**
+ * \brief Joue un apercu d'une note insérée dans un block.
+ *  
+ * @param block l'id du block
+ * @param line le numéro de ligne de la note dans le block
+ */
+void FAT_data_note_previewNote (u8 block,u8 line){
+    // copie en mémoire de l'instruemnt -> on doit modifier certaines données pour la preview comme la durée.
+    u8 instId = FAT_tracker.allBlocks[block].notes[line].instrument;
+
+    // se souvenir des vrais paramètres
+    u8 mem_loopMode = FAT_tracker.allInstruments[instId].loopmode;
+    u8 mem_soundLength = FAT_tracker.allInstruments[instId].soundlength;
+
+    FAT_tracker.allInstruments[instId].loopmode = 1;
+    FAT_tracker.allInstruments[instId].soundlength = 0x20;
+
+    FAT_player_playNote(&FAT_tracker.allBlocks[block].notes[line], FAT_tracker.allInstruments[instId].type);
+
+    FAT_tracker.allInstruments[instId].loopmode = mem_loopMode;
+    FAT_tracker.allInstruments[instId].soundlength = mem_soundLength;
 }
 
 /**
@@ -1816,6 +1848,19 @@ void FAT_data_project_changeKeyRepeat(s8 addedValue) {
 
             ) {
         FAT_tracker.keyRepeat += addedValue;
+    }
+}
+
+/**
+ * \brief Permet d'activer/désactiver la fonction preview.
+ * 
+ * @param addedValue si &lt; 0, alors désactivation, sinon activation 
+ */
+void FAT_data_project_changePreview (s8 addedValue){
+    if (addedValue < 0){
+        FAT_tracker.previewEnable = 0;
+    } else if (addedValue > 0){
+        FAT_tracker.previewEnable = 1;
     }
 }
 

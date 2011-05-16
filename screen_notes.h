@@ -54,6 +54,7 @@ bool FAT_screenNotes_isPopuped = 0;
 u8 FAT_screenNotes_currentBlockId;
 
 #include "screen_notes_cursor.h"
+#include "data.h"
 
 /** \brief Fonction principale pour l'écran NOTE (callback). */
 void FAT_screenNotes_mainFunc() {
@@ -382,6 +383,11 @@ void FAT_screenNotes_pressA() {
                         FAT_screenNotes_currentSelectedLine, -1);
             }
 
+            if (FAT_data_isPreviewEnabled()) {
+                FAT_data_note_previewNote(FAT_screenNotes_currentBlockId,
+                        FAT_screenNotes_currentSelectedLine);
+            }
+
             break;
 
         case SCREENNOTES_COLUMN_ID_INST:
@@ -416,6 +422,12 @@ void FAT_screenNotes_pressA() {
                             FAT_screenNotes_currentSelectedLine, -16);
                 }
             }
+            
+            if (FAT_data_isPreviewEnabled()) {
+                FAT_data_note_previewNote(FAT_screenNotes_currentBlockId,
+                        FAT_screenNotes_currentSelectedLine);
+            }
+            
             break;
 
         case SCREENNOTES_COLUMN_ID_CMD_NAME:
