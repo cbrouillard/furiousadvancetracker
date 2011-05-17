@@ -70,6 +70,9 @@
 #include "gfx/screen_dialog_load.raw.c"
 #include "gfx/screen_dialog_load.map.c"
 
+#include "gfx/screen_dialog_keyboard.raw.c"
+#include "gfx/screen_dialog_keyboard.map.c"
+
 // SPRITES
 #include "gfx/actual_screen_popup.raw.c"
 #include "gfx/cursor_popup.raw.c"

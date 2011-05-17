@@ -254,6 +254,7 @@ void FAT_showIntro() {
     ham_DrawText(1, 16, "SIZE %d octets", (sizeof (tracker)));
 #endif
     ham_DrawText(1, 19, "version %s", FAT_VERSION);
+    ham_DrawText(1, 16, "()\"-/!?.$");
     while (!F_CTRLINPUT_START_PRESSED && !F_CTRLINPUT_A_PRESSED && !F_CTRLINPUT_B_PRESSED
             && !F_CTRLINPUT_DOWN_PRESSED && !F_CTRLINPUT_LEFT_PRESSED && !F_CTRLINPUT_RIGHT_PRESSED && !F_CTRLINPUT_UP_PRESSED
             && !F_CTRLINPUT_L_PRESSED && !F_CTRLINPUT_R_PRESSED
