@@ -73,7 +73,7 @@ void snd_simple_playSoundOnChannel1(u8 sweep, u16 envelope, u8 mode,
  * @param volume de 0 à F
  * @param envdir direction de l'enveloppe 1 increase, 0 decrease
  * @param envsteptime pas de l'enveloppe de 0 à 7
- * @param waveduty forme de l'onde 0, 1, 2 ou 3f
+ * @param waveduty forme de l'onde 0, 1, 2 ou 3
  * @param soundlength durée du son 0 à 3f (attention valeur inversée: 3f = court) ACTIF seulement si loopmode = 1
  * @param loopmode continuous 0, timed 1
  * @param output sortie du son 0 PAS DE SON / 1 GAUCHE / 2 DROITE / 3 GAUCHE ET DROITE
