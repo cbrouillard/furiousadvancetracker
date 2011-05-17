@@ -43,6 +43,7 @@ void snd_init_soundApi();
  * \param waveduty Forme de l'onde 0, 1, 2 ou 3
  * \param soundlength Durée du son 0 à 3f (attention valeur inversée: 3f = court) ACTIF seulement si loopmode = 1
  * \param loopmode Timed 1, continuous 0
+ * \param output sortie du son 0 PAS DE SON / 1 GAUCHE / 2 DROITE / 3 GAUCHE ET DROITE
  * \param sfreq Le numéro de fréquence de la note jouée. de 0 à 72 cf: const u16 freqs[NB_FREQUENCES]
  * \param transpose La valeur de transposition de 0 à FF
  **/
@@ -75,6 +76,7 @@ void snd_simple_playSoundOnChannel1(u8 sweep, u16 envelope, u8 mode,
  * @param waveduty forme de l'onde 0, 1, 2 ou 3f
  * @param soundlength durée du son 0 à 3f (attention valeur inversée: 3f = court) ACTIF seulement si loopmode = 1
  * @param loopmode continuous 0, timed 1
+ * @param output sortie du son 0 PAS DE SON / 1 GAUCHE / 2 DROITE / 3 GAUCHE ET DROITE
  * @param sfreq le numéro de fréquence de la note jouée. de 0 à 72 cf: const u16 freqs[NB_FREQUENCES]
  * @param transpose le paramètre de transposition
  */
@@ -103,6 +105,7 @@ void snd_simple_playSoundOnChannel2(u16 envelope,
  * @param voice numéro de la voix à jouer
  * @param bank numéro de la bank à jouer 0 ou 1 (appliqué seulement si bankMode = 1)
  * @param bankMode single 0, dual 1
+ * \param output sortie du son 0 PAS DE SON / 1 GAUCHE / 2 DROITE / 3 GAUCHE ET DROITE
  * @param freq le numéro de fréquence de la note jouée. de 0 à 72 cf: const u16 freqs[NB_FREQUENCES]
  * @param transpose le paramètre de transposition
  */
@@ -122,6 +125,7 @@ void snd_simple_playSoundOnChannel3();
  * @param envsteptime pas de l'enveloppe de 0 à 7
  * @param soundlength durée du son 0 à 3f (attention valeur inversée: 3f = court) ACTIF seulement si loopmode = 1
  * @param loopmode timed 1, continuous 0
+ * \param output sortie du son 0 PAS DE SON / 1 GAUCHE / 2 DROITE / 3 GAUCHE ET DROITE
  * @param shiftFreq
  * @param stepping
  * @param freqRatio
