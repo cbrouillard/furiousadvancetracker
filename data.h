@@ -15,6 +15,9 @@
  * 
  * Il contient également un set de fonctions utiles pour les modifications et récupérations
  * sur toutes les données techniques du tracker.
+ * 
+ * Ce fichier se contente de gérer les données en RAM. Voir filesystem.h pour les fonctions
+ * d'écritures sur le fichier de sauvegarde ROM.
  */
 
 #ifndef _DATA_H_
@@ -154,14 +157,7 @@
  * <b>NE PAS TOUCHER !</b>
  */
 #define NULL_VALUE 0xff
-/**
- * \brief Addresse vers la mémoire SRAM (la mémoire pour la sauvegarde).
- */
-#define GAMEPAK_RAM  ((u8*)0x0E000000)
-/**
- * \brief Pointeur vers la mémoire SRAM.
- */
-u8 *gamepak = GAMEPAK_RAM;
+
 /**
  * \brief Tableau constant contenant toutes les notes sous formes de chaînes de caractères.
  */
@@ -1864,39 +1860,6 @@ void FAT_data_project_changePreview (s8 addedValue){
     }
 }
 
-/**
- * \brief Fonction de sauvegarde d'un track.
- * 
- */
-void FAT_data_project_save() {
-    mutex = 0;
-    u8* tracker = (u8*) & FAT_tracker;
-    u32 trackSize = SIZEOF_8BIT(FAT_tracker);
-    int counter = 0;
-    while (counter < trackSize) {
-        gamepak[counter] = tracker[counter];
-        counter++;
-    }
-
-    gamepak[counter] = 0x5a;
-    mutex = 1;
-}
-
-/**
- *  \brief Fonction de chargement d'une track.
- * 
- */
-void FAT_data_project_load() {
-    mutex = 0;
-    u8* tracker = (u8*) & FAT_tracker;
-    u32 trackSize = SIZEOF_8BIT(FAT_tracker);
-    int counter = 0;
-    while (counter < trackSize) {
-        tracker[counter] = gamepak[counter];
-        counter++;
-    }
-    mutex = 1;
-}
 
 #endif	/* DATA_H */
 

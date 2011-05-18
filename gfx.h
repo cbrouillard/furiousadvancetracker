@@ -63,6 +63,9 @@
 #include "gfx/screen_effects.raw.c"
 #include "gfx/screen_effects.map.c"
 
+#include "gfx/screen_filesystem.raw.c"
+#include "gfx/screen_filesystem.map.c"
+
 // DIALOGUES
 #include "gfx/screen_dialog_save.raw.c"
 #include "gfx/screen_dialog_save.map.c"
@@ -82,6 +85,9 @@
 #include "gfx/cursor1.raw.c"
 #include "gfx/cursor2.raw.c"
 #include "gfx/cursor3.raw.c"
+#include "gfx/cursor8.raw.c"
+#include "gfx/cursorload.raw.c"
+#include "gfx/cursorsave.raw.c"
 
 #include "gfx/cursor2_player.raw.c"
 #include "gfx/cursor3_player.raw.c"

@@ -19,9 +19,6 @@
 #ifndef _SCREEN_EFFECTS_H_
 #define _SCREEN_EFFECTS_H_
 
-#include "fat.h"
-
-
 
 /** \brief Permet de savoir si la popup est affichée au dessus de l'écran ou non. */
 bool FAT_screenEffects_isPopuped = 0;

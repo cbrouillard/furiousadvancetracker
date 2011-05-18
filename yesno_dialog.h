@@ -41,7 +41,7 @@ void FAT_yesno_dialogSave_mainFunc() {
             
             else if (F_CTRLINPUT_R_PRESSED){
                 FAT_yesno_close();
-                FAT_data_project_save();
+                FAT_filesystem_saveRaw(2);
                 ham_DrawText(23, 16, "SAVED  !");
             }
         }
@@ -62,7 +62,7 @@ void FAT_yesno_dialogLoad_mainFunc() {
             
             else if (F_CTRLINPUT_R_PRESSED){
                 FAT_yesno_close();
-                FAT_data_project_load();
+                FAT_filesystem_loadRaw(0);
                 ham_DrawText(23, 16, "LOADED !");
             }
         }
