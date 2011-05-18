@@ -21,9 +21,6 @@
 #ifndef _PLAYER_H_
 #define	_PLAYER_H_
 
-#include "fat.h"
-
-
 /** \brief Définition d'une valeur pour ralentir le décompte du tempo. */
 #define TEMPO_TIMER_HARDWARE_VALUE 70
 

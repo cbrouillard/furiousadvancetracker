@@ -43,9 +43,9 @@ void FAT_screenLive_init() {
     FAT_reinitScreen();
 
     // initialisation du fond (interface)
-    ham_bg[2].ti = ham_InitTileSet((void*) screen_live_Tiles, SIZEOF_16BIT(screen_live_Tiles), 1, 1);
-    ham_bg[2].mi = ham_InitMapSet((void *) screen_live_Map, 1024, 0, 0);
-    ham_InitBg(2, 1, 3, 0);
+    ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_live_Tiles, SIZEOF_16BIT(screen_live_Tiles), 1, 1);
+    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_live_Map, 1024, 0, 0);
+    ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
     // affichage d'un peu de texte
 

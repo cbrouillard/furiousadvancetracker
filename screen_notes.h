@@ -54,7 +54,6 @@ bool FAT_screenNotes_isPopuped = 0;
 u8 FAT_screenNotes_currentBlockId;
 
 #include "screen_notes_cursor.h"
-#include "data.h"
 
 /** \brief Fonction principale pour l'écran NOTE (callback). */
 void FAT_screenNotes_mainFunc() {

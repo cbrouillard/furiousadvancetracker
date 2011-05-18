@@ -19,7 +19,6 @@
 #ifndef _SCREEN_EFFECTS_H_
 #define _SCREEN_EFFECTS_H_
 
-
 /** \brief Permet de savoir si la popup est affichée au dessus de l'écran ou non. */
 bool FAT_screenEffects_isPopuped = 0;
 
@@ -46,9 +45,9 @@ void FAT_screenEffects_init() {
     FAT_reinitScreen();
 
     // initialisation du fond (interface)
-    ham_bg[2].ti = ham_InitTileSet((void*) screen_effects_Tiles, SIZEOF_16BIT(screen_effects_Tiles), 1, 1);
-    ham_bg[2].mi = ham_InitMapSet((void *) screen_effects_Map, 1024, 0, 0);
-    ham_InitBg(2, 1, 3, 0);
+    ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_effects_Tiles, SIZEOF_16BIT(screen_effects_Tiles), 1, 1);
+    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_effects_Map, 1024, 0, 0);
+    ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
     // affichage d'un peu de texte
 
@@ -76,7 +75,7 @@ void FAT_screenEffects_checkButtons() {
             // TODO show project cursor
             FAT_screenEffects_isPopuped = 0;
 
-            if (FAT_popup_getSelectedIcon() != SCREEN_LIVE_ID) {
+            if (FAT_popup_getSelectedIcon() != SCREEN_EFFECTS_ID) {
                 // TODO hide project cursor
                 FAT_switchToScreen(FAT_popup_getSelectedIcon());
             }

@@ -38,7 +38,9 @@ u8 *gamepak = GAMEPAK_RAM;
 #define RLE_KEY 0x8A
 
 /** \brief Nombre maximal de tracks enregistrable. */
-#define MAX_TRACKS 10
+#define MAX_TRACKS 16
+/** \brief Nombre maximal de tracks enregistrable sans compression. */
+#define MAX_TRACKS_WITHOUT_COMPRESSION 3
 
 void FAT_filesystem_checkFs ();
 void FAT_filesystem_saveTrack (u8 trackNumber);
@@ -50,6 +52,9 @@ u16 FAT_filesystem_getTrackSize (u8 trackNumber);
 void FAT_filesystem_saveRaw(u8 trackNumber);
 void FAT_filesystem_loadRaw(u8 trackNumber);
 u16 FAT_filesystem_findFirstFreeOffset ();
+
+const char* emptyName = "EMPTY   ";
+const char* noAvailable_tmp = "XXXXX   ";
 
 /**
  * \brief Cette fonction vérifie l'intégrité du filesystem.
@@ -67,6 +72,20 @@ void FAT_filesystem_checkFs (){
         
         track ++;
     }
+}
+
+char* FAT_filesystem_getTrackName (u8 trackNumber){
+    if (trackNumber >= MAX_TRACKS_WITHOUT_COMPRESSION) {
+        return (char*) noAvailable_tmp;
+    }
+    
+    u16 offset = FAT_filesystem_getTrackOffset(trackNumber);
+    
+    if (offset == (trackNumber*4)) {
+        return (char*) emptyName;
+    }
+    
+    return & (gamepak [ offset ]);
 }
 
 /**
@@ -111,6 +130,19 @@ u16 FAT_filesystem_getTrackSize (u8 trackNumber){
     u8 secondPart = gamepak[ (trackNumber * 4) + 3];
     
     return (firstPart << 8) | secondPart;
+}
+
+u16 FAT_filesystem_getTrackSizeChecked (u8 trackNumber){
+    if (trackNumber >= MAX_TRACKS_WITHOUT_COMPRESSION) {
+        return 0;
+    }
+    
+    u16 size = FAT_filesystem_getTrackSize(trackNumber);
+    if (size == 0xFFFF){
+        return 0;
+    }
+    
+    return size;
 }
 
 /**

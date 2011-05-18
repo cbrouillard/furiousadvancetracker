@@ -37,6 +37,8 @@
 #define SCREEN_INSTRUMENTS_ID 6
 /** \brief Id écran effects (tables) */
 #define SCREEN_EFFECTS_ID 7
+/** \brief Id écran filesystem. */
+#define SCREEN_FILESYSTEM_ID 8
 /** \brief Nombre total d'écran disponible pour FAT */
 #define NB_SCREEN 8;
 /** \brief Numéro de la couleur du texte. Ce numéro correspond à une couleur dans la palette. <b>NE PAS TOUCHER</b>*/
@@ -129,6 +131,7 @@ bool FAT_isCurrentlyPlaying = 0;
 #include "popup.h"
 #include "yesno_dialog.h"
 #include "screen_song.h"
+#include "screen_filesystem.h"
 #include "screen_project.h"
 #include "screen_live.h"
 #include "screen_composer.h"
@@ -211,7 +214,10 @@ void FAT_init() {
     FAT_initCursor1();
     FAT_initCursor2();
     FAT_initCursor3();
+    FAT_initCursor8();
     FAT_initCursorChange();
+    FAT_initCursorLoad();
+    FAT_initCursorSave();
     FAT_popup_initCursors();
     FAT_screenInstrument_tabCursorInit();
 
@@ -222,9 +228,10 @@ void FAT_init() {
     FAT_screenInstrument_initSpritesForInstrument();
 
     FAT_screenSong_initCursor();
-    FAT_screenBlocks_initCursor();
     FAT_screenNotes_initCursor();
+    FAT_screenBlocks_initCursor();
     FAT_screenComposer_initCursor();
+    FAT_screenFilesystem_initCursor();
 
     // intialisation des données "tracker" stockées en RAM
     FAT_data_initData();
@@ -339,6 +346,9 @@ void FAT_switchToScreen(u8 screenId) {
             break;
         case SCREEN_INSTRUMENTS_ID:
             FAT_screenInstrument_init();
+            break;
+        case SCREEN_FILESYSTEM_ID:
+            FAT_screenFilesystem_init();
             break;
     }
 

@@ -60,7 +60,6 @@ void FAT_screenBlocks_pressA();
 void FAT_screenBlocks_pressB();
 
 #include "screen_blocks_cursor.h"
-#include "fat.h"
 
 /**
  * \brief Fonction de routine qui affiche les numéros de ligne. 
@@ -198,9 +197,9 @@ void FAT_screenBlocks_init() {
     FAT_reinitScreen();
 
     // initialisation du fond (interface)
-    ham_bg[2].ti = ham_InitTileSet((void*) screen_blocks_Tiles, SIZEOF_16BIT(screen_blocks_Tiles), 1, 1);
-    ham_bg[2].mi = ham_InitMapSet((void *) screen_blocks_Map, 1024, 0, 0);
-    ham_InitBg(2, 1, 3, 0);
+    ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_blocks_Tiles, SIZEOF_16BIT(screen_blocks_Tiles), 1, 1);
+    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_blocks_Map, 1024, 0, 0);
+    ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
     // affichage d'un peu de texte
     // numéro de la séquence en cours d'édition, tout est dans SCREEN_SONG :)

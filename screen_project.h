@@ -19,7 +19,6 @@
 #define _SCREEN_PROJECT_H_
 
 #include "screen_project_cursor.h"
-#include "yesno_dialog.h"
 
 /** \brief Petit tableau pour stocker les chaines YES et NOP. */
 const char* yesOrNo[2] = {"NOP\0", "YES\0"};
@@ -67,9 +66,9 @@ void FAT_screenProject_init() {
     FAT_reinitScreen();
 
     // initialisation du fond (interface)
-    ham_bg[2].ti = ham_InitTileSet((void*) screen_projet_Tiles, SIZEOF_16BIT(screen_projet_Tiles), 1, 1);
-    ham_bg[2].mi = ham_InitMapSet((void *) screen_projet_Map, 1024, 0, 0);
-    ham_InitBg(2, 1, 3, 0);
+    ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_projet_Tiles, SIZEOF_16BIT(screen_projet_Tiles), 1, 1);
+    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_projet_Map, 1024, 0, 0);
+    ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
     // affichage d'un peu de texte
     FAT_screenProject_printInfos();
@@ -184,13 +183,23 @@ void FAT_screenProject_pressA() {
             break;
         case 2:
             // TODO afficher la boite de dialogue
-            FAT_yesno_show(DIALOG_SAVE);
+            //FAT_yesno_show(DIALOG_SAVE);
             //FAT_data_project_save();
+            iCanPressAKey = 0;
+            FAT_cursors_hideCursor3();
+            FAT_cursors_hideCursor2();
+            FAT_screenFilesystem_setMode (FILESYSTEM_MODE_SAVE);
+            FAT_switchToScreen(SCREEN_FILESYSTEM_ID);
             break;
         case 3:
             // TODO afficher la boite de dialogue
-            FAT_yesno_show(DIALOG_LOAD);
+            //FAT_yesno_show(DIALOG_LOAD);
             //            FAT_data_project_load();
+            iCanPressAKey = 0;
+            FAT_cursors_hideCursor3();
+            FAT_cursors_hideCursor2();
+            FAT_screenFilesystem_setMode (FILESYSTEM_MODE_LOAD);
+            FAT_switchToScreen(SCREEN_FILESYSTEM_ID);
             break;
         case 4:
             FAT_data_project_changeKeyRepeat(addedValue);

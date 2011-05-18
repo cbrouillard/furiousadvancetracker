@@ -70,6 +70,9 @@
 #include "gfx/screen_dialog_save.raw.c"
 #include "gfx/screen_dialog_save.map.c"
 
+#include "gfx/screen_dialog_sorrysave.raw.c"
+#include "gfx/screen_dialog_sorrysave.map.c"
+
 #include "gfx/screen_dialog_load.raw.c"
 #include "gfx/screen_dialog_load.map.c"
 

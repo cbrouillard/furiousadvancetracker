@@ -7,7 +7,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
 
 /**
  * \file cursors.h
@@ -20,7 +20,7 @@
 /**
  * ID technique HAM pour le cursor de taille 1.
  */
-u8 FAT_cursor1_obj; 
+u8 FAT_cursor1_obj;
 /**
  * ID technique HAM pour le cursor de taille 2.
  */
@@ -29,6 +29,18 @@ u8 FAT_cursor2_obj;
  * ID technique HAM pour le cursor de taille 3.
  */
 u8 FAT_cursor3_obj;
+/**
+ * ID technique HAM pour le cursor de taille 8.
+ */
+u8 FAT_cursor8_obj;
+/**
+ * ID technique HAM pour le cursor LOAD.
+ */
+u8 FAT_cursorload_obj;
+/**
+ * ID technique HAM pour le cursor SAVE.
+ */
+u8 FAT_cursorsave_obj;
 /**
  * ID technique HAM pour le cursor de changement d'onglet (partie instrument).
  */
@@ -74,6 +86,48 @@ void FAT_initCursor3() {
 
     ham_SetObjVisible(FAT_cursor3_obj, 0);
     ham_SetObjPrio(FAT_cursor3_obj, 1);
+}
+
+/**
+ * \brief Initialisation du curseur taille 8.
+ * 
+ * S'occupe de créer le sprite "curseur 8" en mode transparence. Le sprite est configuré
+ * comme invisible par défaut. 
+ */
+void FAT_initCursor8() {
+    FAT_cursor8_obj = ham_CreateObj((void*) cursor8_Bitmap, OBJ_SIZE_64X32,
+            OBJ_MODE_SEMITRANSPARENT, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+
+    ham_SetObjVisible(FAT_cursor8_obj, 0);
+    ham_SetObjPrio(FAT_cursor8_obj, 1);
+}
+
+/**
+ * \brief Initialisation du curseur LOAD.
+ * 
+ * S'occupe de créer le sprite "curseur LOAD" en mode transparence. Le sprite est configuré
+ * comme invisible par défaut. 
+ */
+void FAT_initCursorLoad() {
+    FAT_cursorload_obj = ham_CreateObj((void*) cursorload_Bitmap, OBJ_SIZE_32X16,
+            OBJ_MODE_SEMITRANSPARENT, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+
+    ham_SetObjVisible(FAT_cursorload_obj, 0);
+    ham_SetObjPrio(FAT_cursorload_obj, 1);
+}
+
+/**
+ * \brief Initialisation du curseur LOAD.
+ * 
+ * S'occupe de créer le sprite "curseur LOAD" en mode transparence. Le sprite est configuré
+ * comme invisible par défaut. 
+ */
+void FAT_initCursorSave() {
+    FAT_cursorsave_obj = ham_CreateObj((void*) cursorsave_Bitmap, OBJ_SIZE_32X16,
+            OBJ_MODE_SEMITRANSPARENT, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+
+    ham_SetObjVisible(FAT_cursorsave_obj, 0);
+    ham_SetObjPrio(FAT_cursorsave_obj, 1);
 }
 
 /**
@@ -124,6 +178,39 @@ void FAT_cursors_showCursor3() {
 }
 
 /**
+ * \brief Affiche le curseur 8.
+ * 
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera visible
+ * au prochain commit.
+ */
+void FAT_cursors_showCursor8() {
+    ham_SetObjVisible(FAT_cursor8_obj, 1);
+}
+
+/**
+ * \brief Affiche le curseur LOAD.
+ * 
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera visible
+ * au prochain commit.
+ */
+void FAT_cursors_showCursorLoad() {
+    ham_SetObjVisible(FAT_cursorload_obj, 1);
+}
+
+/**
+ * \brief Affiche le curseur SAVE.
+ * 
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera visible
+ * au prochain commit.
+ */
+void FAT_cursors_showCursorSave() {
+    ham_SetObjVisible(FAT_cursorsave_obj, 1);
+}
+
+/**
  * \brief Cache le curseur 1. 
  * 
  * Attention ! cette fonction ne s'occupe pas de commiter
@@ -154,6 +241,39 @@ void FAT_cursors_hideCursor2() {
  */
 void FAT_cursors_hideCursor3() {
     ham_SetObjVisible(FAT_cursor3_obj, 0);
+}
+
+/**
+ * \brief Cache le curseur 8. 
+ * 
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera invisible
+ * au prochain commit.
+ */
+void FAT_cursors_hideCursor8() {
+    ham_SetObjVisible(FAT_cursor8_obj, 0);
+}
+
+/**
+ * \brief Cache le curseur LOAD. 
+ * 
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera invisible
+ * au prochain commit.
+ */
+void FAT_cursors_hideCursorLoad() {
+    ham_SetObjVisible(FAT_cursorload_obj, 0);
+}
+
+/**
+ * \brief Cache le curseur SAVE. 
+ * 
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera invisible
+ * au prochain commit.
+ */
+void FAT_cursors_hideCursorSave() {
+    ham_SetObjVisible(FAT_cursorsave_obj, 0);
 }
 
 /**
