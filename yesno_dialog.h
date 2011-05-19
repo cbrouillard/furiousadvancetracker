@@ -18,9 +18,6 @@
 #ifndef _YESNO_DIALOG_H_
 #define	_YESNO_DIALOG_H_
 
-#include "fat.h"
-
-
 #define DIALOG_LAYER 0
 
 #define DIALOG_SAVE 0
@@ -30,6 +27,9 @@
 
 // Prototypes
 void FAT_yesno_close ();
+
+/** \brief Variable pour stocker un premier paramètre (variable) pour une boite de dialogue. */
+u8 param1;
 
 /**
  * \brief Fonction principale de la boite de dialog SAVE
@@ -44,9 +44,9 @@ void FAT_yesno_dialogSave_mainFunc() {
             }
             
             else if (F_CTRLINPUT_R_PRESSED){
+                FAT_filesystem_saveRaw(param1);
                 FAT_yesno_close();
-                FAT_filesystem_saveRaw(0);
-                ham_DrawText(23, 16, "SAVED  !");
+                ham_DrawText(24, 16, "SAVED ");
             }
         }
     }
@@ -65,7 +65,7 @@ void FAT_yesno_dialogLoad_mainFunc() {
             }
             
             else if (F_CTRLINPUT_R_PRESSED){
-                //FAT_filesystem_loadRaw(0);
+                FAT_filesystem_loadRaw(param1);
                 FAT_currentScreen = SCREEN_PROJECT_ID;
                 FAT_yesno_close();
                 ham_DrawText(24, 16, "LOADED");
@@ -180,7 +180,11 @@ void FAT_yesno_dialogKeyboard (){
  *
  * @param idDialog l'id de la boite de dialogue
  */
-void FAT_yesno_show (u8 idDialog){
+void FAT_yesno_show (u8 idDialog, ... ){
+    
+    va_list params;
+    va_start (params, idDialog);
+    
     if (ham_bg[POPUP_LAYER].ti) {
         ham_DeInitTileSet(ham_bg[POPUP_LAYER].ti);
         ham_DeInitMapSet(ham_bg[POPUP_LAYER].mi);
@@ -188,9 +192,11 @@ void FAT_yesno_show (u8 idDialog){
     
     switch (idDialog){
         case DIALOG_SAVE:
+            param1 = va_arg(params, int);
             FAT_yesno_dialogSave();
             break;
         case DIALOG_LOAD:
+            param1 = va_arg(params, int);
             FAT_yesno_dialogLoad();
             break;
         case DIALOG_SORRY_SAVE:
@@ -200,6 +206,8 @@ void FAT_yesno_show (u8 idDialog){
             FAT_yesno_dialogKeyboard();
             break;
     }
+    
+    va_end(params);
 }
 
 #endif	/* YESNO_DIALOG_H */

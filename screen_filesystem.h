@@ -36,7 +36,7 @@ bool FAT_screenFilesystem_isPopuped = 0;
 /** \brief Quel est le mode actuel pour l'écran filesystem ? LOAD/SAVE */
 u8 FAT_filesystem_actualMode = FILESYSTEM_MODE_SAVE;
 
-const char* modes[2] = {"\"SAVE\"", "\"LOAD\""};
+const char* modes[2] = {"SAVE", "LOAD"};
 
 // prototypes
 void FAT_screenFilesystem_init();
@@ -45,7 +45,6 @@ void FAT_screenFilesystem_printInfos();
 void FAT_screenFilesystem_pressA();
 
 #include "screen_filesystem_cursor.h"
-#include "yesno_dialog.h"
 
 /**
  * \brief Fonction principale de l'écran (callback). 
@@ -59,13 +58,20 @@ void FAT_screenFilesystem_mainFunc() {
     }
 }
 
+/**
+ * \brief Change le mode pour l'écran filesystem.
+ * @param modeId
+ */
 void FAT_screenFilesystem_setMode(u8 modeId) {
     FAT_filesystem_actualMode = modeId;
 }
 
+/**
+ * \brief Affiche le mode sur la partie droite de l'interface. 
+ */
 void FAT_screenFilesystem_printMode() {
     mutex = 0;
-    ham_DrawText(16, 7, "Mode %s", modes[FAT_filesystem_actualMode]);
+    ham_DrawText(16, 3, "Mode %s", modes[FAT_filesystem_actualMode]);
     mutex = 1;
 }
 
@@ -83,12 +89,16 @@ void FAT_screenFilesystem_printLineColumns() {
     mutex = 1;
 }
 
+/**
+ * \brief Affiche tous les noms des chansons déjà enregistrées. 
+ */
 void FAT_screenFilesystem_printAllTracksName() {
     mutex = 0;
     u8 track = 0;
     u8 y = SCREENFILESYSTEM_LINE_START_Y;
     while (track < MAX_TRACKS) {
-        ham_DrawText(SCREENFILESYSTEM_LINE_TRACKNAME_X, y, "%.8s", FAT_filesystem_getTrackName(track));
+        ham_DrawText(SCREENFILESYSTEM_LINE_TRACKNAME_X, y, "%.8s %.2x", FAT_filesystem_getTrackName(track), 
+                FAT_filesystem_getTrackNbWork(track));
         track++;
         y++;
     }
@@ -96,11 +106,16 @@ void FAT_screenFilesystem_printAllTracksName() {
     mutex = 1;
 }
 
+/**
+ * \brief Affiche quelques informations comme le numéro de ligne actuelle, le nom de la chanson
+ * sélectionnée, ... 
+ */
 void FAT_screenFilesystem_printInfos() {
     mutex = 0;
-    ham_DrawText(16, 3, "line %.2x", FAT_screenFilesystem_currentSelectedLine);
-    ham_DrawText(16, 4, "Name %.8s", FAT_filesystem_getTrackName(FAT_screenFilesystem_currentSelectedLine));
-    ham_DrawText(16, 5, "Size %x", FAT_filesystem_getTrackSizeChecked(FAT_screenFilesystem_currentSelectedLine));
+    ham_DrawText(16, 5, "line %.2x", FAT_screenFilesystem_currentSelectedLine);
+    ham_DrawText(16, 6, "Name %.8s", FAT_filesystem_getTrackName(FAT_screenFilesystem_currentSelectedLine));
+    ham_DrawText(16, 7, "size %.4x", FAT_filesystem_getTrackSizeChecked(FAT_screenFilesystem_currentSelectedLine));
+    ham_DrawText (16,8, "work %.2x", FAT_filesystem_getTrackNbWork(FAT_screenFilesystem_currentSelectedLine));
     mutex = 1;
 }
 
@@ -124,16 +139,7 @@ void FAT_screenFilesystem_init() {
 
     // affichage des curseurs
     FAT_cursors_showCursor8();
-    FAT_cursors_hideCursorLoad();
-    FAT_cursors_hideCursorSave();
-    switch (FAT_filesystem_actualMode) {
-        case FILESYSTEM_MODE_LOAD:
-            FAT_cursors_showCursorLoad();
-            break;
-        case FILESYSTEM_MODE_SAVE:
-            FAT_cursors_showCursorSave();
-            break;
-    }
+    FAT_cursors_showCursor2();
     FAT_screenFilesystem_commitCursorMove();
 
     // démarrage du cycle pour l'écran
@@ -147,7 +153,8 @@ void FAT_screenFilesystem_init() {
 void FAT_screenFilesystem_checkButtons() {
     if (F_CTRLINPUT_SELECT_PRESSED) {
         if (!FAT_screenFilesystem_isPopuped) {
-            // TODO hide project cursor
+            FAT_cursors_hideCursor8();
+            FAT_cursors_hideCursor2();
             FAT_popup_show();
             FAT_screenFilesystem_isPopuped = 1;
         }
@@ -157,14 +164,14 @@ void FAT_screenFilesystem_checkButtons() {
     } else {
         if (FAT_screenFilesystem_isPopuped) {
             FAT_popup_hide();
-            // TODO show project cursor
+            FAT_cursors_showCursor8();
+            FAT_cursors_showCursor2();
             FAT_screenFilesystem_isPopuped = 0;
 
             if (FAT_popup_getSelectedIcon() != SCREEN_FILESYSTEM_ID) {
                 // TODO hide project cursor
                 FAT_cursors_hideCursor8();
-                FAT_cursors_hideCursorSave();
-                FAT_cursors_hideCursorLoad();
+                FAT_cursors_hideCursor2();
                 FAT_switchToScreen(FAT_popup_getSelectedIcon());
             }
         }
@@ -198,6 +205,9 @@ void FAT_screenFilesystem_checkButtons() {
     }
 }
 
+/**
+ * \brief Fonction dédicacée à la gestion de la touche A sur l'écran filesystem. 
+ */
 void FAT_screenFilesystem_pressA() {
     iCanPressAKey = 0;
 
@@ -209,11 +219,11 @@ void FAT_screenFilesystem_pressA() {
 
         switch (FAT_filesystem_actualMode) {
             case FILESYSTEM_MODE_LOAD:
-                FAT_yesno_show (DIALOG_LOAD);
+                FAT_yesno_show (DIALOG_LOAD, FAT_screenFilesystem_currentSelectedLine);
                 break;
 
             case FILESYSTEM_MODE_SAVE:
-                FAT_yesno_show (DIALOG_KEYBOARD);
+                FAT_yesno_show (DIALOG_SAVE, FAT_screenFilesystem_currentSelectedLine);
                 break;
         }
     }

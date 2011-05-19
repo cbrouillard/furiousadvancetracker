@@ -19,6 +19,7 @@
 #define _SCREEN_PROJECT_H_
 
 #include "screen_project_cursor.h"
+#include "data.h"
 
 /** \brief Petit tableau pour stocker les chaines YES et NOP. */
 const char* yesOrNo[2] = {"NOP\0", "YES\0"};
@@ -51,12 +52,27 @@ void FAT_screenProject_printInfos() {
     mutex = 0;
     ham_DrawText(1, 4, "TEMPO     %3d", FAT_tracker.tempo);
     ham_DrawText(1, 5, "TRANSPOSE %.2x", FAT_tracker.transpose);
-    ham_DrawText(1, 8, "SAVE PRJ  OK");
-    ham_DrawText(1, 9, "LOAD PRJ  OK");
-    ham_DrawText(1, 12, "KEYREPEAT %.2x", FAT_tracker.keyRepeat);
-    ham_DrawText(1, 13, "PREVIEW   %.3s", yesOrNo[FAT_tracker.previewEnable != 0]);
-    ham_DrawText(1, 1, "PROJECT: %s", FAT_tracker.songName);
+    ham_DrawText(1, 8, "KEYREPEAT %.2x", FAT_tracker.keyRepeat);
+    ham_DrawText(1, 9, "PREVIEW   %.3s", yesOrNo[FAT_tracker.previewEnable != 0]);
+    ham_DrawText(1, 12, "NEW  PRJ  OK");
+    ham_DrawText(1, 13, "SAVE PRJ  OK");
+    ham_DrawText(1, 14, "LOAD PRJ  OK");
+    
+    ham_DrawText(1, 1, "FAT PROJECT  v%s", FAT_VERSION);
     mutex = 1;
+}
+
+/**
+ * \brief Affiche des informations relatives au projet (comme la taille en sav, 
+ * le nombre de fois enregistré, ...) 
+ */
+void FAT_screenProject_printProject (){
+    mutex = 0;
+    ham_DrawText(16, 3, "Name %.8s", FAT_tracker.songName);
+    ham_DrawText(16, 4, "size %.4x", sizeof (FAT_tracker));
+    ham_DrawText (16,5, "work %.2x", FAT_tracker.nbWork);
+    mutex = 1;
+    
 }
 
 /**
@@ -72,7 +88,11 @@ void FAT_screenProject_init() {
 
     // affichage d'un peu de texte
     FAT_screenProject_printInfos();
+    FAT_screenProject_printProject ();
 
+    // cache quelques curseurs
+    FAT_cursors_hideCursor8();
+    
     // init du curseur
     FAT_screenProject_initCursor();
     FAT_screenProject_displayGoodCursor();
@@ -181,7 +201,7 @@ void FAT_screenProject_pressA() {
             FAT_data_project_changeTranspose(addedValue);
             FAT_screenProject_printInfos();
             break;
-        case 2:
+        case 5:
             // TODO afficher la boite de dialogue
             //FAT_yesno_show(DIALOG_SAVE);
             //FAT_data_project_save();
@@ -191,7 +211,7 @@ void FAT_screenProject_pressA() {
             FAT_screenFilesystem_setMode (FILESYSTEM_MODE_SAVE);
             FAT_switchToScreen(SCREEN_FILESYSTEM_ID);
             break;
-        case 3:
+        case 6:
             // TODO afficher la boite de dialogue
             //FAT_yesno_show(DIALOG_LOAD);
             //            FAT_data_project_load();
@@ -201,11 +221,11 @@ void FAT_screenProject_pressA() {
             FAT_screenFilesystem_setMode (FILESYSTEM_MODE_LOAD);
             FAT_switchToScreen(SCREEN_FILESYSTEM_ID);
             break;
-        case 4:
+        case 2:
             FAT_data_project_changeKeyRepeat(addedValue);
             FAT_screenProject_printInfos();
             break;
-        case 5:
+        case 3:
             FAT_data_project_changePreview(addedValue);
             FAT_screenProject_printInfos();
             break;

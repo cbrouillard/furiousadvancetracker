@@ -138,9 +138,9 @@ void FAT_screenComposer_printAllNote() {
  */
 void FAT_screenComposer_printLocking() {
     if (FAT_screenComposer_isLocked) {
-        ham_DrawText(8, 16, "  LOCKED");
+        ham_DrawText(7, 16, "MODE   LOCKED");
     } else {
-        ham_DrawText(8, 16, "UNLOCKED");
+        ham_DrawText(7, 16, "MODE UNLOCKED");
     }
 }
 
@@ -218,10 +218,13 @@ void FAT_screenComposer_checkButtons() {
     } else {
         if (FAT_screenComposer_isPopuped) {
             FAT_popup_hide();
-            if (FAT_screenComposer_currentSelectedColumn == 0) {
-                FAT_cursors_showCursor3();
-            } else {
-                FAT_cursors_showCursor2();
+            if (!FAT_screenComposer_isLocked) {
+                if (FAT_screenComposer_currentSelectedColumn == 0) {
+                    FAT_cursors_showCursor3();
+                } else {
+                    FAT_cursors_showCursor2();
+                }
+
             }
             FAT_screenComposer_isPopuped = 0;
 

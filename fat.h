@@ -216,8 +216,6 @@ void FAT_init() {
     FAT_initCursor3();
     FAT_initCursor8();
     FAT_initCursorChange();
-    FAT_initCursorLoad();
-    FAT_initCursorSave();
     FAT_popup_initCursors();
     FAT_screenInstrument_tabCursorInit();
 

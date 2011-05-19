@@ -351,6 +351,7 @@ typedef struct INSTRUMENT {
  */
 typedef struct FAT {
     char songName[SONG_NAME_MAX_LETTERS]; /*!< Nom de la track en cours de composition. */
+    u8 nbWork; /*!< Stocke le nombre d'enregistrements pour ce projet. */
     u8 tempo; /*!< Tempo pour la track en cours de composition. */
     u8 transpose; /*!< Valeur de transposition pour la track en cours de composition. */
     u8 keyRepeat; /*!< Valeur permettant de régler la vélocité de l'interface. FF = lent 00 = rapide */
@@ -400,6 +401,7 @@ void FAT_data_initData() {
     FAT_tracker.tempo = 128;
     FAT_tracker.transpose = 0;
     FAT_tracker.keyRepeat = 0;
+    FAT_tracker.nbWork = 0;
     strcpy(FAT_tracker.songName, "SONGNAME\0");
 
     // init des variables du composer

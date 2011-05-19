@@ -57,8 +57,7 @@ void FAT_screenFilesystem_initCursor() {
  */
 void FAT_screenFilesystem_commitCursorMove() {
     ham_SetObjXY(FAT_cursor8_obj, SCREENFILESYSTEM_FIRST_BLOCK_X, FAT_screenFilesystem_cursorY+1);
-    ham_SetObjXY(FAT_cursorload_obj, SCREENFILESYSTEM_FIRST_ACTION_X, FAT_screenFilesystem_cursorY);
-    ham_SetObjXY(FAT_cursorsave_obj, SCREENFILESYSTEM_FIRST_ACTION_X, FAT_screenFilesystem_cursorY);
+    ham_SetObjXY(FAT_cursor2_obj, SCREENFILESYSTEM_FIRST_ACTION_X, FAT_screenFilesystem_cursorY);
 }
 
 /**

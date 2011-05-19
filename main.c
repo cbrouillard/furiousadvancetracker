@@ -52,6 +52,7 @@
 #define FAT_VERSION "0-02"
 
 #include <mygba.h>
+#include <stdarg.h>
 
 #include "soundApi/soundApi.h"
 #include "fat.h"
