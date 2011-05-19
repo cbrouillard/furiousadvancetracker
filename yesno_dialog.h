@@ -18,12 +18,16 @@
 #ifndef _YESNO_DIALOG_H_
 #define	_YESNO_DIALOG_H_
 
+#include "data.h"
+
+
 #define DIALOG_LAYER 0
 
 #define DIALOG_SAVE 0
 #define DIALOG_LOAD 1
 #define DIALOG_SORRY_SAVE 2
 #define DIALOG_KEYBOARD 3
+#define DIALOG_NEW 4
 
 // Prototypes
 void FAT_yesno_close ();
@@ -88,6 +92,27 @@ void FAT_yesno_dialogKeyboard_mainFunc() {
             
             else if (F_CTRLINPUT_R_PRESSED){
                 FAT_yesno_close ();
+            }
+        }
+    }
+}
+
+/**
+ * \brief Fonction principale de la boite de dialog NEW PROJECT.
+ */
+void FAT_yesno_dialogNewProject_mainFunc() {
+    if (mutex) {
+        ham_CopyObjToOAM();
+        if (iCanPressAKey) {
+            
+            if (F_CTRLINPUT_L_PRESSED){
+                FAT_yesno_close();
+            }
+            
+            else if (F_CTRLINPUT_R_PRESSED){
+                FAT_data_initData();
+                FAT_yesno_close();
+                ham_DrawText(24, 16, "GOGOGO");
             }
         }
     }
@@ -159,6 +184,19 @@ void FAT_yes_dialogSorrySave (){
 }
 
 /**
+ * \brief Boite de dialogue indiquant pour la confirmation d'un nouveau projet. 
+ * 
+ */
+void FAT_yesno_dialogNewProject (){
+    ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*) screen_dialog_new_Tiles, SIZEOF_16BIT(screen_dialog_new_Tiles), 1, 1);
+    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void *) screen_dialog_new_Map, 1024, 0, 0);
+    ham_InitBg(DIALOG_LAYER, 1, 0, 0);
+    
+    ham_StopIntHandler(INT_TYPE_VBL);
+    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogNewProject_mainFunc);
+}
+
+/**
  * \brief Boite de dialogue pour le clavier. 
  * 
  */
@@ -204,6 +242,9 @@ void FAT_yesno_show (u8 idDialog, ... ){
             break;
         case DIALOG_KEYBOARD:
             FAT_yesno_dialogKeyboard();
+            break;
+        case DIALOG_NEW:
+            FAT_yesno_dialogNewProject();
             break;
     }
     

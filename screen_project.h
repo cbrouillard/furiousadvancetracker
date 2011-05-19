@@ -20,6 +20,7 @@
 
 #include "screen_project_cursor.h"
 #include "data.h"
+#include "yesno_dialog.h"
 
 /** \brief Petit tableau pour stocker les chaines YES et NOP. */
 const char* yesOrNo[2] = {"NOP\0", "YES\0"};
@@ -228,6 +229,9 @@ void FAT_screenProject_pressA() {
         case 3:
             FAT_data_project_changePreview(addedValue);
             FAT_screenProject_printInfos();
+            break;
+        case 4:
+            FAT_yesno_show(DIALOG_NEW);
             break;
     }
 

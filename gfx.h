@@ -76,6 +76,9 @@
 #include "gfx/screen_dialog_load.raw.c"
 #include "gfx/screen_dialog_load.map.c"
 
+#include "gfx/screen_dialog_new.raw.c"
+#include "gfx/screen_dialog_new.map.c"
+
 #include "gfx/screen_dialog_keyboard.raw.c"
 #include "gfx/screen_dialog_keyboard.map.c"
 
