@@ -17,6 +17,10 @@
 #ifndef _SCREEN_COMPOSER_CURSOR_H_
 #define	_SCREEN_COMPOSER_CURSOR_H_
 
+#include "screen_composer.h"
+#include "cursors.h"
+
+
 /** \brief Position actuelle du curseur pour le composeur. */
 u8 FAT_screenComposer_cursorX;
 /** \brief Position actuelle du curseur pour le composeur. */
@@ -31,6 +35,8 @@ u8 FAT_screenComposer_currentSelectedColumn;
 #define SCREENCOMPOSER_BLOCK3_SIZE_X 24
 /** \brief Taille d'un block mesurant 2 cases (en pixels). */
 #define SCREENCOMPOSER_BLOCK2_SIZE_X 16
+/** \brief Taille d'un block mesurant 1 cases (en pixels). */
+#define SCREENCOMPOSER_BLOCK1_SIZE_X 8
 /** \brief Taille d'un block en hauteur (en pixels). */
 #define SCREENCOMPOSER_BLOCK_SIZE_Y 8
 
@@ -76,8 +82,10 @@ void FAT_screenComposer_commitCursorMove() {
         ham_SetObjXY(FAT_cursor2_obj, SCREENCOMPOSER_PARAMETER_BLOCK_X, FAT_screenComposer_cursorY);
     } else {
 
-        if (FAT_screenComposer_currentSelectedColumn == 0) {
+        if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_NOTES) {
             ham_SetObjXY(FAT_cursor3_obj, FAT_screenComposer_cursorX, FAT_screenComposer_cursorY);
+        } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CHANNEL) {
+            ham_SetObjXY(FAT_cursor1_obj, FAT_screenComposer_cursorX, FAT_screenComposer_cursorY);
         } else {
             ham_SetObjXY(FAT_cursor2_obj, FAT_screenComposer_cursorX, FAT_screenComposer_cursorY);
         }
@@ -92,7 +100,7 @@ void FAT_screenComposer_commitCursorMove() {
 void FAT_screenComposer_moveCursorDown() {
     if (FAT_screenComposer_currentSelectedLine < SCREENCOMPOSER_NB_LINES_ON_SCREEN + SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN) {
         if (FAT_screenComposer_currentSelectedLine >= 1) {
-            if (FAT_screenComposer_currentSelectedLine == 1 
+            if (FAT_screenComposer_currentSelectedLine == 1
                     && FAT_screenComposer_currentSelectedColumn == 0) {
                 FAT_cursors_hideCursor2();
                 FAT_cursors_showCursor3();
@@ -177,6 +185,11 @@ void FAT_screenComposer_moveCursorRight() {
 
             FAT_screenComposer_cursorX += SCREENCOMPOSER_BLOCK2_SIZE_X;
             FAT_screenComposer_currentSelectedColumn = SCREENCOMPOSER_COLUMN_ID_CMD_PARAM;
+        } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CMD_PARAM) {
+            FAT_screenComposer_cursorX += SCREENCOMPOSER_BLOCK2_SIZE_X + SCREENCOMPOSER_WHITE_SPACE_X;
+            FAT_screenComposer_currentSelectedColumn = SCREENCOMPOSER_COLUMN_ID_CHANNEL;
+            FAT_cursors_hideCursor2();
+            FAT_cursors_showCursor1();
         }
     }
 
@@ -204,6 +217,13 @@ void FAT_screenComposer_moveCursorLeft() {
         } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CMD_PARAM) {
             FAT_screenComposer_cursorX -= SCREENCOMPOSER_BLOCK2_SIZE_X;
             FAT_screenComposer_currentSelectedColumn = SCREENCOMPOSER_COLUMN_ID_CMD_NAME;
+   
+        } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CHANNEL) {
+        
+            FAT_screenComposer_cursorX -= SCREENCOMPOSER_BLOCK2_SIZE_X + SCREENCOMPOSER_WHITE_SPACE_X;
+            FAT_screenComposer_currentSelectedColumn = SCREENCOMPOSER_COLUMN_ID_CMD_PARAM;
+            FAT_cursors_hideCursor1();
+            FAT_cursors_showCursor2();
         }
     }
 }

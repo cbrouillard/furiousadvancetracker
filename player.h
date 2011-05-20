@@ -21,6 +21,9 @@
 #ifndef _PLAYER_H_
 #define	_PLAYER_H_
 
+#include "data.h"
+
+
 /** \brief Définition d'une valeur pour ralentir le décompte du tempo. */
 #define TEMPO_TIMER_HARDWARE_VALUE 70
 
@@ -111,7 +114,7 @@ void FAT_player_playComposerNote(u8 noteLine) {
     note* note = &(FAT_tracker.composer.notes[noteLine]);
 
     if (note->freq != NULL_VALUE) {
-        FAT_player_playNoteWithTsp(note, FAT_tracker.allInstruments[note->instrument].type,
+        FAT_player_playNoteWithTsp(note, FAT_tracker.composer.channels[noteLine],
                 FAT_tracker.composer.transpose);
     }
 }

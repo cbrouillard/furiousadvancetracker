@@ -251,6 +251,7 @@ note FAT_data_noteClipboard;
  */
 typedef struct COMPOSER {
     note notes[8]; /*!< Un compositeur contient un certain nombre de notes. */
+    u8 channels[8]; /*!< Permet de surcharger le numéro de channel sur lequel jouer la note. Par défaut, celui de l'instrument assigné à la note. */
     u8 transpose; /*!< Définit la valeur de transposition pour le compositeur entier <b>NON IMPLEMENTE</b>. */
     u8 keyRepeat; /*!< Définit le temps à attendre entre chaque appui de note. */
 } composer;
@@ -1034,7 +1035,7 @@ void FAT_data_note_previewNote(u8 block, u8 line) {
 void FAT_data_note_changeValue(u8 block, u8 noteLine, s8 addedValue) {
     u8 noteName = (FAT_tracker.allBlocks[block].notes[noteLine].note & 0xf0) >> 4;
     u8 noteOctave = FAT_tracker.allBlocks[block].notes[noteLine].note & 0x0f;
-    
+
     FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue;
     if (addedValue < 0) {
 
@@ -1066,7 +1067,7 @@ void FAT_data_note_changeValue(u8 block, u8 noteLine, s8 addedValue) {
 
     FAT_data_lastNoteWritten.freq = FAT_tracker.allBlocks[block].notes[noteLine].freq;
     FAT_data_lastNoteWritten.note = FAT_tracker.allBlocks[block].notes[noteLine].note;
-    
+
 };
 
 /**
@@ -1688,7 +1689,7 @@ void FAT_data_composer_previewNote(u8 line) {
     FAT_tracker.allInstruments[instId].loopmode = 1;
     FAT_tracker.allInstruments[instId].soundlength = 0x20;
 
-    FAT_player_playNote(&FAT_tracker.composer.notes[line], FAT_tracker.allInstruments[instId].type);
+    FAT_player_playNote(&FAT_tracker.composer.notes[line], FAT_tracker.composer.channels[line]);
 
     FAT_tracker.allInstruments[instId].loopmode = mem_loopMode;
     FAT_tracker.allInstruments[instId].soundlength = mem_soundLength;
@@ -1709,6 +1710,7 @@ void FAT_data_composer_addDefaultNote(u8 line) {
     //FAT_tracker.composer.notes[line].octave = FAT_data_lastNoteWritten.octave;
 
     FAT_data_initInstrumentIfNeeded(FAT_tracker.composer.notes[line].instrument, 0);
+    FAT_tracker.composer.channels[line] = FAT_tracker.allInstruments[FAT_tracker.composer.notes[line].instrument].type;
 
 }
 
@@ -1813,6 +1815,8 @@ bool FAT_data_composer_smartChangeInstrument(u8 line) {
 
             FAT_data_initInstrumentIfNeeded(inst,
                     0);
+            FAT_tracker.composer.channels[line] =
+                    FAT_tracker.allInstruments[FAT_tracker.composer.notes[line].instrument].type;
 
             return 1;
         }
@@ -1839,6 +1843,8 @@ void FAT_data_composer_changeInstrument(u8 line, s8 addedValue) {
 
         FAT_data_initInstrumentIfNeeded(FAT_tracker.composer.notes[line].instrument,
                 0);
+        FAT_tracker.composer.channels[line] = 
+                FAT_tracker.allInstruments[FAT_tracker.composer.notes[line].instrument].type;
     }
 }
 
@@ -1871,6 +1877,34 @@ void FAT_data_composer_changeKeyRepeat(u8 composer, s8 value) {
 
             ) {
         FAT_tracker.composer.keyRepeat += value;
+    }
+}
+
+/**
+ * \brief Reset la valeur par défaut pour le channel affecté à la note (récupère le numéro de
+ * channel de l'instrument assigné).
+ *  
+ * @param line le numéro de ligne dans le COMPOSER
+ */
+void FAT_data_composer_resetAffectedChannel (u8 line){
+    FAT_tracker.composer.channels[line] = 
+                FAT_tracker.allInstruments[FAT_tracker.composer.notes[line].instrument].type;
+}
+
+/**
+ * \brief Change le numéro de channel affecté à la note (permet de surcharger la valeur
+ * par défaut de l'instrument et de faire des choses bizarres dans le composer).
+ * 
+ * @param line le numéro de ligne dans le composer
+ * @param addedValue la valeur à ajouter/retrancher
+ */
+void FAT_data_composer_changeAffectedChannelValue (u8 line, s8 addedValue){
+    if (
+            (addedValue < 0 && FAT_tracker.composer.channels[line] > (-addedValue - 1)) ||
+            (addedValue > 0 && FAT_tracker.composer.channels[line] < 4 - addedValue)
+
+            ) {
+        FAT_tracker.composer.channels[line] += addedValue;
     }
 }
 
