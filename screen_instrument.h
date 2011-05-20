@@ -47,6 +47,7 @@ u8 FAT_instrument_waveduty3_obj;
 const char* outputText [4] = {"  ", "L ", " R", "LR"};
 
 #include "screen_instrument_cursor.h"
+#include "cursors.h"
 
 // prototypes
 void FAT_screenInstrument_init();
@@ -287,6 +288,7 @@ void FAT_screenInstrument_checkButtons() {
             FAT_screenInstrument_hideAllWavedutySprite();
             FAT_cursors_hideCursor1();
             FAT_cursors_hideCursor2();
+            FAT_cursors_hideCursor3();
             FAT_popup_show();
             FAT_screenInstrument_isPopuped = 1;
         }
