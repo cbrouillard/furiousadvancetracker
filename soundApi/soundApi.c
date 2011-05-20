@@ -238,19 +238,19 @@ void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voic
 
     switch (volume) {
         case 0:
-            REG_SOUND3CNT_H |= SOUND3OUTPUT0;
+            REG_SOUND3CNT_H = SOUND3OUTPUT0 | soundLength;
             break;
         case 1:
-            REG_SOUND3CNT_H |= SOUND3OUTPUT14;
+            REG_SOUND3CNT_H = SOUND3OUTPUT14 | soundLength;
             break;
         case 2:
-            REG_SOUND3CNT_H |= SOUND3OUTPUT12;
+            REG_SOUND3CNT_H = SOUND3OUTPUT12 | soundLength;
             break;
         case 3:
-            REG_SOUND3CNT_H |= SOUND3OUTPUT34;
+            REG_SOUND3CNT_H = SOUND3OUTPUT34 | soundLength;
             break;
         case 4:
-            REG_SOUND3CNT_H |= SOUND3OUTPUT1;
+            REG_SOUND3CNT_H = SOUND3OUTPUT1 | soundLength;
             break;
     }
 

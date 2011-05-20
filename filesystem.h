@@ -71,6 +71,7 @@ void FAT_filesystem_checkFs() {
         if ((offset == 0xFFFF && size == 0xFFFF) 
                 || (offset == 0x0000 && size == 0xAA55)) {
             FAT_filesystem_setTrackOffset(track, (track * 4));
+            FAT_filesystem_setTrackSize(track, 0);
         }
 
         track++;

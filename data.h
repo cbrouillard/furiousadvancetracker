@@ -433,7 +433,7 @@ void FAT_data_initData() {
  * 
  * @return 1 si activé, 0 sinon
  */
-bool FAT_data_isPreviewEnabled (){
+bool FAT_data_isPreviewEnabled() {
     return FAT_tracker.previewEnable != 0;
 }
 
@@ -1001,7 +1001,7 @@ effect* FAT_data_block_getEffect(u8 sequence, u8 line) {
  * @param block l'id du block
  * @param line le numéro de ligne de la note dans le block
  */
-void FAT_data_note_previewNote (u8 block,u8 line){
+void FAT_data_note_previewNote(u8 block, u8 line) {
     // copie en mémoire de l'instruemnt -> on doit modifier certaines données pour la preview comme la durée.
     u8 instId = FAT_tracker.allBlocks[block].notes[line].instrument;
 
@@ -1034,18 +1034,39 @@ void FAT_data_note_previewNote (u8 block,u8 line){
 void FAT_data_note_changeValue(u8 block, u8 noteLine, s8 addedValue) {
     u8 noteName = (FAT_tracker.allBlocks[block].notes[noteLine].note & 0xf0) >> 4;
     u8 noteOctave = FAT_tracker.allBlocks[block].notes[noteLine].note & 0x0f;
-    if (
-            (addedValue < 0 && noteName > 0) ||
-            (addedValue > 0 && noteName < NB_NOTE - 1)
+    
+    FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue;
+    if (addedValue < 0) {
 
-            ) {
-        FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue;
-        noteName += addedValue;
-        FAT_tracker.allBlocks[block].notes[noteLine].note = (noteName << 4) + noteOctave;
+        if (noteName > 0) {
 
-        FAT_data_lastNoteWritten.freq = FAT_tracker.allBlocks[block].notes[noteLine].freq;
-        FAT_data_lastNoteWritten.note = FAT_tracker.allBlocks[block].notes[noteLine].note;
+            noteName += addedValue;
+
+        } else if (noteOctave > MIN_OCTAVE) {
+            // on change d'octave si possible et on passe à la note maximale.
+            // C 4 passe à B 3
+            noteName = NB_NOTE - 1;
+            noteOctave -= 1;
+        }
+
+    } else if (addedValue > 0) {
+        if (noteName < NB_NOTE - 1) {
+
+            noteName += addedValue;
+
+        } else if (noteOctave < MAX_OCTAVE) {
+            // on passe à l'octave suivant 
+            // B 4 -> C 5
+            noteName = 0;
+            noteOctave += 1;
+        }
     }
+
+    FAT_tracker.allBlocks[block].notes[noteLine].note = (noteName << 4) + noteOctave;
+
+    FAT_data_lastNoteWritten.freq = FAT_tracker.allBlocks[block].notes[noteLine].freq;
+    FAT_data_lastNoteWritten.note = FAT_tracker.allBlocks[block].notes[noteLine].note;
+    
 };
 
 /**
@@ -1275,7 +1296,7 @@ void FAT_data_instrument_playSimulator(u8 inst) {
     u8 mem_loopMode = FAT_tracker.allInstruments[inst].loopmode;
     FAT_tracker.allInstruments[inst].loopmode = 1;
     FAT_player_playNote(&FAT_data_simulator, FAT_tracker.allInstruments[inst].type);
-    FAT_tracker.allInstruments[inst].loopmode = mem_loopMode;            
+    FAT_tracker.allInstruments[inst].loopmode = mem_loopMode;
 }
 
 /**
@@ -1421,7 +1442,7 @@ void FAT_data_instrumentNoise_changePolystep(u8 instrumentId, s8 value) {
  * @param value la valeur à ajouter ou retrancher
  */
 void FAT_data_instrumentPulse_changeOutput(u8 instrumentId, s8 value) {
-    switch (value){
+    switch (value) {
         case -1: // touche LEFT
             FAT_tracker.allInstruments[instrumentId].output = 1;
             break;
@@ -1456,7 +1477,6 @@ void FAT_data_instrumentNoise_changeOutput(u8 instrumentId, s8 value) {
 void FAT_data_instrumentWave_changeOutput(u8 instrumentId, s8 value) {
     FAT_data_instrumentPulse_changeOutput(instrumentId, value);
 }
-
 
 /**
  * \brief Change le paramètre "soundlength" (durée du son) pour un instrument de type PULSE.
@@ -1718,18 +1738,38 @@ note* FAT_data_composer_getNote(u8 line) {
 void FAT_data_composer_changeValue(u8 line, s8 addedValue) {
     u8 noteName = (FAT_tracker.composer.notes[line].note & 0xf0) >> 4;
     u8 noteOctave = FAT_tracker.composer.notes[line].note & 0x0f;
-    if (
-            (addedValue < 0 && noteName > 0) ||
-            (addedValue > 0 && noteName < NB_NOTE - 1)
 
-            ) {
-        FAT_tracker.composer.notes[line].freq += addedValue;
-        noteName += addedValue;
-        FAT_tracker.composer.notes[line].note = (noteName << 4) + noteOctave;
+    FAT_tracker.composer.notes[line].freq += addedValue;
+    if (addedValue < 0) {
 
-        FAT_data_lastNoteWritten.freq = FAT_tracker.composer.notes[line].freq;
-        FAT_data_lastNoteWritten.note = FAT_tracker.composer.notes[line].note;
+        if (noteName > 0) {
+
+            noteName += addedValue;
+
+        } else if (noteOctave > MIN_OCTAVE) {
+            // on change d'octave si possible et on passe à la note maximale.
+            // C 4 passe à B 3
+            noteName = NB_NOTE - 1;
+            noteOctave -= 1;
+        }
+
+    } else if (addedValue > 0) {
+        if (noteName < NB_NOTE - 1) {
+
+            noteName += addedValue;
+
+        } else if (noteOctave < MAX_OCTAVE) {
+            // on passe à l'octave suivant 
+            // B 4 -> C 5
+            noteName = 0;
+            noteOctave += 1;
+        }
     }
+
+    FAT_tracker.composer.notes[line].note = (noteName << 4) + noteOctave;
+
+    FAT_data_lastNoteWritten.freq = FAT_tracker.composer.notes[line].freq;
+    FAT_data_lastNoteWritten.note = FAT_tracker.composer.notes[line].note;
 }
 
 /**
@@ -1854,10 +1894,10 @@ void FAT_data_project_changeKeyRepeat(s8 addedValue) {
  * 
  * @param addedValue si &lt; 0, alors désactivation, sinon activation 
  */
-void FAT_data_project_changePreview (s8 addedValue){
-    if (addedValue < 0){
+void FAT_data_project_changePreview(s8 addedValue) {
+    if (addedValue < 0) {
         FAT_tracker.previewEnable = 0;
-    } else if (addedValue > 0){
+    } else if (addedValue > 0) {
         FAT_tracker.previewEnable = 1;
     }
 }
