@@ -19,6 +19,7 @@
 #define	_YESNO_DIALOG_H_
 
 #include "data.h"
+#include "fat.h"
 
 
 #define DIALOG_LAYER 0
@@ -48,9 +49,11 @@ void FAT_yesno_dialogSave_mainFunc() {
             }
             
             else if (F_CTRLINPUT_R_PRESSED){
+                mutex = 0;
                 FAT_filesystem_saveRaw(param1);
                 FAT_yesno_close();
                 ham_DrawText(24, 16, "SAVED ");
+                mutex = 1;
             }
         }
     }
@@ -69,10 +72,12 @@ void FAT_yesno_dialogLoad_mainFunc() {
             }
             
             else if (F_CTRLINPUT_R_PRESSED){
+                mutex = 0;
                 FAT_filesystem_loadRaw(param1);
                 FAT_currentScreen = SCREEN_PROJECT_ID;
                 FAT_yesno_close();
                 ham_DrawText(24, 16, "LOADED");
+                mutex = 1;
             }
         }
     }
@@ -110,9 +115,12 @@ void FAT_yesno_dialogNewProject_mainFunc() {
             }
             
             else if (F_CTRLINPUT_R_PRESSED){
+                mutex = 0;
                 FAT_data_initData();
+                FAT_currentScreen = SCREEN_SONG_ID;
                 FAT_yesno_close();
                 ham_DrawText(24, 16, "GOGOGO");
+                mutex = 1;
             }
         }
     }
@@ -136,9 +144,11 @@ void FAT_onlyyes_dialog_mainFunc (){
  * \brief Ferme la boite de dialogue et reinitialise la popup (qui est sur le même layer). 
  */
 void FAT_yesno_close (){
+    mutex = 0;
     ham_StopIntHandler(INT_TYPE_VBL);
     FAT_popup_init();
     FAT_switchToScreen(FAT_currentScreen);
+    mutex = 1;
 }
 
 /**

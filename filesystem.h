@@ -17,9 +17,6 @@
 #ifndef _FILESYSTEM_H_
 #define	_FILESYSTEM_H_
 
-#include "data.h"
-
-
 /**
  * \brief Addresse vers la mémoire SRAM (la mémoire pour la sauvegarde).
  */
@@ -56,7 +53,9 @@ void FAT_filesystem_saveRaw(u8 trackNumber);
 void FAT_filesystem_loadRaw(u8 trackNumber);
 u16 FAT_filesystem_findFirstFreeOffset();
 
+/** \brief Chaine de caractère pour les chansons non initialisées. */
 const char* emptyName = "EMPTY   ";
+/** \brief Chaine de caractère pour les slots non disponibles. */
 const char* noAvailable_tmp = "XXXXX   ";
 
 /**
@@ -69,7 +68,8 @@ void FAT_filesystem_checkFs() {
         offset = FAT_filesystem_getTrackOffset(track);
         size = FAT_filesystem_getTrackSize(track);
 
-        if (offset == 0xFFFF && size == 0xFFFF) {
+        if ((offset == 0xFFFF && size == 0xFFFF) 
+                || (offset == 0x0000 && size == 0xAA55)) {
             FAT_filesystem_setTrackOffset(track, (track * 4));
         }
 
@@ -77,6 +77,12 @@ void FAT_filesystem_checkFs() {
     }
 }
 
+/**
+ * \brief Donne le nom d'une chanson stockée dans le filesystem. 
+ * 
+ * @param trackNumber numéro de la chanson 
+ * @return un pointeur sur l'espace mémoire contenant la chaine.
+ */
 char* FAT_filesystem_getTrackName(u8 trackNumber) {
     if (trackNumber >= MAX_TRACKS_WITHOUT_COMPRESSION) {
         return (char*) noAvailable_tmp;
@@ -91,45 +97,81 @@ char* FAT_filesystem_getTrackName(u8 trackNumber) {
     return & (gamepak [ offset ]);
 }
 
-u8 FAT_filesystem_getTrackNbWork (u8 trackNumber){
+/**
+ * \brief Donne le nombre de fois qu'une track a été enregistrée.
+ * 
+ * @param trackNumber le numéro de la chanson
+ * @return un chiffre compris entre 0 et 0xff
+ */
+u8 FAT_filesystem_getTrackNbWork(u8 trackNumber) {
     if (trackNumber >= MAX_TRACKS_WITHOUT_COMPRESSION) {
         return 0;
     }
-    
-    u16 offset =  FAT_filesystem_getTrackOffset(trackNumber);
+
+    u16 offset = FAT_filesystem_getTrackOffset(trackNumber);
 
     if (offset == (trackNumber * 4)) {
         return 0;
     }
-    
+
     return gamepak [ offset + SONG_NAME_MAX_LETTERS ];
 }
 
 /**
  * \brief Parcourt la table d'allocation des tracks et donne le premier offset physiquement
  * libre pour le stockage d'une track.
+ * 
+ * \todo Pas de compression pour le moment, cette méthode est donc "stupide".
  */
 u16 FAT_filesystem_findFirstFreeOffset() {
     return MAX_TRACKS * 4; // offset par défaut = fin de la table d'allocation
 }
 
+/**
+ * \brief Donne l'offset de départ de stockage pour une chanson. Mode RAW.
+ * 
+ * @param trackNumber le numéro de chanson
+ * @return un nombre compris entre 0x0000 et 0xffff
+ */
 u16 FAT_filesystem_findRawTrackOffset(u8 trackNumber) {
     return (MAX_TRACKS * 4) + (sizeof (FAT_tracker) * trackNumber);
 }
 
+/**
+ * \brief Sauvegarde de la chanson AVEC compression.
+ * 
+ * @param trackNumber numéro du slot d'enregistrement
+ */
 void FAT_filesystem_saveTrack(u8 trackNumber) {
 
 }
 
+/**
+ * \brief Chargement de la chanson AVEC compression.
+ * 
+ * @param trackNumber numéro du slot d'enregistrement
+ */
 void FAT_filesystem_loadTrack(u8 trackNumber) {
 
 }
 
+/**
+ * \brief Modifie l'offset de départ d'une chanson.
+ *  
+ * @param trackNumber le numéro de la chanson (et du slot)
+ * @param offset la nouvelle valeur de l'offset
+ */
 void FAT_filesystem_setTrackOffset(u8 trackNumber, u16 offset) {
     gamepak[ trackNumber * 4 ] = offset >> 8;
     gamepak[ (trackNumber * 4) + 1 ] = offset & 0x00ff;
 }
 
+/**
+ * \brief Récupère l'offset de départ d'une chanson.
+ *  
+ * @param trackNumber le numéro de la chanson (et du slot)
+ * @param offset la nouvelle valeur de l'offset
+ */
 u16 FAT_filesystem_getTrackOffset(u8 trackNumber) {
     u16 firstPart = gamepak[ trackNumber * 4 ];
     u8 secondPart = gamepak[ (trackNumber * 4) + 1 ];
@@ -137,11 +179,23 @@ u16 FAT_filesystem_getTrackOffset(u8 trackNumber) {
     return (firstPart << 8) | secondPart;
 }
 
+/**
+ * \brief Remplit la valeur de la taille de la chanson.
+ * 
+ * @param trackNumber numéro de la track
+ * @param size taille de 0x0000 à 0xFFFF
+ */
 void FAT_filesystem_setTrackSize(u8 trackNumber, u16 size) {
-    gamepak[ (trackNumber * 4) + 2] = size >> 8;
-    gamepak[ (trackNumber * 4) + 3] = size & 0x00ff;
+    gamepak[ (trackNumber * 4) + 2 ] = size >> 8;
+    gamepak[ (trackNumber * 4) + 3 ] = size & 0x00ff;
 }
 
+/**
+ * \brief Récupère la taille actuelle de la chanson.
+ * @param trackNumber le numéro de la chanson
+ * 
+ * @return un nombre compris entre 0x0000 et 0xFFFF
+ */
 u16 FAT_filesystem_getTrackSize(u8 trackNumber) {
     u16 firstPart = gamepak[ (trackNumber * 4) + 2];
     u8 secondPart = gamepak[ (trackNumber * 4) + 3];
@@ -149,6 +203,13 @@ u16 FAT_filesystem_getTrackSize(u8 trackNumber) {
     return (firstPart << 8) | secondPart;
 }
 
+/**
+ * \brief Donne la taille de la chanson en vérifiant certaines conditions liées au 
+ * mode RAW.
+ * 
+ * @param trackNumber le numéro de la chanson
+ * @return la taille compris entre 0x0000 et 0xFFFF
+ */
 u16 FAT_filesystem_getTrackSizeChecked(u8 trackNumber) {
     if (trackNumber >= MAX_TRACKS_WITHOUT_COMPRESSION) {
         return 0;
@@ -168,8 +229,8 @@ u16 FAT_filesystem_getTrackSizeChecked(u8 trackNumber) {
  */
 void FAT_filesystem_saveRaw(u8 trackNumber) {
     mutex = 0;
-    FAT_tracker.nbWork ++;
-    
+    FAT_tracker.nbWork++;
+
     u8* tracker = (u8*) & FAT_tracker;
 
     //u32 trackSize = FAT_filesystem_getTrackSize(trackNumber);

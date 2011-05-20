@@ -10,10 +10,8 @@
  */
 
 /**
- * \file screen_effects.h
- * \brief Ce fichier contient toutes les fonctions utiles pour la gestion de l'écran EFFECTS.
- * 
- * Cet écran est globalement similaire à celui des tables dans LSDJ.
+ * \file screen_filesystem.h
+ * \brief Ce fichier contient toutes les fonctions utiles pour la gestion de l'écran filesystem.
  */
 
 #ifndef _SCREEN_FILESYSTEM_H_
