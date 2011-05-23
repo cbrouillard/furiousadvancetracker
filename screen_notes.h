@@ -313,6 +313,11 @@ void FAT_screenNotes_checkButtons() {
 
                 FAT_screenNotes_commitCursorMove();
             }
+            
+            if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED) {
+                iCanPressAKey = 0;
+                FAT_showHelp(SCREEN_NOTES_ID);
+            }
         }
 
         FAT_keys_waitForAnotherKeyTouch();

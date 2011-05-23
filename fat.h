@@ -39,6 +39,8 @@
 #define SCREEN_EFFECTS_ID 7
 /** \brief Id écran filesystem. */
 #define SCREEN_FILESYSTEM_ID 8
+/** \brief Id écran help. */
+#define SCREEN_HELP_ID 9
 /** \brief Nombre total d'écran disponible pour FAT */
 #define NB_SCREEN 8;
 /** \brief Numéro de la couleur du texte. Ce numéro correspond à une couleur dans la palette. <b>NE PAS TOUCHER</b>*/
@@ -78,6 +80,7 @@ u8 FAT_currentScreen = SCREEN_SONG_ID;
 void FAT_initSpritePalette();
 void FAT_initScreenPalette();
 void FAT_switchToScreen(u8 screenId);
+void FAT_showHelp (u8 screenId);
 void FAT_reinitScreen();
 void FAT_forceClearTextLayer();
 void FAT_waitVSync();
@@ -139,6 +142,8 @@ bool FAT_isCurrentlyPlaying = 0;
 #include "screen_notes.h"
 #include "screen_instrument.h"
 #include "screen_effects.h"
+
+#include "screen_help.h"
 
 #include "player.h"
 
@@ -351,6 +356,14 @@ void FAT_switchToScreen(u8 screenId) {
     }
 
     FAT_popup_moveSelectedScreenCursor();
+}
+
+/**
+ * \brief Affiche l'écran d'aide correspondant à l'id passé en paramètres.
+ * \param screenId le numéro d'écran actuellement consulté. 
+ */
+void FAT_showHelp (u8 screenId){
+    FAT_screenHelp_init(screenId);
 }
 
 /**

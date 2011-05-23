@@ -66,6 +66,22 @@
 #include "gfx/screen_filesystem.raw.c"
 #include "gfx/screen_filesystem.map.c"
 
+// ECRANS D'AIDE
+#include "gfx/screen_help_projet.raw.c"
+#include "gfx/screen_help_projet.map.c"
+#include "gfx/screen_help_filesystem.raw.c"
+#include "gfx/screen_help_filesystem.map.c"
+#include "gfx/screen_help_composer.raw.c"
+#include "gfx/screen_help_composer.map.c"
+#include "gfx/screen_help_song.raw.c"
+#include "gfx/screen_help_song.map.c"
+#include "gfx/screen_help_blocks.raw.c"
+#include "gfx/screen_help_blocks.map.c"
+#include "gfx/screen_help_notes.raw.c"
+#include "gfx/screen_help_notes.map.c"
+#include "gfx/screen_help_instrument.raw.c"
+#include "gfx/screen_help_instrument.map.c"
+
 // DIALOGUES
 #include "gfx/screen_dialog_save.raw.c"
 #include "gfx/screen_dialog_save.map.c"

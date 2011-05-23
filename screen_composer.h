@@ -112,7 +112,7 @@ void FAT_screenComposer_printNote(u8 line) {
                 line + SCREENCOMPOSER_LINE_START_Y,
                 "%s%1x %.2x      %.1x\0",
                 noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument,
-//                FAT_data_getInstrumentType(actualNote->instrument) + 1
+                //                FAT_data_getInstrumentType(actualNote->instrument) + 1
                 FAT_tracker.composer.channels[line] + 1
                 );
     } else {
@@ -250,6 +250,11 @@ void FAT_screenComposer_checkButtons() {
                     FAT_screenComposer_pressB();
                 }
 
+                if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED) {
+                    iCanPressAKey = 0;
+                    FAT_showHelp(SCREEN_COMPOSER_ID);
+                }
+
                 if (F_CTRLINPUT_START_PRESSED) {
                     // lock/unlock le compositeur
                     iCanPressAKey = 0;
@@ -361,27 +366,27 @@ void FAT_screenComposer_pressA() {
 
                 break;
             case SCREENCOMPOSER_COLUMN_ID_CHANNEL:
-                
-                if (F_CTRLINPUT_L_PRESSED){
+
+                if (F_CTRLINPUT_L_PRESSED) {
                     iCanPressAKey = 0;
-                    FAT_data_composer_resetAffectedChannel (realLine);
+                    FAT_data_composer_resetAffectedChannel(realLine);
                 } else {
-                    
-                    if (F_CTRLINPUT_RIGHT_PRESSED){
+
+                    if (F_CTRLINPUT_RIGHT_PRESSED) {
                         iCanPressAKey = 0;
-                        FAT_data_composer_changeAffectedChannelValue (realLine, 1);
+                        FAT_data_composer_changeAffectedChannelValue(realLine, 1);
                     }
-                    
-                    if (F_CTRLINPUT_LEFT_PRESSED){
+
+                    if (F_CTRLINPUT_LEFT_PRESSED) {
                         iCanPressAKey = 0;
-                        FAT_data_composer_changeAffectedChannelValue (realLine, -1);
+                        FAT_data_composer_changeAffectedChannelValue(realLine, -1);
                     }
                 }
-                
+
                 if (FAT_data_isPreviewEnabled()) {
                     FAT_data_composer_previewNote(realLine);
                 }
-                
+
                 break;
 
         }
@@ -462,7 +467,7 @@ void FAT_screenComposer_switchLocking() {
     } else {
         if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_NOTES) {
             FAT_cursors_showCursor3();
-        }else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CHANNEL){
+        } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CHANNEL) {
             FAT_cursors_showCursor1();
         } else {
             FAT_cursors_showCursor2();

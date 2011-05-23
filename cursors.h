@@ -196,6 +196,7 @@ void FAT_cursors_hideCursor8() {
     ham_SetObjVisible(FAT_cursor8_obj, 0);
 }
 
+
 /**
  * \brief Affiche le curseur de changement d'onglet. 
  * 
@@ -228,4 +229,14 @@ void FAT_cursors_moveCursorChange(u8 x, u8 y) {
     ham_SetObjXY(FAT_cursorChange_obj, x, y);
 }
 
+/**
+ * \brief Cache tous les curseurs. 
+ */
+void FAT_cursors_hideAllCursors(){
+    FAT_cursors_hideCursor1();
+    FAT_cursors_hideCursor2();
+    FAT_cursors_hideCursor3();
+    FAT_cursors_hideCursor8();
+    FAT_cursors_hideCursorChange();
+}
 #endif

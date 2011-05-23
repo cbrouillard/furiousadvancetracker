@@ -23,13 +23,13 @@
 /** \brief Position par défaut du curseur de tabulation. */
 #define SCREENINSTRUMENT_TABULATION_CURSOR_DEFAULT_Y 5
 /** \brief Position du curseur de tabulation pour le type d'instrument PULSE. */
-#define SCREENINSTRUMENT_TABULATION_CURSOR_PULSE_X 5
+#define SCREENINSTRUMENT_TABULATION_CURSOR_PULSE_X 3
 /** \brief Position du curseur de tabulation pour le type d'instrument WAVE. */
-#define SCREENINSTRUMENT_TABULATION_CURSOR_WAVE_X 53
+#define SCREENINSTRUMENT_TABULATION_CURSOR_WAVE_X 47
 /** \brief Position du curseur de tabulation pour le type d'instrument NOISE. */
-#define SCREENINSTRUMENT_TABULATION_CURSOR_NOISE_X 101
+#define SCREENINSTRUMENT_TABULATION_CURSOR_NOISE_X 91
 /** \brief Position du curseur de tabulation pour le type d'instrument SAMPLE. */
-#define SCREENINSTRUMENT_TABULATION_CURSOR_SAMPLE_X 149
+#define SCREENINSTRUMENT_TABULATION_CURSOR_SAMPLE_X 135
 /** \brief Position du premier emplacement dans l'écran instrument (ne tient pas compte du type). */
 #define SCREENINSTRUMENTS_FIRST_BLOCK_X 88
 /** \brief Position du premier emplacement dans l'écran instrument (ne tient pas compte du type). */

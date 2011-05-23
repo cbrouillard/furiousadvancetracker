@@ -34,6 +34,7 @@ bool FAT_screenFilesystem_isPopuped = 0;
 /** \brief Quel est le mode actuel pour l'écran filesystem ? LOAD/SAVE */
 u8 FAT_filesystem_actualMode = FILESYSTEM_MODE_SAVE;
 
+/** \brief Chaines de caractères pour représenter le mode actuel de l'écran filesystem. */
 const char* modes[2] = {"SAVE", "LOAD"};
 
 // prototypes
@@ -95,7 +96,7 @@ void FAT_screenFilesystem_printAllTracksName() {
     u8 track = 0;
     u8 y = SCREENFILESYSTEM_LINE_START_Y;
     while (track < MAX_TRACKS) {
-        ham_DrawText(SCREENFILESYSTEM_LINE_TRACKNAME_X, y, "%.8s %.2x", FAT_filesystem_getTrackName(track), 
+        ham_DrawText(SCREENFILESYSTEM_LINE_TRACKNAME_X, y, "%.8s %.2x", FAT_filesystem_getTrackName(track),
                 FAT_filesystem_getTrackNbWork(track));
         track++;
         y++;
@@ -113,7 +114,7 @@ void FAT_screenFilesystem_printInfos() {
     ham_DrawText(16, 5, "line %.2x", FAT_screenFilesystem_currentSelectedLine);
     ham_DrawText(16, 6, "Name %.8s", FAT_filesystem_getTrackName(FAT_screenFilesystem_currentSelectedLine));
     ham_DrawText(16, 7, "size %.4x", FAT_filesystem_getTrackSizeChecked(FAT_screenFilesystem_currentSelectedLine));
-    ham_DrawText (16,8, "work %.2x", FAT_filesystem_getTrackNbWork(FAT_screenFilesystem_currentSelectedLine));
+    ham_DrawText(16, 8, "work %.2x", FAT_filesystem_getTrackNbWork(FAT_screenFilesystem_currentSelectedLine));
     mutex = 1;
 }
 
@@ -174,6 +175,11 @@ void FAT_screenFilesystem_checkButtons() {
             }
         }
 
+        if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED) {
+            iCanPressAKey = 0;
+            FAT_showHelp(SCREEN_FILESYSTEM_ID);
+        }
+
         if (F_CTRLINPUT_RIGHT_PRESSED) {
             iCanPressAKey = 0;
         }
@@ -211,17 +217,17 @@ void FAT_screenFilesystem_pressA() {
 
     if (FAT_screenFilesystem_currentSelectedLine >= MAX_TRACKS_WITHOUT_COMPRESSION) {
 
-        FAT_yesno_show (DIALOG_SORRY_SAVE);
+        FAT_yesno_show(DIALOG_SORRY_SAVE);
 
     } else {
 
         switch (FAT_filesystem_actualMode) {
             case FILESYSTEM_MODE_LOAD:
-                FAT_yesno_show (DIALOG_LOAD, FAT_screenFilesystem_currentSelectedLine);
+                FAT_yesno_show(DIALOG_LOAD, FAT_screenFilesystem_currentSelectedLine);
                 break;
 
             case FILESYSTEM_MODE_SAVE:
-                FAT_yesno_show (DIALOG_SAVE, FAT_screenFilesystem_currentSelectedLine);
+                FAT_yesno_show(DIALOG_SAVE, FAT_screenFilesystem_currentSelectedLine);
                 break;
         }
     }

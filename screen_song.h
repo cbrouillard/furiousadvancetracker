@@ -70,7 +70,7 @@ void FAT_screenSong_mainFunc() {
 void FAT_screenSong_init() {
 
     FAT_reinitScreen();
-    
+
 
     // initialisation du fond (interface)
     ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_song_Tiles, SIZEOF_16BIT(screen_song_Tiles), 1, 1);
@@ -196,7 +196,7 @@ void FAT_screenSong_checkButtons() {
         }
 
         if (F_CTRLINPUT_A_PRESSED) {
-            
+
             FAT_screenSong_pressA();
 
         } else {
@@ -208,6 +208,11 @@ void FAT_screenSong_checkButtons() {
                 } else {
                     FAT_player_stopPlayer();
                 }
+            }
+
+            if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED) {
+                iCanPressAKey = 0;
+                FAT_showHelp(SCREEN_SONG_ID);
             }
 
             if (F_CTRLINPUT_B_PRESSED) {
@@ -301,7 +306,7 @@ void FAT_screenSong_pressA() {
         FAT_data_sequence_changeValue(FAT_screenSong_currentSelectedColumn,
                 FAT_screenSong_currentSelectedLine, 1); // ajout de 1
     }
-    
+
     if (F_CTRLINPUT_LEFT_PRESSED) {
         iCanPressAKey = 0;
         FAT_data_sequence_changeValue(FAT_screenSong_currentSelectedColumn,

@@ -19,8 +19,6 @@
 #define _SCREEN_PROJECT_H_
 
 #include "screen_project_cursor.h"
-#include "data.h"
-#include "yesno_dialog.h"
 
 /** \brief Petit tableau pour stocker les chaines YES et NOP. */
 const char* yesOrNo[2] = {"NOP\0", "YES\0"};
@@ -59,7 +57,7 @@ void FAT_screenProject_printInfos() {
     ham_DrawText(1, 13, "SAVE PRJ  OK");
     ham_DrawText(1, 14, "LOAD PRJ  OK");
     
-    ham_DrawText(1, 1, "FAT PROJECT  v%s", FAT_VERSION);
+    ham_DrawText(1, 1, "FAT PROJECT v%s", FAT_VERSION);
     mutex = 1;
 }
 
@@ -141,6 +139,11 @@ void FAT_screenProject_checkButtons() {
                 } else {
                     FAT_player_stopPlayer();
                 }
+            }
+            
+            if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED){
+                iCanPressAKey = 0;
+                FAT_showHelp(SCREEN_PROJECT_ID);
             }
 
             if (F_CTRLINPUT_RIGHT_PRESSED) {

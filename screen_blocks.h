@@ -335,6 +335,12 @@ void FAT_screenBlocks_checkButtons() {
 
                 FAT_screenBlocks_commitCursorMove();
             }
+
+            if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED) {
+                iCanPressAKey = 0;
+                FAT_showHelp(SCREEN_BLOCKS_ID);
+            }
+
         }
         FAT_keys_waitForAnotherKeyTouch();
     }
