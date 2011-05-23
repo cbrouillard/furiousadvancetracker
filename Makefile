@@ -8,7 +8,7 @@ include $(HAMDIR)/system/master.mak
 #
 # Set the name of your desired GBA image name here
 #
-PROGNAME = FuriousAdvanceTracker_v0-02
+PROGNAME = FuriousAdvanceTracker_v0.2.0
 
 #
 # Set a list of files you want to compile 

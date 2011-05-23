@@ -49,7 +49,7 @@
 /**
  * \brief Version actuelle de FAT.
  */
-#define FAT_VERSION "0-02"
+#define FAT_VERSION "0.2.0"
 
 #include <mygba.h>
 #include <stdarg.h>

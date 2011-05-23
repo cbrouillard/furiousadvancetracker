@@ -18,10 +18,6 @@
 #ifndef _YESNO_DIALOG_H_
 #define	_YESNO_DIALOG_H_
 
-#include "data.h"
-#include "fat.h"
-
-
 #define DIALOG_LAYER 0
 
 #define DIALOG_SAVE 0
@@ -73,6 +69,7 @@ void FAT_yesno_dialogLoad_mainFunc() {
             
             else if (F_CTRLINPUT_R_PRESSED){
                 mutex = 0;
+                FAT_player_stopPlayer();
                 FAT_filesystem_loadRaw(param1);
                 FAT_currentScreen = SCREEN_PROJECT_ID;
                 FAT_yesno_close();
@@ -116,6 +113,7 @@ void FAT_yesno_dialogNewProject_mainFunc() {
             
             else if (F_CTRLINPUT_R_PRESSED){
                 mutex = 0;
+                FAT_player_stopPlayer();
                 FAT_data_initData();
                 FAT_currentScreen = SCREEN_SONG_ID;
                 FAT_yesno_close();
