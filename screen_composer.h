@@ -194,12 +194,15 @@ void FAT_screenComposer_init() {
     // curseur
     FAT_cursors_hideCursor2();
     FAT_cursors_hideCursor3();
-    FAT_screenComposer_commitCursorMove();
-    if (FAT_screenComposer_currentSelectedColumn == 0) {
+    FAT_cursors_hideCursor1();
+    if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_NOTES && FAT_screenComposer_currentSelectedLine > 1) {
         FAT_cursors_showCursor3();
+    } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CHANNEL && FAT_screenComposer_currentSelectedLine > 1) {
+        FAT_cursors_showCursor1();
     } else {
         FAT_cursors_showCursor2();
     }
+    FAT_screenComposer_commitCursorMove();
 }
 
 /**
@@ -210,6 +213,7 @@ void FAT_screenComposer_checkButtons() {
         if (!FAT_screenComposer_isPopuped) {
             FAT_cursors_hideCursor3();
             FAT_cursors_hideCursor2();
+            FAT_cursors_hideCursor1();
             FAT_popup_show();
             FAT_screenComposer_isPopuped = 1;
         }
@@ -220,8 +224,10 @@ void FAT_screenComposer_checkButtons() {
         if (FAT_screenComposer_isPopuped) {
             FAT_popup_hide();
             if (!FAT_screenComposer_isLocked) {
-                if (FAT_screenComposer_currentSelectedColumn == 0) {
+                if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_NOTES) {
                     FAT_cursors_showCursor3();
+                } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CHANNEL){
+                    FAT_cursors_showCursor1();
                 } else {
                     FAT_cursors_showCursor2();
                 }
@@ -232,6 +238,7 @@ void FAT_screenComposer_checkButtons() {
             if (FAT_popup_getSelectedIcon() != SCREEN_COMPOSER_ID) {
                 FAT_cursors_hideCursor3();
                 FAT_cursors_hideCursor2();
+                FAT_cursors_hideCursor1();
                 FAT_switchToScreen(FAT_popup_getSelectedIcon());
             }
         }

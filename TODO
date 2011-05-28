@@ -1,26 +1,29 @@
 CONTACTER l'auteur de HAM pour lui demander la permission d'utiliser HAM release.
 
 V0-02:
-- A TESTER stabiliser les instruments WAV (version 0-02)
-
+- bug SoundLength sur instru wav
 - refactoring pour les types d'effets : structure, ponctuel, long (refactoring_effects)
 - commande H (Hop) (version 0-02)
 - commande SW (Sweep) (version 0-02)
 - commande EN (Enveloppe) (version 0-02)
+- command OU (Output) 
 
 - OK documentation: faire un tableau comparatif des cartouches
-- documentation: compléter la section technique
+- OK documentation: compléter la section technique
 
-- A TESTER composer: appliquer le transpose (version 0-02)
-- A TESTER ! interface: gérer un key-repeat global
+- A TESTER composer: appliquer le transpose (version 0-02) (bug sur WAV)
+- OK interface: gérer un key-repeat global
 - brancher le key repeat sur le composer.
 
 
 v0-03:
 - design de l'écran effets (version 0-03)
 - jouer des samples sur les deux channels qui reste
+- deep clone
 
 
 v0-0x:
 - réfléchir à la commande C , V , P (les commandes qui sont actives sur toute la durée
 de la note en cours de lecture) (version 0-0x (x>2))
+
+Idée: faire un mini jeu style TGPA avec un Chat qui tire sur des notes de musiques branchées sur des samples. 

@@ -125,7 +125,7 @@ void snd_init_soundApi() {
     // volume à fond, activation stéréo des 4 canaux
     // activation des directsound A et B en mode timer 0 et 1
     REG_SOUNDCNT_L = 0xff77;
-    REG_SOUNDCNT_H = 0xfb0f;
+    REG_SOUNDCNT_H = 2;//0xfb0f;
 
     REG_SOUND3CNT_L = SOUND3BANK32 | SOUND3SETBANK1;
 
