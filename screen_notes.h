@@ -340,7 +340,7 @@ void FAT_screenNotes_pressB() {
             break;
         case SCREENNOTES_COLUMN_ID_CMD_NAME:
         case SCREENNOTES_COLUMN_ID_CMD_PARAM:
-            if (FAT_data_note_isEffectEmpty(FAT_screenNotes_currentBlockId, FAT_screenBlocks_currentSelectedLine)) {
+            if (FAT_data_note_isEffectEmpty(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine)) {
                 FAT_data_note_pasteEffect(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine);
             } else {
                 FAT_data_note_cutEffect(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine);

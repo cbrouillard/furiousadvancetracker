@@ -1843,7 +1843,7 @@ void FAT_data_composer_changeInstrument(u8 line, s8 addedValue) {
 
         FAT_data_initInstrumentIfNeeded(FAT_tracker.composer.notes[line].instrument,
                 0);
-        FAT_tracker.composer.channels[line] = 
+        FAT_tracker.composer.channels[line] =
                 FAT_tracker.allInstruments[FAT_tracker.composer.notes[line].instrument].type;
     }
 }
@@ -1886,9 +1886,9 @@ void FAT_data_composer_changeKeyRepeat(u8 composer, s8 value) {
  *  
  * @param line le numéro de ligne dans le COMPOSER
  */
-void FAT_data_composer_resetAffectedChannel (u8 line){
-    FAT_tracker.composer.channels[line] = 
-                FAT_tracker.allInstruments[FAT_tracker.composer.notes[line].instrument].type;
+void FAT_data_composer_resetAffectedChannel(u8 line) {
+    FAT_tracker.composer.channels[line] =
+            FAT_tracker.allInstruments[FAT_tracker.composer.notes[line].instrument].type;
 }
 
 /**
@@ -1898,7 +1898,7 @@ void FAT_data_composer_resetAffectedChannel (u8 line){
  * @param line le numéro de ligne dans le composer
  * @param addedValue la valeur à ajouter/retrancher
  */
-void FAT_data_composer_changeAffectedChannelValue (u8 line, s8 addedValue){
+void FAT_data_composer_changeAffectedChannelValue(u8 line, s8 addedValue) {
     if (
             (addedValue < 0 && FAT_tracker.composer.channels[line] > (-addedValue - 1)) ||
             (addedValue > 0 && FAT_tracker.composer.channels[line] < 4 - addedValue)
