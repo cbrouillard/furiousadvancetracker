@@ -77,6 +77,9 @@ bool mutex = 1;
 /** \brief Stocke l'id de l'écran sur lequel l'utilisateur se situe. */
 u8 FAT_currentScreen = SCREEN_SONG_ID;
 
+/** \brief Variable quasi temporaire afin de savoir si on a activé l'écran d'aide. */
+u8 isHelpActivated = 0;
+
 void FAT_initSpritePalette();
 void FAT_initScreenPalette();
 void FAT_switchToScreen(u8 screenId);

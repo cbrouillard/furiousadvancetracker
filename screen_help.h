@@ -88,6 +88,8 @@ void FAT_screenHelp_init(u8 screenIdForHelp) {
     // démarrage du cycle pour l'écran
     ham_StopIntHandler(INT_TYPE_VBL);
     ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenHelp_mainFunc);
+    
+    isHelpActivated = 1;
 }
 
 /**
@@ -111,12 +113,14 @@ void FAT_screenHelp_checkButtons() {
 
             if (FAT_popup_getSelectedIcon() != SCREEN_HELP_ID) {
                 // TODO hide project cursor
+                isHelpActivated = 0;
                 FAT_switchToScreen(FAT_popup_getSelectedIcon());
             }
         }
 
         if (F_CTRLINPUT_B_PRESSED) {
             iCanPressAKey = 0;
+            isHelpActivated = 0;
             FAT_switchToScreen(FAT_currentScreen);
         }
 

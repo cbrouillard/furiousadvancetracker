@@ -22,6 +22,7 @@
 #define	_PLAYER_H_
 
 #include "data.h"
+#include "fat.h"
 
 
 /** \brief Définition d'une valeur pour ralentir le décompte du tempo. */
@@ -462,7 +463,7 @@ void FAT_player_moveOrHideCursor(u8 channel) {
             FAT_player_hideBlockCursor();
             FAT_player_hideNoteCursor();
             if (actualSequencesForChannel[channel] != NULL_VALUE
-                    && actualSequencesForChannel[channel] >= FAT_screenSong_currentStartLine) {
+                    && actualSequencesForChannel[channel] >= FAT_screenSong_currentStartLine && !isHelpActivated) {
                 // la lecture a été lancée depuis l'écran SONG
                 // on dispose du numéro de ligne actuellement jouée dans actualSequencesForChannel[channel]
                 ham_SetObjXY(FAT_cursor_playerSequences_obj[channel],
@@ -477,7 +478,7 @@ void FAT_player_moveOrHideCursor(u8 channel) {
             FAT_player_hideSequencesCursors();
             FAT_player_hideNoteCursor();
             if (actualBlocksForChannel[channel] != NULL_VALUE &&
-                    FAT_currentPlayedSequence == FAT_screenBlocks_currentSequenceId) {
+                    FAT_currentPlayedSequence == FAT_screenBlocks_currentSequenceId && !isHelpActivated) {
                 ham_SetObjXY(FAT_cursor_player2_obj, 23, 15 + (actualBlocksForChannel[channel]*8));
                 ham_SetObjVisible(FAT_cursor_player2_obj, 1);
             } else {
@@ -489,7 +490,7 @@ void FAT_player_moveOrHideCursor(u8 channel) {
             FAT_player_hideSequencesCursors();
             FAT_player_hideBlockCursor();
             if (actualNotesForChannel[channel] != NULL_VALUE
-                    && FAT_currentPlayedBlock == FAT_screenNotes_currentBlockId) {
+                    && FAT_currentPlayedBlock == FAT_screenNotes_currentBlockId && !isHelpActivated) {
                 ham_SetObjXY(FAT_cursor_player3_obj, 23, 15 + (actualNotesForChannel[channel]*8));
                 ham_SetObjVisible(FAT_cursor_player3_obj, 1);
             } else {
