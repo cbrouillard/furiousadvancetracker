@@ -8,35 +8,16 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+/*
 typedef unsigned char u8;
 typedef unsigned short int u16;
 typedef unsigned int u32;
+ */
 
+#include <mygba.h>
 #include <stdlib.h>
-
+#include "../gbfs.h"
 #include "soundApi.h"
-
-
-extern const u32 _binary_lo1234_pcm_start[]; //the sample, 8bit signed, 16Khz
-/*
-#define REG_DMA1SAD     *(u32*)0x40000BC	//DMA1 Source Address
-#define REG_DMA1DAD     *(u32*)0x40000C0	//DMA1 Desination Address
-#define REG_DMA1CNT_H   *(u16*)0x40000C6	//DMA1 Control High Value
-#define REG_SGFIFOA    *(u32 volatile*)0x40000A0		//???
-#define REG_TM0CNT_H    *(u16*)0x4000102	//Timer 0 Control
-#define REG_TM0CNT_L	*(u16*)0x4000100	//Timer 0 count value
-#define REG_IE         *(u16*)0x4000200		//Interrupt Enable
-#define REG_IF         *(u16 volatile*)0x4000202		//Interrupt Flags
-#define REG_WSCNT      *(u16*)0x4000204		//???
-#define REG_IME        *(u16*)0x4000208		//Interrupt Master Enable
-#define REG_TM1CNT     *(u32*)0x4000104		//Timer 2
-#define REG_TM1CNT_L   *(u16*)0x4000104		//Timer 2 count value
-#define REG_TM1CNT_H   *(u16*)0x4000106		//Timer 2 control
-*/
-void snd_tmp_playSampleTest() {
-
-}
-
 
 #define NULL_VALUE 0xff
 
@@ -125,7 +106,7 @@ void snd_init_soundApi() {
     // volume à fond, activation stéréo des 4 canaux
     // activation des directsound A et B en mode timer 0 et 1
     REG_SOUNDCNT_L = 0xff77;
-    REG_SOUNDCNT_H = 2;//0xfb0f;
+    REG_SOUNDCNT_H = 0xfb0e;
 
     REG_SOUND3CNT_L = SOUND3BANK32 | SOUND3SETBANK1;
 
@@ -318,3 +299,101 @@ void snd_tryToApplyEffect(u8 channelId, u8 effectNumber, u8 effectValue) {
 
     }
 }
+
+/// GESTION DES SAMPLES
+
+const GBFS_FILE* snd_loadKit (u8 numKit){
+    u8 cpt = 0;
+    const GBFS_FILE* kit = find_first_gbfs_file(find_first_gbfs_file);
+    while (cpt < numKit){
+        kit = skip_gbfs_file(kit);
+        cpt ++;
+    }
+    
+    return kit;
+}
+
+u8 snd_countSamplesInKit (kit* dat){
+    return gbfs_count_objs(dat) - 1; // -1 car le fichier info ne doit pas être compté.
+}
+
+void snd_getKitName (kit* dat, char* buffer){
+    
+}
+
+#define REG_TM0CNT      *(u32*)0x4000100	//Timer 0
+#define REG_TM0CNT_L	*(u16*)0x4000100	//Timer 0 count value
+#define REG_TM0CNT_H    *(u16*)0x4000102	//Timer 0 Control
+#define REG_SGFIFOA    *(vu32*)0x40000A0
+
+#define REG_TM1CNT     *(u32*)0x4000104		//Timer 2
+#define REG_TM1CNT_L   *(u16*)0x4000104		//Timer 2 count value
+#define REG_TM1CNT_H   *(u16*)0x4000106		//Timer 2 control
+#define REG_SGFIFOB    *(vu32*)0x40000A4
+
+int snASampleOffset;
+int snBSampleOffset;
+
+u32 snASmpSize;
+u32 snBSmpSize;
+
+const u32* snASample;
+const u32* snBSample;
+
+void snd_timerFunc_sampleOnSNA() {
+    if (!(snASampleOffset & 3))REG_SGFIFOA = snASample[snASampleOffset >> 2];
+
+    snASampleOffset++;
+
+    if (snASampleOffset > snASmpSize) {
+        //sample finished!
+        ham_StopIntHandler(INT_TYPE_TIM0);
+        M_TIM0CNT_TIMER_STOP
+    }
+
+}
+
+void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
+
+    snASample = gbfs_get_nth_obj(dat, sampleNumber, 0x0, &snASmpSize);
+
+    if (snASample) {
+        ham_StopIntHandler(INT_TYPE_TIM0);
+        M_TIM0CNT_TIMER_STOP
+
+        ham_StartIntHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sampleOnSNA);
+        REG_TM0CNT_L = 0xffff;
+        REG_TM0CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
+        snASampleOffset = 0;
+    }
+}
+
+void snd_timerFunc_sampleOnSNB() {
+    if (!(snBSampleOffset & 3))REG_SGFIFOB = snBSample[snBSampleOffset >> 2];
+
+    snBSampleOffset++;
+
+    if (snBSampleOffset > snBSmpSize) {
+        //sample finished!
+        ham_StopIntHandler(INT_TYPE_TIM1);
+        M_TIM1CNT_TIMER_STOP
+    }
+}
+
+void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber) {
+    
+    snBSample = gbfs_get_nth_obj(dat, sampleNumber, 0x0, &snBSmpSize);
+
+    if (snBSample) {
+        ham_StopIntHandler(INT_TYPE_TIM1);
+        M_TIM1CNT_TIMER_STOP
+
+        ham_StartIntHandler(INT_TYPE_TIM1, (void*) &snd_timerFunc_sampleOnSNB);
+        REG_TM1CNT_L = 0xffff;
+        REG_TM1CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
+        snBSampleOffset = 0;
+    }
+
+}
+
+

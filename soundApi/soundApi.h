@@ -24,6 +24,7 @@
 
 #include "register.h"
 
+typedef const GBFS_FILE kit;
 
 /**
  * \brief Initialise le mode audio sur la Gameboy: active les 4 canaux.
@@ -154,6 +155,35 @@ void snd_stopAllSounds();
  */
 void snd_tryToApplyEffect (u8 channelId, u8 effectNumber, u8 effectValue);
 
-void snd_tmp_playSampleTest ();
+/**
+ * \brief Charge un kit par son numéro.
+ * @param numKit le numéro du kit à charger.
+ * @return un pointeur vers les données du kit ou NULL (0x0) si non trouvé.
+ */
+kit* snd_loadKit (u8 numKit);
+
+/**
+ * \brief Compte le nombre de samples trouvés dans un kit donné.
+ * @param dat le pointeur vers les données du kit.
+ * @return le nombre de samples (uniquement les fichiers wav) présent dans le kit
+ */
+u8 snd_countSamplesInKit (kit* dat);
+
+/**
+ * \brief Joue un sample sur le canal directsound A. Attention, il est nécessaire d'avoir
+ * un contexte GBFS afin d'utiliser cette fonction. 
+ * @param dat le contexte géré par GBFS
+ * @param sampleNumber le numéro de sample à jouer dans le contexte GBFS
+ */
+void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber);
+
+/**
+ * \brief Joue un sample sur le canal directsound B. Attention, il est nécessaire d'avoir
+ * un contexte GBFS afin d'utiliser cette fonction. 
+ * @param dat le contexte géré par GBFS
+ * @param sampleNumber le numéro de sample à jouer dans le contexte GBFS
+ */
+void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber);
+
 
 #endif

@@ -257,17 +257,20 @@ void FAT_initIntroPalette() {
 void FAT_showIntro() {
     FAT_reinitScreen();
 
-    // jouer un petit son d'exemple
-    snd_tmp_playSampleTest();
-
     FAT_initIntroPalette();
 
     ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_intro_Tiles, SIZEOF_16BIT(screen_intro_Tiles), 1, 1);
     ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_intro_Map, 1024, 0, 0);
     ham_InitBg(SCREEN_LAYER, 1, 0, 0);
 #ifdef DEBUG_ON
-    ham_DrawText(1, 15, "DEBUG ON");
-    ham_DrawText(1, 16, "SIZE %d octets", (sizeof (tracker)));
+    ham_DrawText(1, 14, "DEBUG ON");
+    ham_DrawText(1, 16, "SONG SIZE %d octets", (sizeof (tracker)));
+    
+    kit *dat = snd_loadKit (0);
+    ham_DrawText(1,15, "%d SAMPLES FOUND", snd_countSamplesInKit (dat));
+    
+    snd_playSampleOnChannelB(dat, 1);
+    
 #endif
     ham_DrawText(1, 19, "version %s", FAT_VERSION);
     while (!F_CTRLINPUT_START_PRESSED && !F_CTRLINPUT_A_PRESSED && !F_CTRLINPUT_B_PRESSED

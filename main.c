@@ -42,8 +42,10 @@
  * \brief Si cette variable est positionné à 1, le mode DEBUG pour FAT est activé. Certaines,
  * informations seront affichées.
  */
-#define DEBUG_ON "YES_comment_to_disable"
+#define DEBUG_ON 1
+/*
 #undef DEBUG_ON
+*/
 
 /**
  * \brief Version actuelle de FAT.
@@ -53,6 +55,7 @@
 #include <mygba.h>
 #include <stdarg.h>
 
+#include "gbfs.h"
 #include "soundApi/soundApi.h"
 #include "fat.h"
 

@@ -101,9 +101,16 @@ void FAT_screenNotes_printNote(u8 line) {
     if (!FAT_data_isNoteEmpty(FAT_screenNotes_currentBlockId, line)) {
         note* actualNote = FAT_data_getNote(FAT_screenNotes_currentBlockId, line);
 
-        ham_DrawText(SCREENNOTES_NOTE_LINE_X,
-                line + SCREENNOTES_LINE_START_Y,
-                "%s%1x %.2x\0", noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument);
+        if (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA) {
+
+            ham_DrawText(SCREENNOTES_NOTE_LINE_X,
+                    line + SCREENNOTES_LINE_START_Y,
+                    "%s%1x %.2x\0", noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument);
+        } else {
+            ham_DrawText(SCREENNOTES_NOTE_LINE_X,
+                    line + SCREENNOTES_LINE_START_Y,
+                    "%s%1x %.2x\0", "SM", (actualNote->note & 0x0f) - 3, actualNote->instrument);
+        }
     } else {
         ham_DrawText(SCREENNOTES_NOTE_LINE_X,
                 line + SCREENNOTES_LINE_START_Y, "      \0");
@@ -313,7 +320,7 @@ void FAT_screenNotes_checkButtons() {
 
                 FAT_screenNotes_commitCursorMove();
             }
-            
+
             if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED) {
                 iCanPressAKey = 0;
                 FAT_showHelp(SCREEN_NOTES_ID);
