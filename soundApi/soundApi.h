@@ -23,6 +23,7 @@
 #define _SOUND_API_
 
 #include "register.h"
+#include "gbfs.h"
 
 typedef const GBFS_FILE kit;
 

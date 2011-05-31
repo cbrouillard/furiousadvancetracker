@@ -55,7 +55,6 @@
 #include <mygba.h>
 #include <stdarg.h>
 
-#include "gbfs.h"
 #include "soundApi/soundApi.h"
 #include "fat.h"
 

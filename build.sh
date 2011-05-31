@@ -3,12 +3,15 @@ VERSION="0.3.0"
 echo "### Nettoyage"
 make clean
 rm *.elf *.gba *.s
+rm soundApi/*.o
 echo "### Compilation"
 make
 echo "### Padbin pour execution du GBFS"
 wine padbin.exe 256 FuriousAdvanceTracker_v$VERSION.gba
 echo "### Generation du SAMPLE filesystem"
-wine gbfs.exe default_samples.gbfs samples/0infos.txt samples/*.wav
+rm *.gbfs
+#objcopy -v -I binary -O elf32-little --rename-section .data=.rodata in_file out_file
+wine gbfs.exe default_samples.gbfs samples/0infos.txt samples/*.snd
 echo "### Patch du GBA pour inclusion des samples"
 cat FuriousAdvanceTracker_v$VERSION.gba default_samples.gbfs > TMP.gba
 mv TMP.gba FuriousAdvanceTracker_v$VERSION.gba

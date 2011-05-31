@@ -16,7 +16,6 @@ typedef unsigned int u32;
 
 #include <mygba.h>
 #include <stdlib.h>
-#include "../gbfs.h"
 #include "soundApi.h"
 
 #define NULL_VALUE 0xff
@@ -302,23 +301,23 @@ void snd_tryToApplyEffect(u8 channelId, u8 effectNumber, u8 effectValue) {
 
 /// GESTION DES SAMPLES
 
-const GBFS_FILE* snd_loadKit (u8 numKit){
+const GBFS_FILE* snd_loadKit(u8 numKit) {
     u8 cpt = 0;
     const GBFS_FILE* kit = find_first_gbfs_file(find_first_gbfs_file);
-    while (cpt < numKit){
+    while (cpt < numKit) {
         kit = skip_gbfs_file(kit);
-        cpt ++;
+        cpt++;
     }
-    
+
     return kit;
 }
 
-u8 snd_countSamplesInKit (kit* dat){
+u8 snd_countSamplesInKit(kit* dat) {
     return gbfs_count_objs(dat) - 1; // -1 car le fichier info ne doit pas être compté.
 }
 
-void snd_getKitName (kit* dat, char* buffer){
-    
+void snd_getKitName(kit* dat, char* buffer) {
+
 }
 
 #define REG_TM0CNT      *(u32*)0x4000100	//Timer 0
@@ -341,10 +340,11 @@ const u32* snASample;
 const u32* snBSample;
 
 void snd_timerFunc_sampleOnSNA() {
-    if (!(snASampleOffset & 3))REG_SGFIFOA = snASample[snASampleOffset >> 2];
-
+    if (!(snASampleOffset & 3)) { 
+        REG_SGFIFOA = snASample[snASampleOffset>>2]; // u32
+    }
+    
     snASampleOffset++;
-
     if (snASampleOffset > snASmpSize) {
         //sample finished!
         ham_StopIntHandler(INT_TYPE_TIM0);
@@ -358,13 +358,14 @@ void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
     snASample = gbfs_get_nth_obj(dat, sampleNumber, 0x0, &snASmpSize);
 
     if (snASample) {
+
         ham_StopIntHandler(INT_TYPE_TIM0);
         M_TIM0CNT_TIMER_STOP
-
-        ham_StartIntHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sampleOnSNA);
-        REG_TM0CNT_L = 0xffff;
-        REG_TM0CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
         snASampleOffset = 0;
+
+        REG_TM0CNT_L = 0xFFFF;
+        REG_TM0CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
+        ham_StartIntHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sampleOnSNA);
     }
 }
 
@@ -381,17 +382,17 @@ void snd_timerFunc_sampleOnSNB() {
 }
 
 void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber) {
-    
+
     snBSample = gbfs_get_nth_obj(dat, sampleNumber, 0x0, &snBSmpSize);
 
     if (snBSample) {
         ham_StopIntHandler(INT_TYPE_TIM1);
         M_TIM1CNT_TIMER_STOP
+        snBSampleOffset = 0;
 
-        ham_StartIntHandler(INT_TYPE_TIM1, (void*) &snd_timerFunc_sampleOnSNB);
         REG_TM1CNT_L = 0xffff;
         REG_TM1CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
-        snBSampleOffset = 0;
+        ham_StartIntHandler(INT_TYPE_TIM1, (void*) &snd_timerFunc_sampleOnSNB);
     }
 
 }

@@ -269,7 +269,7 @@ void FAT_showIntro() {
     kit *dat = snd_loadKit (0);
     ham_DrawText(1,15, "%d SAMPLES FOUND", snd_countSamplesInKit (dat));
     
-    snd_playSampleOnChannelB(dat, 1);
+    snd_playSampleOnChannelA(dat, 1);
     
 #endif
     ham_DrawText(1, 19, "version %s", FAT_VERSION);
