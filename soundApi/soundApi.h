@@ -32,6 +32,9 @@ typedef const GBFS_FILE kit;
  **/
 void snd_init_soundApi();
 
+/** \brief Fonction utilisée uniquement pour FAT afin de gérer le mutex (pour éviter les conflits et plantages). */
+void snd_onlyFAT_initMutex (bool* mutex);
+
 /**
  * 
  * \brief Joue un son sur le channel 1.

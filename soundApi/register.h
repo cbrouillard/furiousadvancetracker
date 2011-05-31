@@ -75,4 +75,14 @@
 
 #define ECRAN           (*((u16 volatile *) (0x6000000)));
 
+#define SND_REG_TM0CNT      *(u32*)0x4000100	//Timer 0
+#define SND_REG_TM0CNT_L	*(u16*)0x4000100	//Timer 0 count value
+#define SND_REG_TM0CNT_H    *(u16*)0x4000102	//Timer 0 Control
+#define SND_REG_SGFIFOA    *(vu32*)0x40000A0
+
+#define SND_REG_TM1CNT     *(u32*)0x4000104		//Timer 2
+#define SND_REG_TM1CNT_L   *(u16*)0x4000104		//Timer 2 count value
+#define SND_REG_TM1CNT_H   *(u16*)0x4000106		//Timer 2 control
+#define SND_REG_SGFIFOB    *(vu32*)0x40000A4
+
 #endif

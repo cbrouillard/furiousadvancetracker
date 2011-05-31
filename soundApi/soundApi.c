@@ -79,6 +79,16 @@ const unsigned long voices[] = {
 
 };
 
+void snd_timerFunc_sampleOnSNA();
+void snd_timerFunc_sampleOnSNB();
+
+bool fakeMutex;
+bool* FAT_mutex = &fakeMutex;
+
+void snd_onlyFAT_initMutex(bool* mutex) {
+    FAT_mutex = mutex;
+}
+
 void snd_loadWav(u8 inst) {
     REG_DMA3SAD = (u32) & voices[inst << 2];
     REG_DMA3DAD = (u32) & REG_WAVE_RAM0;
@@ -110,6 +120,9 @@ void snd_init_soundApi() {
     REG_SOUND3CNT_L = SOUND3BANK32 | SOUND3SETBANK1;
 
     snd_loadWav(0);
+
+    ham_StartIntHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sampleOnSNA);
+    ham_StartIntHandler(INT_TYPE_TIM1, (void*) &snd_timerFunc_sampleOnSNB);
 
 }
 
@@ -320,16 +333,6 @@ void snd_getKitName(kit* dat, char* buffer) {
 
 }
 
-#define REG_TM0CNT      *(u32*)0x4000100	//Timer 0
-#define REG_TM0CNT_L	*(u16*)0x4000100	//Timer 0 count value
-#define REG_TM0CNT_H    *(u16*)0x4000102	//Timer 0 Control
-#define REG_SGFIFOA    *(vu32*)0x40000A0
-
-#define REG_TM1CNT     *(u32*)0x4000104		//Timer 2
-#define REG_TM1CNT_L   *(u16*)0x4000104		//Timer 2 count value
-#define REG_TM1CNT_H   *(u16*)0x4000106		//Timer 2 control
-#define REG_SGFIFOB    *(vu32*)0x40000A4
-
 int snASampleOffset;
 int snBSampleOffset;
 
@@ -340,60 +343,68 @@ const u32* snASample;
 const u32* snBSample;
 
 void snd_timerFunc_sampleOnSNA() {
-    if (!(snASampleOffset & 3)) { 
-        REG_SGFIFOA = snASample[snASampleOffset>>2]; // u32
+    *FAT_mutex = 0;
+    if (!(snASampleOffset & 3)) {
+        SND_REG_SGFIFOA = snASample[snASampleOffset >> 2]; // u32
     }
-    
+
     snASampleOffset++;
     if (snASampleOffset > snASmpSize) {
         //sample finished!
-        ham_StopIntHandler(INT_TYPE_TIM0);
+        //ham_StopIntHandler(INT_TYPE_TIM0);
         M_TIM0CNT_TIMER_STOP
+                //M_TIM0CNT_IRQ_DISABLE
     }
-
+    *FAT_mutex = 1;
 }
 
 void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
-
-    snASample = gbfs_get_nth_obj(dat, sampleNumber, 0x0, &snASmpSize);
+    *FAT_mutex = 0;
+    snASample = gbfs_get_nth_obj(dat, sampleNumber, NULL, &snASmpSize);
 
     if (snASample) {
 
-        ham_StopIntHandler(INT_TYPE_TIM0);
         M_TIM0CNT_TIMER_STOP
+        //ham_StopIntHandler(INT_TYPE_TIM0);
+        M_TIM0CNT_IRQ_DISABLE
         snASampleOffset = 0;
 
-        REG_TM0CNT_L = 0xFFFF;
-        REG_TM0CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
-        ham_StartIntHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sampleOnSNA);
+        SND_REG_TM0CNT_L = 0xFFFF;
+        SND_REG_TM0CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
     }
+    *FAT_mutex = 1;
 }
 
 void snd_timerFunc_sampleOnSNB() {
-    if (!(snBSampleOffset & 3))REG_SGFIFOB = snBSample[snBSampleOffset >> 2];
+    *FAT_mutex = 0;
+    if (!(snBSampleOffset & 3)) {
+        SND_REG_SGFIFOB = snBSample[snBSampleOffset >> 2];
+    }
 
     snBSampleOffset++;
 
     if (snBSampleOffset > snBSmpSize) {
         //sample finished!
-        ham_StopIntHandler(INT_TYPE_TIM1);
+        //ham_StopIntHandler(INT_TYPE_TIM1);
         M_TIM1CNT_TIMER_STOP
     }
+    *FAT_mutex = 1;
 }
 
 void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber) {
-
-    snBSample = gbfs_get_nth_obj(dat, sampleNumber, 0x0, &snBSmpSize);
+    *FAT_mutex = 0;
+    snBSample = gbfs_get_nth_obj(dat, sampleNumber, NULL, &snBSmpSize);
 
     if (snBSample) {
-        ham_StopIntHandler(INT_TYPE_TIM1);
+        //ham_StopIntHandler(INT_TYPE_TIM1);
         M_TIM1CNT_TIMER_STOP
+        M_TIM1CNT_IRQ_DISABLE
         snBSampleOffset = 0;
 
-        REG_TM1CNT_L = 0xffff;
-        REG_TM1CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
-        ham_StartIntHandler(INT_TYPE_TIM1, (void*) &snd_timerFunc_sampleOnSNB);
+        SND_REG_TM1CNT_L = 0xffff;
+        SND_REG_TM1CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
     }
+    *FAT_mutex = 1;
 
 }
 

@@ -43,9 +43,7 @@
  * informations seront affichées.
  */
 #define DEBUG_ON 1
-/*
 #undef DEBUG_ON
-*/
 
 /**
  * \brief Version actuelle de FAT.
@@ -66,6 +64,7 @@ int main() {
 
     FAT_init();
     snd_init_soundApi();
+    snd_onlyFAT_initMutex(&mutex);
 
     FAT_showIntro();
     FAT_screenSong_init();

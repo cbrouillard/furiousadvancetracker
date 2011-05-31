@@ -23,6 +23,7 @@
 
 #include "data.h"
 #include "fat.h"
+#include "soundApi/soundApi.h"
 
 
 /** \brief Définition d'une valeur pour ralentir le décompte du tempo. */
@@ -53,6 +54,12 @@ u8 FAT_cursor_player3_obj;
 u8 FAT_cursor_player2_obj;
 /** \brief Objet HAM pour référencer les sprites "curseur player" utilisés dans l'écran SONG. */
 u8 FAT_cursor_playerSequences_obj[6];
+
+/** \brief Cette variable stocke le dernier kit chargé (afin d'éviter de recharger plusieurs fois le même). */
+kit* FAT_sample_bufferA;
+/** \brief Cette variable stocke le dernier kit chargé (afin d'éviter de recharger plusieurs fois le même). */
+kit* FAT_sample_bufferB;
+
 /**
  * \brief Compteur pour le tempo.
  * 
@@ -180,6 +187,12 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                 snd_playSoundOnChannel4(inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->soundlength,
                         inst->loopmode, inst->output, note->note & 0x0f, inst->wavedutyOrPolynomialStep, 
                         note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
+                break;
+            case 4: // SNA 
+                snd_playSampleOnChannelA(FAT_sample_bufferA, 1);
+                break;
+            case 5: // SNB
+                snd_playSampleOnChannelB(FAT_sample_bufferB, 4);
                 break;
         }
 
