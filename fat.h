@@ -83,7 +83,7 @@ u8 isHelpActivated = 0;
 void FAT_initSpritePalette();
 void FAT_initScreenPalette();
 void FAT_switchToScreen(u8 screenId);
-void FAT_showHelp (u8 screenId);
+void FAT_showHelp(u8 screenId);
 void FAT_reinitScreen();
 void FAT_forceClearTextLayer();
 void FAT_waitVSync();
@@ -198,8 +198,8 @@ void FAT_keys_waitForAnotherKeyTouch() {
 void FAT_init() {
     // HAM !
     ham_Init();
-    
-    FAT_filesystem_checkFs ();
+
+    FAT_filesystem_checkFs();
 
     ham_SetBgMode(0);
     ham_InitText(1);
@@ -241,7 +241,7 @@ void FAT_init() {
 
     // intialisation des données "tracker" stockées en RAM
     FAT_data_initData();
-    
+
     // TODO enlever !
     FAT_sample_bufferA = snd_loadKit(0);
     FAT_sample_bufferB = snd_loadKit(0);
@@ -269,18 +269,20 @@ void FAT_showIntro() {
 #ifdef DEBUG_ON
     ham_DrawText(1, 14, "DEBUG ON");
     ham_DrawText(1, 16, "SONG SIZE %d octets", (sizeof (tracker)));
-    
-    kit *dat = snd_loadKit (0);
-    ham_DrawText(1,15, "%d SAMPLES FOUND", snd_countSamplesInKit (dat));
-    
+
+    kit *dat = snd_loadKit(0);
+    ham_DrawText(1, 15, "%d SAMPLES FOUND", snd_countSamplesInKit(dat));
+
     snd_playSampleOnChannelA(dat, 1);
-    
+    snd_playSampleOnChannelB(dat, 4);
+
 #endif
     ham_DrawText(1, 19, "version %s", FAT_VERSION);
     while (!F_CTRLINPUT_START_PRESSED && !F_CTRLINPUT_A_PRESSED && !F_CTRLINPUT_B_PRESSED
             && !F_CTRLINPUT_DOWN_PRESSED && !F_CTRLINPUT_LEFT_PRESSED && !F_CTRLINPUT_RIGHT_PRESSED && !F_CTRLINPUT_UP_PRESSED
             && !F_CTRLINPUT_L_PRESSED && !F_CTRLINPUT_R_PRESSED
             && !F_CTRLINPUT_SELECT_PRESSED) {
+
     }
 
     ham_InitBg(SCREEN_LAYER, 0, 3, 0);
@@ -372,7 +374,7 @@ void FAT_switchToScreen(u8 screenId) {
  * \brief Affiche l'écran d'aide correspondant à l'id passé en paramètres.
  * \param screenId le numéro d'écran actuellement consulté. 
  */
-void FAT_showHelp (u8 screenId){
+void FAT_showHelp(u8 screenId) {
     FAT_screenHelp_init(screenId);
 }
 

@@ -16,3 +16,4 @@ doc/latex
 doc/man
 deploy_doc.sh
 manual/FAT_documentation_EN.pages
+*.gbfs

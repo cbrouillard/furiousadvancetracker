@@ -21,11 +21,6 @@
 #ifndef _PLAYER_H_
 #define	_PLAYER_H_
 
-#include "data.h"
-#include "fat.h"
-#include "soundApi/soundApi.h"
-
-
 /** \brief Définition d'une valeur pour ralentir le décompte du tempo. */
 #define TEMPO_TIMER_HARDWARE_VALUE 70
 
@@ -189,10 +184,10 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                         note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
                 break;
             case 4: // SNA 
-                snd_playSampleOnChannelA(FAT_sample_bufferA, 1);
+                snd_playSampleOnChannelA(FAT_sample_bufferA, 4);
                 break;
             case 5: // SNB
-                snd_playSampleOnChannelB(FAT_sample_bufferB, 4);
+                snd_playSampleOnChannelB(FAT_sample_bufferB, 1);
                 break;
         }
 
