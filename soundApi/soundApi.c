@@ -352,7 +352,7 @@ void snd_timerFunc_sampleOnSNA() {
     snASampleOffset++;
     if (snASampleOffset > snASmpSize) {
         //sample finished!
-        SND_REG_TM0CNT_H = 0x0003;
+        SND_REG_TM0CNT_H = 0;
         snASampleOffset = 0;
     }
 }
@@ -362,7 +362,7 @@ void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
     snASample = gbfs_get_nth_obj(dat, sampleNumber, NULL, &snASmpSize);
 
     if (snASample) {
-        SND_REG_TM0CNT_H = 0x0003;
+        SND_REG_TM0CNT_H = 0;
         snASampleOffset = 0;
         SND_REG_TM0CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
     }
@@ -377,7 +377,7 @@ void snd_timerFunc_sampleOnSNB() {
 
     if (snBSampleOffset > snBSmpSize) {
         //sample finished!
-        SND_REG_TM1CNT_H = 0x0003;
+        SND_REG_TM1CNT_H = 0;
         snBSampleOffset = 0;
     }
 }
@@ -387,7 +387,7 @@ void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber) {
     snBSample = gbfs_get_nth_obj(dat, sampleNumber, NULL, &snBSmpSize);
 
     if (snBSample) {
-        SND_REG_TM1CNT_H = 0x0003;
+        SND_REG_TM1CNT_H = 0;
         snBSampleOffset = 0;
         SND_REG_TM1CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
     }

@@ -52,7 +52,7 @@
 
 /** \brief Définition du temps d'attente MINIMUM entre 2 appui sur la touche START. Ce chiffre peut 
  être pondéré avec une valeur paramétrable. */
-#define WAIT_FOR_START 50
+#define WAIT_FOR_START 40
 
 /**
  * \brief Cette variable sert à gérer les contextes conflictuels (notamment dans les
@@ -156,11 +156,12 @@ bool FAT_isCurrentlyPlaying = 0;
  */
 void FAT_player_timerFunc_iCanPressAKey() {
     waitForStart++;
-    if (waitForStart >= (WAIT_FOR_START + FAT_tracker.keyRepeat) && !iCanPressAKey) {
+    if (!iCanPressAKey && waitForStart >= (WAIT_FOR_START + FAT_tracker.keyRepeat) ) {
         iCanPressAKey = 1;
         waitForStart = 0;
-        M_TIM2CNT_IRQ_DISABLE
-        M_TIM2CNT_TIMER_STOP
+        //M_TIM2CNT_IRQ_DISABLE
+        //M_TIM2CNT_TIMER_STOP
+        R_TIM2CNT = 0;
 #ifdef DEBUG_ON
                 ham_DrawText(21, 16, "KEY ON ");
 #endif
@@ -176,11 +177,11 @@ void FAT_keys_waitForAnotherKeyTouch() {
     ham_DrawText(21, 16, "KEY OFF");
 #endif
     if (!iCanPressAKey) {
-        ham_StartIntHandler(INT_TYPE_TIM2, (void*) &FAT_player_timerFunc_iCanPressAKey);
-
-        R_TIM2CNT = 0;
-        M_TIM2CNT_IRQ_ENABLE
-        M_TIM2CNT_TIMER_START
+        //R_TIM2COUNT = 0x0010;
+        R_TIM2CNT = 0x00C0;
+        //R_TIM2CNT = 0;
+        //M_TIM2CNT_IRQ_ENABLE
+        //M_TIM2CNT_TIMER_START
     }
 }
 
@@ -209,6 +210,8 @@ void FAT_init() {
             FX_LAYER_SELECT(0, 0, 1, 1, 0, 0),
             FX_MODE_ALPHABLEND);
     ham_SetFxAlphaLevel(7, 7);
+    
+    ham_StartIntHandler(INT_TYPE_TIM2, (void*) &FAT_player_timerFunc_iCanPressAKey);
 
     // initialisation des palettes.
     FAT_initScreenPalette();
