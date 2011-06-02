@@ -177,8 +177,8 @@ void FAT_keys_waitForAnotherKeyTouch() {
     ham_DrawText(21, 16, "KEY OFF");
 #endif
     if (!iCanPressAKey) {
-        //R_TIM2COUNT = 0x0010;
-        R_TIM2CNT = 0x00C0;
+        R_TIM2COUNT = 0xff80;
+        R_TIM2CNT = 0x00C3;
         //R_TIM2CNT = 0;
         //M_TIM2CNT_IRQ_ENABLE
         //M_TIM2CNT_TIMER_START

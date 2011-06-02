@@ -22,8 +22,8 @@
 #define	_PLAYER_H_
 
 /** \brief Définition d'une valeur pour ralentir le décompte du tempo. */
-#define TEMPO_TIMER_HARDWARE_VALUE 70
-
+#define TEMPO_TIMER_HARDWARE_VALUE 100
+//70
 /*
  * Toutes ces variables sont des repères pour le player. Afin de savoir quelle séquence/block/note jouer.
  * Attention. Les valeurs dans les tableaux représentent des NUMEROS DE LIGNES. 
@@ -212,7 +212,8 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
     FAT_isCurrentlyPlaying = 1;
     ham_StartIntHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc_playSequences);
 
-    R_TIM3CNT = 0x00C0;
+    R_TIM3COUNT = 0xff00;
+    R_TIM3CNT = 0x00C3;
     //M_TIM3CNT_IRQ_ENABLE
     //M_TIM3CNT_TIMER_START
 
@@ -241,7 +242,8 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
     FAT_isCurrentlyPlaying = 1;
     ham_StartIntHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc_playBlocks);
 
-    R_TIM3CNT = 0x00C0;
+    R_TIM3COUNT = 0xff00;
+    R_TIM3CNT = 0x00C3;
     //M_TIM3CNT_IRQ_ENABLE
     //M_TIM3CNT_TIMER_START
 
@@ -256,8 +258,6 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
  * @param channel le numéro de channel sur lequel on joue
  */
 void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
-
-
     memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
     memset(actualBlocksForChannel, NULL_VALUE, sizeof (u8)*6);
     memset(actualNotesForChannel, 0, sizeof (u8)*6);
@@ -269,7 +269,8 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
     FAT_isCurrentlyPlaying = 1;
     ham_StartIntHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc_playNotes);
 
-    R_TIM3CNT = 0x00C0;
+    R_TIM3COUNT = 0xff00;
+    R_TIM3CNT = 0x00C3;
     //M_TIM3CNT_IRQ_ENABLE
     //M_TIM3CNT_TIMER_START
 
