@@ -16,8 +16,7 @@ typedef unsigned int u32;
 
 #include "soundApi.h"
 
-
-extern const u32 _binary_lo1234_pcm_start[]; //the sample, 8bit signed, 16Khz
+//extern const u32 _binary_lo1234_pcm_start[]; //the sample, 8bit signed, 16Khz
 /*
 #define REG_DMA1SAD     *(u32*)0x40000BC	//DMA1 Source Address
 #define REG_DMA1DAD     *(u32*)0x40000C0	//DMA1 Desination Address
