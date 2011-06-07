@@ -181,10 +181,6 @@ void FAT_screenNotes_init() {
     FAT_screenNotes_printBlockNumber();
     FAT_screenNotes_printAllScreenText();
 
-    // démarrage du cycle pour l'écran
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenNotes_mainFunc);
-
     // affichage du curseur
     FAT_cursors_hideCursor2();
     FAT_cursors_hideCursor3();

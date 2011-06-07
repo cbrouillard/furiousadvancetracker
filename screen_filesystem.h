@@ -140,10 +140,6 @@ void FAT_screenFilesystem_init() {
     FAT_cursors_showCursor8();
     FAT_cursors_showCursor2();
     FAT_screenFilesystem_commitCursorMove();
-
-    // démarrage du cycle pour l'écran
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenFilesystem_mainFunc);
 }
 
 /**

@@ -84,10 +84,6 @@ void FAT_screenHelp_init(u8 screenIdForHelp) {
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
     FAT_cursors_hideAllCursors();
-
-    // démarrage du cycle pour l'écran
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenHelp_mainFunc);
     
     isHelpActivated = 1;
 }

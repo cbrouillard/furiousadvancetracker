@@ -49,11 +49,6 @@ void FAT_screenEffects_init() {
     ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_effects_Map, 1024, 0, 0);
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
-    // affichage d'un peu de texte
-
-    // démarrage du cycle pour l'écran
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenEffects_mainFunc);
 }
 
 /**
