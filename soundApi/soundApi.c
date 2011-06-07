@@ -121,11 +121,11 @@ void snd_init_soundApi() {
 
     snd_loadWav(0);
 
-    ham_StartIntHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sampleOnSNA);
-    ham_StartIntHandler(INT_TYPE_TIM1, (void*) &snd_timerFunc_sampleOnSNB);
+    //ham_StartIntHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sampleOnSNA);
+    //ham_StartIntHandler(INT_TYPE_TIM1, (void*) &snd_timerFunc_sampleOnSNB);
 
-    SND_REG_TM0CNT_L = 0xFFFF;
-    SND_REG_TM1CNT_L = 0xFFFF;
+    //SND_REG_TM0CNT_L = 0xFFFF;
+    //SND_REG_TM1CNT_L = 0xFFFF;
 }
 
 void snd_changeChannelOutput(u8 channelNumber, u8 outputValue) {
@@ -354,13 +354,13 @@ void snd_timerFunc_sampleOnSNA() {
     if (snASampleOffset > snASmpSize) {
         //sample finished!
         SND_REG_TM0CNT_H = 0;
-        R_TIM0CNT  = 0;
+        R_TIM0CNT = 0;
         snASampleOffset = 0;
     }
     *FAT_mutex = 1;
 }
 
-void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
+void snd_playSampleOnChannelA_(kit* dat, u8 sampleNumber) {
 
     snASample = gbfs_get_nth_obj(dat, sampleNumber, NULL, &snASmpSize);
 
@@ -373,6 +373,25 @@ void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
         R_TIM0COUNT = 0xffff;
         SND_REG_TM0CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
     }
+}
+
+#define REG_DMA1SAD     *(u32*)0x40000BC	//DMA1 Source Address
+#define REG_DMA1DAD     *(u32*)0x40000C0	//DMA1 Desination Address
+#define REG_DMA1CNT_H   *(u16*)0x40000C6	//DMA1 Control High Value
+void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
+    snASample = gbfs_get_nth_obj(dat, sampleNumber, NULL, &snASmpSize);
+
+    SND_REG_TM0CNT_H = 0;
+    
+    REG_DMA1SAD = (unsigned long) snASample; //dma1 source
+    REG_DMA1DAD = 0x040000a0; // -> FIFO A
+    REG_DMA1CNT_H = 0xb600; //dma control: DMA enabled+ start on FIFO+32bit+repeat+increment source&dest
+
+    R_TIM1COUNT = 0xffff - (snASmpSize / 4); //0xffff-the number of samples to play
+    SND_REG_TM1CNT_H = 0xC3; //enable timer1 + irq and cascade from timer 0
+
+    R_TIM0COUNT = 0xFBE8; //16khz playback freq
+    SND_REG_TM0CNT_H = 0x0080; //enable timer0
 }
 
 void snd_timerFunc_sampleOnSNB() {
