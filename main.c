@@ -57,6 +57,47 @@
 #include "fat.h"
 
 
+bool FAT_newFrame = 0;
+
+void FAT_mainVbl_func() {
+    FAT_newFrame = 1;
+}
+
+void FAT_checkButtons(){
+    switch (FAT_currentScreen) {
+        case SCREEN_PROJECT_ID:
+            FAT_screenProject_checkButtons();
+            break;
+        case SCREEN_LIVE_ID:
+            FAT_screenLive_checkButtons();
+            break;
+        case SCREEN_SONG_ID:
+            FAT_screenSong_checkButtons();
+            break;
+        case SCREEN_BLOCKS_ID:
+            FAT_screenBlocks_checkButtons();
+            break;
+        case SCREEN_NOTES_ID:
+            FAT_screenNotes_checkButtons();
+            break;
+        case SCREEN_EFFECTS_ID:
+            FAT_screenEffects_checkButtons();
+            break;
+        case SCREEN_COMPOSER_ID:
+            FAT_screenComposer_checkButtons();
+            break;
+        case SCREEN_INSTRUMENTS_ID:
+            FAT_screenInstrument_checkButtons();
+            break;
+        case SCREEN_FILESYSTEM_ID:
+            FAT_screenFilesystem_checkButtons();
+            break;
+        case SCREEN_HELP_ID:
+            FAT_screenHelp_checkButtons();
+            break;
+    }
+}
+
 /**
  * \brief Fonction main. Si vous lisez le code source, il est judicieux de commencer par comprendre cette fonction.
  */
@@ -67,9 +108,25 @@ int main() {
     snd_onlyFAT_initMutex(&mutex);
 
     FAT_showIntro();
-    FAT_screenSong_init();
     
+    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_mainVbl_func);
+    FAT_screenSong_init();
+
     while (1) {
+
+        if (FAT_newFrame) {
+            if (mutex) {
+                
+                ham_CopyObjToOAM();
+                
+                if (iCanPressAKey) {
+                    FAT_checkButtons();
+                }
+            }
+            
+            FAT_newFrame = 0;
+        }
+
     }
     return 0;
 }

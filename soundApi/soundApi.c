@@ -18,6 +18,30 @@ typedef unsigned int u32;
 #include <stdlib.h>
 #include "soundApi.h"
 
+<<<<<<< HEAD
+=======
+//extern const u32 _binary_lo1234_pcm_start[]; //the sample, 8bit signed, 16Khz
+/*
+#define REG_DMA1SAD     *(u32*)0x40000BC	//DMA1 Source Address
+#define REG_DMA1DAD     *(u32*)0x40000C0	//DMA1 Desination Address
+#define REG_DMA1CNT_H   *(u16*)0x40000C6	//DMA1 Control High Value
+#define REG_SGFIFOA    *(u32 volatile*)0x40000A0		//???
+#define REG_TM0CNT_H    *(u16*)0x4000102	//Timer 0 Control
+#define REG_TM0CNT_L	*(u16*)0x4000100	//Timer 0 count value
+#define REG_IE         *(u16*)0x4000200		//Interrupt Enable
+#define REG_IF         *(u16 volatile*)0x4000202		//Interrupt Flags
+#define REG_WSCNT      *(u16*)0x4000204		//???
+#define REG_IME        *(u16*)0x4000208		//Interrupt Master Enable
+#define REG_TM1CNT     *(u32*)0x4000104		//Timer 2
+#define REG_TM1CNT_L   *(u16*)0x4000104		//Timer 2 count value
+#define REG_TM1CNT_H   *(u16*)0x4000106		//Timer 2 control
+*/
+void snd_tmp_playSampleTest() {
+
+}
+
+
+>>>>>>> 1668a0d26be6a7e45de438a76265afcf00fd77e7
 #define NULL_VALUE 0xff
 
 #define NB_FREQUENCES 72

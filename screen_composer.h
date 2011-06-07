@@ -187,10 +187,6 @@ void FAT_screenComposer_init() {
     FAT_screenComposer_printAllScreenText();
     FAT_screenComposer_printLocking();
 
-    // démarrage du cycle pour l'écran
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenComposer_mainFunc);
-
     // curseur
     FAT_cursors_hideCursor2();
     FAT_cursors_hideCursor3();

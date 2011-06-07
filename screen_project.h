@@ -95,10 +95,6 @@ void FAT_screenProject_init() {
     // init du curseur
     FAT_screenProject_initCursor();
     FAT_screenProject_displayGoodCursor();
-
-    // démarrage du cycle pour l'écran
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenProject_mainFunc);
 }
 
 /**
