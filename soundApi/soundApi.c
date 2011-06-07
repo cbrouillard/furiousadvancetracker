@@ -18,30 +18,6 @@ typedef unsigned int u32;
 #include <stdlib.h>
 #include "soundApi.h"
 
-<<<<<<< HEAD
-=======
-//extern const u32 _binary_lo1234_pcm_start[]; //the sample, 8bit signed, 16Khz
-/*
-#define REG_DMA1SAD     *(u32*)0x40000BC	//DMA1 Source Address
-#define REG_DMA1DAD     *(u32*)0x40000C0	//DMA1 Desination Address
-#define REG_DMA1CNT_H   *(u16*)0x40000C6	//DMA1 Control High Value
-#define REG_SGFIFOA    *(u32 volatile*)0x40000A0		//???
-#define REG_TM0CNT_H    *(u16*)0x4000102	//Timer 0 Control
-#define REG_TM0CNT_L	*(u16*)0x4000100	//Timer 0 count value
-#define REG_IE         *(u16*)0x4000200		//Interrupt Enable
-#define REG_IF         *(u16 volatile*)0x4000202		//Interrupt Flags
-#define REG_WSCNT      *(u16*)0x4000204		//???
-#define REG_IME        *(u16*)0x4000208		//Interrupt Master Enable
-#define REG_TM1CNT     *(u32*)0x4000104		//Timer 2
-#define REG_TM1CNT_L   *(u16*)0x4000104		//Timer 2 count value
-#define REG_TM1CNT_H   *(u16*)0x4000106		//Timer 2 control
-*/
-void snd_tmp_playSampleTest() {
-
-}
-
-
->>>>>>> 1668a0d26be6a7e45de438a76265afcf00fd77e7
 #define NULL_VALUE 0xff
 
 #define NB_FREQUENCES 72
@@ -145,11 +121,8 @@ void snd_init_soundApi() {
 
     snd_loadWav(0);
 
-    //ham_StartIntHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sampleOnSNA);
-    //ham_StartIntHandler(INT_TYPE_TIM1, (void*) &snd_timerFunc_sampleOnSNB);
-
-    //SND_REG_TM0CNT_L = 0xFFFF;
-    //SND_REG_TM1CNT_L = 0xFFFF;
+    ham_StartIntHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sampleOnSNA);
+    ham_StartIntHandler(INT_TYPE_TIM1, (void*) &snd_timerFunc_sampleOnSNB);
 }
 
 void snd_changeChannelOutput(u8 channelNumber, u8 outputValue) {
@@ -359,8 +332,8 @@ void snd_getKitName(kit* dat, char* buffer) {
 
 }
 
-int snASampleOffset;
-int snBSampleOffset;
+int snASampleOffset = 1;
+int snBSampleOffset = 1;
 
 u32 snASmpSize;
 u32 snBSmpSize;
@@ -369,8 +342,7 @@ const u32* snASample;
 const u32* snBSample;
 
 void snd_timerFunc_sampleOnSNA() {
-    *FAT_mutex = 0;
-    if (!(snASampleOffset & 3) && snASampleOffset < snASmpSize) {
+    if (!(snASampleOffset & 3)) {
         SND_REG_SGFIFOA = snASample[snASampleOffset >> 2]; // u32
     }
 
@@ -381,10 +353,9 @@ void snd_timerFunc_sampleOnSNA() {
         R_TIM0CNT = 0;
         snASampleOffset = 0;
     }
-    *FAT_mutex = 1;
 }
 
-void snd_playSampleOnChannelA_(kit* dat, u8 sampleNumber) {
+void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
 
     snASample = gbfs_get_nth_obj(dat, sampleNumber, NULL, &snASmpSize);
 
@@ -399,27 +370,8 @@ void snd_playSampleOnChannelA_(kit* dat, u8 sampleNumber) {
     }
 }
 
-#define REG_DMA1SAD     *(u32*)0x40000BC	//DMA1 Source Address
-#define REG_DMA1DAD     *(u32*)0x40000C0	//DMA1 Desination Address
-#define REG_DMA1CNT_H   *(u16*)0x40000C6	//DMA1 Control High Value
-void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
-    snASample = gbfs_get_nth_obj(dat, sampleNumber, NULL, &snASmpSize);
-
-    SND_REG_TM0CNT_H = 0;
-    
-    REG_DMA1SAD = (unsigned long) snASample; //dma1 source
-    REG_DMA1DAD = 0x040000a0; // -> FIFO A
-    REG_DMA1CNT_H = 0xb600; //dma control: DMA enabled+ start on FIFO+32bit+repeat+increment source&dest
-
-    R_TIM1COUNT = 0xffff - (snASmpSize / 4); //0xffff-the number of samples to play
-    SND_REG_TM1CNT_H = 0xC3; //enable timer1 + irq and cascade from timer 0
-
-    R_TIM0COUNT = 0xFBE8; //16khz playback freq
-    SND_REG_TM0CNT_H = 0x0080; //enable timer0
-}
-
 void snd_timerFunc_sampleOnSNB() {
-    if (!(snBSampleOffset & 3) && snBSampleOffset < snBSmpSize) {
+    if (!(snBSampleOffset & 3)) {
         SND_REG_SGFIFOB = snBSample[snBSampleOffset >> 2];
     }
 
@@ -437,8 +389,12 @@ void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber) {
     snBSample = gbfs_get_nth_obj(dat, sampleNumber, NULL, &snBSmpSize);
 
     if (snBSample) {
-        SND_REG_TM1CNT_H = 0;
-        snBSampleOffset = 0;
+        if (snBSampleOffset != 0) {
+            SND_REG_TM1CNT_H = 0;
+            R_TIM1CNT = 0;
+            snBSampleOffset = 0;
+        }
+        R_TIM1COUNT = 0xffff;
         SND_REG_TM1CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
     }
 }

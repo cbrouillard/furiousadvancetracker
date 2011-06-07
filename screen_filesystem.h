@@ -129,7 +129,6 @@ void FAT_screenFilesystem_init() {
     ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_filesystem_Map, 1024, 0, 0);
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
-
     // affichage d'un peu de texte
     FAT_screenFilesystem_printLineColumns();
     FAT_screenFilesystem_printAllTracksName();
