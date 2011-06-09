@@ -159,9 +159,9 @@ void FAT_player_timerFunc_iCanPressAKey() {
     if (!iCanPressAKey && waitForStart >= (WAIT_FOR_START + FAT_tracker.keyRepeat) ) {
         iCanPressAKey = 1;
         waitForStart = 0;
-        //M_TIM2CNT_IRQ_DISABLE
-        //M_TIM2CNT_TIMER_STOP
-        R_TIM2CNT = 0;
+        M_TIM2CNT_IRQ_DISABLE
+        M_TIM2CNT_TIMER_STOP
+//        R_TIM2CNT = 0;
 #ifdef DEBUG_ON
                 ham_DrawText(21, 16, "KEY ON ");
 #endif
@@ -177,11 +177,11 @@ void FAT_keys_waitForAnotherKeyTouch() {
     ham_DrawText(21, 16, "KEY OFF");
 #endif
     if (!iCanPressAKey) {
-        R_TIM2COUNT = 0xff80;
-        R_TIM2CNT = 0x00C3;
-        //R_TIM2CNT = 0;
-        //M_TIM2CNT_IRQ_ENABLE
-        //M_TIM2CNT_TIMER_START
+//        R_TIM2COUNT = 0xffd0;
+//        R_TIM2CNT = 0x00C3;
+        R_TIM2CNT = 0;
+        M_TIM2CNT_IRQ_ENABLE
+        M_TIM2CNT_TIMER_START
     }
 }
 
@@ -246,8 +246,8 @@ void FAT_init() {
     FAT_data_initData();
 
     // TODO enlever !
-    FAT_sample_bufferA = snd_loadKit(0);
-    FAT_sample_bufferB = snd_loadKit(0);
+    FAT_sample_bufferA = snd_loadKit(1);
+    FAT_sample_bufferB = snd_loadKit(1);
 }
 
 /**
@@ -273,14 +273,14 @@ void FAT_showIntro() {
     ham_DrawText(1, 14, "DEBUG ON");
     ham_DrawText(1, 16, "SONG SIZE %d octets", (sizeof (tracker)));
 
-    kit *dat = snd_loadKit(0);
+    kit *dat = snd_loadKit(1);
     ham_DrawText(1, 15, "%d SAMPLES FOUND", snd_countSamplesInKit(dat));
 
-    snd_playSampleOnChannelA(dat, 1);
-    snd_playSampleOnChannelB(dat, 4);
+    snd_playSampleOnChannelA(dat, 0);
+    snd_playSampleOnChannelB(dat, 3);
 
 #endif
-    ham_DrawText(1, 19, "version %s", FAT_VERSION);
+    ham_DrawText(1, 19, "version %s       %.3d kits", FAT_VERSION,snd_countAvailableKits());
     while (!F_CTRLINPUT_START_PRESSED && !F_CTRLINPUT_A_PRESSED && !F_CTRLINPUT_B_PRESSED
             && !F_CTRLINPUT_DOWN_PRESSED && !F_CTRLINPUT_LEFT_PRESSED && !F_CTRLINPUT_RIGHT_PRESSED && !F_CTRLINPUT_UP_PRESSED
             && !F_CTRLINPUT_L_PRESSED && !F_CTRLINPUT_R_PRESSED

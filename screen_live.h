@@ -25,18 +25,6 @@ void FAT_screenLive_init();
 void FAT_screenLive_checkButtons();
 
 /**
- * \brief Fonction principale de l'écran (callback). 
- */
-void FAT_screenLive_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenLive_checkButtons();
-        }
-    }
-}
-
-/**
  * \brief Initialisation de l'écran. 
  */
 void FAT_screenLive_init() {

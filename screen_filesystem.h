@@ -46,18 +46,6 @@ void FAT_screenFilesystem_pressA();
 #include "screen_filesystem_cursor.h"
 
 /**
- * \brief Fonction principale de l'écran (callback). 
- */
-void FAT_screenFilesystem_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenFilesystem_checkButtons();
-        }
-    }
-}
-
-/**
  * \brief Change le mode pour l'écran filesystem.
  * @param modeId
  */

@@ -55,16 +55,6 @@ u8 FAT_screenNotes_currentBlockId;
 
 #include "screen_notes_cursor.h"
 
-/** \brief Fonction principale pour l'écran NOTE (callback). */
-void FAT_screenNotes_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenNotes_checkButtons();
-        }
-    }
-}
-
 /**
  * \brief Cette fonction se content d'imprimer le numéro de ligne sur la partie
  * gauche de l'interface. 

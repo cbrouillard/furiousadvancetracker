@@ -72,18 +72,6 @@ void FAT_screenComposer_playAffectedNotes();
 #include "screen_composer_cursor.h"
 
 /**
- * \brief Fonction callback principale pour l'écran COMPOSER.
- */
-void FAT_screenComposer_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenComposer_checkButtons();
-        }
-    }
-}
-
-/**
  * \brief Affiche les informations "dynamiques" dans l'écran COMPOSER (numéro de ligne, ...). 
  */
 void FAT_screenComposer_printInfos() {
@@ -222,7 +210,7 @@ void FAT_screenComposer_checkButtons() {
             if (!FAT_screenComposer_isLocked) {
                 if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_NOTES) {
                     FAT_cursors_showCursor3();
-                } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CHANNEL){
+                } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CHANNEL) {
                     FAT_cursors_showCursor1();
                 } else {
                     FAT_cursors_showCursor2();

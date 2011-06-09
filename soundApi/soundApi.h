@@ -167,6 +167,14 @@ void snd_tryToApplyEffect (u8 channelId, u8 effectNumber, u8 effectValue);
 kit* snd_loadKit (u8 numKit);
 
 /**
+ * \brief Compte le nombre de kits inclus dans la cartouche. Cette fonction est "double".
+ * Elle effectue le calcul la première fois qu'elle est appelée est place le résultat dans un cache.
+ * Ce cache est simplement retourné lors des autres appels (le nombre de kits ne peut pas changer une fois
+ * la GBA allumée). 
+ */
+const u8 snd_countAvailableKits ();
+
+/**
  * \brief Compte le nombre de samples trouvés dans un kit donné.
  * @param dat le pointeur vers les données du kit.
  * @return le nombre de samples (uniquement les fichiers wav) présent dans le kit
@@ -189,5 +197,24 @@ void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber);
  */
 void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber);
 
+/**
+ * \brief Renvoie le nom du kit en donnant l'id de celui-ci (de 0 à 255).
+ * @param kitId le numéro du kit voulu
+ */
+char* snd_getKitNameById (u8 kitId);
+
+/**
+ * \brief Récupère le nom d'un sample donné (3 caractères).
+ * \param kitId le numéro du kit
+ * \param sampleId le numéro du sample
+ */
+char* snd_getSampleNameById (u8 kitId, u8 sampleId);
+
+/**
+ * \brief Compte le nombre de samples présents dans un kit (défini par son numéro).
+ * Attention, le chiffre retourné ne compte pas le fichier info.txt inclus dans le kit.
+ * \param kitId le numéro du kit à inspecter
+ */
+u8 snd_countSamplesInKitById(u8 kitId);
 
 #endif

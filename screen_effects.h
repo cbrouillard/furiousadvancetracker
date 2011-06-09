@@ -27,18 +27,6 @@ void FAT_screenEffects_init();
 void FAT_screenEffects_checkButtons();
 
 /**
- * \brief Fonction principale de l'écran (callback). 
- */
-void FAT_screenEffects_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenEffects_checkButtons();
-        }
-    }
-}
-
-/**
  * \brief Initialisation de l'écran. 
  */
 void FAT_screenEffects_init() {

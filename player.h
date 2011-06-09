@@ -145,8 +145,8 @@ void FAT_player_playNote(note* note, u8 channel) {
 void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
     if (note->freq != NULL_VALUE) {
         instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
-        u16 sweepshifts = (inst->sweep & 0x70) >> 4;
-        u16 sweeptime = (inst->sweep & 0x0F);
+        u16 sweepshifts = (inst->sweepOrKitNumber & 0x70) >> 4;
+        u16 sweeptime = (inst->sweepOrKitNumber & 0x0F);
         u16 sweepdir = 1;
         if (sweeptime > 7) {
             sweeptime -= 8;
@@ -184,10 +184,10 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                         note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
                 break;
             case 4: // SNA 
-                snd_playSampleOnChannelA(FAT_sample_bufferA, 4);
+                snd_playSampleOnChannelA(FAT_sample_bufferA, 3);
                 break;
             case 5: // SNB
-                snd_playSampleOnChannelB(FAT_sample_bufferB, 1);
+                snd_playSampleOnChannelB(FAT_sample_bufferB, 0);
                 break;
         }
 
@@ -214,8 +214,6 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
 
     R_TIM3COUNT = 0xff00;
     R_TIM3CNT = 0x00C3;
-    //M_TIM3CNT_IRQ_ENABLE
-    //M_TIM3CNT_TIMER_START
 
     FAT_keys_waitForAnotherKeyTouch();
 
@@ -244,8 +242,6 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
 
     R_TIM3COUNT = 0xff00;
     R_TIM3CNT = 0x00C3;
-    //M_TIM3CNT_IRQ_ENABLE
-    //M_TIM3CNT_TIMER_START
 
     FAT_keys_waitForAnotherKeyTouch();
 }

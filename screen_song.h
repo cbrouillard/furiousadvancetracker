@@ -53,24 +53,11 @@ void FAT_screenSong_pressB();
 const char* CHANNEL_NAME[6] = {"PU1\0", "PU2\0", "WAV\0", "NOI\0", "SNA\0", "SNB\0"};
 
 /**
- * \brief Fonction principale de l'écran (callback).
- */
-void FAT_screenSong_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenSong_checkButtons();
-        }
-    }
-}
-
-/**
  * \brief Cette fonction permet d'initialiser l'écran.
  */
 void FAT_screenSong_init() {
 
     FAT_reinitScreen();
-
 
     // initialisation du fond (interface)
     ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_song_Tiles, SIZEOF_16BIT(screen_song_Tiles), 1, 1);

@@ -60,18 +60,6 @@ void FAT_screenInstrument_hideAllEnvdirSprites();
 void FAT_screenInstrument_hideAllWavedutySprite();
 
 /**
- * \brief Fonction principale de l'écran (callback). 
- */
-void FAT_screenInstrument_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenInstrument_checkButtons();
-        }
-    }
-}
-
-/**
  * \brief Affiche le numéro de l'écran en cours d'édition dans le cadre en haut à droite. 
  */
 void FAT_screenInstrument_printInstrumentNumber() {
@@ -105,7 +93,7 @@ void FAT_screenInstrument_printAllText(u8 type) {
                 ham_DrawText(1, 11, "LENGTH    NA");
             }
             FAT_screenInstrument_showOutput(1, 12, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
-            ham_DrawText(1, 13, "SWEEP     %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].sweep);
+            ham_DrawText(1, 13, "SWEEP     %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].sweepOrKitNumber);
             ham_DrawText(1, 16, "TEST IT   %s%1x\0",
                     noteName[(FAT_data_simulator.note & 0xf0) >> 4], FAT_data_simulator.note & 0x0f);
             break;
@@ -150,6 +138,10 @@ void FAT_screenInstrument_printAllText(u8 type) {
             break;
         case INSTRUMENT_TYPE_SAMPLEA:
         case INSTRUMENT_TYPE_SAMPLEB:
+            ham_DrawText(16, 4, "NB SAMPLES %.2x", snd_countSamplesInKitById(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].sweepOrKitNumber));
+            //ham_DrawText(16, 5, "NB KITS    %.2x", snd_countAvailableKits ());
+            
+            ham_DrawText(1, 4, "NAME %s", snd_getKitNameById(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].sweepOrKitNumber));
             break;
     }
     mutex = 1;
@@ -163,6 +155,7 @@ void FAT_screenInstrument_init() {
     note* FAT_screenInstrument_currentNote = FAT_data_getNote(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine);
     FAT_screenInstrument_currentInstrumentId = FAT_screenInstrument_currentNote->instrument;
     if (FAT_screenInstrument_currentInstrumentId == NULL_VALUE) {
+
         FAT_screenInstrument_currentInstrumentId = 0;
     }
     FAT_data_initInstrumentIfNeeded(FAT_screenInstrument_currentInstrumentId, FAT_screenSong_currentSelectedColumn);
@@ -226,6 +219,7 @@ void FAT_screenInstrument_switchScreen(u8 type) {
             FAT_screenInstrument_printInstrumentNumber();
             FAT_screenInstrument_printAllText(type);
             FAT_screenInstrument_displayGoodCursor(type);
+
             break;
     }
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
@@ -264,6 +258,7 @@ void FAT_screenInstrument_changeInstrumentType(s8 move) {
         case INSTRUMENT_TYPE_SAMPLEA:
         case INSTRUMENT_TYPE_SAMPLEB:
             if (move < 0) {
+
                 FAT_data_instrument_changeType(FAT_screenInstrument_currentInstrumentId, INSTRUMENT_TYPE_NOISE);
             }
             break;
@@ -401,6 +396,7 @@ void FAT_screenInstrument_checkButtons() {
         }
 
         if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED) {
+
             iCanPressAKey = 0;
             FAT_screenInstrument_hideTabulationCursor();
             FAT_showHelp(SCREEN_INSTRUMENTS_ID);
@@ -417,6 +413,7 @@ void FAT_screenInstrument_checkButtons() {
  * Attention, ne faire appel à cette méthode qu'une seule fois !
  */
 void FAT_screenInstrument_initSpritesForInstrument() {
+
     FAT_instrument_envdir0_obj = ham_CreateObj((void*) envdir_0_Bitmap, OBJ_SIZE_8X8,
             OBJ_MODE_NORMAL, 1, 0, 0, 0, 0, 0, 0, 0, 0);
     FAT_instrument_envdir1_obj = ham_CreateObj((void*) envdir_1_Bitmap, OBJ_SIZE_8X8,
@@ -439,6 +436,7 @@ void FAT_screenInstrument_initSpritesForInstrument() {
  * \brief Cache tous les sprites relatifs à l'affiche de la direction de l'enveloppe. 
  */
 void FAT_screenInstrument_hideAllEnvdirSprites() {
+
     ham_SetObjVisible(FAT_instrument_envdir0_obj, 0);
     ham_SetObjVisible(FAT_instrument_envdir1_obj, 0);
 }
@@ -447,6 +445,7 @@ void FAT_screenInstrument_hideAllEnvdirSprites() {
  * \brief Cache tous les sprites relatifs à l'affiche du paramètre waveduty. 
  */
 void FAT_screenInstrument_hideAllWavedutySprite() {
+
     ham_SetObjVisible(FAT_instrument_waveduty0_obj, 0);
     ham_SetObjVisible(FAT_instrument_waveduty1_obj, 0);
     ham_SetObjVisible(FAT_instrument_waveduty2_obj, 0);
@@ -466,6 +465,7 @@ void FAT_screenInstrument_showEnvdir(u8 envdirValue, u8 spriteX, u8 spriteY) {
         ham_SetObjXY(FAT_instrument_envdir1_obj, spriteX, spriteY);
         ham_SetObjVisible(FAT_instrument_envdir1_obj, 1);
     } else {
+
         ham_SetObjXY(FAT_instrument_envdir0_obj, spriteX, spriteY);
         ham_SetObjVisible(FAT_instrument_envdir0_obj, 1);
     }
@@ -480,6 +480,7 @@ void FAT_screenInstrument_showEnvdir(u8 envdirValue, u8 spriteX, u8 spriteY) {
  * @param output la valeur de paramètre (0,1,2 ou 3)
  */
 void FAT_screenInstrument_showOutput(u8 x, u8 y, u8 output) {
+
     ham_DrawText(x, y, "OUTPUT    %.2s", outputText[output]);
 }
 
@@ -503,6 +504,7 @@ void FAT_screenInstrument_showWaveduty(u8 wavedutyValue, u8 spriteX, u8 spriteY)
         ham_SetObjXY(FAT_instrument_waveduty2_obj, spriteX, spriteY);
         ham_SetObjVisible(FAT_instrument_waveduty2_obj, 1);
     } else if (wavedutyValue == 3) {
+
         ham_SetObjXY(FAT_instrument_waveduty3_obj, spriteX, spriteY);
         ham_SetObjVisible(FAT_instrument_waveduty3_obj, 1);
     }
@@ -531,6 +533,7 @@ s8 FAT_screenInstrument_giveMeAddedValue() {
     }
 
     if (F_CTRLINPUT_DOWN_PRESSED) {
+
         iCanPressAKey = 0;
         addedValue = -16;
     }
@@ -573,6 +576,7 @@ void FAT_screenInstrument_pulse_pressA() {
         case 8: // SIMULATOR
             FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);
             FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
+
             break;
     }
 
@@ -610,6 +614,7 @@ void FAT_screenInstrument_wave_pressA() {
         case 7: // SIMULATOR
             FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);
             FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
+
             break;
     }
 
@@ -647,6 +652,7 @@ void FAT_screenInstrument_noise_pressA() {
         case 7: // SIMULATOR
             FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);
             FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
+
             break;
     }
 

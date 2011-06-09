@@ -311,7 +311,8 @@ typedef struct CHANNEL {
  */
 typedef struct INSTRUMENT {
     u8 type; /*!< Le type de l'instrument: PULSE1, PULSE2, WAVE, NOISE, SAMPLEA, SAMPLEB */
-    u8 sweep; /*!< Valeur de "sweep". Le "sweep" n'est applicable que sur le channel 1. */
+    u8 sweepOrKitNumber; /*!< Valeur de "sweep". Le "sweep" n'est applicable que sur le channel 1. Cette variable peut aussi 
+                             contenir la valeur du numéro de kit séléctionné dans le cas d'un instrument de type SAMPLE*/
     //u8 volume; // max = F = 4bits
     //u8 envdirection; // max = 1
     //u8 envsteptime; // max = 7
@@ -823,7 +824,7 @@ bool FAT_data_isSequenceEmpty(u8 sequenceId) {
  * @return 1 si l'instrument est disponible, 0 sinon
  */
 bool FAT_data_isInstrumentFree(u8 inst) {
-    return FAT_tracker.allInstruments[inst].sweep == NULL_VALUE;
+    return FAT_tracker.allInstruments[inst].sweepOrKitNumber == NULL_VALUE;
 }
 
 /**
@@ -905,8 +906,8 @@ void FAT_data_addDefaultNote(u8 block, u8 noteLine, u8 channel) {
  * @param instId l'id de l'instrument à initialiser
  */
 void FAT_data_initInstrumentIfNeeded(u8 instId, u8 channel) {
-    if (FAT_tracker.allInstruments[instId].sweep == NULL_VALUE) {
-        FAT_tracker.allInstruments[instId].sweep = 0;
+    if (FAT_tracker.allInstruments[instId].sweepOrKitNumber == NULL_VALUE) {
+        FAT_tracker.allInstruments[instId].sweepOrKitNumber = 0;
         FAT_tracker.allInstruments[instId].envelope = 0x0a;
         FAT_tracker.allInstruments[instId].volumeRatio = 3;
         FAT_tracker.allInstruments[instId].wavedutyOrPolynomialStep = 0;
@@ -1529,11 +1530,11 @@ void FAT_data_instrumentWave_changeSoundLength(u8 instrumentId, s8 value) {
  */
 void FAT_data_instrumentPulse_changeSweep(u8 instrumentId, s8 value) {
     if (
-            (value < 0 && FAT_tracker.allInstruments[instrumentId].sweep > (-value - 1)) ||
-            (value > 0 && FAT_tracker.allInstruments[instrumentId].sweep < INSTRUMENT_PULSE_SWEEP_MAX - value)
+            (value < 0 && FAT_tracker.allInstruments[instrumentId].sweepOrKitNumber > (-value - 1)) ||
+            (value > 0 && FAT_tracker.allInstruments[instrumentId].sweepOrKitNumber < INSTRUMENT_PULSE_SWEEP_MAX - value)
 
             ) {
-        FAT_tracker.allInstruments[instrumentId].sweep += value;
+        FAT_tracker.allInstruments[instrumentId].sweepOrKitNumber += value;
     }
 }
 

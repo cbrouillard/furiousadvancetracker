@@ -16,6 +16,7 @@ typedef unsigned int u32;
 
 #include <mygba.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "soundApi.h"
 
 #define NULL_VALUE 0xff
@@ -167,13 +168,6 @@ void snd_playSoundOnChannel1(
 
     REG_SOUND1CNT_X = SOUND1INIT | (loopmode << 14) | freqs[sfreq];
     REG_SOUND1CNT_X = (REG_SOUND1CNT_X & 0xf800) | (loopmode << 14) | freqs[sfreq];
-
-    /*
-        REG_SOUND1CNT_L = (sweeptime << 4)+(sweepdir << 3) + sweepshifts;
-        REG_SOUND1CNT_H = (envinit << 12) + (envdirection << 11)+(envsteptime << 8)+(waveduty << 6) + soundlength;
-        REG_SOUND1CNT_X = SOUND1INIT + (loopmode << 14) + sfreq;
-        REG_SOUND1CNT_X = (REG_SOUND1CNT_X & 0xf800)+ (loopmode << 14) + sfreq;
-     */
 }
 
 void snd_playSoundOnChannel2(u16 volume,
@@ -312,6 +306,17 @@ void snd_tryToApplyEffect(u8 channelId, u8 effectNumber, u8 effectValue) {
 }
 
 /// GESTION DES SAMPLES
+u8 snd_availableKits = 0;
+const u8 snd_countAvailableKits (){
+    if (!snd_availableKits){
+        kit* table = snd_loadKit(0);
+        char buffer[4];
+        strncpy(buffer, gbfs_get_nth_obj(table, 0, NULL, NULL), 3);
+        snd_availableKits = atoi(buffer);
+    }
+    
+    return snd_availableKits;
+}
 
 const GBFS_FILE* snd_loadKit(u8 numKit) {
     u8 cpt = 0;
@@ -328,8 +333,53 @@ u8 snd_countSamplesInKit(kit* dat) {
     return gbfs_count_objs(dat) - 1; // -1 car le fichier info ne doit pas être compté.
 }
 
-void snd_getKitName(kit* dat, char* buffer) {
+u8 snd_countSamplesInKitById(u8 kitId) {
+    kit* kit = snd_loadKit(kitId + 1);
+    if (kit) {
+        return snd_countSamplesInKit(kit);        
+    } 
+    
+    return 0;
+}
 
+void snd_getKitName(kit* dat, u8 kitId, char* buffer) {
+    if (dat) {
+        strncpy(buffer, gbfs_get_nth_obj(dat, 0, NULL, NULL), 8);
+    } else {
+        sprintf(buffer, "KIT %d", kitId);
+    }
+}
+
+char* snd_getKitNameById(u8 kitId) {
+
+    static char kitName[9];
+
+    kit* kit = snd_loadKit(kitId + 1);
+    snd_getKitName(kit, kitId, kitName);
+
+    return kitName;
+}
+
+char* snd_getSampleNameById(u8 kitId, u8 sampleId) {
+    static char sampleName[4];
+    char buffer[24];
+
+    kit* kit = snd_loadKit(kitId + 1);
+    if (kit) {
+        const u32* sample = gbfs_get_nth_obj(kit, sampleId, buffer, NULL);
+        if (sample) {
+
+            strncpy(sampleName, buffer, 3);
+
+        } else {
+            sprintf(sampleName, "XXX");
+        }
+
+    } else {
+        sprintf(sampleName, "XXX");
+    }
+
+    return sampleName;
 }
 
 int snASampleOffset = 1;
@@ -357,7 +407,7 @@ void snd_timerFunc_sampleOnSNA() {
 
 void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
 
-    snASample = gbfs_get_nth_obj(dat, sampleNumber, NULL, &snASmpSize);
+    snASample = gbfs_get_nth_obj(dat, sampleNumber+1, NULL, &snASmpSize);
 
     if (snASample) {
         if (snASampleOffset != 0) {
@@ -380,20 +430,24 @@ void snd_timerFunc_sampleOnSNB() {
     if (snBSampleOffset > snBSmpSize) {
         //sample finished!
         SND_REG_TM1CNT_H = 0;
+        R_TIM1CNT = 0;
         snBSampleOffset = 0;
     }
 }
 
 void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber) {
 
-    snBSample = gbfs_get_nth_obj(dat, sampleNumber, NULL, &snBSmpSize);
+    snBSample = gbfs_get_nth_obj(dat, sampleNumber+1, NULL, &snBSmpSize);
 
     if (snBSample) {
-        if (snBSampleOffset != 0) {
-            SND_REG_TM1CNT_H = 0;
-            R_TIM1CNT = 0;
-            snBSampleOffset = 0;
-        }
+        /*
+                if (snBSampleOffset != 0) {
+                    SND_REG_TM1CNT_H = 0;
+                }
+         */
+        SND_REG_TM1CNT_H = 0;
+        R_TIM1CNT = 0;
+        snBSampleOffset = 0;
         R_TIM1COUNT = 0xffff;
         SND_REG_TM1CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
     }

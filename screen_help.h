@@ -24,21 +24,12 @@
 /** \brief Permet de savoir si la popup est affichée au dessus de l'écran ou non. */
 bool FAT_screenHelp_isPopuped = 0;
 
+/** \brief Cette variable permet de savoir depuis quel écran l'aide à été appelée. */
+u8 FAT_help_fromScreenId;
+
 // prototypes
 void FAT_screenHelp_init(u8 screenIdForHelp);
 void FAT_screenHelp_checkButtons();
-
-/**
- * \brief Fonction principale de l'écran (callback). 
- */
-void FAT_screenHelp_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenHelp_checkButtons();
-        }
-    }
-}
 
 /**
  * \brief Initialisation de l'écran. 
@@ -86,6 +77,8 @@ void FAT_screenHelp_init(u8 screenIdForHelp) {
     FAT_cursors_hideAllCursors();
     
     isHelpActivated = 1;
+    FAT_currentScreen = SCREEN_HELP_ID;
+    FAT_help_fromScreenId = screenIdForHelp;
 }
 
 /**
@@ -117,7 +110,7 @@ void FAT_screenHelp_checkButtons() {
         if (F_CTRLINPUT_B_PRESSED) {
             iCanPressAKey = 0;
             isHelpActivated = 0;
-            FAT_switchToScreen(FAT_currentScreen);
+            FAT_switchToScreen(FAT_help_fromScreenId);
         }
 
         // TODO commit project cursor move

@@ -33,18 +33,6 @@ void FAT_screenProject_checkButtons();
 void FAT_screenProject_pressA();
 
 /**
- * \brief Fonction principale de l'écran (callback). 
- */
-void FAT_screenProject_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenProject_checkButtons();
-        }
-    }
-}
-
-/**
  * \brief Affiche les infos du projet sur l'écran. 
  */
 void FAT_screenProject_printInfos() {

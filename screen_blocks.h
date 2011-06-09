@@ -176,18 +176,6 @@ void FAT_screenBlocks_printAllScreenText() {
 }
 
 /**
- * \brief Fonction temporisée: coeur de l'écran BLOCK (callback). 
- */
-void FAT_screenBlocks_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenBlocks_checkButtons();
-        }
-    }
-}
-
-/**
  * \brief Initialise l'écran BLOCKS.
  * 
  * Affiche du texte, déplace le curseur à la dernière position connue, change 
