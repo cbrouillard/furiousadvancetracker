@@ -47,6 +47,7 @@ u8 FAT_instrument_waveduty3_obj;
 const char* outputText [4] = {"  ", "L ", " R", "LR"};
 
 #include "screen_instrument_cursor.h"
+#include "data.h"
 
 // prototypes
 void FAT_screenInstrument_init();
@@ -93,12 +94,12 @@ void FAT_screenInstrument_printAllText(u8 type) {
                 ham_DrawText(1, 11, "LENGTH    NA");
             }
             FAT_screenInstrument_showOutput(1, 12, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
-            ham_DrawText(1, 13, "SWEEP     %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].sweepOrKitNumber);
+            ham_DrawText(1, 13, "SWEEP     %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].sweep);
             ham_DrawText(1, 16, "TEST IT   %s%1x\0",
                     noteName[(FAT_data_simulator.note & 0xf0) >> 4], FAT_data_simulator.note & 0x0f);
             break;
         case INSTRUMENT_TYPE_WAVE:
-            ham_DrawText(1, 4, "VOLUME    %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].volumeRatio);
+            ham_DrawText(1, 4, "VOLUME    %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].volumeRatio & 0x0f);
             ham_DrawText(1, 7, "TIMED     %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
             if (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
                 ham_DrawText(1, 8, "LENGTH    %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
@@ -138,10 +139,28 @@ void FAT_screenInstrument_printAllText(u8 type) {
             break;
         case INSTRUMENT_TYPE_SAMPLEA:
         case INSTRUMENT_TYPE_SAMPLEB:
-            ham_DrawText(16, 4, "NB SAMPLES %.2x", snd_countSamplesInKitById(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].sweepOrKitNumber));
+            ham_DrawText(16, 4, "NB SAMPLES %.2x", snd_countSamplesInKitById(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].sweep));
             //ham_DrawText(16, 5, "NB KITS    %.2x", snd_countAvailableKits ());
-            
-            ham_DrawText(1, 4, "NAME %s", snd_getKitNameById(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].sweepOrKitNumber));
+
+            ham_DrawText(1, 4, "NAME %s", snd_getKitNameById(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].kitNumber));
+            ham_DrawText(1, 7, "VOLUME    %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].volumeRatio >> 4);
+            ham_DrawText(1, 10, "SPEED     %.1xx", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].speedOrLooping & 0x0f);
+            if (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].speedOrLooping >> 4) {
+                ham_DrawText(1, 11, "LOOP      %s", "YES");
+            } else {
+                ham_DrawText(1, 11, "LOOP      %s", "NOP");
+            }
+            ham_DrawText(1, 12, "TIMED     %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
+            if (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
+                ham_DrawText(1, 13, "LENGTH    %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
+            } else {
+                ham_DrawText(1, 13, "LENGTH    NA");
+            }
+            ham_DrawText(1, 14, "OFFSET    %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].offset);
+            FAT_screenInstrument_showOutput(1, 15, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
+
+            ham_DrawText(16, 12, "TEST IT   %s%1x\0", "SM", 1);
+
             break;
     }
     mutex = 1;
@@ -179,9 +198,7 @@ void FAT_screenInstrument_init() {
 void FAT_screenInstrument_switchScreen(u8 type) {
     FAT_reinitScreen();
 
-    FAT_cursors_hideCursor1();
-    FAT_cursors_hideCursor2();
-    FAT_cursors_hideCursor3();
+    FAT_cursors_hideAllCursors();
     FAT_screenInstrument_hideAllEnvdirSprites();
     FAT_screenInstrument_hideAllWavedutySprite();
 
@@ -218,6 +235,7 @@ void FAT_screenInstrument_switchScreen(u8 type) {
 
             FAT_screenInstrument_printInstrumentNumber();
             FAT_screenInstrument_printAllText(type);
+            FAT_screenInstrument_initCursor(type);
             FAT_screenInstrument_displayGoodCursor(type);
 
             break;
@@ -276,9 +294,7 @@ void FAT_screenInstrument_checkButtons() {
     if (F_CTRLINPUT_SELECT_PRESSED) {
         if (!FAT_screenInstrument_isPopuped) {
             FAT_screenInstrument_hideAllWavedutySprite();
-            FAT_cursors_hideCursor1();
-            FAT_cursors_hideCursor2();
-            FAT_cursors_hideCursor3();
+            FAT_cursors_hideAllCursors();
             FAT_popup_show();
             FAT_screenInstrument_isPopuped = 1;
         }
@@ -295,8 +311,7 @@ void FAT_screenInstrument_checkButtons() {
             if (FAT_popup_getSelectedIcon() != SCREEN_INSTRUMENTS_ID) {
                 FAT_screenInstrument_hideAllEnvdirSprites();
                 FAT_screenInstrument_hideAllWavedutySprite();
-                FAT_cursors_hideCursor1();
-                FAT_cursors_hideCursor2();
+                FAT_cursors_hideAllCursors();
                 FAT_switchToScreen(FAT_popup_getSelectedIcon());
             }
         }
@@ -663,7 +678,36 @@ void FAT_screenInstrument_noise_pressA() {
  * \brief Cette fonction permet de gérer l'appui sur la touche A pour un instrument de type SAMPLE.
  */
 void FAT_screenInstrument_sample_pressA() {
+    s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
 
+    switch (FAT_screenInstruments_currentSelectedLine) {
+        case 0: // KIT COLLECTION
+            //FAT_data_instrumentSample_changeKitNumber(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 1: // VOLUME
+            FAT_data_instrumentSample_changeVolume(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 2: // SPEED
+            FAT_data_instrumentSample_changeSpeed(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 3: // LOOP
+            FAT_data_instrumentSample_changeLooping(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 4: //TIMED
+            FAT_data_instrumentSample_changeLoopmode(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 5: // LENGTH
+            FAT_data_instrumentSample_changeSoundLength(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 6: // OFFSET
+            FAT_data_instrumentSample_changeOffset(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 7: // OUTPUT
+            FAT_data_instrumentSample_changeOutput(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+    }
+
+    FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
 }
 
 /**

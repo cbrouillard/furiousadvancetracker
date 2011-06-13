@@ -42,6 +42,8 @@
 #define SCREENINSTRUMENT_NOISE_NB_LINES_ON_SCREEN 8
 /** \brief Nombre de lignes sur l'écran WAVE. */
 #define SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN 8
+/** \brief Nombre de lignes sur l'écran SAMPLE. */
+#define SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN 8
 
 /** \brief Position actuelle du cursor. */
 u8 FAT_screenInstrument_cursorX;
@@ -65,6 +67,8 @@ const u8 INST_PULSE_BLOCK_Y[SCREENINSTRUMENT_PULSE_NB_LINES_ON_SCREEN] = {31, 39
 const u8 INST_NOISE_BLOCK_Y[SCREENINSTRUMENT_NOISE_NB_LINES_ON_SCREEN] = {31, 39, 47, 55, 79, 87, 95, 127};
 /** \brief Positions des emplacements de paramètre dans l'écran WAVE. */
 const u8 INST_WAVE_BLOCK_Y[SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN] = {31, 55, 63, 71, 79, 87, 95, 119};
+/** \brief Positions des emplacements de paramètre dans l'écran SAMPLE. */
+const u8 INST_SAMPLE_BLOCK_Y[SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN] = {31, 55, 79, 87, 95, 103, 111, 119};
 
 /**
  * \brief Cache le curseur de tabulation. 
@@ -197,9 +201,29 @@ void FAT_screenInstrument_noise_commitCursorMove() {
 
 /**
  * \brief Validation du déplacement du curseur d'édition sur l'écran SAMPLEs.
+ * \todo Position en dur pour la ligne 1
  */
 void FAT_screenInstrument_sample_commitCursorMove() {
-
+    switch (FAT_screenInstruments_currentSelectedLine) {
+        case 0:
+            ham_SetObjXY(FAT_cursor8_obj, 48, FAT_screenInstrument_cursorY + 1);
+            break;
+        case 1:
+        case 4:
+            ham_SetObjXY(FAT_cursor1_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            break;
+            
+        case 2:
+        case 5:
+        case 6:
+        case 7:
+            ham_SetObjXY(FAT_cursor2_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            break;
+            
+        case 3:
+            ham_SetObjXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            break;
+    }
 }
 
 /**
@@ -324,7 +348,36 @@ void FAT_screenInstrument_wave_displayGoodCursor() {
  * \brief Affiche le bon curseur (taille) selon sa position sur l'écran SAMPLE. 
  */
 void FAT_screenInstrument_sample_displayGoodCursor() {
-
+    switch (FAT_screenInstruments_currentSelectedLine) {
+        case 0:
+            FAT_cursors_showCursor8();
+            FAT_cursors_hideCursor1();
+            FAT_cursors_hideCursor2();
+            FAT_cursors_hideCursor3();
+            break;
+        case 1:
+        case 4:
+            FAT_cursors_showCursor1();
+            FAT_cursors_hideCursor8();
+            FAT_cursors_hideCursor2();
+            FAT_cursors_hideCursor3();
+            break;
+        case 2:
+        case 5:
+        case 6:
+        case 7:
+            FAT_cursors_showCursor2();
+            FAT_cursors_hideCursor8();
+            FAT_cursors_hideCursor1();
+            FAT_cursors_hideCursor3();
+            break;
+        case 3:
+            FAT_cursors_showCursor3();
+            FAT_cursors_hideCursor1();
+            FAT_cursors_hideCursor2();
+            FAT_cursors_hideCursor8();
+            break;
+    }
 }
 
 /**
@@ -413,6 +466,17 @@ void FAT_screenInstrument_moveCursorDown(u8 type) {
             break;
         case INSTRUMENT_TYPE_SAMPLEA:
         case INSTRUMENT_TYPE_SAMPLEB:
+
+            if (FAT_screenInstruments_currentSelectedLine < SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN - 1) {
+                if (!(FAT_screenInstrument_cursorY >= SCREENINSTRUMENTS_LAST_BLOCK_Y - 1)) {
+                    FAT_screenInstruments_currentSelectedLine++;
+                    FAT_screenInstrument_cursorY = INST_SAMPLE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
+                }
+            }
+
+            FAT_screenInstrument_displayGoodCursor(type);
+
+
             break;
     }
 }
@@ -462,6 +526,16 @@ void FAT_screenInstrument_moveCursorUp(u8 type) {
             break;
         case INSTRUMENT_TYPE_SAMPLEA:
         case INSTRUMENT_TYPE_SAMPLEB:
+            
+            if (FAT_screenInstruments_currentSelectedLine > 0) {
+                if (!(FAT_screenInstrument_cursorY <= SCREENINSTRUMENTS_FIRST_BLOCK_Y - 1)) {
+                    FAT_screenInstruments_currentSelectedLine--;
+                    FAT_screenInstrument_cursorY = INST_SAMPLE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
+                }
+            }
+
+            FAT_screenInstrument_displayGoodCursor(type);
+            
             break;
     }
 }

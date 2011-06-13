@@ -138,6 +138,18 @@
  */
 #define INSTRUMENT_WAVE_NB_VOICE 0x18
 /**
+ * \brief Valeur de volume maximum pour un instruemnt de type SAMPLE
+ */
+#define INSTRUMENT_SAMPLE_VOLUME_MAX 2
+/**
+ * \brief Valeur de vitesse maximale pour un sample. 1= vitesse normale, F = maximale. 0= stop
+ */
+#define INSTRUMENT_SAMPLE_SPEED_MAX 16
+/**
+ * \brief Valeur maximale pour le paramètre offset d'un instrument de type SAMPLE
+ */
+#define INSTRUMENT_SAMPLE_OFFSET_MAX 256
+/**
  * \brief Tempo maximal.
  */
 #define MAX_TEMPO 255
@@ -311,8 +323,7 @@ typedef struct CHANNEL {
  */
 typedef struct INSTRUMENT {
     u8 type; /*!< Le type de l'instrument: PULSE1, PULSE2, WAVE, NOISE, SAMPLEA, SAMPLEB */
-    u8 sweepOrKitNumber; /*!< Valeur de "sweep". Le "sweep" n'est applicable que sur le channel 1. Cette variable peut aussi 
-                             contenir la valeur du numéro de kit séléctionné dans le cas d'un instrument de type SAMPLE*/
+    u8 sweep; /*!< Valeur de "sweep". Le "sweep" n'est applicable que sur le channel 1. */
     //u8 volume; // max = F = 4bits
     //u8 envdirection; // max = 1
     //u8 envsteptime; // max = 7
@@ -338,11 +349,22 @@ typedef struct INSTRUMENT {
     // bank -> (voiceAndBank & 0x20) >> 5
     // bankMode -> (voiceAndBank & 0x40) >> 6
 
-    // supprimer cette variable -> volume existe !
+    // 0x 0000   0000
+    // 0x SAMPLE WAVE
+    // wave -> volumeRatio & 0x0f
+    // sample -> (volumeRatio & 0xf0) >> 4
     u8 volumeRatio; /*!< Stocke le volume pour un instrument de type WAVE. */
     u8 output; /*!< Stocke la sortie d'un son : gauche ou droite. 0 __ / 1 L_ / 2 R_ / 3 RL */
 
     u8 table; /*!< Numéro de table de commandes à appliquer pour chaque note assignée à cet instrument. */
+
+    u8 kitNumber; /*!< Numéro du kit utilisé pour un instrument de type SAMPLE.*/
+    u8 offset; /*!< Offset de départ pour la lecture d'un sample. 0 = début du sample, 0xff = fin. */
+    // 0x 000 0    0000
+    // 0x 000 LOOP SPEED
+    // loop -> speedOrLooping >> 4
+    // speed -> speedOrLooping & 0x0f
+    u8 speedOrLooping; /*!< Contient les valeurs pour la vitesse et le mode looping d'un sample. */
 } instrument;
 
 /**
@@ -824,7 +846,7 @@ bool FAT_data_isSequenceEmpty(u8 sequenceId) {
  * @return 1 si l'instrument est disponible, 0 sinon
  */
 bool FAT_data_isInstrumentFree(u8 inst) {
-    return FAT_tracker.allInstruments[inst].sweepOrKitNumber == NULL_VALUE;
+    return FAT_tracker.allInstruments[inst].sweep == NULL_VALUE;
 }
 
 /**
@@ -906,15 +928,21 @@ void FAT_data_addDefaultNote(u8 block, u8 noteLine, u8 channel) {
  * @param instId l'id de l'instrument à initialiser
  */
 void FAT_data_initInstrumentIfNeeded(u8 instId, u8 channel) {
-    if (FAT_tracker.allInstruments[instId].sweepOrKitNumber == NULL_VALUE) {
-        FAT_tracker.allInstruments[instId].sweepOrKitNumber = 0;
+    if (FAT_tracker.allInstruments[instId].sweep == NULL_VALUE) {
+        FAT_tracker.allInstruments[instId].sweep = 0;
         FAT_tracker.allInstruments[instId].envelope = 0x0a;
-        FAT_tracker.allInstruments[instId].volumeRatio = 3;
+        FAT_tracker.allInstruments[instId].volumeRatio = 0x13;
         FAT_tracker.allInstruments[instId].wavedutyOrPolynomialStep = 0;
         FAT_tracker.allInstruments[instId].soundlength = 0;
         FAT_tracker.allInstruments[instId].loopmode = 0;
         FAT_tracker.allInstruments[instId].voiceAndBank = 0;
         FAT_tracker.allInstruments[instId].output = 3; //LR
+
+        FAT_tracker.allInstruments[instId].kitNumber = 0;
+        FAT_tracker.allInstruments[instId].offset = 0;
+        FAT_tracker.allInstruments[instId].speedOrLooping = 0x01;
+
+        FAT_tracker.allInstruments[instId].table = 0;
 
         FAT_tracker.allInstruments[instId].type = channel;
     }
@@ -1338,12 +1366,35 @@ void FAT_data_instrumentNoise_changeVolume(u8 instrumentId, s8 value) {
  * @param value la valeur à ajouter ou retrancher
  */
 void FAT_data_instrumentWave_changeVolume(u8 instrumentId, s8 value) {
+    u8 volumeRatio = FAT_tracker.allInstruments[instrumentId].volumeRatio & 0x0f;
+    u8 sampleRatio = (FAT_tracker.allInstruments[instrumentId].volumeRatio & 0xf0);
     if (
-            (value < 0 && FAT_tracker.allInstruments[instrumentId].volumeRatio > (-value - 1)) ||
-            (value > 0 && FAT_tracker.allInstruments[instrumentId].volumeRatio < INSTRUMENT_WAVE_VOLUME_MAX - value)
+            (value < 0 && volumeRatio > (-value - 1)) ||
+            (value > 0 && volumeRatio < INSTRUMENT_WAVE_VOLUME_MAX - value)
 
             ) {
-        FAT_tracker.allInstruments[instrumentId].volumeRatio += value;
+        volumeRatio += value;
+        FAT_tracker.allInstruments[instrumentId].volumeRatio = sampleRatio | volumeRatio;
+    }
+}
+
+/**
+ * \brief Change le volume pour un instrument de type SAMPLE.
+ * 
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
+void FAT_data_instrumentSample_changeVolume(u8 instrumentId, s8 value) {
+    u8 volumeRatio = (FAT_tracker.allInstruments[instrumentId].volumeRatio & 0xf0) >> 4;
+    u8 waveRatio = FAT_tracker.allInstruments[instrumentId].volumeRatio & 0x0f;
+
+    if (
+            (value < 0 && volumeRatio > (-value - 1)) ||
+            (value > 0 && volumeRatio < INSTRUMENT_SAMPLE_VOLUME_MAX - value)
+
+            ) {
+        volumeRatio += value;
+        FAT_tracker.allInstruments[instrumentId].volumeRatio = (volumeRatio << 4) | waveRatio;
     }
 }
 
@@ -1481,6 +1532,16 @@ void FAT_data_instrumentWave_changeOutput(u8 instrumentId, s8 value) {
 }
 
 /**
+ * \brief Change le paramètre "output" (sortie droite/gauche) pour un instrument de type SAMPLE.
+ *  
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
+void FAT_data_instrumentSample_changeOutput(u8 instrumentId, s8 value) {
+    FAT_data_instrumentPulse_changeOutput(instrumentId, value);
+}
+
+/**
  * \brief Change le paramètre "soundlength" (durée du son) pour un instrument de type PULSE.
  *  
  * @param instrumentId l'id de l'instrument à modifier
@@ -1523,6 +1584,16 @@ void FAT_data_instrumentWave_changeSoundLength(u8 instrumentId, s8 value) {
 }
 
 /**
+ * \brief Change le paramètre "soundlength" (durée du son) pour un instrument de type SAMPLE.
+ *  
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter ou retrancher
+ */
+void FAT_data_instrumentSample_changeSoundLength(u8 instrumentId, s8 value) {
+    FAT_data_instrumentWave_changeSoundLength(instrumentId, value);
+}
+
+/**
  * \brief Change le paramètre "sweep" (effet sweep) pour un instrument de type PULSE.
  *  
  * @param instrumentId l'id de l'instrument à modifier
@@ -1530,11 +1601,11 @@ void FAT_data_instrumentWave_changeSoundLength(u8 instrumentId, s8 value) {
  */
 void FAT_data_instrumentPulse_changeSweep(u8 instrumentId, s8 value) {
     if (
-            (value < 0 && FAT_tracker.allInstruments[instrumentId].sweepOrKitNumber > (-value - 1)) ||
-            (value > 0 && FAT_tracker.allInstruments[instrumentId].sweepOrKitNumber < INSTRUMENT_PULSE_SWEEP_MAX - value)
+            (value < 0 && FAT_tracker.allInstruments[instrumentId].sweep > (-value - 1)) ||
+            (value > 0 && FAT_tracker.allInstruments[instrumentId].sweep < INSTRUMENT_PULSE_SWEEP_MAX - value)
 
             ) {
-        FAT_tracker.allInstruments[instrumentId].sweepOrKitNumber += value;
+        FAT_tracker.allInstruments[instrumentId].sweep += value;
     }
 }
 
@@ -1575,6 +1646,16 @@ void FAT_data_instrumentWave_changeLoopmode(u8 instrumentId, s8 value) {
  * @param value la valeur à ajouter ou retrancher
  */
 void FAT_data_instrumentNoise_changeLoopmode(u8 instrumentId, s8 value) {
+    FAT_data_instrumentPulse_changeLoopmode(instrumentId, value);
+}
+
+/**
+ * \brief Change le paramètre "loopmode" pour un instrument de type SAMPLE.
+ *  
+ * @param instrumentId id de l'instrument à modifier
+ * @param value la valeur à ajouter/retrancher
+ */
+void FAT_data_instrumentSample_changeLoopmode(u8 instrumentId, s8 value) {
     FAT_data_instrumentPulse_changeLoopmode(instrumentId, value);
 }
 
@@ -1636,6 +1717,61 @@ void FAT_data_instrumentWave_changeBankmode(u8 instrumentId, s8 value) {
     }
 
     FAT_tracker.allInstruments[instrumentId].voiceAndBank = (bankMode << 6) | bank | voice;
+}
+
+/**
+ * \brief Change la valeur du paramètre "speed" pour un instrument de type SAMPLE.
+ * 
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter / retrancher
+ */
+void FAT_data_instrumentSample_changeSpeed(u8 instrumentId, s8 value) {
+    u8 speed = FAT_tracker.allInstruments[instrumentId].speedOrLooping & 0x0f;
+    u8 looping = FAT_tracker.allInstruments[instrumentId].speedOrLooping & 0xf0;
+    if (
+            (value < 0 && speed > (-value - 1)) ||
+            (value > 0 && speed < INSTRUMENT_SAMPLE_SPEED_MAX - value)
+
+            ) {
+        speed += value;
+        FAT_tracker.allInstruments[instrumentId].speedOrLooping = looping | speed;
+    }
+}
+
+/**
+ * \brief Modifie la valeur du paramètre "loop" pour un instrument de type SAMPLE. Si le loop est à 1,
+ * alors le sample sera joué de façon infini par le système.
+ * 
+ * @param instrumentId l'id de l'instrument à modifier
+ * @param value la valeur à ajouter/retrancher
+ */
+void FAT_data_instrumentSample_changeLooping(u8 instrumentId, s8 value) {
+    u8 speed = FAT_tracker.allInstruments[instrumentId].speedOrLooping & 0x0f;
+    u8 looping = FAT_tracker.allInstruments[instrumentId].speedOrLooping >> 4;
+
+    if (value < 0) {
+        looping = 0;
+    } else if (value > 0) {
+        looping = 1;
+    }
+
+    FAT_tracker.allInstruments[instrumentId].speedOrLooping = (looping << 4) | speed;
+}
+
+/**
+ * \brief Modifie le paramètre offset pour un instrument de type SAMPLE. 
+ * 
+ * @param instrumentId l'id de l'instrument à modifier 
+ * @param value la valeur à ajouter ou retrancher
+ */
+void FAT_data_instrumentSample_changeOffset(u8 instrumentId, s8 value) {
+    if (
+            (value < 0 && FAT_tracker.allInstruments[instrumentId].offset > (-value - 1)) ||
+            (value > 0 && FAT_tracker.allInstruments[instrumentId].offset < INSTRUMENT_SAMPLE_OFFSET_MAX - value)
+
+            ) {
+        FAT_tracker.allInstruments[instrumentId].offset += value;
+    }
 }
 
 /**
