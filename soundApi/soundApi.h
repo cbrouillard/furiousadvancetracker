@@ -188,6 +188,7 @@ u8 snd_countSamplesInKit (kit* dat);
  * @param sampleNumber le numéro de sample à jouer dans le contexte GBFS
  */
 void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber);
+void snd_playSampleOnChannelAById(u8 kitId, u8 sampleNumber);
 
 /**
  * \brief Joue un sample sur le canal directsound B. Attention, il est nécessaire d'avoir
@@ -196,6 +197,7 @@ void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber);
  * @param sampleNumber le numéro de sample à jouer dans le contexte GBFS
  */
 void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber);
+void snd_playSampleOnChannelBById(u8 kitId, u8 sampleNumber);
 
 /**
  * \brief Renvoie le nom du kit en donnant l'id de celui-ci (de 0 à 255).

@@ -366,10 +366,11 @@ char* snd_getSampleNameById(u8 kitId, u8 sampleId) {
 
     kit* kit = snd_loadKit(kitId + 1);
     if (kit) {
-        const u32* sample = gbfs_get_nth_obj(kit, sampleId, buffer, NULL);
+        u32* sample = (u32*) gbfs_get_nth_obj(kit, sampleId + 1, buffer, NULL);
         if (sample) {
 
-            strncpy(sampleName, buffer, 3);
+            //strncpy(sampleName, buffer, 3);
+            sampleName[0] = buffer[0]; sampleName[1] = buffer[1]; sampleName[2] =  buffer[2];
 
         } else {
             sprintf(sampleName, "XXX");
@@ -379,6 +380,7 @@ char* snd_getSampleNameById(u8 kitId, u8 sampleId) {
         sprintf(sampleName, "XXX");
     }
 
+    sampleName[3] = '\0';
     return sampleName;
 }
 
@@ -420,6 +422,13 @@ void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
     }
 }
 
+void snd_playSampleOnChannelAById(u8 kitId, u8 sampleNumber){
+    kit* kit = snd_loadKit(kitId+1);
+    if (kit){
+        snd_playSampleOnChannelA(kit, sampleNumber);
+    }
+}
+
 void snd_timerFunc_sampleOnSNB() {
     if (!(snBSampleOffset & 3)) {
         SND_REG_SGFIFOB = snBSample[snBSampleOffset >> 2];
@@ -450,6 +459,13 @@ void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber) {
         snBSampleOffset = 0;
         R_TIM1COUNT = 0xffff;
         SND_REG_TM1CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
+    }
+}
+
+void snd_playSampleOnChannelBById(u8 kitId, u8 sampleNumber){
+    kit* kit = snd_loadKit(kitId+1);
+    if (kit){
+        snd_playSampleOnChannelB(kit, sampleNumber);
     }
 }
 

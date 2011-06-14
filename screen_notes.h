@@ -54,6 +54,7 @@ bool FAT_screenNotes_isPopuped = 0;
 u8 FAT_screenNotes_currentBlockId;
 
 #include "screen_notes_cursor.h"
+#include "data.h"
 
 /**
  * \brief Cette fonction se content d'imprimer le numéro de ligne sur la partie
@@ -99,7 +100,7 @@ void FAT_screenNotes_printNote(u8 line) {
         } else {
             ham_DrawText(SCREENNOTES_NOTE_LINE_X,
                     line + SCREENNOTES_LINE_START_Y,
-                    "%s%1x %.2x\0", "SM", (actualNote->note & 0x0f) - 3, actualNote->instrument);
+                    "S%.2x %.2x\0", actualNote->freq, actualNote->instrument);
         }
     } else {
         ham_DrawText(SCREENNOTES_NOTE_LINE_X,
@@ -358,23 +359,23 @@ void FAT_screenNotes_pressA() {
 
             if (F_CTRLINPUT_RIGHT_PRESSED) {
                 iCanPressAKey = 0;
-                FAT_data_note_changeValue(FAT_screenNotes_currentBlockId,
+                FAT_data_note_changeValue(FAT_screenSong_currentSelectedColumn, FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, 1); // ajout de 1
             }
 
             if (F_CTRLINPUT_LEFT_PRESSED) {
                 iCanPressAKey = 0;
-                FAT_data_note_changeValue(FAT_screenNotes_currentBlockId,
+                FAT_data_note_changeValue(FAT_screenSong_currentSelectedColumn, FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, -1); // retrait de 1
             }
 
-            if (F_CTRLINPUT_UP_PRESSED) {
+            if (F_CTRLINPUT_UP_PRESSED && (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA)) {
                 iCanPressAKey = 0;
                 FAT_data_note_changeOctave(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, 1);
             }
 
-            if (F_CTRLINPUT_DOWN_PRESSED) {
+            if (F_CTRLINPUT_DOWN_PRESSED && (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA)) {
                 iCanPressAKey = 0;
                 FAT_data_note_changeOctave(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, -1);

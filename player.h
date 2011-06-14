@@ -21,6 +21,9 @@
 #ifndef _PLAYER_H_
 #define	_PLAYER_H_
 
+#include "data.h"
+
+
 /** \brief Définition d'une valeur pour ralentir le décompte du tempo. */
 #define TEMPO_TIMER_HARDWARE_VALUE 100
 //70
@@ -49,11 +52,6 @@ u8 FAT_cursor_player3_obj;
 u8 FAT_cursor_player2_obj;
 /** \brief Objet HAM pour référencer les sprites "curseur player" utilisés dans l'écran SONG. */
 u8 FAT_cursor_playerSequences_obj[6];
-
-/** \brief Cette variable stocke le dernier kit chargé (afin d'éviter de recharger plusieurs fois le même). */
-kit* FAT_sample_bufferA;
-/** \brief Cette variable stocke le dernier kit chargé (afin d'éviter de recharger plusieurs fois le même). */
-kit* FAT_sample_bufferB;
 
 /**
  * \brief Compteur pour le tempo.
@@ -184,10 +182,10 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                         note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
                 break;
             case 4: // SNA 
-                snd_playSampleOnChannelA(FAT_sample_bufferA, 3);
+                snd_playSampleOnChannelAById(inst->kitNumber, note->freq);
                 break;
             case 5: // SNB
-                snd_playSampleOnChannelB(FAT_sample_bufferB, 0);
+                snd_playSampleOnChannelBById(inst->kitNumber, note->freq);
                 break;
         }
 

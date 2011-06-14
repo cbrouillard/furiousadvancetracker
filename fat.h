@@ -244,10 +244,6 @@ void FAT_init() {
 
     // intialisation des données "tracker" stockées en RAM
     FAT_data_initData();
-
-    // TODO enlever !
-    FAT_sample_bufferA = snd_loadKit(1);
-    FAT_sample_bufferB = snd_loadKit(1);
 }
 
 /**
