@@ -97,15 +97,6 @@ bool playSnBSample = 0;
 
 void snd_timerFunc_sample();
 
-/**
-bool fakeMutex;
-bool* FAT_mutex = &fakeMutex;
-
-void snd_onlyFAT_initMutex(bool* mutex) {
-    FAT_mutex = mutex;
-}
- */
-
 void snd_loadWav(u8 inst) {
     REG_DMA3SAD = (u32) & voices[inst << 2];
     REG_DMA3DAD = (u32) & REG_WAVE_RAM0;
@@ -286,6 +277,7 @@ void snd_stopAllSounds() {
 }
 
 #define EFFECT_KILL 0
+#define EFFECT_SWEEP 1
 
 void snd_effect_kill(u8 channelId, u8 value) {
     switch (channelId) {
@@ -311,6 +303,19 @@ void snd_effect_kill(u8 channelId, u8 value) {
     }
 }
 
+void snd_effect_sweep (u8 channelId, u8 value){
+    if (channelId == 0){
+        u16 sweepshifts = (value & 0x70) >> 4;
+        u16 sweeptime = (value & 0x0F);
+        u16 sweepdir = 1;
+        if (sweeptime > 7) {
+            sweeptime -= 8;
+            sweepdir = 0;
+        }
+        REG_SOUND1CNT_L = (sweeptime << 4) | (sweepdir << 3) | sweepshifts;
+    }
+}
+
 void snd_tryToApplyEffect(u8 channelId, u8 effectNumber, u8 effectValue) {
     switch (effectNumber) {
 
@@ -318,6 +323,9 @@ void snd_tryToApplyEffect(u8 channelId, u8 effectNumber, u8 effectValue) {
             snd_effect_kill(channelId, effectValue);
             break;
 
+        case EFFECT_SWEEP:
+            snd_effect_sweep(channelId, effectValue);
+            break;
     }
 }
 

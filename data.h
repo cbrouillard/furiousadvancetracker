@@ -71,7 +71,7 @@
 /**
  * \brief Définit le nombre d'effet disponibles pour les notes.
  */
-#define NB_NOTE_EFFECT 2
+#define NB_NOTE_EFFECT 3
 /**
  * \brief Définit le nombre d'effet disponibles pour les blocks.
  */
@@ -177,12 +177,12 @@ const char* noteName[NB_NOTE] = {"C ", "C\"", "D ", "D\"", "E ", "F ", "F\"", "G
 /**
  * \brief Tableau constant contenant tous les noms d'effets disponibles pour les notes.
  */
-const char* noteEffectName[NB_NOTE_EFFECT] = {"K ", "H "};
+const char* noteEffectName[NB_NOTE_EFFECT] = {"K ", "H ", "SW"};
 /**
  * \brief Mapping entre le nom de l'effet et son numéro dans la soundApi. Si le mapping 
  * a pour valeur NULL_VALUE, alors l'effet n'est pas géré par la soundAPI.
  */
-const u8 noteEffectNum[NB_NOTE_EFFECT] = {0, NULL_VALUE};
+const u8 noteEffectNum[NB_NOTE_EFFECT] = {0, NULL_VALUE, 1};
 /**
  * \brief Tableau constant contenant tous les noms d'effets disponibles pour les blocks.
  */
