@@ -106,7 +106,6 @@ int main() {
     FAT_init();
     snd_init_soundApi();
     snd_init_kits();
-    snd_onlyFAT_initMutex(&sampleMutex);
 
     FAT_showIntro();
 

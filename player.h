@@ -22,6 +22,7 @@
 #define	_PLAYER_H_
 
 #include "data.h"
+#include "soundApi/soundApi.h"
 
 
 /** \brief Définition d'une valeur pour ralentir le décompte du tempo. */
@@ -60,7 +61,7 @@ u8 FAT_cursor_playerSequences_obj[6];
  * est réinitialisé ensuite.
  * Dans le cas contraire, on attend sans jouer de note.
  */
-u32 tempoReach = ((60000 / 128) / 4) / 2 ;// TEMPO_TIMER_HARDWARE_VALUE;
+u32 tempoReach = ((60000 / 128) / 4) / 2; // TEMPO_TIMER_HARDWARE_VALUE;
 
 /**
  * \brief Function temporisée qui lit toutes les séquences. (callback)
@@ -172,25 +173,30 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
 
             case 2: // WAV
                 snd_playSoundOnChannel3(inst->volumeRatio & 0x0f, inst->soundlength, inst->loopmode, inst->voiceAndBank & 0x1f,
-                        (inst->voiceAndBank & 0x20) >> 5, (inst->voiceAndBank & 0x40) >> 6, 
-                        inst->output,note->freq, transpose + FAT_tracker.transpose);
+                        (inst->voiceAndBank & 0x20) >> 5, (inst->voiceAndBank & 0x40) >> 6,
+                        inst->output, note->freq, transpose + FAT_tracker.transpose);
                 break;
             case 3: // NOISE
                 //ham_DrawText (23, 16, "NOI");
                 snd_playSoundOnChannel4(inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->soundlength,
-                        inst->loopmode, inst->output, note->note & 0x0f, inst->wavedutyOrPolynomialStep, 
+                        inst->loopmode, inst->output, note->note & 0x0f, inst->wavedutyOrPolynomialStep,
                         note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
                 break;
             case 4: // SNA 
-                snd_playSampleOnChannelAById(inst->kitNumber, note->freq);
+                //snd_playSampleOnChannelAById(inst->kitNumber, note->freq);
+                snd_playChannelASample(inst->kitNumber, note->freq, inst->volumeRatio,
+                        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4, 
+                        (inst->envelope & 0xe0) >> 5, inst->soundlength, inst->offset);
                 break;
             case 5: // SNB
-                snd_playSampleOnChannelBById(inst->kitNumber, note->freq);
+                snd_playChannelBSample(inst->kitNumber, note->freq, inst->volumeRatio,
+                        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4, 
+                        (inst->envelope & 0xe0) >> 5, inst->soundlength, inst->offset);
                 break;
         }
 
     }
-    
+
     if (note->effect.name != NULL_VALUE) {
         snd_tryToApplyEffect(channel, noteEffectNum[note->effect.name >> 1], note->effect.value);
     }
@@ -259,7 +265,7 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
     FAT_currentPlayedBlock = blockId;
     FAT_currentPlayedChannel = channel;
 
-    tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2;//- TEMPO_TIMER_HARDWARE_VALUE;
+    tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     FAT_isCurrentlyPlaying = 1;
     ham_StartIntHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc_playNotes);
 
@@ -395,7 +401,7 @@ void FAT_player_timerFunc_playNotes() {
             }
         }
 
-        tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2;//- TEMPO_TIMER_HARDWARE_VALUE;
+        tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     }
 }
 

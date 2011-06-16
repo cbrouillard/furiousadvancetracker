@@ -35,10 +35,7 @@ void snd_init_soundApi();
 /**
  * \brief Précharge les kits présents dans la cartouche.
  */
-void snd_init_kits ();
-
-/** \brief Fonction utilisée uniquement pour FAT afin de gérer le mutex (pour éviter les conflits et plantages). */
-void snd_onlyFAT_initMutex (bool* mutex);
+void snd_init_kits();
 
 /**
  * 
@@ -162,14 +159,14 @@ void snd_stopAllSounds();
  * @param effectNumber le numéro d'effet à appliquer
  * @param effectValue la valeur de l'effet
  */
-void snd_tryToApplyEffect (u8 channelId, u8 effectNumber, u8 effectValue);
+void snd_tryToApplyEffect(u8 channelId, u8 effectNumber, u8 effectValue);
 
 /**
  * \brief Charge un kit par son numéro.
  * @param numKit le numéro du kit à charger.
  * @return un pointeur vers les données du kit ou NULL (0x0) si non trouvé.
  */
-kit* snd_loadKit (u8 numKit);
+kit* snd_loadKit(u8 numKit);
 
 /**
  * \brief Compte le nombre de kits inclus dans la cartouche. Cette fonction est "double".
@@ -177,14 +174,14 @@ kit* snd_loadKit (u8 numKit);
  * Ce cache est simplement retourné lors des autres appels (le nombre de kits ne peut pas changer une fois
  * la GBA allumée). 
  */
-const u8 snd_countAvailableKits ();
+const u8 snd_countAvailableKits();
 
 /**
  * \brief Compte le nombre de samples trouvés dans un kit donné.
  * @param dat le pointeur vers les données du kit.
  * @return le nombre de samples (uniquement les fichiers wav) présent dans le kit
  */
-u8 snd_countSamplesInKit (kit* dat);
+u8 snd_countSamplesInKit(kit* dat);
 
 /**
  * \brief Joue un sample sur le canal directsound A. Attention, il est nécessaire d'avoir
@@ -196,6 +193,21 @@ void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber);
 void snd_playSampleOnChannelAById(u8 kitId, u8 sampleNumber);
 
 /**
+ * \brief Joue un sample sur le canal A en appliquant quelques paramètres supplémentaires.
+ * 
+ * @param kitId le numéro de kit contenant le sample de 0 à MAX_KITS
+ * @param sampleNumber le numéro de sample dans le kit de 0 à 255
+ * @param volume le ratio de volume à appliquer 0 = 50% 1 = 100%
+ * @param speed la vitesse d'execution du sample de 0 à F  1 = normal, 0 = 50%, F = très rapide (16x) 
+ * @param looping si looping est à 1, la lecture du sample sera répétée à l'infini
+ * @param timedMode permet d'activer le mode timing 1 = actif 0 = inactif
+ * @param length si timedMode = 1 alors ce paramètre permet de spécifier la longeur du sample 0 = 0% FF = 100%
+ * @param offset permet de spécifier a partir de quel moment le sample démarre de 0 = début à 255 = fin
+ */
+void snd_playChannelASample(u8 kitId, u8 sampleNumber, u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset);
+
+
+/**
  * \brief Joue un sample sur le canal directsound B. Attention, il est nécessaire d'avoir
  * un contexte GBFS afin d'utiliser cette fonction. 
  * @param dat le contexte géré par GBFS
@@ -205,17 +217,31 @@ void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber);
 void snd_playSampleOnChannelBById(u8 kitId, u8 sampleNumber);
 
 /**
+ * \brief Joue un sample sur le canal B en appliquant quelques paramètres supplémentaires.
+ * 
+ * @param kitId le numéro de kit contenant le sample de 0 à MAX_KITS
+ * @param sampleNumber le numéro de sample dans le kit de 0 à 255
+ * @param volume le ratio de volume à appliquer 0 = 50% 1 = 100%
+ * @param speed la vitesse d'execution du sample de 0 à F  1 = normal, 0 = 50%, F = très rapide (16x) 
+ * @param looping si looping est à 1, la lecture du sample sera répétée à l'infini
+ * @param timedMode permet d'activer le mode timing 1 = actif 0 = inactif
+ * @param length si timedMode = 1 alors ce paramètre permet de spécifier la longeur du sample 0 = 0% FF = 100%
+ * @param offset permet de spécifier a partir de quel moment le sample démarre de 0 = début à 255 = fin
+ */
+void snd_playChannelBSample(u8 kitId, u8 sampleNumber, u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset);
+
+/**
  * \brief Renvoie le nom du kit en donnant l'id de celui-ci (de 0 à 255).
  * @param kitId le numéro du kit voulu
  */
-char* snd_getKitNameById (u8 kitId);
+char* snd_getKitNameById(u8 kitId);
 
 /**
  * \brief Récupère le nom d'un sample donné (3 caractères).
  * \param kitId le numéro du kit
  * \param sampleId le numéro du sample
  */
-char* snd_getSampleNameById (u8 kitId, u8 sampleId);
+char* snd_getSampleNameById(u8 kitId, u8 sampleId);
 
 /**
  * \brief Compte le nombre de samples présents dans un kit (défini par son numéro).

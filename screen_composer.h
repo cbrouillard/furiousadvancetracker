@@ -70,6 +70,7 @@ void FAT_screenComposer_switchLocking();
 void FAT_screenComposer_playAffectedNotes();
 
 #include "screen_composer_cursor.h"
+#include "data.h"
 
 /**
  * \brief Affiche les informations "dynamiques" dans l'écran COMPOSER (numéro de ligne, ...). 
@@ -96,13 +97,25 @@ void FAT_screenComposer_printNote(u8 line) {
     if (!FAT_data_composer_isNoteEmpty(line)) {
         note* actualNote = FAT_data_composer_getNote(line);
 
-        ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
-                line + SCREENCOMPOSER_LINE_START_Y,
-                "%s%1x %.2x      %.1x\0",
-                noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument,
-                //                FAT_data_getInstrumentType(actualNote->instrument) + 1
-                FAT_tracker.composer.channels[line] + 1
-                );
+        if (FAT_data_composer_getChannel(line) > INSTRUMENT_TYPE_NOISE) {
+
+            ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
+                    line + SCREENCOMPOSER_LINE_START_Y,
+                    "S%.2x %.2x      %.1x\0",
+                    actualNote->freq, actualNote->instrument,
+                    FAT_tracker.composer.channels[line] + 1
+                    );
+
+        } else {
+
+            ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
+                    line + SCREENCOMPOSER_LINE_START_Y,
+                    "%s%1x %.2x      %.1x\0",
+                    noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument,
+                    //                FAT_data_getInstrumentType(actualNote->instrument) + 1
+                    FAT_tracker.composer.channels[line] + 1
+                    );
+        }
     } else {
         ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
                 line + SCREENCOMPOSER_LINE_START_Y, "             \0");
@@ -306,12 +319,16 @@ void FAT_screenComposer_pressA() {
 
                 if (F_CTRLINPUT_UP_PRESSED) {
                     iCanPressAKey = 0;
-                    FAT_data_composer_changeOctave(realLine, 1); // ajout de 1
+                    if (FAT_data_composer_getChannel(realLine) <= INSTRUMENT_TYPE_NOISE) {
+                        FAT_data_composer_changeOctave(realLine, 1); // ajout de 1
+                    }
                 }
 
                 if (F_CTRLINPUT_DOWN_PRESSED) {
                     iCanPressAKey = 0;
-                    FAT_data_composer_changeOctave(realLine, -1);
+                    if (FAT_data_composer_getChannel(realLine) <= INSTRUMENT_TYPE_NOISE) {
+                        FAT_data_composer_changeOctave(realLine, -1);
+                    }
                 }
 
                 if (FAT_data_isPreviewEnabled()) {

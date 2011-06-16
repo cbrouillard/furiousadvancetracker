@@ -18,8 +18,6 @@
 #define	_SCREEN_COMPOSER_CURSOR_H_
 
 #include "screen_composer.h"
-#include "cursors.h"
-
 
 /** \brief Position actuelle du curseur pour le composeur. */
 u8 FAT_screenComposer_cursorX;

@@ -93,16 +93,18 @@ const u32* snASample;
 const u32* snBSample;
 
 bool playSnASample = 0;
+bool playSnBSample = 0;
 
-void snd_timerFunc_sampleOnSNA();
-void snd_timerFunc_sampleOnSNB();
+void snd_timerFunc_sample();
 
+/**
 bool fakeMutex;
 bool* FAT_mutex = &fakeMutex;
 
 void snd_onlyFAT_initMutex(bool* mutex) {
     FAT_mutex = mutex;
 }
+ */
 
 void snd_loadWav(u8 inst) {
     REG_DMA3SAD = (u32) & voices[inst << 2];
@@ -130,14 +132,11 @@ void snd_init_soundApi() {
     // volume à fond, activation stéréo des 4 canaux
     // activation des directsound A et B en mode timer 0 et 1
     REG_SOUNDCNT_L = 0xff77;
-    REG_SOUNDCNT_H = 0xfb0e;
+    REG_SOUNDCNT_H = 0xbb0e;
 
     REG_SOUND3CNT_L = SOUND3BANK32 | SOUND3SETBANK1;
 
     snd_loadWav(0);
-
-
-    //ham_StartIntHandler(INT_TYPE_TIM1, (void*) &snd_timerFunc_sampleOnSNB);
 }
 
 void snd_changeChannelOutput(u8 channelNumber, u8 outputValue) {
@@ -280,6 +279,9 @@ void snd_stopAllSounds() {
     //REG_SOUND3CNT_X = 0x8000;
     //REG_SOUND4CNT_H = 0x8000;
 
+    playSnASample = 0;
+    playSnBSample = 0;
+
     snd_init_soundApi();
 }
 
@@ -335,7 +337,7 @@ const u8 snd_countAvailableKits() {
 
 void snd_init_kits() {
     R_TIM0COUNT = 0xffff;
-    ham_StartIntHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sampleOnSNA);
+    ham_StartIntHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sample);
 
     snd_countAvailableKits();
     u8 cpt = 0;
@@ -418,7 +420,7 @@ char* snd_getSampleNameById(u8 kitId, u8 sampleId) {
     return sampleName;
 }
 
-void snd_timerFunc_sampleOnSNA() {
+void snd_timerFunc_sample() {
     if (playSnASample) {
         if (!(snASampleOffset & 3) && snASampleOffset < snASmpSize) {
             SND_REG_SGFIFOA = snASample[snASampleOffset >> 2]; // u32
@@ -427,24 +429,45 @@ void snd_timerFunc_sampleOnSNA() {
         snASampleOffset++;
         if (snASampleOffset > snASmpSize) {
             //sample finished!
-            R_TIM0CNT = 0;
-            snASampleOffset = 0;
+            //R_TIM0CNT = 0;
             playSnASample = 0;
+            snASampleOffset = 0;
         }
+    }
+
+    if (playSnBSample) {
+        if (!(snBSampleOffset & 3) && snBSampleOffset < snBSmpSize) {
+            SND_REG_SGFIFOB = snBSample[snBSampleOffset >> 2]; // u32
+        }
+
+        snBSampleOffset++;
+        if (snBSampleOffset > snBSmpSize) {
+            //sample finished!
+            //R_TIM0CNT = 0;
+            playSnBSample = 0;
+            snBSampleOffset = 0;
+        }
+    }
+
+    if (!playSnASample && !playSnBSample) {
+        R_TIM0CNT = 0;
     }
 
 }
 
 void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
+    playSnASample = 0;
     snASample = gbfs_get_nth_obj(dat, sampleNumber + 1, NULL, &snASmpSize);
 
     if (snASample) {
         if (snASampleOffset != 0) {
-            R_TIM0CNT = 0;
+            //R_TIM0CNT = 0;
             snASampleOffset = 0;
         }
         playSnASample = 1;
-        R_TIM0CNT = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
+        if (R_TIM0CNT == 0) {
+            R_TIM0CNT = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
+        }
     }
 }
 
@@ -455,36 +478,25 @@ void snd_playSampleOnChannelAById(u8 kitId, u8 sampleNumber) {
     }
 }
 
-void snd_timerFunc_sampleOnSNB() {
-    if (!(snBSampleOffset & 3)) {
-        SND_REG_SGFIFOB = snBSample[snBSampleOffset >> 2];
-    }
-
-    snBSampleOffset++;
-
-    if (snBSampleOffset > snBSmpSize) {
-        //sample finished!
-        SND_REG_TM1CNT_H = 0;
-        R_TIM1CNT = 0;
-        snBSampleOffset = 0;
-    }
+void snd_playChannelASample(u8 kitId, u8 sampleNumber, 
+        u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset) {
+    snd_playSampleOnChannelAById(kitId, sampleNumber);
 }
 
 void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber) {
-
+    playSnBSample = 0;
     snBSample = gbfs_get_nth_obj(dat, sampleNumber + 1, NULL, &snBSmpSize);
 
     if (snBSample) {
-        /*
-                if (snBSampleOffset != 0) {
-                    SND_REG_TM1CNT_H = 0;
-                }
-         */
-        SND_REG_TM1CNT_H = 0;
-        R_TIM1CNT = 0;
-        snBSampleOffset = 0;
-        R_TIM1COUNT = 0xffff;
-        SND_REG_TM1CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
+        if (snBSampleOffset != 0) {
+            //R_TIM0CNT = 0;
+            playSnBSample = 0;
+            snBSampleOffset = 0;
+        }
+        playSnBSample = 1;
+        if (R_TIM0CNT == 0) {
+            R_TIM0CNT = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
+        }
     }
 }
 
@@ -493,6 +505,11 @@ void snd_playSampleOnChannelBById(u8 kitId, u8 sampleNumber) {
     if (kit) {
         snd_playSampleOnChannelB(kit, sampleNumber);
     }
+}
+
+void snd_playChannelBSample(u8 kitId, u8 sampleNumber, 
+        u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset) {
+    snd_playSampleOnChannelBById(kitId, sampleNumber);
 }
 
 
