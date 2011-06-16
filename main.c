@@ -54,6 +54,9 @@
 #include <stdarg.h>
 
 #include "soundApi/soundApi.h"
+
+void FAT_mainVbl_func();
+
 #include "fat.h"
 
 

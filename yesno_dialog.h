@@ -146,6 +146,7 @@ void FAT_yesno_close (){
     ham_StopIntHandler(INT_TYPE_VBL);
     FAT_popup_init();
     FAT_switchToScreen(FAT_currentScreen);
+    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_mainVbl_func);
     mutex = 1;
 }
 

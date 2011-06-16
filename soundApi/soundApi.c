@@ -194,6 +194,26 @@ void snd_playSoundOnChannel2(u16 volume,
     REG_SOUND2CNT_H = (REG_SOUND2CNT_H & 0xf800) | (loopmode << 14) | freqs[sfreq];
 }
 
+void snd_modifyWaveCanalVolume(u16 volume) {
+    switch (volume) {
+        case 0:
+            REG_SOUND3CNT_H = SOUND3OUTPUT0;
+            break;
+        case 1:
+            REG_SOUND3CNT_H = SOUND3OUTPUT14;
+            break;
+        case 2:
+            REG_SOUND3CNT_H = SOUND3OUTPUT12;
+            break;
+        case 3:
+            REG_SOUND3CNT_H = SOUND3OUTPUT34;
+            break;
+        case 4:
+            REG_SOUND3CNT_H = SOUND3OUTPUT1;
+            break;
+    }
+}
+
 void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voice,
         u16 bank, u16 bankMode, u8 output, u16 freq, u8 transpose) {
 
@@ -226,23 +246,8 @@ void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voic
         //REG_SOUND3CNT_L &= 0xffbf;
     }
 
-    switch (volume) {
-        case 0:
-            REG_SOUND3CNT_H = SOUND3OUTPUT0 | soundLength;
-            break;
-        case 1:
-            REG_SOUND3CNT_H = SOUND3OUTPUT14 | soundLength;
-            break;
-        case 2:
-            REG_SOUND3CNT_H = SOUND3OUTPUT12 | soundLength;
-            break;
-        case 3:
-            REG_SOUND3CNT_H = SOUND3OUTPUT34 | soundLength;
-            break;
-        case 4:
-            REG_SOUND3CNT_H = SOUND3OUTPUT1 | soundLength;
-            break;
-    }
+    snd_modifyWaveCanalVolume(volume);
+    REG_SOUND3CNT_H |= soundLength;
 
     if (loopmode == 0) {
         REG_SOUND3CNT_X = freqs[freq] | SOUND3PLAYLOOP | SOUND3INIT;
@@ -278,6 +283,8 @@ void snd_stopAllSounds() {
 
 #define EFFECT_KILL 0
 #define EFFECT_SWEEP 1
+#define EFFECT_OUTPUT 2
+#define EFFECT_VOLUME 3
 
 void snd_effect_kill(u8 channelId, u8 value) {
     switch (channelId) {
@@ -303,8 +310,8 @@ void snd_effect_kill(u8 channelId, u8 value) {
     }
 }
 
-void snd_effect_sweep (u8 channelId, u8 value){
-    if (channelId == 0){
+void snd_effect_sweep(u8 channelId, u8 value) {
+    if (channelId == 0) {
         u16 sweepshifts = (value & 0x70) >> 4;
         u16 sweeptime = (value & 0x0F);
         u16 sweepdir = 1;
@@ -313,6 +320,34 @@ void snd_effect_sweep (u8 channelId, u8 value){
             sweepdir = 0;
         }
         REG_SOUND1CNT_L = (sweeptime << 4) | (sweepdir << 3) | sweepshifts;
+    }
+}
+
+void snd_effect_output(u8 channelId, u8 value) {
+    snd_changeChannelOutput(channelId, value);
+}
+
+void snd_effect_volume(u8 channelId, u16 value) {
+    switch (channelId) {
+        case 0:
+            REG_SOUND1CNT_L &= 0x0FFF;
+            REG_SOUND1CNT_L |= (value << 12);
+            break;
+        case 1:
+            REG_SOUND2CNT_L &= 0x0FFF;
+            REG_SOUND2CNT_L |= (value << 12);
+            break;
+        case 2:
+            snd_modifyWaveCanalVolume(value);
+            break;
+        case 3:
+            REG_SOUND4CNT_L &= 0x0FFF;
+            REG_SOUND4CNT_L |= (value << 12);
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
     }
 }
 
@@ -325,6 +360,14 @@ void snd_tryToApplyEffect(u8 channelId, u8 effectNumber, u8 effectValue) {
 
         case EFFECT_SWEEP:
             snd_effect_sweep(channelId, effectValue);
+            break;
+
+        case EFFECT_OUTPUT:
+            snd_effect_output(channelId, effectValue);
+            break;
+
+        case EFFECT_VOLUME:
+            snd_effect_volume(channelId, effectValue);
             break;
     }
 }
@@ -486,7 +529,7 @@ void snd_playSampleOnChannelAById(u8 kitId, u8 sampleNumber) {
     }
 }
 
-void snd_playChannelASample(u8 kitId, u8 sampleNumber, 
+void snd_playChannelASample(u8 kitId, u8 sampleNumber,
         u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset) {
     snd_playSampleOnChannelAById(kitId, sampleNumber);
 }
@@ -515,7 +558,7 @@ void snd_playSampleOnChannelBById(u8 kitId, u8 sampleNumber) {
     }
 }
 
-void snd_playChannelBSample(u8 kitId, u8 sampleNumber, 
+void snd_playChannelBSample(u8 kitId, u8 sampleNumber,
         u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset) {
     snd_playSampleOnChannelBById(kitId, sampleNumber);
 }

@@ -1,12 +1,8 @@
-CONTACTER l'auteur de HAM pour lui demander la permission d'utiliser HAM release.
-
 V0-02:
-- bug SoundLength sur instru wav
+- OK bug SoundLength sur instru wav
 - refactoring pour les types d'effets : structure, ponctuel, long (refactoring_effects)
-- commande H (Hop) (version 0-02)
-- commande SW (Sweep) (version 0-02)
-- commande EN (Enveloppe) (version 0-02)
-- command OU (Output) 
+- OK commande SW (Sweep) (version 0-02)
+- OK command OU (Output) 
 
 - OK documentation: faire un tableau comparatif des cartouches
 - OK documentation: compléter la section technique
@@ -20,7 +16,9 @@ v0-03:
 - design de l'écran effets (version 0-03)
 - jouer des samples sur les deux channels qui reste
 - deep clone
-
+- commande H (Hop) (version 0-02)
+- commande EN (Enveloppe) (version 0-02)
+- commande VL (Volume) 
 
 v0-0x:
 - réfléchir à la commande C , V , P (les commandes qui sont actives sur toute la durée
