@@ -63,7 +63,7 @@ void FAT_mainVbl_func() {
     FAT_newFrame = 1;
 }
 
-void FAT_checkButtons(){
+void FAT_checkButtons() {
     switch (FAT_currentScreen) {
         case SCREEN_PROJECT_ID:
             FAT_screenProject_checkButtons();
@@ -105,10 +105,11 @@ int main() {
 
     FAT_init();
     snd_init_soundApi();
-    snd_onlyFAT_initMutex(&mutex);
+    snd_init_kits();
+    snd_onlyFAT_initMutex(&sampleMutex);
 
     FAT_showIntro();
-    
+
     ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_mainVbl_func);
     FAT_screenSong_init();
 
@@ -116,14 +117,14 @@ int main() {
 
         if (FAT_newFrame) {
             if (mutex) {
-                
-                ham_CopyObjToOAM();
-                
+
                 if (iCanPressAKey) {
                     FAT_checkButtons();
                 }
+
+                ham_CopyObjToOAM();
             }
-            
+
             FAT_newFrame = 0;
         }
 

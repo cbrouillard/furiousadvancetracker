@@ -80,6 +80,20 @@ const unsigned long voices[] = {
 
 };
 
+#define MAX_KITS 32
+kit* kits[MAX_KITS];
+
+int snASampleOffset = 1;
+int snBSampleOffset = 1;
+
+u32 snASmpSize;
+u32 snBSmpSize;
+
+const u32* snASample;
+const u32* snBSample;
+
+bool playSnASample = 0;
+
 void snd_timerFunc_sampleOnSNA();
 void snd_timerFunc_sampleOnSNB();
 
@@ -122,8 +136,8 @@ void snd_init_soundApi() {
 
     snd_loadWav(0);
 
-    ham_StartIntHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sampleOnSNA);
-    ham_StartIntHandler(INT_TYPE_TIM1, (void*) &snd_timerFunc_sampleOnSNB);
+
+    //ham_StartIntHandler(INT_TYPE_TIM1, (void*) &snd_timerFunc_sampleOnSNB);
 }
 
 void snd_changeChannelOutput(u8 channelNumber, u8 outputValue) {
@@ -307,18 +321,36 @@ void snd_tryToApplyEffect(u8 channelId, u8 effectNumber, u8 effectValue) {
 
 /// GESTION DES SAMPLES
 u8 snd_availableKits = 0;
-const u8 snd_countAvailableKits (){
-    if (!snd_availableKits){
+
+const u8 snd_countAvailableKits() {
+    if (!snd_availableKits) {
         kit* table = snd_loadKit(0);
         char buffer[4];
         strncpy(buffer, gbfs_get_nth_obj(table, 0, NULL, NULL), 3);
         snd_availableKits = atoi(buffer);
     }
-    
+
     return snd_availableKits;
 }
 
-const GBFS_FILE* snd_loadKit(u8 numKit) {
+void snd_init_kits() {
+    R_TIM0COUNT = 0xffff;
+    ham_StartIntHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sampleOnSNA);
+
+    snd_countAvailableKits();
+    u8 cpt = 0;
+
+    kit* kit = find_first_gbfs_file(find_first_gbfs_file);
+    if (kit) {
+        while (cpt < snd_availableKits && cpt < MAX_KITS) {
+            kit = skip_gbfs_file(kit);
+            kits[cpt] = kit;
+            cpt++;
+        }
+    }
+}
+
+kit* snd_loadKit(u8 numKit) {
     u8 cpt = 0;
     const GBFS_FILE* kit = find_first_gbfs_file(find_first_gbfs_file);
     while (cpt < numKit) {
@@ -334,11 +366,11 @@ u8 snd_countSamplesInKit(kit* dat) {
 }
 
 u8 snd_countSamplesInKitById(u8 kitId) {
-    kit* kit = snd_loadKit(kitId + 1);
+    kit* kit = kits[kitId];
     if (kit) {
-        return snd_countSamplesInKit(kit);        
-    } 
-    
+        return snd_countSamplesInKit(kit);
+    }
+
     return 0;
 }
 
@@ -354,7 +386,7 @@ char* snd_getKitNameById(u8 kitId) {
 
     static char kitName[9];
 
-    kit* kit = snd_loadKit(kitId + 1);
+    kit* kit = kits[kitId];
     snd_getKitName(kit, kitId, kitName);
 
     return kitName;
@@ -364,13 +396,15 @@ char* snd_getSampleNameById(u8 kitId, u8 sampleId) {
     static char sampleName[4];
     char buffer[24];
 
-    kit* kit = snd_loadKit(kitId + 1);
+    kit* kit = kits[kitId];
     if (kit) {
         u32* sample = (u32*) gbfs_get_nth_obj(kit, sampleId + 1, buffer, NULL);
         if (sample) {
 
             //strncpy(sampleName, buffer, 3);
-            sampleName[0] = buffer[0]; sampleName[1] = buffer[1]; sampleName[2] =  buffer[2];
+            sampleName[0] = buffer[0];
+            sampleName[1] = buffer[1];
+            sampleName[2] = buffer[2];
 
         } else {
             sprintf(sampleName, "XXX");
@@ -384,47 +418,39 @@ char* snd_getSampleNameById(u8 kitId, u8 sampleId) {
     return sampleName;
 }
 
-int snASampleOffset = 1;
-int snBSampleOffset = 1;
-
-u32 snASmpSize;
-u32 snBSmpSize;
-
-const u32* snASample;
-const u32* snBSample;
-
 void snd_timerFunc_sampleOnSNA() {
-    if (!(snASampleOffset & 3)) {
-        SND_REG_SGFIFOA = snASample[snASampleOffset >> 2]; // u32
+    if (playSnASample) {
+        if (!(snASampleOffset & 3) && snASampleOffset < snASmpSize) {
+            SND_REG_SGFIFOA = snASample[snASampleOffset >> 2]; // u32
+        }
+
+        snASampleOffset++;
+        if (snASampleOffset > snASmpSize) {
+            //sample finished!
+            R_TIM0CNT = 0;
+            snASampleOffset = 0;
+            playSnASample = 0;
+        }
     }
 
-    snASampleOffset++;
-    if (snASampleOffset > snASmpSize) {
-        //sample finished!
-        SND_REG_TM0CNT_H = 0;
-        R_TIM0CNT = 0;
-        snASampleOffset = 0;
-    }
 }
 
 void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
-
-    snASample = gbfs_get_nth_obj(dat, sampleNumber+1, NULL, &snASmpSize);
+    snASample = gbfs_get_nth_obj(dat, sampleNumber + 1, NULL, &snASmpSize);
 
     if (snASample) {
         if (snASampleOffset != 0) {
-            SND_REG_TM0CNT_H = 0;
             R_TIM0CNT = 0;
             snASampleOffset = 0;
         }
-        R_TIM0COUNT = 0xffff;
-        SND_REG_TM0CNT_H = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
+        playSnASample = 1;
+        R_TIM0CNT = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
     }
 }
 
-void snd_playSampleOnChannelAById(u8 kitId, u8 sampleNumber){
-    kit* kit = snd_loadKit(kitId+1);
-    if (kit){
+void snd_playSampleOnChannelAById(u8 kitId, u8 sampleNumber) {
+    kit* kit = kits[kitId];
+    if (kit) {
         snd_playSampleOnChannelA(kit, sampleNumber);
     }
 }
@@ -446,7 +472,7 @@ void snd_timerFunc_sampleOnSNB() {
 
 void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber) {
 
-    snBSample = gbfs_get_nth_obj(dat, sampleNumber+1, NULL, &snBSmpSize);
+    snBSample = gbfs_get_nth_obj(dat, sampleNumber + 1, NULL, &snBSmpSize);
 
     if (snBSample) {
         /*
@@ -462,9 +488,9 @@ void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber) {
     }
 }
 
-void snd_playSampleOnChannelBById(u8 kitId, u8 sampleNumber){
-    kit* kit = snd_loadKit(kitId+1);
-    if (kit){
+void snd_playSampleOnChannelBById(u8 kitId, u8 sampleNumber) {
+    kit* kit = kits[kitId];
+    if (kit) {
         snd_playSampleOnChannelB(kit, sampleNumber);
     }
 }

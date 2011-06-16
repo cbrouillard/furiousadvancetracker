@@ -32,6 +32,11 @@ typedef const GBFS_FILE kit;
  **/
 void snd_init_soundApi();
 
+/**
+ * \brief Précharge les kits présents dans la cartouche.
+ */
+void snd_init_kits ();
+
 /** \brief Fonction utilisée uniquement pour FAT afin de gérer le mutex (pour éviter les conflits et plantages). */
 void snd_onlyFAT_initMutex (bool* mutex);
 

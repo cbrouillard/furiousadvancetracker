@@ -69,7 +69,7 @@
  * }</code>
  * <b>NE PAS TOUCHER !</b>
  */
-bool mutex = 1;
+bool mutex = 1, sampleMutex = 1;
 
 /** \brief Définition globale du format d'affichage des numéros de lignes. */
 #define FAT_FORMAT_LINE "%.2x\0"
