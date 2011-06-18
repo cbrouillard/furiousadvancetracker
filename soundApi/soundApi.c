@@ -330,19 +330,19 @@ void snd_effect_output(u8 channelId, u8 value) {
 void snd_effect_volume(u8 channelId, u16 value) {
     switch (channelId) {
         case 0:
-            REG_SOUND1CNT_L &= 0x0FFF;
-            REG_SOUND1CNT_L |= (value << 12);
+            REG_SOUND1CNT_H &= 0x0FFF;
+            REG_SOUND1CNT_H |= ((value > 0xF ? 0xF : value) << 12);
             break;
         case 1:
             REG_SOUND2CNT_L &= 0x0FFF;
-            REG_SOUND2CNT_L |= (value << 12);
+            REG_SOUND2CNT_L |= ((value > 0xF ? 0xF : value) << 12);
             break;
         case 2:
-            snd_modifyWaveCanalVolume(value);
+            snd_modifyWaveCanalVolume((value > 0x4 ? 0x4 : value));
             break;
         case 3:
             REG_SOUND4CNT_L &= 0x0FFF;
-            REG_SOUND4CNT_L |= (value << 12);
+            REG_SOUND4CNT_L |= ((value > 0xF ? 0xF : value) << 12);
             break;
         case 4:
             break;
@@ -378,9 +378,13 @@ u8 snd_availableKits = 0;
 const u8 snd_countAvailableKits() {
     if (!snd_availableKits) {
         kit* table = snd_loadKit(0);
-        char buffer[4];
-        strncpy(buffer, gbfs_get_nth_obj(table, 0, NULL, NULL), 3);
-        snd_availableKits = atoi(buffer);
+        if (table) {
+            char buffer[4];
+            strncpy(buffer, gbfs_get_nth_obj(table, 0, NULL, NULL), 3);
+            snd_availableKits = atoi(buffer);
+        } else {
+            snd_availableKits = 0;
+        }
     }
 
     return snd_availableKits;

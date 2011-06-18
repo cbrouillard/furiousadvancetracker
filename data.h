@@ -57,6 +57,12 @@
  */
 #define NB_EFFECTS_IN_ONE_TABLE 16
 /**
+ * \brief Définit le nombre maximal de voix disponibles. Les voix sont l'équivalent des 
+ * synthé dans LSDJ.
+ */
+#define NB_MAX_VOICE 16
+
+/**
  * \brief Octave minimale pour une note.
  */
 #define MIN_OCTAVE 3
@@ -317,6 +323,17 @@ typedef struct CHANNEL {
 } channel;
 
 /**
+ * \struc VOICE
+ * \brief Une voix représente un synthé dans LSDJ. Une voice contient les paramètres qui feront 
+ * sonner chaque instrument WAVE différement. Certaines voices sont définies en dur dans la soundApi.
+ * Un instrument peut avoir 0 ou 1 voice attachée. Une voice peut être attachée à plusieurs instruments de type
+ * WAVE.
+ */
+typedef struct VOICE {
+    unsigned long value[8];
+} voice;
+
+/**
  * \struct INSTRUMENT
  * \brief L'instrument possède divers paramètres utiles pour modifier la sonorité d'une note: chaque note est 
  * attachée à un instrument.
@@ -365,6 +382,8 @@ typedef struct INSTRUMENT {
     // loop -> speedOrLooping >> 4
     // speed -> speedOrLooping & 0x0f
     u8 speedOrLooping; /*!< Contient les valeurs pour la vitesse et le mode looping d'un sample. */
+    
+    u8 voice; /*!< Lien vers une voix pour un instrument de type SAMPLE. de 0 a MAX_VOICE. NULL_VALUE = pas de lien.*/
 } instrument;
 
 /**
@@ -385,7 +404,7 @@ typedef struct FAT {
     block allBlocks [NB_MAX_BLOCKS]; /*!< Tableau (physique) contenant tous les blocks. */
     instrument allInstruments[NB_MAX_INSTRUMENTS]; /*!< Tableau (physique) contenant tous les instruments. */
     composer composer; /*!< Données pour l'écran de composition. */
-
+    voice voices[NB_MAX_VOICE]; /*!< Les voix disponibles. Une voix = un synthé LSDJ. */
     table tables[NB_MAX_TABLES]; /*!< Tableau (physique) contenant toutes les tables. */
 } tracker;
 
@@ -942,6 +961,7 @@ void FAT_data_initInstrumentIfNeeded(u8 instId, u8 channel) {
         FAT_tracker.allInstruments[instId].loopmode = 0;
         FAT_tracker.allInstruments[instId].voiceAndBank = 0;
         FAT_tracker.allInstruments[instId].output = 3; //LR
+        FAT_tracker.allInstruments[instId].voice = NULL_VALUE;
 
         FAT_tracker.allInstruments[instId].kitNumber = 0;
         FAT_tracker.allInstruments[instId].offset = 0;

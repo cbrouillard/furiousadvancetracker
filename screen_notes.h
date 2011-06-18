@@ -54,7 +54,6 @@ bool FAT_screenNotes_isPopuped = 0;
 u8 FAT_screenNotes_currentBlockId;
 
 #include "screen_notes_cursor.h"
-#include "data.h"
 
 /**
  * \brief Cette fonction se content d'imprimer le numéro de ligne sur la partie
