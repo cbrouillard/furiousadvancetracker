@@ -144,16 +144,31 @@ void FAT_player_playNote(note* note, u8 channel) {
 void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
     if (note->freq != NULL_VALUE) {
         instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
-        u16 sweepshifts = (inst->sweep & 0x70) >> 4;
-        u16 sweeptime = (inst->sweep & 0x0F);
-        u16 sweepdir = 1;
-        if (sweeptime > 7) {
-            sweeptime -= 8;
-            sweepdir = 0;
-        }
+        
+        u16 sweepshifts;
+        u16 sweeptime;
+        u16 sweepdir;
 
         switch (channel) {
             case 0: // PU1
+                if (note->effect.name != NULL_VALUE && (note->effect.name >> 1) == 3) { // sweep
+                    sweepshifts = (note->effect.value & 0x70) >> 4;
+                    sweeptime = (note->effect.value & 0x0F);
+                    sweepdir = 1;
+                    if (sweeptime > 7) {
+                        sweeptime -= 8;
+                        sweepdir = 0;
+                    }
+                } else {
+                    sweepshifts = (inst->sweep & 0x70) >> 4;
+                    sweeptime = (inst->sweep & 0x0F);
+                    sweepdir = 1;
+                    if (sweeptime > 7) {
+                        sweeptime -= 8;
+                        sweepdir = 0;
+                    }
+                }
+
                 //ham_DrawText (23, 16, "PU1");
                 snd_playSoundOnChannel1(
                         sweeptime, sweepdir, sweepshifts,
@@ -185,12 +200,12 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
             case 4: // SNA 
                 //snd_playSampleOnChannelAById(inst->kitNumber, note->freq);
                 snd_playChannelASample(inst->kitNumber, note->freq, inst->volumeRatio,
-                        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4, 
+                        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
                         (inst->envelope & 0xe0) >> 5, inst->soundlength, inst->offset);
                 break;
             case 5: // SNB
                 snd_playChannelBSample(inst->kitNumber, note->freq, inst->volumeRatio,
-                        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4, 
+                        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
                         (inst->envelope & 0xe0) >> 5, inst->soundlength, inst->offset);
                 break;
         }

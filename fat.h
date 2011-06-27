@@ -237,6 +237,7 @@ void FAT_init() {
     FAT_screenInstrument_initSpritesForInstrument();
 
     FAT_screenSong_initCursor();
+    FAT_screenLive_initCursor();
     FAT_screenNotes_initCursor();
     FAT_screenBlocks_initCursor();
     FAT_screenComposer_initCursor();
