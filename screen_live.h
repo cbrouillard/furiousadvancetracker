@@ -65,6 +65,7 @@ void FAT_screenLive_printLineColumns() {
     mutex = 0;
     for (int c = FAT_screenLive_currentStartLine; c < (SCREENLIVE_NB_LINES_ON_SCREEN + FAT_screenLive_currentStartLine); c++) {
         ham_DrawText(SCREENLIVE_LINE_X, y, FAT_FORMAT_LINE, c);
+        ham_DrawText(21, y, "GO");
         y += SCREENLIVE_LINE_SIZE_Y;
     }
     mutex = 1;
