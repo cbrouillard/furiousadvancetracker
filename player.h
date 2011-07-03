@@ -76,7 +76,7 @@ void FAT_player_timerFunc_playBlocks();
  */
 void FAT_player_timerFunc_playNotes();
 
-void FAT_player_moveOrHideCursor(u8 channel);
+void FAT_player_moveOrHideCursor(u8 channel, block* block);
 void FAT_player_hideAllCursors();
 void FAT_player_hideSequencesCursors();
 void FAT_player_hideBlockCursor();
@@ -309,7 +309,7 @@ void FAT_player_timerFunc_playSequences() {
                     block* block = &FAT_tracker.allBlocks[FAT_currentPlayedBlock];
 
                     // Déplacement des curseurs de lecture
-                    FAT_player_moveOrHideCursor(i);
+                    FAT_player_moveOrHideCursor(i, block);
 
                     // TODO BUFFERISER
                     // TODO un effet à appliquer sur la note ?
@@ -366,7 +366,7 @@ void FAT_player_timerFunc_playBlocks() {
                 block* block = &FAT_tracker.allBlocks[FAT_currentPlayedBlock];
 
                 // Déplacement des curseurs de lecture
-                FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);
+                FAT_player_moveOrHideCursor(FAT_currentPlayedChannel, block);
 
                 // TODO BUFFERISER
                 // TODO un effet à appliquer sur la note ?
@@ -403,7 +403,7 @@ void FAT_player_timerFunc_playNotes() {
             block* block = &FAT_tracker.allBlocks[FAT_currentPlayedBlock];
 
             // Déplacement des curseurs de lecture
-            FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);
+            FAT_player_moveOrHideCursor(FAT_currentPlayedChannel, block);
 
             // TODO BUFFERISER
             // TODO un effet à appliquer sur la note ?
@@ -481,7 +481,7 @@ void FAT_player_hideNoteCursor() {
  * 
  * @param channel le numéro de channel sur lequel on joue du son
  */
-void FAT_player_moveOrHideCursor(u8 channel) {
+void FAT_player_moveOrHideCursor(u8 channel, block* currentBlock) {
 
     switch (FAT_currentScreen) {
         case SCREEN_SONG_ID: // on est dans l'écran SONG !
@@ -498,6 +498,10 @@ void FAT_player_moveOrHideCursor(u8 channel) {
             } else {
                 FAT_player_hideSequencesCursors();
             }
+            
+            note* note = &(currentBlock->notes[actualNotesForChannel[channel]]);
+            FAT_screenSong_showActualPlayedNote (channel, (note->note&0xf0)>>4, note->note&0x0f);
+            
             break;
         case SCREEN_BLOCKS_ID: // on est dans l'écran BLOCKS
             FAT_player_hideSequencesCursors();
