@@ -387,6 +387,15 @@ typedef struct INSTRUMENT {
 } instrument;
 
 /**
+ * \struct LIVE
+ * \brief Cette structure embarque toutes les données relatives au mode LIVE.
+ */
+typedef struct LIVE {    
+    bool liveMode; /*!< Le live mode permet de définir le mode de défilement des séquences: 0 = automatique 1 = manuel*/
+    u8 volume[6]; /*!< Tableau des valeurs de volumes affectés à chaque canal.*/
+} livedata;
+
+/**
  * \struct FAT
  * \brief Structure principale: stocke l'intégralité d'une track en cours de composition.
  * 
@@ -406,6 +415,7 @@ typedef struct FAT {
     composer composer; /*!< Données pour l'écran de composition. */
     voice voices[NB_MAX_VOICE]; /*!< Les voix disponibles. Une voix = un synthé LSDJ. */
     table tables[NB_MAX_TABLES]; /*!< Tableau (physique) contenant toutes les tables. */
+    livedata liveData;
 } tracker;
 
 /**
@@ -469,6 +479,8 @@ void FAT_data_initData() {
     FAT_data_blockClipboard = NULL_VALUE;
     memset(&FAT_data_noteClipboard, NULL_VALUE, sizeof (note));
     memset(&FAT_data_lastEffectWritten, NULL_VALUE, sizeof (effect));
+    
+    memset(&FAT_tracker.liveData.volume, NULL_VALUE / 2, sizeof(u8)*6);
 }
 
 /**

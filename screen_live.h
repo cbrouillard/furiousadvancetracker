@@ -41,6 +41,50 @@ void FAT_screenLive_printInfos();
 void FAT_screenLive_printAllScreenText();
 
 #include "screen_live_cursor.h"
+#include "data.h"
+
+/**
+ * \brief Affiche uniquement la valeur du tempo au bon endroit. 
+ */
+void FAT_screenLive_printTempo() {
+    mutex = 0;
+    ham_DrawText(26, 9, "%d", FAT_tracker.tempo);
+    mutex = 1;
+}
+
+/**
+ * \brief Affiche uniquement la valeur du transpose au bon endroit. 
+ */
+void FAT_screenLive_printTranspose() {
+    mutex = 0;
+    ham_DrawText(27, 12, "%.2x", FAT_tracker.transpose);
+    mutex = 1;
+}
+
+/**
+ * \brief Affiche uniquement la valeur du mode live au bon endroit. 
+ */
+void FAT_screenLive_printLiveMode() {
+    mutex = 0;
+    if (FAT_tracker.liveData.liveMode) {
+        ham_DrawText(26, 6, "MAN");
+    } else {
+        ham_DrawText(26, 6, "AUT");
+    }
+    mutex = 1;
+}
+
+void FAT_screenLive_printVolumes (){
+    mutex = 0;
+    ham_DrawText (3, 13, "%.2x %.2x %.2x %.2x %.2x %.2x", 
+            FAT_tracker.liveData.volume[0],
+            FAT_tracker.liveData.volume[1],
+            FAT_tracker.liveData.volume[2],
+            FAT_tracker.liveData.volume[3],
+            FAT_tracker.liveData.volume[4],
+            FAT_tracker.liveData.volume[5]);
+    mutex = 1;
+}
 
 /**
  * \brief Affiche quelques infos (nom du projet, ligne actuellement sélectionnée et nom du channel)
@@ -50,8 +94,20 @@ void FAT_screenLive_printInfos() {
     mutex = 0;
     ham_DrawText(24, 3, "LIVE!");
     ham_DrawText(24, 5, "LMODE");
+    FAT_screenLive_printLiveMode();
     ham_DrawText(24, 8, "TEMPO");
+    FAT_screenLive_printTempo();
     ham_DrawText(24, 11, "TRNSP");
+    FAT_screenLive_printTranspose();
+    mutex = 1;
+}
+
+/**
+ * \brief Affiche le texte lorsque aucun live n'est joué (les notes en bas de l'écran "---" par exemple).
+ */
+void FAT_screenLive_printNoPlayingText() {
+    mutex = 0;
+    ham_DrawText(3, 15, "------------------ -");
     mutex = 1;
 }
 
@@ -133,9 +189,11 @@ void FAT_screenLive_init() {
     ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_live_Tiles, SIZEOF_16BIT(screen_live_Tiles), 1, 1);
     ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_live_Map, 1024, 0, 0);
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
-    
+
     FAT_screenLive_printAllScreenText();
-    
+    FAT_screenLive_printNoPlayingText();
+    FAT_screenLive_printVolumes ();
+
     // affichage du curseur
     FAT_cursors_hideCursor2();
     FAT_screenLive_commitCursorMove();
@@ -181,23 +239,23 @@ void FAT_screenLive_checkButtons() {
         if (F_CTRLINPUT_DOWN_PRESSED) {
             iCanPressAKey = 0;
             if (F_CTRLINPUT_R_PRESSED) {
-                    FAT_screenLive_movePageDown();
-                } else if (F_CTRLINPUT_L_PRESSED) {
-                    FAT_screenLive_moveCursorAllDown();
-                } else {
-                    FAT_screenLive_moveCursorDown();
-                }
+                FAT_screenLive_movePageDown();
+            } else if (F_CTRLINPUT_L_PRESSED) {
+                FAT_screenLive_moveCursorAllDown();
+            } else {
+                FAT_screenLive_moveCursorDown();
+            }
         }
 
         if (F_CTRLINPUT_UP_PRESSED) {
             iCanPressAKey = 0;
             if (F_CTRLINPUT_R_PRESSED) {
-                    FAT_screenLive_movePageUp();
-                } else if (F_CTRLINPUT_L_PRESSED) {
-                    FAT_screenLive_moveCursorAllUp();
-                } else {
-                    FAT_screenLive_moveCursorUp();
-                }
+                FAT_screenLive_movePageUp();
+            } else if (F_CTRLINPUT_L_PRESSED) {
+                FAT_screenLive_moveCursorAllUp();
+            } else {
+                FAT_screenLive_moveCursorUp();
+            }
         }
 
         if (F_CTRLINPUT_A_PRESSED) {

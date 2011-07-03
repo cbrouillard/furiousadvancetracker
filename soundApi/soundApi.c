@@ -304,8 +304,10 @@ void snd_effect_kill(u8 channelId, u8 value) {
             REG_SOUND4CNT_H |= (1 << 14);
             break;
         case 4:
+            playSnASample = 0;
             break;
         case 5:
+            playSnBSample = 0;
             break;
     }
 }
