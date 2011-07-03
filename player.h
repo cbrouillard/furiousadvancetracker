@@ -76,7 +76,7 @@ void FAT_player_timerFunc_playBlocks();
  */
 void FAT_player_timerFunc_playNotes();
 
-void FAT_player_moveOrHideCursor(u8 channel, block* block);
+void FAT_player_moveOrHideCursor(u8 channel, note* block);
 void FAT_player_hideAllCursors();
 void FAT_player_hideSequencesCursors();
 void FAT_player_hideBlockCursor();
@@ -144,7 +144,7 @@ void FAT_player_playNote(note* note, u8 channel) {
 void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
     if (note->freq != NULL_VALUE) {
         instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
-        
+
         u16 sweepshifts;
         u16 sweeptime;
         u16 sweepdir;
@@ -309,7 +309,7 @@ void FAT_player_timerFunc_playSequences() {
                     block* block = &FAT_tracker.allBlocks[FAT_currentPlayedBlock];
 
                     // Déplacement des curseurs de lecture
-                    FAT_player_moveOrHideCursor(i, block);
+                    FAT_player_moveOrHideCursor(i, &(block->notes[actualNotesForChannel[i]]));
 
                     // TODO BUFFERISER
                     // TODO un effet à appliquer sur la note ?
@@ -366,7 +366,7 @@ void FAT_player_timerFunc_playBlocks() {
                 block* block = &FAT_tracker.allBlocks[FAT_currentPlayedBlock];
 
                 // Déplacement des curseurs de lecture
-                FAT_player_moveOrHideCursor(FAT_currentPlayedChannel, block);
+                FAT_player_moveOrHideCursor(FAT_currentPlayedChannel, &(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]));
 
                 // TODO BUFFERISER
                 // TODO un effet à appliquer sur la note ?
@@ -403,7 +403,7 @@ void FAT_player_timerFunc_playNotes() {
             block* block = &FAT_tracker.allBlocks[FAT_currentPlayedBlock];
 
             // Déplacement des curseurs de lecture
-            FAT_player_moveOrHideCursor(FAT_currentPlayedChannel, block);
+            FAT_player_moveOrHideCursor(FAT_currentPlayedChannel, &(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]));
 
             // TODO BUFFERISER
             // TODO un effet à appliquer sur la note ?
@@ -481,7 +481,7 @@ void FAT_player_hideNoteCursor() {
  * 
  * @param channel le numéro de channel sur lequel on joue du son
  */
-void FAT_player_moveOrHideCursor(u8 channel, block* currentBlock) {
+void FAT_player_moveOrHideCursor(u8 channel, note* note) {
 
     switch (FAT_currentScreen) {
         case SCREEN_SONG_ID: // on est dans l'écran SONG !
@@ -495,13 +495,15 @@ void FAT_player_moveOrHideCursor(u8 channel, block* currentBlock) {
                         23 + (channel * (8 + 16)),
                         15 + ((actualSequencesForChannel[channel] - FAT_screenSong_currentStartLine)*8));
                 ham_SetObjVisible(FAT_cursor_playerSequences_obj[channel], 1);
+
+                if (note->freq != NULL_VALUE) {
+                    FAT_screenSong_showActualPlayedNote(channel, (note->note & 0xf0) >> 4, note->note & 0x0f);
+                }
             } else {
                 FAT_player_hideSequencesCursors();
             }
-            
-            note* note = &(currentBlock->notes[actualNotesForChannel[channel]]);
-            FAT_screenSong_showActualPlayedNote (channel, (note->note&0xf0)>>4, note->note&0x0f);
-            
+
+
             break;
         case SCREEN_BLOCKS_ID: // on est dans l'écran BLOCKS
             FAT_player_hideSequencesCursors();
