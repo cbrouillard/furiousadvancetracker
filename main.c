@@ -62,9 +62,6 @@ void FAT_mainVbl_func();
 
 bool FAT_newFrame = 0;
 
-void FAT_mainVbl_func() {
-    FAT_newFrame = 1;
-}
 
 void FAT_checkButtons() {
     switch (FAT_currentScreen) {
@@ -101,6 +98,18 @@ void FAT_checkButtons() {
     }
 }
 
+void FAT_mainVbl_func() {
+    ham_DrawText(1,19,"FUNC!");
+    if (mutex) {
+        ham_CopyObjToOAM();
+        
+        if (iCanPressAKey) {
+            FAT_checkButtons();
+        }
+    }
+    ham_DrawText(1,19,"     ");
+}
+
 /**
  * \brief Fonction main. Si vous lisez le code source, il est judicieux de commencer par comprendre cette fonction.
  */
@@ -112,25 +121,11 @@ int main() {
 
     FAT_showIntro();
 
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_mainVbl_func);
     FAT_screenSong_init();
 
-    while (1) {
+    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_mainVbl_func);
+    while (1) { }
 
-        if (FAT_newFrame) {
-            if (mutex) {
-
-                if (iCanPressAKey) {
-                    FAT_checkButtons();
-                }
-
-                ham_CopyObjToOAM();
-            }
-
-            FAT_newFrame = 0;
-        }
-
-    }
     return 0;
 }
 

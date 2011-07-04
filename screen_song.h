@@ -81,12 +81,12 @@ void FAT_screenSong_init() {
  */
 void FAT_screenSong_printChannelFollower (){
     mutex = 0;
-    ham_DrawText(22, 9, "%s", CHANNEL_NAME[0]);
-    ham_DrawText(22, 10, "%s", CHANNEL_NAME[1]);
-    ham_DrawText(22, 11, "%s", CHANNEL_NAME[2]);
-    ham_DrawText(22, 12, "%s", CHANNEL_NAME[3]);
-    ham_DrawText(22, 13, "%s", CHANNEL_NAME[4]);
-    ham_DrawText(22, 14, "%s", CHANNEL_NAME[5]);
+    ham_DrawText(22, 9, "%s ---", CHANNEL_NAME[0]);
+    ham_DrawText(22, 10, "%s ---", CHANNEL_NAME[1]);
+    ham_DrawText(22, 11, "%s ---", CHANNEL_NAME[2]);
+    ham_DrawText(22, 12, "%s ---", CHANNEL_NAME[3]);
+    ham_DrawText(22, 13, "%s ---", CHANNEL_NAME[4]);
+    ham_DrawText(22, 14, "%s ---", CHANNEL_NAME[5]);
     mutex = 1;
 }
 
