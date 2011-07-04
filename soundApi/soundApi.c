@@ -8,35 +8,16 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+/*
 typedef unsigned char u8;
 typedef unsigned short int u16;
 typedef unsigned int u32;
+ */
 
+#include <mygba.h>
 #include <stdlib.h>
-
+#include <stdio.h>
 #include "soundApi.h"
-
-
-extern const u32 _binary_lo1234_pcm_start[]; //the sample, 8bit signed, 16Khz
-/*
-#define REG_DMA1SAD     *(u32*)0x40000BC	//DMA1 Source Address
-#define REG_DMA1DAD     *(u32*)0x40000C0	//DMA1 Desination Address
-#define REG_DMA1CNT_H   *(u16*)0x40000C6	//DMA1 Control High Value
-#define REG_SGFIFOA    *(u32 volatile*)0x40000A0		//???
-#define REG_TM0CNT_H    *(u16*)0x4000102	//Timer 0 Control
-#define REG_TM0CNT_L	*(u16*)0x4000100	//Timer 0 count value
-#define REG_IE         *(u16*)0x4000200		//Interrupt Enable
-#define REG_IF         *(u16 volatile*)0x4000202		//Interrupt Flags
-#define REG_WSCNT      *(u16*)0x4000204		//???
-#define REG_IME        *(u16*)0x4000208		//Interrupt Master Enable
-#define REG_TM1CNT     *(u32*)0x4000104		//Timer 2
-#define REG_TM1CNT_L   *(u16*)0x4000104		//Timer 2 count value
-#define REG_TM1CNT_H   *(u16*)0x4000106		//Timer 2 control
-*/
-void snd_tmp_playSampleTest() {
-
-}
-
 
 #define NULL_VALUE 0xff
 
@@ -99,6 +80,23 @@ const unsigned long voices[] = {
 
 };
 
+#define MAX_KITS 32
+kit* kits[MAX_KITS];
+
+int snASampleOffset = 1;
+int snBSampleOffset = 1;
+
+u32 snASmpSize;
+u32 snBSmpSize;
+
+const u32* snASample;
+const u32* snBSample;
+
+bool playSnASample = 0;
+bool playSnBSample = 0;
+
+void snd_timerFunc_sample();
+
 void snd_loadWav(u8 inst) {
     REG_DMA3SAD = (u32) & voices[inst << 2];
     REG_DMA3DAD = (u32) & REG_WAVE_RAM0;
@@ -125,12 +123,11 @@ void snd_init_soundApi() {
     // volume à fond, activation stéréo des 4 canaux
     // activation des directsound A et B en mode timer 0 et 1
     REG_SOUNDCNT_L = 0xff77;
-    REG_SOUNDCNT_H = 2;//0xfb0f;
+    REG_SOUNDCNT_H = 0xbb0e;
 
     REG_SOUND3CNT_L = SOUND3BANK32 | SOUND3SETBANK1;
 
     snd_loadWav(0);
-
 }
 
 void snd_changeChannelOutput(u8 channelNumber, u8 outputValue) {
@@ -175,13 +172,6 @@ void snd_playSoundOnChannel1(
 
     REG_SOUND1CNT_X = SOUND1INIT | (loopmode << 14) | freqs[sfreq];
     REG_SOUND1CNT_X = (REG_SOUND1CNT_X & 0xf800) | (loopmode << 14) | freqs[sfreq];
-
-    /*
-        REG_SOUND1CNT_L = (sweeptime << 4)+(sweepdir << 3) + sweepshifts;
-        REG_SOUND1CNT_H = (envinit << 12) + (envdirection << 11)+(envsteptime << 8)+(waveduty << 6) + soundlength;
-        REG_SOUND1CNT_X = SOUND1INIT + (loopmode << 14) + sfreq;
-        REG_SOUND1CNT_X = (REG_SOUND1CNT_X & 0xf800)+ (loopmode << 14) + sfreq;
-     */
 }
 
 void snd_playSoundOnChannel2(u16 volume,
@@ -202,6 +192,26 @@ void snd_playSoundOnChannel2(u16 volume,
 
     REG_SOUND2CNT_H = SOUND2INIT | (loopmode << 14) | freqs[sfreq];
     REG_SOUND2CNT_H = (REG_SOUND2CNT_H & 0xf800) | (loopmode << 14) | freqs[sfreq];
+}
+
+void snd_modifyWaveCanalVolume(u16 volume) {
+    switch (volume) {
+        case 0:
+            REG_SOUND3CNT_H = SOUND3OUTPUT0;
+            break;
+        case 1:
+            REG_SOUND3CNT_H = SOUND3OUTPUT14;
+            break;
+        case 2:
+            REG_SOUND3CNT_H = SOUND3OUTPUT12;
+            break;
+        case 3:
+            REG_SOUND3CNT_H = SOUND3OUTPUT34;
+            break;
+        case 4:
+            REG_SOUND3CNT_H = SOUND3OUTPUT1;
+            break;
+    }
 }
 
 void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voice,
@@ -236,23 +246,8 @@ void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voic
         //REG_SOUND3CNT_L &= 0xffbf;
     }
 
-    switch (volume) {
-        case 0:
-            REG_SOUND3CNT_H = SOUND3OUTPUT0 | soundLength;
-            break;
-        case 1:
-            REG_SOUND3CNT_H = SOUND3OUTPUT14 | soundLength;
-            break;
-        case 2:
-            REG_SOUND3CNT_H = SOUND3OUTPUT12 | soundLength;
-            break;
-        case 3:
-            REG_SOUND3CNT_H = SOUND3OUTPUT34 | soundLength;
-            break;
-        case 4:
-            REG_SOUND3CNT_H = SOUND3OUTPUT1 | soundLength;
-            break;
-    }
+    snd_modifyWaveCanalVolume(volume);
+    REG_SOUND3CNT_H |= soundLength;
 
     if (loopmode == 0) {
         REG_SOUND3CNT_X = freqs[freq] | SOUND3PLAYLOOP | SOUND3INIT;
@@ -280,10 +275,16 @@ void snd_stopAllSounds() {
     //REG_SOUND3CNT_X = 0x8000;
     //REG_SOUND4CNT_H = 0x8000;
 
+    playSnASample = 0;
+    playSnBSample = 0;
+
     snd_init_soundApi();
 }
 
 #define EFFECT_KILL 0
+#define EFFECT_SWEEP 1
+#define EFFECT_OUTPUT 2
+#define EFFECT_VOLUME 3
 
 void snd_effect_kill(u8 channelId, u8 value) {
     switch (channelId) {
@@ -303,6 +304,49 @@ void snd_effect_kill(u8 channelId, u8 value) {
             REG_SOUND4CNT_H |= (1 << 14);
             break;
         case 4:
+            playSnASample = 0;
+            break;
+        case 5:
+            playSnBSample = 0;
+            break;
+    }
+}
+
+void snd_effect_sweep(u8 channelId, u8 value) {
+    if (channelId == 0) {
+        u16 sweepshifts = (value & 0x70) >> 4;
+        u16 sweeptime = (value & 0x0F);
+        u16 sweepdir = 1;
+        if (sweeptime > 7) {
+            sweeptime -= 8;
+            sweepdir = 0;
+        }
+        REG_SOUND1CNT_L = (sweeptime << 4) | (sweepdir << 3) | sweepshifts;
+    }
+}
+
+void snd_effect_output(u8 channelId, u8 value) {
+    snd_changeChannelOutput(channelId, value);
+}
+
+void snd_effect_volume(u8 channelId, u16 value) {
+    switch (channelId) {
+        case 0:
+            REG_SOUND1CNT_H &= 0x0FFF;
+            REG_SOUND1CNT_H |= ((value > 0xF ? 0xF : value) << 12);
+            break;
+        case 1:
+            REG_SOUND2CNT_L &= 0x0FFF;
+            REG_SOUND2CNT_L |= ((value > 0xF ? 0xF : value) << 12);
+            break;
+        case 2:
+            snd_modifyWaveCanalVolume((value > 0x4 ? 0x4 : value));
+            break;
+        case 3:
+            REG_SOUND4CNT_L &= 0x0FFF;
+            REG_SOUND4CNT_L |= ((value > 0xF ? 0xF : value) << 12);
+            break;
+        case 4:
             break;
         case 5:
             break;
@@ -316,5 +360,213 @@ void snd_tryToApplyEffect(u8 channelId, u8 effectNumber, u8 effectValue) {
             snd_effect_kill(channelId, effectValue);
             break;
 
+        case EFFECT_SWEEP:
+            snd_effect_sweep(channelId, effectValue);
+            break;
+
+        case EFFECT_OUTPUT:
+            snd_effect_output(channelId, effectValue);
+            break;
+
+        case EFFECT_VOLUME:
+            snd_effect_volume(channelId, effectValue);
+            break;
     }
 }
+
+/// GESTION DES SAMPLES
+u8 snd_availableKits = 0;
+
+const u8 snd_countAvailableKits() {
+    if (!snd_availableKits) {
+        kit* table = snd_loadKit(0);
+        if (table) {
+            char buffer[4];
+            strncpy(buffer, gbfs_get_nth_obj(table, 0, NULL, NULL), 3);
+            snd_availableKits = atoi(buffer);
+        } else {
+            snd_availableKits = 0;
+        }
+    }
+
+    return snd_availableKits;
+}
+
+void snd_init_kits() {
+    R_TIM0COUNT = 0xffff;
+    ham_StartIntHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sample);
+
+    snd_countAvailableKits();
+    u8 cpt = 0;
+
+    kit* kit = find_first_gbfs_file(find_first_gbfs_file);
+    if (kit) {
+        while (cpt < snd_availableKits && cpt < MAX_KITS) {
+            kit = skip_gbfs_file(kit);
+            kits[cpt] = kit;
+            cpt++;
+        }
+    }
+}
+
+kit* snd_loadKit(u8 numKit) {
+    u8 cpt = 0;
+    const GBFS_FILE* kit = find_first_gbfs_file(find_first_gbfs_file);
+    while (cpt < numKit) {
+        kit = skip_gbfs_file(kit);
+        cpt++;
+    }
+
+    return kit;
+}
+
+u8 snd_countSamplesInKit(kit* dat) {
+    return gbfs_count_objs(dat) - 1; // -1 car le fichier info ne doit pas être compté.
+}
+
+u8 snd_countSamplesInKitById(u8 kitId) {
+    kit* kit = kits[kitId];
+    if (kit) {
+        return snd_countSamplesInKit(kit);
+    }
+
+    return 0;
+}
+
+void snd_getKitName(kit* dat, u8 kitId, char* buffer) {
+    if (dat) {
+        strncpy(buffer, gbfs_get_nth_obj(dat, 0, NULL, NULL), 8);
+    } else {
+        sprintf(buffer, "KIT %d", kitId);
+    }
+}
+
+char* snd_getKitNameById(u8 kitId) {
+
+    static char kitName[9];
+
+    kit* kit = kits[kitId];
+    snd_getKitName(kit, kitId, kitName);
+
+    return kitName;
+}
+
+char* snd_getSampleNameById(u8 kitId, u8 sampleId) {
+    static char sampleName[4];
+    char buffer[24];
+
+    kit* kit = kits[kitId];
+    if (kit) {
+        u32* sample = (u32*) gbfs_get_nth_obj(kit, sampleId + 1, buffer, NULL);
+        if (sample) {
+
+            //strncpy(sampleName, buffer, 3);
+            sampleName[0] = buffer[0];
+            sampleName[1] = buffer[1];
+            sampleName[2] = buffer[2];
+
+        } else {
+            sprintf(sampleName, "XXX");
+        }
+
+    } else {
+        sprintf(sampleName, "XXX");
+    }
+
+    sampleName[3] = '\0';
+    return sampleName;
+}
+
+void snd_timerFunc_sample() {
+    if (playSnASample) {
+        if (!(snASampleOffset & 3) && snASampleOffset < snASmpSize) {
+            SND_REG_SGFIFOA = snASample[snASampleOffset >> 2]; // u32
+        }
+
+        snASampleOffset++;
+        if (snASampleOffset > snASmpSize) {
+            //sample finished!
+            //R_TIM0CNT = 0;
+            playSnASample = 0;
+            snASampleOffset = 0;
+        }
+    }
+
+    if (playSnBSample) {
+        if (!(snBSampleOffset & 3) && snBSampleOffset < snBSmpSize) {
+            SND_REG_SGFIFOB = snBSample[snBSampleOffset >> 2]; // u32
+        }
+
+        snBSampleOffset++;
+        if (snBSampleOffset > snBSmpSize) {
+            //sample finished!
+            //R_TIM0CNT = 0;
+            playSnBSample = 0;
+            snBSampleOffset = 0;
+        }
+    }
+
+    if (!playSnASample && !playSnBSample) {
+        R_TIM0CNT = 0;
+    }
+
+}
+
+void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
+    playSnASample = 0;
+    snASample = gbfs_get_nth_obj(dat, sampleNumber + 1, NULL, &snASmpSize);
+
+    if (snASample) {
+        if (snASampleOffset != 0) {
+            //R_TIM0CNT = 0;
+            snASampleOffset = 0;
+        }
+        playSnASample = 1;
+        if (R_TIM0CNT == 0) {
+            R_TIM0CNT = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
+        }
+    }
+}
+
+void snd_playSampleOnChannelAById(u8 kitId, u8 sampleNumber) {
+    kit* kit = kits[kitId];
+    if (kit) {
+        snd_playSampleOnChannelA(kit, sampleNumber);
+    }
+}
+
+void snd_playChannelASample(u8 kitId, u8 sampleNumber,
+        u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset) {
+    snd_playSampleOnChannelAById(kitId, sampleNumber);
+}
+
+void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber) {
+    playSnBSample = 0;
+    snBSample = gbfs_get_nth_obj(dat, sampleNumber + 1, NULL, &snBSmpSize);
+
+    if (snBSample) {
+        if (snBSampleOffset != 0) {
+            //R_TIM0CNT = 0;
+            playSnBSample = 0;
+            snBSampleOffset = 0;
+        }
+        playSnBSample = 1;
+        if (R_TIM0CNT == 0) {
+            R_TIM0CNT = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
+        }
+    }
+}
+
+void snd_playSampleOnChannelBById(u8 kitId, u8 sampleNumber) {
+    kit* kit = kits[kitId];
+    if (kit) {
+        snd_playSampleOnChannelB(kit, sampleNumber);
+    }
+}
+
+void snd_playChannelBSample(u8 kitId, u8 sampleNumber,
+        u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset) {
+    snd_playSampleOnChannelBById(kitId, sampleNumber);
+}
+
+

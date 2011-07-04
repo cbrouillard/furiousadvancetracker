@@ -42,20 +42,19 @@
  * \brief Si cette variable est positionné à 1, le mode DEBUG pour FAT est activé. Certaines,
  * informations seront affichées.
  */
-#define DEBUG_ON "YES_comment_to_disable"
+#define DEBUG_ON "YES"
 #undef DEBUG_ON
 
 /**
  * \brief Version actuelle de FAT.
  */
-#define FAT_VERSION "0.2.0"
+#define FAT_VERSION "0.3.0"
 
 #include <mygba.h>
 #include <stdarg.h>
 
 #include "soundApi/soundApi.h"
 #include "fat.h"
-
 
 /**
  * \brief Fonction main. Si vous lisez le code source, il est judicieux de commencer par comprendre cette fonction.

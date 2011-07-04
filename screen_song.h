@@ -42,6 +42,7 @@ void FAT_screenSong_mainFunc();
 void FAT_screenSong_checkButtons();
 void FAT_screenSong_printLineColumns();
 void FAT_screenSong_printAllScreenText();
+void FAT_screenSong_printChannelFollower();
 void FAT_screenSong_printInfos();
 void FAT_screenSong_pressA();
 void FAT_screenSong_pressB();
@@ -79,6 +80,7 @@ void FAT_screenSong_init() {
 
     // affichage du numéro des lignes, des séquences, ...
     FAT_screenSong_printAllScreenText();
+    FAT_screenSong_printChannelFollower();
 
     // démarrage du cycle pour l'écran
     ham_StopIntHandler(INT_TYPE_VBL);
@@ -88,6 +90,33 @@ void FAT_screenSong_init() {
     FAT_cursors_hideCursor2();
     FAT_screenSong_commitCursorMove();
     FAT_cursors_showCursor2();
+}
+
+/**
+ * \brief Cette fonction se contente d'ecrire le nom des channels dans la 
+ * boite rouge sur l'écran SONG. Ne devrait pas être appelé plusieurs fois.
+ */
+void FAT_screenSong_printChannelFollower (){
+    mutex = 0;
+    ham_DrawText(22, 9, "%s ---", CHANNEL_NAME[0]);
+    ham_DrawText(22, 10, "%s ---", CHANNEL_NAME[1]);
+    ham_DrawText(22, 11, "%s ---", CHANNEL_NAME[2]);
+    ham_DrawText(22, 12, "%s ---", CHANNEL_NAME[3]);
+    ham_DrawText(22, 13, "%s ---", CHANNEL_NAME[4]);
+    ham_DrawText(22, 14, "%s ---", CHANNEL_NAME[5]);
+    mutex = 1;
+}
+
+/**
+ * \brief Affiche la note actuellement jouée dans la boite rouge de l'écran SONG.
+ * @param channel le numéro de canal
+ * @param noteName le nom de la note
+ * @param noteOctave l'octave de la note
+ */
+void FAT_screenSong_showActualPlayedNote(u8 channel, u8 name, u8 noteOctave){
+    mutex = 0;
+    ham_DrawText(26, channel+9, "%s%.1x", noteName[name], noteOctave);
+    mutex = 1;
 }
 
 /**

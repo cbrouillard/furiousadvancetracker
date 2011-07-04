@@ -257,9 +257,6 @@ void FAT_initIntroPalette() {
 void FAT_showIntro() {
     FAT_reinitScreen();
 
-    // jouer un petit son d'exemple
-    snd_tmp_playSampleTest();
-
     FAT_initIntroPalette();
 
     ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_intro_Tiles, SIZEOF_16BIT(screen_intro_Tiles), 1, 1);
@@ -269,7 +266,7 @@ void FAT_showIntro() {
     ham_DrawText(1, 15, "DEBUG ON");
     ham_DrawText(1, 16, "SIZE %d octets", (sizeof (tracker)));
 #endif
-    ham_DrawText(1, 19, "version %s", FAT_VERSION);
+    ham_DrawText(1, 19, "version %s       %.3d kits", FAT_VERSION,snd_countAvailableKits());
     while (!F_CTRLINPUT_START_PRESSED && !F_CTRLINPUT_A_PRESSED && !F_CTRLINPUT_B_PRESSED
             && !F_CTRLINPUT_DOWN_PRESSED && !F_CTRLINPUT_LEFT_PRESSED && !F_CTRLINPUT_RIGHT_PRESSED && !F_CTRLINPUT_UP_PRESSED
             && !F_CTRLINPUT_L_PRESSED && !F_CTRLINPUT_R_PRESSED

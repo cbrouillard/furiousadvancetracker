@@ -375,6 +375,7 @@ void FAT_screenNotes_pressA() {
                         FAT_screenNotes_currentSelectedLine, -1); // retrait de 1
             }
 
+
             if (F_CTRLINPUT_UP_PRESSED) {
                 iCanPressAKey = 0;
                 FAT_data_note_changeOctave(FAT_screenNotes_currentBlockId,
