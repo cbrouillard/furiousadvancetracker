@@ -54,22 +54,7 @@
  être pondéré avec une valeur paramétrable. */
 #define WAIT_FOR_START 40
 
-/**
- * \brief Cette variable sert à gérer les contextes conflictuels (notamment dans les
- * boucles affichant du texte à gogo). 
- * 
- * Si le mutex est à zéro alors aucun affichage ne pourra avoir lieu.
- * 
- * Usage:
- * <code>void printBeaucoupTexte() {
- *      mutex = 0;
- *      print text1
- *      print text2
- *      mutex = 1;
- * }</code>
- * <b>NE PAS TOUCHER !</b>
- */
-bool mutex = 1, sampleMutex = 1;
+bool sampleMutex = 1;
 
 /** \brief Définition globale du format d'affichage des numéros de lignes. */
 #define FAT_FORMAT_LINE "%.2x\0"
@@ -95,10 +80,6 @@ void FAT_blockCPU(u16 time);
 #include "filesystem.h"
 #include "cursors.h"
 
-/**
- * \brief Permet de savoir si l'utilisateur a le droit d'appuyer sur une touche
- */
-u8 iCanPressAKey = 1;
 
 /** \brief Prototype. Fonction définie dans player.h. */
 void FAT_player_startPlayerFromSequences(u8 startLine);
@@ -205,14 +186,16 @@ void FAT_init() {
     ham_SetBgMode(0);
     ham_InitText(1);
     ham_SetTextCol(TEXT_COLOR, 0);
+    
+    //ham_StopIntHandler(INT_TYPE_VBL);
+    //ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_mainVbl_func);
+    ham_StartIntHandler(INT_TYPE_TIM2, (void*) &FAT_player_timerFunc_iCanPressAKey);
 
     ham_SetFxMode(FX_LAYER_SELECT(0, 0, 0, 0, 1, 0),
             FX_LAYER_SELECT(0, 0, 1, 1, 0, 0),
             FX_MODE_ALPHABLEND);
     ham_SetFxAlphaLevel(7, 7);
     
-    ham_StartIntHandler(INT_TYPE_TIM2, (void*) &FAT_player_timerFunc_iCanPressAKey);
-
     // initialisation des palettes.
     FAT_initScreenPalette();
     FAT_initSpritePalette();
@@ -299,8 +282,8 @@ void FAT_reinitScreen() {
         //        ham_InitBg(2, 0, 3, 0);
         ham_DeInitTileSet(ham_bg[SCREEN_LAYER].ti);
         ham_DeInitMapSet(ham_bg[SCREEN_LAYER].mi);
+        FAT_forceClearTextLayer();
     }
-    FAT_forceClearTextLayer();
 }
 
 /**

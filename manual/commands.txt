@@ -12,6 +12,14 @@ START: lancer la lecture depuis le séquenceur (SONG) / stopper la lecture OK
 
 LIVE:
 --------------------------------------------------------
+START: lancer la lecture depuis le séquencer (LIVE) / stopper la lecture
+A: Démarre la séquence dans le canal actuel (séquenceur)
+B: Mute le canal actuel
+L+B: Mute tout les canaux sauf l'actuel
+R+BAS/HAUT : Passer du séquenceur au controleurs de volumes
+R+DROITE/GAUCHE : Passer du séquenceur au controlleurs de paramètres
+
+
 COMPOSER:
 --------------------------------------------------------
 SONG:

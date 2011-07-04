@@ -55,13 +55,41 @@
 
 #include "soundApi/soundApi.h"
 
-void FAT_mainVbl_func();
+/**
+ * \brief Cette variable sert à gérer les contextes conflictuels (notamment dans les
+ * boucles affichant du texte à gogo). 
+ * 
+ * Si le mutex est à zéro alors aucun affichage ne pourra avoir lieu.
+ * 
+ * Usage:
+ * <code>void printBeaucoupTexte() {
+ *      mutex = 0;
+ *      print text1
+ *      print text2
+ *      mutex = 1;
+ * }</code>
+ * <b>NE PAS TOUCHER !</b>
+ */
+bool mutex = 1;
+
+/**
+ * \brief Permet de savoir si l'utilisateur a le droit d'appuyer sur une touche
+ */
+u8 iCanPressAKey = 1;
+
+void FAT_checkButtons();
+
+void FAT_mainVbl_func() {
+    if (mutex) {
+        ham_CopyObjToOAM();
+        
+        if (iCanPressAKey) {
+            FAT_checkButtons();
+        }
+    }
+}
 
 #include "fat.h"
-
-
-bool FAT_newFrame = 0;
-
 
 void FAT_checkButtons() {
     switch (FAT_currentScreen) {
@@ -98,33 +126,24 @@ void FAT_checkButtons() {
     }
 }
 
-void FAT_mainVbl_func() {
-    ham_DrawText(1,19,"FUNC!");
-    if (mutex) {
-        ham_CopyObjToOAM();
-        
-        if (iCanPressAKey) {
-            FAT_checkButtons();
-        }
-    }
-    ham_DrawText(1,19,"     ");
-}
-
 /**
  * \brief Fonction main. Si vous lisez le code source, il est judicieux de commencer par comprendre cette fonction.
  */
 int main() {
 
     FAT_init();
+    
     snd_init_soundApi();
     snd_init_kits();
 
-    FAT_showIntro();
+    //FAT_showIntro();
 
-    FAT_screenSong_init();
-
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_mainVbl_func);
-    while (1) { }
+    FAT_switchToScreen(SCREEN_SONG_ID);    
+    
+    while (1) {
+        FAT_waitVSync();
+        FAT_mainVbl_func();
+    }
 
     return 0;
 }
