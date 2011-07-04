@@ -2,7 +2,7 @@
 # HAM Makefile
 #################################
 
-HAMDIR = /home/cyril/Coding/GBA/devkit/ham-271-linux-full
+#HAMDIR = /home/cyril/Coding/GBA/devkit/ham-271-linux-full
 include $(HAMDIR)/system/master.mak
 
 #
@@ -13,7 +13,7 @@ PROGNAME = FuriousAdvanceTracker_v0.2.0
 #
 # Set a list of files you want to compile 
 # 
-OFILES += main.o soundApi/soundApi.o soundApi/kits/lo1234.o
+OFILES += main.o soundApi/soundApi.o 
 
 ######################################
 # Standard Makefile targets start here
