@@ -936,14 +936,18 @@ bool FAT_data_smartAllocateSequence(u8 channelId, u8 line) {
  * @param noteLine le numéro de ligne de la note à ajouter
  */
 void FAT_data_addDefaultNote(u8 block, u8 noteLine, u8 channel) {
-    FAT_tracker.allBlocks[block].notes[noteLine].freq = FAT_data_lastNoteWritten.freq;
+    FAT_data_initInstrumentIfNeeded(FAT_data_lastNoteWritten.instrument, channel);
 
+    if (channel >= INSTRUMENT_TYPE_SAMPLEA) {
+        u8 nbAvailableSamples = snd_countSamplesInKitById(FAT_tracker.allInstruments[FAT_data_lastNoteWritten.instrument].kitNumber);
+        if (FAT_data_lastNoteWritten.freq >= nbAvailableSamples) {
+            FAT_data_lastNoteWritten.freq = nbAvailableSamples - 1;
+        }
+    }
+
+    FAT_tracker.allBlocks[block].notes[noteLine].freq = FAT_data_lastNoteWritten.freq;
     FAT_tracker.allBlocks[block].notes[noteLine].instrument = FAT_data_lastNoteWritten.instrument;
     FAT_tracker.allBlocks[block].notes[noteLine].note = FAT_data_lastNoteWritten.note;
-    //FAT_tracker.allBlocks[block].notes[noteLine].name = FAT_data_lastNoteWritten.name;
-    //FAT_tracker.allBlocks[block].notes[noteLine].octave = FAT_data_lastNoteWritten.octave;
-
-    FAT_data_initInstrumentIfNeeded(FAT_tracker.allBlocks[block].notes[noteLine].instrument, channel);
 }
 
 /**
@@ -1089,34 +1093,55 @@ void FAT_data_note_previewNote(u8 block, u8 line) {
  * @param noteLine le numéro de ligne de la note dans le block
  * @param addedValue la valeur à ajouter/retirer (1 ou -1 généralement)
  */
-void FAT_data_note_changeValue(u8 block, u8 noteLine, s8 addedValue) {
-    u8 noteName = (FAT_tracker.allBlocks[block].notes[noteLine].note & 0xf0) >> 4;
+void FAT_data_note_changeValue(u8 channel, u8 block, u8 noteLine, s8 addedValue) {
+    u8 noteName = FAT_tracker.allBlocks[block].notes[noteLine].note >> 4;
     u8 noteOctave = FAT_tracker.allBlocks[block].notes[noteLine].note & 0x0f;
 
-    FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue;
-    if (addedValue < 0) {
-
-        if (noteName > 0) {
-
-            noteName += addedValue;
-
-        } else if (noteOctave > MIN_OCTAVE) {
-            // on change d'octave si possible et on passe à la note maximale.
-            // C 4 passe à B 3
-            noteName = NB_NOTE - 1;
-            noteOctave -= 1;
+    instrument* inst = &(FAT_tracker.allInstruments[FAT_tracker.allBlocks[block].notes[noteLine].instrument]);
+    if (channel >= INSTRUMENT_TYPE_SAMPLEA) {
+        u8 nbMaxSample = snd_countSamplesInKitById(inst->kitNumber);
+        //if (FAT_tracker.allBlocks[block].notes[noteLine].freq >= nbMaxSample){
+        //    FAT_tracker.allBlocks[block].notes[noteLine].freq = nbMaxSample;
+            /*< \todo changer l'intitulé noteName et noteOctave pour affichage correct. */
+        //}
+        if ((addedValue > 0 && FAT_tracker.allBlocks[block].notes[noteLine].freq < nbMaxSample-1) ||
+                (addedValue < 0 && FAT_tracker.allBlocks[block].notes[noteLine].freq > 0)) {
+            FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue;
         }
+    } else {
+        
+        if (addedValue < 0) {
 
-    } else if (addedValue > 0) {
-        if (noteName < NB_NOTE - 1) {
+            if (noteName > 0) {
 
-            noteName += addedValue;
+                noteName += addedValue;
 
-        } else if (noteOctave < MAX_OCTAVE) {
-            // on passe à l'octave suivant 
-            // B 4 -> C 5
-            noteName = 0;
-            noteOctave += 1;
+            } else if (noteOctave > MIN_OCTAVE) {
+                // on change d'octave si possible et on passe à la note maximale.
+                // C 4 passe à B 3
+                noteName = NB_NOTE - 1;
+                noteOctave -= 1;
+            }
+            
+            if (FAT_tracker.allBlocks[block].notes[noteLine].freq > 0){
+                FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue;
+            }
+
+        } else if (addedValue > 0) {
+            if (noteName < NB_NOTE - 1) {
+
+                noteName += addedValue;
+
+            } else if (noteOctave < MAX_OCTAVE) {
+                // on passe à l'octave suivant 
+                // B 4 -> C 5
+                noteName = 0;
+                noteOctave += 1;
+            }
+            
+            if (FAT_tracker.allBlocks[block].notes[noteLine].freq < NB_FREQUENCES){
+                FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue;
+            }
         }
     }
 
@@ -1893,6 +1918,16 @@ note* FAT_data_composer_getNote(u8 line) {
 }
 
 /**
+ * \brief Retourne le channel sur lequel sera jouée la note sur la ligne donnée.
+ * 
+ * @param line le numéro de ligne sur lequel la note est posée
+ * @return le numéro de channel entre 0 et 5
+ */
+u8 FAT_data_composer_getChannel (u8 line){
+   return FAT_tracker.composer.channels[line];
+}
+
+/**
  * \brief Change l'intitulé d'une note dans le composer.
  * 
  * Cette méthode permet de changer l'intitulé de la note et donc sa fréquence.
@@ -1909,33 +1944,57 @@ void FAT_data_composer_changeValue(u8 line, s8 addedValue) {
     u8 noteName = (FAT_tracker.composer.notes[line].note & 0xf0) >> 4;
     u8 noteOctave = FAT_tracker.composer.notes[line].note & 0x0f;
 
-    FAT_tracker.composer.notes[line].freq += addedValue;
-    if (addedValue < 0) {
-
-        if (noteName > 0) {
-
-            noteName += addedValue;
-
-        } else if (noteOctave > MIN_OCTAVE) {
-            // on change d'octave si possible et on passe à la note maximale.
-            // C 4 passe à B 3
-            noteName = NB_NOTE - 1;
-            noteOctave -= 1;
+    u8 channel = FAT_data_composer_getChannel(line);
+    instrument* inst = &(FAT_tracker.allInstruments[FAT_tracker.composer.notes[line].instrument]);
+    
+    if (channel >= INSTRUMENT_TYPE_SAMPLEA) {
+        u8 nbMaxSample = snd_countSamplesInKitById(inst->kitNumber);
+        if (FAT_tracker.composer.notes[line].freq >= nbMaxSample){
+            FAT_tracker.composer.notes[line].freq = nbMaxSample - 1;
+            /*< \todo changer l'intitulé noteName et noteOctave pour affichage correct. */
         }
-
-    } else if (addedValue > 0) {
-        if (noteName < NB_NOTE - 1) {
-
-            noteName += addedValue;
-
-        } else if (noteOctave < MAX_OCTAVE) {
-            // on passe à l'octave suivant 
-            // B 4 -> C 5
-            noteName = 0;
-            noteOctave += 1;
+        if ((addedValue > 0 && FAT_tracker.composer.notes[line].freq < nbMaxSample-1) ||
+                (addedValue < 0 && FAT_tracker.composer.notes[line].freq > 0)) {
+            FAT_tracker.composer.notes[line].freq += addedValue;
         }
+    } else {
+        
+        if (addedValue < 0) {
+
+            if (noteName > 0) {
+
+                noteName += addedValue;
+
+            } else if (noteOctave > MIN_OCTAVE) {
+                // on change d'octave si possible et on passe à la note maximale.
+                // C 4 passe à B 3
+                noteName = NB_NOTE - 1;
+                noteOctave -= 1;
+            }
+            
+            if (FAT_tracker.composer.notes[line].freq > 0){
+                FAT_tracker.composer.notes[line].freq += addedValue;
+            }
+
+        } else if (addedValue > 0) {
+            if (noteName < NB_NOTE - 1) {
+
+                noteName += addedValue;
+
+            } else if (noteOctave < MAX_OCTAVE) {
+                // on passe à l'octave suivant 
+                // B 4 -> C 5
+                noteName = 0;
+                noteOctave += 1;
+            }
+            
+            if (FAT_tracker.composer.notes[line].freq < NB_FREQUENCES){
+                FAT_tracker.composer.notes[line].freq += addedValue;
+            }
+        }
+        
     }
-
+    
     FAT_tracker.composer.notes[line].note = (noteName << 4) + noteOctave;
 
     FAT_data_lastNoteWritten.freq = FAT_tracker.composer.notes[line].freq;
@@ -2069,7 +2128,7 @@ void FAT_data_composer_resetAffectedChannel(u8 line) {
 void FAT_data_composer_changeAffectedChannelValue(u8 line, s8 addedValue) {
     if (
             (addedValue < 0 && FAT_tracker.composer.channels[line] > (-addedValue - 1)) ||
-            (addedValue > 0 && FAT_tracker.composer.channels[line] < 4 - addedValue)
+            (addedValue > 0 && FAT_tracker.composer.channels[line] < 6 - addedValue)
 
             ) {
         FAT_tracker.composer.channels[line] += addedValue;

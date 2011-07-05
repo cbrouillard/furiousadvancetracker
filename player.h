@@ -172,19 +172,30 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
 
             case 2: // WAV
                 snd_playSoundOnChannel3(inst->volumeRatio, inst->soundlength, inst->loopmode, inst->voiceAndBank & 0x1f,
-                        (inst->voiceAndBank & 0x20) >> 5, (inst->voiceAndBank & 0x40) >> 6, 
-                        inst->output,note->freq, transpose + FAT_tracker.transpose);
+                        (inst->voiceAndBank & 0x20) >> 5, (inst->voiceAndBank & 0x40) >> 6,
+                        inst->output, note->freq, transpose + FAT_tracker.transpose);
                 break;
             case 3: // NOISE
                 //ham_DrawText (23, 16, "NOI");
                 snd_playSoundOnChannel4(inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->soundlength,
-                        inst->loopmode, inst->output, note->note & 0x0f, inst->wavedutyOrPolynomialStep, 
+                        inst->loopmode, inst->output, note->note & 0x0f, inst->wavedutyOrPolynomialStep,
                         note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
+                break;
+            case 4: // SNA 
+                //snd_playSampleOnChannelAById(inst->kitNumber, note->freq);
+                snd_playChannelASample(inst->kitNumber, note->freq, inst->volumeRatio,
+                        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
+                        (inst->envelope & 0xe0) >> 5, inst->soundlength, inst->offset);
+                break;
+            case 5: // SNB
+                snd_playChannelBSample(inst->kitNumber, note->freq, inst->volumeRatio,
+                        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
+                        (inst->envelope & 0xe0) >> 5, inst->soundlength, inst->offset);
                 break;
         }
 
     }
-    
+
     if (note->effect.name != NULL_VALUE) {
         snd_tryToApplyEffect(channel, noteEffectNum[note->effect.name >> 1], note->effect.value);
     }
@@ -470,11 +481,11 @@ void FAT_player_moveOrHideCursor(u8 channel, note* note) {
                         23 + (channel * (8 + 16)),
                         15 + ((actualSequencesForChannel[channel] - FAT_screenSong_currentStartLine)*8));
                 ham_SetObjVisible(FAT_cursor_playerSequences_obj[channel], 1);
-                
+
                 if (note->freq != NULL_VALUE) {
                     FAT_screenSong_showActualPlayedNote(channel, (note->note & 0xf0) >> 4, note->note & 0x0f);
                 }
-                
+
             } else {
                 FAT_player_hideSequencesCursors();
             }

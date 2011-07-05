@@ -63,6 +63,7 @@ int main() {
 
     FAT_init();
     snd_init_soundApi();
+    snd_init_kits();
 
     FAT_showIntro();
     FAT_screenSong_init();

@@ -101,9 +101,16 @@ void FAT_screenNotes_printNote(u8 line) {
     if (!FAT_data_isNoteEmpty(FAT_screenNotes_currentBlockId, line)) {
         note* actualNote = FAT_data_getNote(FAT_screenNotes_currentBlockId, line);
 
-        ham_DrawText(SCREENNOTES_NOTE_LINE_X,
-                line + SCREENNOTES_LINE_START_Y,
-                "%s%1x %.2x\0", noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument);
+        if (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA) {
+
+            ham_DrawText(SCREENNOTES_NOTE_LINE_X,
+                    line + SCREENNOTES_LINE_START_Y,
+                    "%s%1x %.2x\0", noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument);
+        } else {
+            ham_DrawText(SCREENNOTES_NOTE_LINE_X,
+                    line + SCREENNOTES_LINE_START_Y,
+                    "S%.2x %.2x\0", actualNote->freq, actualNote->instrument);
+        }
     } else {
         ham_DrawText(SCREENNOTES_NOTE_LINE_X,
                 line + SCREENNOTES_LINE_START_Y, "      \0");
@@ -365,24 +372,24 @@ void FAT_screenNotes_pressA() {
 
             if (F_CTRLINPUT_RIGHT_PRESSED) {
                 iCanPressAKey = 0;
-                FAT_data_note_changeValue(FAT_screenNotes_currentBlockId,
+                FAT_data_note_changeValue(FAT_screenSong_currentSelectedColumn,FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, 1); // ajout de 1
             }
 
             if (F_CTRLINPUT_LEFT_PRESSED) {
                 iCanPressAKey = 0;
-                FAT_data_note_changeValue(FAT_screenNotes_currentBlockId,
+                FAT_data_note_changeValue(FAT_screenSong_currentSelectedColumn,FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, -1); // retrait de 1
             }
 
 
-            if (F_CTRLINPUT_UP_PRESSED) {
+            if (F_CTRLINPUT_UP_PRESSED && (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA)) {
                 iCanPressAKey = 0;
                 FAT_data_note_changeOctave(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, 1);
             }
 
-            if (F_CTRLINPUT_DOWN_PRESSED) {
+            if (F_CTRLINPUT_DOWN_PRESSED && (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA)) {
                 iCanPressAKey = 0;
                 FAT_data_note_changeOctave(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, -1);

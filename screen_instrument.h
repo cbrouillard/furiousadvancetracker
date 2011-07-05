@@ -151,7 +151,7 @@ void FAT_screenInstrument_printAllText(u8 type) {
             break;
         case INSTRUMENT_TYPE_SAMPLEA:
         case INSTRUMENT_TYPE_SAMPLEB:
-            ham_DrawText(16, 4, "NB SAMPLES %.2x", snd_countSamplesInKitById(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].sweep));
+            ham_DrawText(16, 4, "NB SAMPLES %.2x", snd_countSamplesInKitById(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].kitNumber));
             //ham_DrawText(16, 5, "NB KITS    %.2x", snd_countAvailableKits ());
 
             ham_DrawText(1, 4, "NAME %s", snd_getKitNameById(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].kitNumber));
