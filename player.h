@@ -60,7 +60,7 @@ u8 FAT_cursor_playerSequences_obj[6];
  * est réinitialisé ensuite.
  * Dans le cas contraire, on attend sans jouer de note.
  */
-u32 tempoReach = TEMPO_TIMER_HARDWARE_VALUE;
+u32 tempoReach = ((60000 / 128) / 4) / 2;;
 
 /**
  * \brief Function temporisée qui lit toutes les séquences. (callback)
