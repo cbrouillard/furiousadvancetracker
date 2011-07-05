@@ -211,13 +211,12 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
     memset(actualBlocksForChannel, 0, sizeof (u8)*6);
     memset(actualNotesForChannel, 0, sizeof (u8)*6);
 
-    tempoReach = ((60000 / FAT_tracker.tempo) / 4) - TEMPO_TIMER_HARDWARE_VALUE;
+    tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     FAT_isCurrentlyPlaying = 1;
     ham_StartIntHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc_playSequences);
 
-    R_TIM3CNT = 0;
-    M_TIM3CNT_IRQ_ENABLE
-    M_TIM3CNT_TIMER_START
+    R_TIM3COUNT = 0xffc0;
+    R_TIM3CNT = 0x00C3;
 
     FAT_keys_waitForAnotherKeyTouch();
 
@@ -240,13 +239,12 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
     FAT_currentPlayedSequence = sequenceId;
     FAT_currentPlayedChannel = channel;
 
-    tempoReach = ((60000 / FAT_tracker.tempo) / 4) - TEMPO_TIMER_HARDWARE_VALUE;
+    tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     FAT_isCurrentlyPlaying = 1;
     ham_StartIntHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc_playBlocks);
 
-    R_TIM3CNT = 0;
-    M_TIM3CNT_IRQ_ENABLE
-    M_TIM3CNT_TIMER_START
+    R_TIM3COUNT = 0xffc0;
+    R_TIM3CNT = 0x00C3;
 
     FAT_keys_waitForAnotherKeyTouch();
 }
@@ -259,8 +257,7 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
  * @param channel le numéro de channel sur lequel on joue
  */
 void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
-
-
+    
     memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
     memset(actualBlocksForChannel, NULL_VALUE, sizeof (u8)*6);
     memset(actualNotesForChannel, 0, sizeof (u8)*6);
@@ -268,13 +265,14 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
     FAT_currentPlayedBlock = blockId;
     FAT_currentPlayedChannel = channel;
 
-    tempoReach = ((60000 / FAT_tracker.tempo) / 4) - TEMPO_TIMER_HARDWARE_VALUE;
+    tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     FAT_isCurrentlyPlaying = 1;
     ham_StartIntHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc_playNotes);
 
-    R_TIM3CNT = 0;
-    M_TIM3CNT_IRQ_ENABLE
-    M_TIM3CNT_TIMER_START
+    R_TIM3COUNT = 0xffc0;
+    R_TIM3CNT = 0x00C3;
+    //M_TIM3CNT_IRQ_ENABLE
+    //M_TIM3CNT_TIMER_START
 
     FAT_keys_waitForAnotherKeyTouch();
 }
@@ -334,7 +332,7 @@ void FAT_player_timerFunc_playSequences() {
 
         }
 
-        tempoReach = ((60000 / FAT_tracker.tempo) / 4) - TEMPO_TIMER_HARDWARE_VALUE;
+        tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     }
 }
 
@@ -375,7 +373,7 @@ void FAT_player_timerFunc_playBlocks() {
 
         }
 
-        tempoReach = ((60000 / FAT_tracker.tempo) / 4) - TEMPO_TIMER_HARDWARE_VALUE;
+        tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     }
 
 
@@ -403,7 +401,7 @@ void FAT_player_timerFunc_playNotes() {
             }
         }
 
-        tempoReach = ((60000 / FAT_tracker.tempo) / 4) - TEMPO_TIMER_HARDWARE_VALUE;
+        tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     }
 }
 
@@ -412,8 +410,9 @@ void FAT_player_timerFunc_playNotes() {
  */
 void FAT_player_stopPlayer() {
 
-    M_TIM3CNT_TIMER_STOP
-    M_TIM3CNT_IRQ_DISABLE
+    R_TIM3CNT = 0;
+    //M_TIM3CNT_TIMER_STOP
+    //M_TIM3CNT_IRQ_DISABLE
 
     // stop le son
     snd_stopAllSounds();
@@ -483,7 +482,7 @@ void FAT_player_moveOrHideCursor(u8 channel, note* note) {
                 ham_SetObjVisible(FAT_cursor_playerSequences_obj[channel], 1);
 
                 if (note->freq != NULL_VALUE) {
-                    FAT_screenSong_showActualPlayedNote(channel, (note->note & 0xf0) >> 4, note->note & 0x0f);
+                    FAT_screenSong_showActualPlayedNote(channel, (note->note & 0xf0) >> 4, note->note & 0x0f, note->freq);
                 }
 
             } else {

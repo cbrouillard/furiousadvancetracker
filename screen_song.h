@@ -96,7 +96,7 @@ void FAT_screenSong_init() {
  * \brief Cette fonction se contente d'ecrire le nom des channels dans la 
  * boite rouge sur l'écran SONG. Ne devrait pas être appelé plusieurs fois.
  */
-void FAT_screenSong_printChannelFollower (){
+void FAT_screenSong_printChannelFollower() {
     mutex = 0;
     ham_DrawText(22, 9, "%s ---", CHANNEL_NAME[0]);
     ham_DrawText(22, 10, "%s ---", CHANNEL_NAME[1]);
@@ -113,9 +113,13 @@ void FAT_screenSong_printChannelFollower (){
  * @param noteName le nom de la note
  * @param noteOctave l'octave de la note
  */
-void FAT_screenSong_showActualPlayedNote(u8 channel, u8 name, u8 noteOctave){
+void FAT_screenSong_showActualPlayedNote(u8 channel, u8 name, u8 noteOctave, u8 freq) {
     mutex = 0;
-    ham_DrawText(26, channel+9, "%s%.1x", noteName[name], noteOctave);
+    if (channel < INSTRUMENT_TYPE_SAMPLEA) {
+        ham_DrawText(26, channel + 9, "%s%.1x", noteName[name], noteOctave);
+    } else {
+        ham_DrawText(26, channel + 9, "S%.2x", freq);
+    }
     mutex = 1;
 }
 
