@@ -39,6 +39,8 @@ void FAT_screenLive_printAllScreenText();
 
 #include "screen_live_cursor.h"
 #include "data.h"
+#include "screen_song_cursor.h"
+#include "screen_song.h"
 
 /**
  * \brief Fonction principale de l'écran (callback). 
@@ -57,7 +59,7 @@ void FAT_screenLive_mainFunc() {
  */
 void FAT_screenLive_printTempo() {
     mutex = 0;
-    ham_DrawText(26, 9, "%d", FAT_tracker.tempo);
+    ham_DrawText(10, 16, "%d", FAT_tracker.tempo);
     mutex = 1;
 }
 
@@ -66,7 +68,7 @@ void FAT_screenLive_printTempo() {
  */
 void FAT_screenLive_printTranspose() {
     mutex = 0;
-    ham_DrawText(27, 12, "%.2x", FAT_tracker.transpose);
+    ham_DrawText(10, 16, "%.2x", FAT_tracker.transpose);
     mutex = 1;
 }
 
@@ -76,16 +78,16 @@ void FAT_screenLive_printTranspose() {
 void FAT_screenLive_printLiveMode() {
     mutex = 0;
     if (FAT_tracker.liveData.liveMode) {
-        ham_DrawText(26, 6, "MAN");
+        ham_DrawText(3, 16, "MAN");
     } else {
-        ham_DrawText(26, 6, "AUT");
+        ham_DrawText(3, 16, "AUT");
     }
     mutex = 1;
 }
 
 void FAT_screenLive_printVolumes (){
     mutex = 0;
-    ham_DrawText (3, 13, "%.2x %.2x %.2x %.2x %.2x %.2x", 
+    ham_DrawText (2, 13, "%.3d%.3d%.3d%.3d%.3d%.3d", 
             FAT_tracker.liveData.volume[0],
             FAT_tracker.liveData.volume[1],
             FAT_tracker.liveData.volume[2],
@@ -95,44 +97,45 @@ void FAT_screenLive_printVolumes (){
     mutex = 1;
 }
 
-/**
- * \brief Affiche quelques infos (nom du projet, ligne actuellement sélectionnée et nom du channel)
- * sur l'écran. 
- */
-void FAT_screenLive_printInfos() {
+void FAT_screenLive_printTransposes (){
     mutex = 0;
-    ham_DrawText(24, 3, "LIVE!");
-    ham_DrawText(24, 5, "LMODE");
-    FAT_screenLive_printLiveMode();
-    ham_DrawText(24, 8, "TEMPO");
-    FAT_screenLive_printTempo();
-    ham_DrawText(24, 11, "TRNSP");
-    FAT_screenLive_printTranspose();
-    mutex = 1;
-}
-
-/**
- * \brief Affiche le texte lorsque aucun live n'est joué (les notes en bas de l'écran "---" par exemple).
- */
-void FAT_screenLive_printNoPlayingText() {
-    mutex = 0;
-    ham_DrawText(3, 15, "------------------ -");
+    ham_DrawText (2, 14, "%.3d%.3d%.3d%.3d%.3d%.3d", 
+            FAT_tracker.transpose,
+            FAT_tracker.transpose,
+            FAT_tracker.transpose,
+            FAT_tracker.transpose,
+            FAT_tracker.transpose,
+            FAT_tracker.transpose);
     mutex = 1;
 }
 
 /**
  * \brief Imprime les numéros de lignes. 
  * 
- * L'impression démarre depuis la valeur de FAT_screenSong_currentStartLine jusqu'à FAT_screenSong_currentStartLine + screenLive_NB_LINES_ON_SCREEN
+ * L'impression démarre depuis la valeur de FAT_screenSong_currentStartLine jusqu'à FAT_screenSong_currentStartLine + SCREENSONG_NB_LINES_ON_SCREEN
  */
 void FAT_screenLive_printLineColumns() {
     u8 y = SCREENLIVE_LINE_START_Y;
     mutex = 0;
     for (int c = FAT_screenSong_currentStartLine; c < (SCREENLIVE_NB_LINES_ON_SCREEN + FAT_screenSong_currentStartLine); c++) {
         ham_DrawText(SCREENLIVE_LINE_X, y, FAT_FORMAT_LINE, c);
-        ham_DrawText(21, y, "GO");
         y += SCREENLIVE_LINE_SIZE_Y;
     }
+    mutex = 1;
+}
+
+/**
+ * \brief Affiche quelques infos (nom du projet, ligne actuellement sélectionnée et nom du channel)
+ * sur l'écran. 
+ */
+void FAT_screenLive_printInfos() {
+    mutex = 0;
+    ham_DrawText(21, 3, "%s", FAT_tracker.songName);
+    ham_DrawText(21, 4, "LINE  %.2x", FAT_screenSong_currentSelectedLine);
+    ham_DrawText(21, 5, "CHAN %s", CHANNEL_NAME[FAT_screenSong_currentSelectedColumn]);
+    
+    FAT_screenLive_printLiveMode();
+    FAT_screenLive_printTempo();
     mutex = 1;
 }
 
@@ -199,9 +202,17 @@ void FAT_screenLive_init() {
     ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_live_Map, 1024, 0, 0);
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
+    if (FAT_screenSong_cursorY > SCREENLIVE_LAST_BLOCK_Y) {
+        FAT_screenSong_currentStartLine = FAT_screenSong_currentSelectedLine - 9;
+        FAT_screenSong_cursorY = SCREENLIVE_LAST_BLOCK_Y;
+    }
+    
     FAT_screenLive_printAllScreenText();
-    FAT_screenLive_printNoPlayingText();
     FAT_screenLive_printVolumes ();
+    FAT_screenLive_printTransposes ();
+    
+    // partie identique à l'écran SONG
+    FAT_screenSong_printChannelFollower();
 
     // affichage du curseur
     FAT_cursors_hideCursor2();

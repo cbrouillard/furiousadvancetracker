@@ -476,7 +476,7 @@ void FAT_data_initData() {
     memset(&FAT_data_noteClipboard, NULL_VALUE, sizeof (note));
     memset(&FAT_data_lastEffectWritten, NULL_VALUE, sizeof (effect));
     
-    memset(&FAT_tracker.liveData.volume, NULL_VALUE / 2, sizeof(u8)*6);
+    memset(&FAT_tracker.liveData.volume, 100, sizeof(u8)*6);
 }
 
 /**
