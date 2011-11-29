@@ -15,7 +15,7 @@ PROGNAME = FuriousAdvanceTracker_v0.3.0
 #
 # Set a list of files you want to compile 
 # 
-OFILES += main.o ResourceData.o soundApi/soundApi.o soundApi/libgbfs.o
+OFILES += main.o soundApi/soundApi.o soundApi/libgbfs.o
 
 ######################################
 # Standard Makefile targets start here
