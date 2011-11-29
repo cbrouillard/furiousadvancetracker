@@ -49,15 +49,15 @@ void FAT_screenProject_mainFunc() {
  */
 void FAT_screenProject_printInfos() {
     mutex = 0;
-    ham_DrawText(1, 4, "TEMPO     %3d", FAT_tracker.tempo);
-    ham_DrawText(1, 5, "TRANSPOSE %.2x", FAT_tracker.transpose);
-    ham_DrawText(1, 8, "KEYREPEAT %.2x", FAT_tracker.keyRepeat);
-    ham_DrawText(1, 9, "PREVIEW   %.3s", yesOrNo[FAT_tracker.previewEnable != 0]);
-    ham_DrawText(1, 12, "NEW  PRJ  OK");
-    ham_DrawText(1, 13, "SAVE PRJ  OK");
-    ham_DrawText(1, 14, "LOAD PRJ  OK");
-    
-    ham_DrawText(1, 1, "FAT PROJECT v%s", FAT_VERSION);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Tempo     %3d", FAT_tracker.tempo);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 5, 0, "Transpose %.2x", FAT_tracker.transpose);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 8, 0, "KeyRepeat %.2x", FAT_tracker.keyRepeat);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 9, 0, "Preview   %.3s", yesOrNo[FAT_tracker.previewEnable != 0]);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 12, 0, "New  Prj  OK");
+    hel_BgTextPrintF(TEXT_LAYER, 1, 13, 0, "Save Prj  OK");
+    hel_BgTextPrintF(TEXT_LAYER, 1, 14, 0, "Load Prj  OK");
+
+    hel_BgTextPrintF(TEXT_LAYER, 1, 1, 0, "FAT project v%s", FAT_VERSION);
     mutex = 1;
 }
 
@@ -65,13 +65,13 @@ void FAT_screenProject_printInfos() {
  * \brief Affiche des informations relatives au projet (comme la taille en sav, 
  * le nombre de fois enregistré, ...) 
  */
-void FAT_screenProject_printProject (){
+void FAT_screenProject_printProject() {
     mutex = 0;
-    ham_DrawText(16, 3, "Name %.8s", FAT_tracker.songName);
-    ham_DrawText(16, 4, "size %.4x", sizeof (FAT_tracker));
-    ham_DrawText (16,5, "work %.2x", FAT_tracker.nbWork);
+    hel_BgTextPrintF(TEXT_LAYER,16, 3, 0, "Name %.8s", FAT_tracker.songName);
+    hel_BgTextPrintF(TEXT_LAYER,16, 4, 0, "Size %.4x", sizeof (FAT_tracker));
+    hel_BgTextPrintF(TEXT_LAYER,16, 5, 0, "Work %.2x", FAT_tracker.nbWork);
     mutex = 1;
-    
+
 }
 
 /**
@@ -87,11 +87,11 @@ void FAT_screenProject_init() {
 
     // affichage d'un peu de texte
     FAT_screenProject_printInfos();
-    FAT_screenProject_printProject ();
+    FAT_screenProject_printProject();
 
     // cache quelques curseurs
     FAT_cursors_hideCursor8();
-    
+
     // init du curseur
     FAT_screenProject_initCursor();
     FAT_screenProject_displayGoodCursor();
@@ -140,8 +140,8 @@ void FAT_screenProject_checkButtons() {
                     FAT_player_stopPlayer();
                 }
             }
-            
-            if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED){
+
+            if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED) {
                 iCanPressAKey = 0;
                 FAT_showHelp(SCREEN_PROJECT_ID);
             }
@@ -212,7 +212,7 @@ void FAT_screenProject_pressA() {
             iCanPressAKey = 0;
             FAT_cursors_hideCursor3();
             FAT_cursors_hideCursor2();
-            FAT_screenFilesystem_setMode (FILESYSTEM_MODE_SAVE);
+            FAT_screenFilesystem_setMode(FILESYSTEM_MODE_SAVE);
             FAT_switchToScreen(SCREEN_FILESYSTEM_ID);
             break;
         case 6:
@@ -222,7 +222,7 @@ void FAT_screenProject_pressA() {
             iCanPressAKey = 0;
             FAT_cursors_hideCursor3();
             FAT_cursors_hideCursor2();
-            FAT_screenFilesystem_setMode (FILESYSTEM_MODE_LOAD);
+            FAT_screenFilesystem_setMode(FILESYSTEM_MODE_LOAD);
             FAT_switchToScreen(SCREEN_FILESYSTEM_ID);
             break;
         case 2:

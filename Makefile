@@ -5,6 +5,8 @@
 #HAMDIR = /home/cyril/Coding/GBA/devkit/ham-271-linux-full
 include $(HAMDIR)/system/master.mak
 
+ADD_LIBS += $(GCCARM)/lib/libhel2_d.a
+
 #
 # Set the name of your desired GBA image name here
 #
@@ -13,7 +15,7 @@ PROGNAME = FuriousAdvanceTracker_v0.3.0
 #
 # Set a list of files you want to compile 
 # 
-OFILES += main.o soundApi/soundApi.o soundApi/libgbfs.o
+OFILES += main.o ResourceData.o soundApi/soundApi.o soundApi/libgbfs.o
 
 ######################################
 # Standard Makefile targets start here

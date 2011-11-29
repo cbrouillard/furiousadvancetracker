@@ -56,7 +56,7 @@ u16 FAT_filesystem_findFirstFreeOffset();
 /** \brief Chaine de caractère pour les chansons non initialisées. */
 const char* emptyName = "EMPTY   ";
 /** \brief Chaine de caractère pour les slots non disponibles. */
-const char* noAvailable_tmp = "XXXXX   ";
+const char* noAvailable_tmp = "--------";
 
 /**
  * \brief Cette fonction vérifie l'intégrité du filesystem.

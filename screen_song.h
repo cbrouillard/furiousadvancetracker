@@ -98,12 +98,12 @@ void FAT_screenSong_init() {
  */
 void FAT_screenSong_printChannelFollower() {
     mutex = 0;
-    ham_DrawText(22, 9, "%s ---", CHANNEL_NAME[0]);
-    ham_DrawText(22, 10, "%s ---", CHANNEL_NAME[1]);
-    ham_DrawText(22, 11, "%s ---", CHANNEL_NAME[2]);
-    ham_DrawText(22, 12, "%s ---", CHANNEL_NAME[3]);
-    ham_DrawText(22, 13, "%s ---", CHANNEL_NAME[4]);
-    ham_DrawText(22, 14, "%s ---", CHANNEL_NAME[5]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 9, 0, "%s ---", CHANNEL_NAME[0]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 10, 0, "%s ---", CHANNEL_NAME[1]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 11, 0, "%s ---", CHANNEL_NAME[2]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 12, 0, "%s ---", CHANNEL_NAME[3]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 13, 0, "%s ---", CHANNEL_NAME[4]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 14, 0, "%s ---", CHANNEL_NAME[5]);
     mutex = 1;
 }
 
@@ -116,9 +116,9 @@ void FAT_screenSong_printChannelFollower() {
 void FAT_screenSong_showActualPlayedNote(u8 channel, u8 name, u8 noteOctave, u8 freq) {
     mutex = 0;
     if (channel < INSTRUMENT_TYPE_SAMPLEA) {
-        ham_DrawText(26, channel + 9, "%s%.1x", noteName[name], noteOctave);
+        hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "%s%.1x", noteName[name], noteOctave);
     } else {
-        ham_DrawText(26, channel + 9, "S%.2x", freq);
+        hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "S%.2x", freq);
     }
     mutex = 1;
 }
@@ -129,9 +129,9 @@ void FAT_screenSong_showActualPlayedNote(u8 channel, u8 name, u8 noteOctave, u8 
  */
 void FAT_screenSong_printInfos() {
     mutex = 0;
-    ham_DrawText(21, 3, "%s", FAT_tracker.songName);
-    ham_DrawText(21, 4, "LINE  %.2x", FAT_screenSong_currentSelectedLine);
-    ham_DrawText(21, 5, "CHAN %s", CHANNEL_NAME[FAT_screenSong_currentSelectedColumn]);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "%s\nLine  %.2x\nChan %s", FAT_tracker.songName, FAT_screenSong_currentSelectedLine, CHANNEL_NAME[FAT_screenSong_currentSelectedColumn]);
+    //hel_BgTextPrintF(TEXT_LAYER, 21, 4, "LINE  %.2x", FAT_screenSong_currentSelectedLine);
+    //hel_BgTextPrintF(TEXT_LAYER, 21, 5, "CHAN %s", CHANNEL_NAME[FAT_screenSong_currentSelectedColumn]);
     mutex = 1;
 }
 
@@ -144,7 +144,7 @@ void FAT_screenSong_printLineColumns() {
     u8 y = SCREENSONG_LINE_START_Y;
     mutex = 0;
     for (int c = FAT_screenSong_currentStartLine; c < (SCREENSONG_NB_LINES_ON_SCREEN + FAT_screenSong_currentStartLine); c++) {
-        ham_DrawText(SCREENSONG_LINE_X, y, FAT_FORMAT_LINE, c);
+        hel_BgTextPrintF(TEXT_LAYER, SCREENSONG_LINE_X, y, 0, FAT_FORMAT_LINE, c);
         y += SCREENSONG_LINE_SIZE_Y;
     }
     mutex = 1;
@@ -160,11 +160,11 @@ void FAT_screenSong_printSequences() {
 
         for (c = 0; c < 6; c++) {
             if (FAT_tracker.channels[c].sequences[v + FAT_screenSong_currentStartLine] == NULL_VALUE) {
-                ham_DrawText(SCREENSONG_SEQUENCE_LINE_X + (c * 3),
-                        v + SCREENSONG_LINE_START_Y, "  ");
+                hel_BgTextPrint(TEXT_LAYER, SCREENSONG_SEQUENCE_LINE_X + (c * 3),
+                        v + SCREENSONG_LINE_START_Y, 0, "  ");
             } else {
-                ham_DrawText(SCREENSONG_SEQUENCE_LINE_X + (c * 3),
-                        v + SCREENSONG_LINE_START_Y, "%.2x ",
+                hel_BgTextPrintF(TEXT_LAYER, SCREENSONG_SEQUENCE_LINE_X + (c * 3),
+                        v + SCREENSONG_LINE_START_Y, 0, "%.2x ",
                         FAT_tracker.channels[c].sequences[v + FAT_screenSong_currentStartLine]);
             }
         }
@@ -183,12 +183,12 @@ void FAT_screenSong_printSequences() {
 void FAT_screenSong_printSequence(u8 channel, u8 lineOnScreen, u8 realLine) {
     mutex = 0;
     if (FAT_tracker.channels[channel].sequences[realLine] != NULL_VALUE) {
-        ham_DrawText(SCREENSONG_SEQUENCE_LINE_X + (3 * channel),
-                lineOnScreen + SCREENSONG_LINE_START_Y,
+        hel_BgTextPrintF(TEXT_LAYER, SCREENSONG_SEQUENCE_LINE_X + (3 * channel),
+                lineOnScreen + SCREENSONG_LINE_START_Y, 0,
                 "%.2x\0", FAT_tracker.channels[channel].sequences[realLine]);
     } else {
-        ham_DrawText(SCREENSONG_SEQUENCE_LINE_X + (3 * channel),
-                lineOnScreen + SCREENSONG_LINE_START_Y, "  ");
+        hel_BgTextPrint(TEXT_LAYER, SCREENSONG_SEQUENCE_LINE_X + (3 * channel),
+                lineOnScreen + SCREENSONG_LINE_START_Y, 0, "  ");
     }
     mutex = 1;
 }

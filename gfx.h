@@ -66,6 +66,9 @@
 #include "gfx/screen_filesystem.raw.c"
 #include "gfx/screen_filesystem.map.c"
 
+#include "gfx/text.raw.c"
+#include "gfx/text.map.c"
+
 // ECRANS D'AIDE
 #include "gfx/screen_help_projet.raw.c"
 #include "gfx/screen_help_projet.map.c"

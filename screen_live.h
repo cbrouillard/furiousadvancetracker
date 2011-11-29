@@ -37,10 +37,10 @@ void FAT_screenLive_checkButtons();
 void FAT_screenLive_printInfos();
 void FAT_screenLive_printAllScreenText();
 
+bool FAT_screenLive_isCursorInSequencer = 1;
+
 #include "screen_live_cursor.h"
-#include "data.h"
-#include "screen_song_cursor.h"
-#include "screen_song.h"
+#include "cursors.h"
 
 /**
  * \brief Fonction principale de l'écran (callback). 
@@ -59,7 +59,7 @@ void FAT_screenLive_mainFunc() {
  */
 void FAT_screenLive_printTempo() {
     mutex = 0;
-    ham_DrawText(10, 16, "%d", FAT_tracker.tempo);
+    hel_BgTextPrintF(TEXT_LAYER, 10, 16, 0, "%d", FAT_tracker.tempo);
     mutex = 1;
 }
 
@@ -68,7 +68,7 @@ void FAT_screenLive_printTempo() {
  */
 void FAT_screenLive_printTranspose() {
     mutex = 0;
-    ham_DrawText(10, 16, "%.2x", FAT_tracker.transpose);
+    hel_BgTextPrintF(TEXT_LAYER, 10, 16, 0, "%.2x", FAT_tracker.transpose);
     mutex = 1;
 }
 
@@ -78,16 +78,16 @@ void FAT_screenLive_printTranspose() {
 void FAT_screenLive_printLiveMode() {
     mutex = 0;
     if (FAT_tracker.liveData.liveMode) {
-        ham_DrawText(3, 16, "MAN");
+        hel_BgTextPrint(TEXT_LAYER, 3, 16, 0, "MAN");
     } else {
-        ham_DrawText(3, 16, "AUT");
+        hel_BgTextPrintF(TEXT_LAYER, 3, 16, 0, "AUT");
     }
     mutex = 1;
 }
 
-void FAT_screenLive_printVolumes (){
+void FAT_screenLive_printVolumes() {
     mutex = 0;
-    ham_DrawText (2, 13, "%.3d%.3d%.3d%.3d%.3d%.3d", 
+    hel_BgTextPrintF(TEXT_LAYER, 2, 13, 0, "%.3d%.3d%.3d%.3d%.3d%.3d",
             FAT_tracker.liveData.volume[0],
             FAT_tracker.liveData.volume[1],
             FAT_tracker.liveData.volume[2],
@@ -97,9 +97,9 @@ void FAT_screenLive_printVolumes (){
     mutex = 1;
 }
 
-void FAT_screenLive_printTransposes (){
+void FAT_screenLive_printTransposes() {
     mutex = 0;
-    ham_DrawText (2, 14, "%.3d%.3d%.3d%.3d%.3d%.3d", 
+    hel_BgTextPrintF(TEXT_LAYER, 2, 14, 0, "%.3d%.3d%.3d%.3d%.3d%.3d",
             FAT_tracker.transpose,
             FAT_tracker.transpose,
             FAT_tracker.transpose,
@@ -118,7 +118,7 @@ void FAT_screenLive_printLineColumns() {
     u8 y = SCREENLIVE_LINE_START_Y;
     mutex = 0;
     for (int c = FAT_screenSong_currentStartLine; c < (SCREENLIVE_NB_LINES_ON_SCREEN + FAT_screenSong_currentStartLine); c++) {
-        ham_DrawText(SCREENLIVE_LINE_X, y, FAT_FORMAT_LINE, c);
+        hel_BgTextPrintF(TEXT_LAYER, SCREENLIVE_LINE_X, y, 0, FAT_FORMAT_LINE, c);
         y += SCREENLIVE_LINE_SIZE_Y;
     }
     mutex = 1;
@@ -130,10 +130,10 @@ void FAT_screenLive_printLineColumns() {
  */
 void FAT_screenLive_printInfos() {
     mutex = 0;
-    ham_DrawText(21, 3, "%s", FAT_tracker.songName);
-    ham_DrawText(21, 4, "LINE  %.2x", FAT_screenSong_currentSelectedLine);
-    ham_DrawText(21, 5, "CHAN %s", CHANNEL_NAME[FAT_screenSong_currentSelectedColumn]);
-    
+    hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "%s", FAT_tracker.songName);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 4, 0, "Line  %.2x", FAT_screenSong_currentSelectedLine);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 5, 0, "Chan %s", CHANNEL_NAME[FAT_screenSong_currentSelectedColumn]);
+
     FAT_screenLive_printLiveMode();
     FAT_screenLive_printTempo();
     mutex = 1;
@@ -149,12 +149,12 @@ void FAT_screenLive_printInfos() {
 void FAT_screenLive_printSequence(u8 channel, u8 lineOnScreen, u8 realLine) {
     mutex = 0;
     if (FAT_tracker.channels[channel].sequences[realLine] != NULL_VALUE) {
-        ham_DrawText(SCREENLIVE_SEQUENCE_LINE_X + (3 * channel),
-                lineOnScreen + SCREENLIVE_LINE_START_Y,
+        hel_BgTextPrintF(TEXT_LAYER, SCREENLIVE_SEQUENCE_LINE_X + (3 * channel),
+                lineOnScreen + SCREENLIVE_LINE_START_Y, 0,
                 "%.2x\0", FAT_tracker.channels[channel].sequences[realLine]);
     } else {
-        ham_DrawText(SCREENLIVE_SEQUENCE_LINE_X + (3 * channel),
-                lineOnScreen + SCREENLIVE_LINE_START_Y, "  ");
+        hel_BgTextPrint(TEXT_LAYER, SCREENLIVE_SEQUENCE_LINE_X + (3 * channel),
+                lineOnScreen + SCREENLIVE_LINE_START_Y, 0, "  ");
     }
     mutex = 1;
 }
@@ -169,11 +169,11 @@ void FAT_screenLive_printSequences() {
 
         for (c = 0; c < 6; c++) {
             if (FAT_tracker.channels[c].sequences[v + FAT_screenSong_currentStartLine] == NULL_VALUE) {
-                ham_DrawText(SCREENLIVE_SEQUENCE_LINE_X + (c * 3),
-                        v + SCREENLIVE_LINE_START_Y, "  ");
+                hel_BgTextPrint(TEXT_LAYER, SCREENLIVE_SEQUENCE_LINE_X + (c * 3),
+                        v + SCREENLIVE_LINE_START_Y, 0, "  ");
             } else {
-                ham_DrawText(SCREENLIVE_SEQUENCE_LINE_X + (c * 3),
-                        v + SCREENLIVE_LINE_START_Y, "%.2x ",
+                hel_BgTextPrintF(TEXT_LAYER, SCREENLIVE_SEQUENCE_LINE_X + (c * 3),
+                        v + SCREENLIVE_LINE_START_Y, 0, "%.2x ",
                         FAT_tracker.channels[c].sequences[v + FAT_screenSong_currentStartLine]);
             }
         }
@@ -202,15 +202,15 @@ void FAT_screenLive_init() {
     ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_live_Map, 1024, 0, 0);
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
-    if (FAT_screenSong_cursorY > SCREENLIVE_LAST_BLOCK_Y) {
+    if (FAT_screenSong_cursorY > SCREENLIVE_LAST_BLOCK_Y && FAT_screenLive_isCursorInSequencer) {
         FAT_screenSong_currentStartLine = FAT_screenSong_currentSelectedLine - 9;
         FAT_screenSong_cursorY = SCREENLIVE_LAST_BLOCK_Y;
     }
-    
+
     FAT_screenLive_printAllScreenText();
-    FAT_screenLive_printVolumes ();
-    FAT_screenLive_printTransposes ();
-    
+    FAT_screenLive_printVolumes();
+    FAT_screenLive_printTransposes();
+
     // partie identique à l'écran SONG
     FAT_screenSong_printChannelFollower();
 
@@ -218,11 +218,30 @@ void FAT_screenLive_init() {
     FAT_cursors_hideCursor2();
     FAT_screenLive_commitCursorMove();
     FAT_cursors_showCursor2();
-    
+
     // démarrage du cycle pour l'écran
     ham_StopIntHandler(INT_TYPE_VBL);
     ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenLive_mainFunc);
 
+}
+
+/**
+ * 
+ * @param part la partie vers laquelle switcher: 0 = table, 1 = sequenceur
+ */
+void FAT_screenLive_switchActivePart(bool part) {
+    FAT_screenLive_isCursorInSequencer = part;
+
+    if (part) {
+        // sequenceur
+        FAT_cursors_hideCursor3();
+        FAT_cursors_showCursor2();
+    } else {
+        // table
+        FAT_cursors_hideCursor2();
+        FAT_cursors_showCursor3();
+    }
+    FAT_screenLive_commitCursorMove();
 }
 
 /**
@@ -231,7 +250,7 @@ void FAT_screenLive_init() {
 void FAT_screenLive_checkButtons() {
     if (F_CTRLINPUT_SELECT_PRESSED) {
         if (!FAT_screenLive_isPopuped) {
-            // TODO hide project cursor
+            FAT_cursors_hideCursor2();
             FAT_popup_show();
             FAT_screenLive_isPopuped = 1;
         }
@@ -241,7 +260,7 @@ void FAT_screenLive_checkButtons() {
     } else {
         if (FAT_screenLive_isPopuped) {
             FAT_popup_hide();
-            // TODO show project cursor
+            FAT_cursors_showCursor2();
             FAT_screenLive_isPopuped = 0;
 
             if (FAT_popup_getSelectedIcon() != SCREEN_LIVE_ID) {
@@ -263,7 +282,10 @@ void FAT_screenLive_checkButtons() {
         if (F_CTRLINPUT_DOWN_PRESSED) {
             iCanPressAKey = 0;
             if (F_CTRLINPUT_R_PRESSED) {
-                FAT_screenLive_movePageDown();
+                //FAT_screenLive_movePageDown();
+                // changer de portion d'écran -> du séquenceur vers la table
+                FAT_screenLive_switchActivePart(0);
+
             } else if (F_CTRLINPUT_L_PRESSED) {
                 FAT_screenLive_moveCursorAllDown();
             } else {
@@ -274,7 +296,10 @@ void FAT_screenLive_checkButtons() {
         if (F_CTRLINPUT_UP_PRESSED) {
             iCanPressAKey = 0;
             if (F_CTRLINPUT_R_PRESSED) {
-                FAT_screenLive_movePageUp();
+                //FAT_screenLive_movePageUp();
+                // changer de portion d'écran -> de la table vers le sequenceur
+                FAT_screenLive_switchActivePart(1);
+
             } else if (F_CTRLINPUT_L_PRESSED) {
                 FAT_screenLive_moveCursorAllUp();
             } else {

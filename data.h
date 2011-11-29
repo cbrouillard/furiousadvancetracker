@@ -27,7 +27,7 @@
  * \def NB_MAX_SEQUENCES
  * \brief Nombre de séquences disponibles <b>au total</b> en mémoire. 0x80 = 128
  */
-#define NB_MAX_SEQUENCES 0x80
+#define NB_MAX_SEQUENCES 64 //0x80
 /**
  * \brief Nombre de séquences référençables par canal. 0x40 = 64
  */
@@ -178,7 +178,7 @@
 /**
  * \brief Tableau constant contenant toutes les notes sous formes de chaînes de caractères.
  */
-const char* noteName[NB_NOTE] = {"C ", "C\"", "D ", "D\"", "E ", "F ", "F\"", "G ", "G\"", "A ", "A\"", "B "};
+const char* noteName[NB_NOTE] = {"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ", "G#", "A ", "A#", "B "};
 /**
  * \brief Tableau constant contenant tous les noms d'effets disponibles pour les notes.
  */

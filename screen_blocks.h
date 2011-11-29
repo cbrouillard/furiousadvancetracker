@@ -68,7 +68,7 @@ void FAT_screenBlocks_printLineColumns() {
     mutex = 0;
     u8 y = SCREENBLOCKS_LINE_START_Y;
     for (int c = 0; c < (SCREENBLOCKS_NB_LINES_ON_SCREEN); c++) {
-        ham_DrawText(SCREENBLOCKS_LINE_X, y, FAT_FORMAT_LINE, c);
+        hel_BgTextPrintF(TEXT_LAYER, SCREENBLOCKS_LINE_X, y, 0, FAT_FORMAT_LINE, c);
         y += SCREENBLOCKS_LINE_SIZE_Y;
     }
     mutex = 1;
@@ -82,7 +82,7 @@ void FAT_screenBlocks_printLineColumns() {
  */
 void FAT_screenBlocks_printInfos() {
     mutex = 0;
-    ham_DrawText(18, 4, "LINE     %.2x", FAT_screenBlocks_currentSelectedLine);
+    hel_BgTextPrintF(TEXT_LAYER, 18, 4, 0, "Line     %.2x", FAT_screenBlocks_currentSelectedLine);
     mutex = 1;
 }
 
@@ -94,7 +94,7 @@ void FAT_screenBlocks_printInfos() {
  */
 void FAT_screenBlocks_printSequenceNumber() {
     mutex = 0;
-    ham_DrawText(18, 3, "SEQUENCE %.2x", FAT_screenBlocks_currentSequenceId);
+    hel_BgTextPrintF(TEXT_LAYER, 18, 3, 0, "Sequence %.2x", FAT_screenBlocks_currentSequenceId);
     mutex = 1;
 }
 
@@ -106,12 +106,12 @@ void FAT_screenBlocks_printSequenceNumber() {
 void FAT_screenBlocks_printBlock(u8 line) {
     mutex = 0;
     if (FAT_data_getBlock(FAT_screenBlocks_currentSequenceId, line) != NULL_VALUE) {
-        ham_DrawText(SCREENBLOCKS_BLOCK_LINE_X,
-                line + SCREENBLOCKS_LINE_START_Y,
+        hel_BgTextPrintF(TEXT_LAYER, SCREENBLOCKS_BLOCK_LINE_X,
+                line + SCREENBLOCKS_LINE_START_Y, 0,
                 "%.2x\0", FAT_data_getBlock(FAT_screenBlocks_currentSequenceId, line));
     } else {
-        ham_DrawText(SCREENBLOCKS_BLOCK_LINE_X,
-                line + SCREENBLOCKS_LINE_START_Y, "  ");
+        hel_BgTextPrint(TEXT_LAYER, SCREENBLOCKS_BLOCK_LINE_X,
+                line + SCREENBLOCKS_LINE_START_Y, 0, "  ");
     }
     mutex = 1;
 }
@@ -124,10 +124,10 @@ void FAT_screenBlocks_printBlock(u8 line) {
 void FAT_screenBlocks_printTranspose(u8 line) {
     mutex = 0;
     if (!FAT_data_block_isTransposeEmpty(FAT_screenBlocks_currentSequenceId, line)) {
-        ham_DrawText(SCREENBLOCKS_TRANSPOSE_LINE_X, line + SCREENBLOCKS_LINE_START_Y,
+        hel_BgTextPrintF(TEXT_LAYER, SCREENBLOCKS_TRANSPOSE_LINE_X, line + SCREENBLOCKS_LINE_START_Y, 0,
                 "%.2x\0", FAT_data_block_getTranspose(FAT_screenBlocks_currentSequenceId, line));
     } else {
-        ham_DrawText(SCREENBLOCKS_TRANSPOSE_LINE_X, line + SCREENBLOCKS_LINE_START_Y,
+        hel_BgTextPrint(TEXT_LAYER, SCREENBLOCKS_TRANSPOSE_LINE_X, line + SCREENBLOCKS_LINE_START_Y, 0,
                 "  ");
     }
     mutex = 1;
@@ -144,10 +144,10 @@ void FAT_screenBlocks_printEffect(u8 line) {
 
         effect* effect = FAT_data_block_getEffect(FAT_screenBlocks_currentSequenceId, line);
 
-        ham_DrawText(SCREENBLOCKS_EFFECT_LINE_X, line + SCREENBLOCKS_LINE_START_Y,
+        hel_BgTextPrintF(TEXT_LAYER, SCREENBLOCKS_EFFECT_LINE_X, line + SCREENBLOCKS_LINE_START_Y, 0,
                 "%s%.2x\0", blockEffectName[(effect->name & 0xfe) >> 1], effect->value);
     } else {
-        ham_DrawText(SCREENBLOCKS_EFFECT_LINE_X, line + SCREENBLOCKS_LINE_START_Y,
+        hel_BgTextPrint(TEXT_LAYER, SCREENBLOCKS_EFFECT_LINE_X, line + SCREENBLOCKS_LINE_START_Y, 0,
                 "    ");
     }
     mutex = 1;

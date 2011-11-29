@@ -72,7 +72,9 @@
 bool mutex = 1;
 
 /** \brief Définition globale du format d'affichage des numéros de lignes. */
-#define FAT_FORMAT_LINE "%.2x\0"
+#define FAT_FORMAT_LINE "%.2x"
+
+#define TEXT_LAYER 1
 
 /** \brief Stocke l'id de l'écran sur lequel l'utilisateur se situe. */
 u8 FAT_currentScreen = SCREEN_SONG_ID;
@@ -83,7 +85,7 @@ u8 isHelpActivated = 0;
 void FAT_initSpritePalette();
 void FAT_initScreenPalette();
 void FAT_switchToScreen(u8 screenId);
-void FAT_showHelp (u8 screenId);
+void FAT_showHelp(u8 screenId);
 void FAT_reinitScreen();
 void FAT_forceClearTextLayer();
 void FAT_waitVSync();
@@ -150,6 +152,8 @@ bool FAT_isCurrentlyPlaying = 0;
 
 #include "player.h"
 
+#include "ResourceData.h"
+
 /**
  * \brief Fonction callback associée avec un TIMER: permet de décompter le temps
  * d'attente pour l'appui sur une touche. 
@@ -184,6 +188,30 @@ void FAT_keys_waitForAnotherKeyTouch() {
     }
 }
 
+// A buffer of memory which the Background Text
+// System uses to manage internal states.
+// It must not be modified from outside as long as
+// any Background Text System is running.
+u8 ATTR_EWRAM ATTR_ALIGNED(4) g_BgTextSystemMemory[HEL_SUBSYSTEM_BGTEXT_REQUIREDMEMORY];
+
+// g_CharLUT will hold offsets to each character
+// in the map data. This array basically functions
+// as a lookup table. It must be 256 elements big,
+// which equals the maximum number of a characters
+// in ASCII (0..255).
+// This buffer is only neccessary when you pass
+// BGTEXT_FLAGS_GENERATELUT to hel_BgTextCreate.
+// Please see documentation for details.
+u16 ATTR_EWRAM g_CharLUT[256];
+
+// That's the order of characters how they
+// appear on the source graphic.
+// See hel/demos/sharedmedia/charset8x8.bmp
+const char CHARORDER[] =
+        " BCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmn"\
+    "opqrstuvwxyz0123456789XXXXXXX,.-;:A#^+*@"\
+    "!\"§$\%&/()=?|\\<>[]{}¹²³°";
+
 /**
  * \brief Initialisation de HAM et d'autres données propres à FAT. 
  * 
@@ -198,12 +226,33 @@ void FAT_keys_waitForAnotherKeyTouch() {
 void FAT_init() {
     // HAM !
     ham_Init();
-    
-    FAT_filesystem_checkFs ();
+    //hel_SysSetPrefetch(TRUE);
 
-    ham_SetBgMode(0);
-    ham_InitText(1);
-    ham_SetTextCol(TEXT_COLOR, 0);
+    FAT_filesystem_checkFs();
+
+    hel_BgSetMode(0);
+    hel_BgTextInit((void*) g_BgTextSystemMemory);
+
+    // Initialize the tileset and an empty
+    // mapset using regular HAMlib functions
+    //ham_bg[TEXT_LAYER].ti = ham_InitTileSet(ResData(RES_CHARSET8X8_RAW), RES_CHARSET8X8_RAW_SIZE16, COLORS_16, TRUE);
+    ham_bg[TEXT_LAYER].ti = ham_InitTileSet((void*) text_Tiles, SIZEOF_16BIT(text_Tiles), 1, 1);
+    ham_bg[TEXT_LAYER].mi = ham_InitMapEmptySet(1024, 0);
+
+    //ham_InitText(1);
+    hel_BgTextCreate(
+            TEXT_LAYER, // BgNo
+            1, // Width of one character specified in tiles
+            1, // Height of one character specified in tiles
+            //ResData(RES_CHARSET8X8_MAP), // Pointer to character map
+            text_Map,
+            CHARORDER, // Pointer to array that reflects the order of characters on source graphic
+            g_CharLUT, // Pointer to buffer that receives the generated lookup table
+            BGTEXT_FLAGS_GENERATELUT); // Flags that control creation and print behaviour
+
+    ham_InitBg(TEXT_LAYER, TRUE, 0, FALSE);
+
+    //ham_SetTextCol(TEXT_COLOR, 0);
 
     ham_SetFxMode(FX_LAYER_SELECT(0, 0, 0, 0, 1, 0),
             FX_LAYER_SELECT(0, 0, 1, 1, 0, 0),
@@ -263,11 +312,16 @@ void FAT_showIntro() {
     ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_intro_Tiles, SIZEOF_16BIT(screen_intro_Tiles), 1, 1);
     ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_intro_Map, 1024, 0, 0);
     ham_InitBg(SCREEN_LAYER, 1, 0, 0);
+
 #ifdef DEBUG_ON
     ham_DrawText(1, 15, "DEBUG ON");
     ham_DrawText(1, 16, "SIZE %d octets", (sizeof (tracker)));
 #endif
-    ham_DrawText(1, 19, "version %s       %.3d kits", FAT_VERSION,snd_countAvailableKits());
+    hel_BgTextPrintF(TEXT_LAYER, 0, 19, 0, " version %s       %.3d kits", FAT_VERSION, snd_countAvailableKits());
+
+    //hel_BgTextPrint(TEXT_LAYER, 0,5,0," BCDEFGHIJKLMNOPQRSTUVWXYZabcd\nefghijklmnopqrstuvwxyz01234567\n89?ÖÄÜöäü,.-;:A#^+*@!\"§%\%&/()=?|\\<>[]{}¹²³°");
+    //hel_BgTextPrint(TEXT_LAYER, 0, 0, 0, "opqrstuvwxyz0123456789?ÖÄÜöäü,.-;:A#^+*@");
+
     while (!F_CTRLINPUT_START_PRESSED && !F_CTRLINPUT_A_PRESSED && !F_CTRLINPUT_B_PRESSED
             && !F_CTRLINPUT_DOWN_PRESSED && !F_CTRLINPUT_LEFT_PRESSED && !F_CTRLINPUT_RIGHT_PRESSED && !F_CTRLINPUT_UP_PRESSED
             && !F_CTRLINPUT_L_PRESSED && !F_CTRLINPUT_R_PRESSED
@@ -299,9 +353,14 @@ void FAT_reinitScreen() {
  */
 void FAT_forceClearTextLayer() {
     mutex = 0;
-    for (u8 l = 1; l < 20; l++) {
-        ham_DrawText(0, l, "                              ");
-    }
+    //    for (u8 l = 1; l < 20; l++) {
+    //        hel_BgTextPrint(1, 0, l, 0, "                              ");
+    //    }
+    hel_BgTextPrint(1, 0, 0, 0, "                              \n                              \n                              \n                              \n                              \n");
+    hel_BgTextPrint(1, 0, 5, 0, "                              \n                              \n                              \n                              \n                              \n");
+    hel_BgTextPrint(1, 0, 10, 0, "                              \n                              \n                              \n                              \n                              \n");
+    hel_BgTextPrint(1, 0, 15, 0, "                              \n                              \n                              \n                              \n                              \n");
+
     mutex = 1;
 }
 
@@ -363,7 +422,7 @@ void FAT_switchToScreen(u8 screenId) {
  * \brief Affiche l'écran d'aide correspondant à l'id passé en paramètres.
  * \param screenId le numéro d'écran actuellement consulté. 
  */
-void FAT_showHelp (u8 screenId){
+void FAT_showHelp(u8 screenId) {
     FAT_screenHelp_init(screenId);
 }
 

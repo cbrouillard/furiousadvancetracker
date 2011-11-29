@@ -70,7 +70,7 @@ void FAT_screenFilesystem_setMode(u8 modeId) {
  */
 void FAT_screenFilesystem_printMode() {
     mutex = 0;
-    ham_DrawText(16, 3, "Mode %s", modes[FAT_filesystem_actualMode]);
+    hel_BgTextPrintF(TEXT_LAYER,16, 3, 0,"Mode %s", modes[FAT_filesystem_actualMode]);
     mutex = 1;
 }
 
@@ -82,7 +82,7 @@ void FAT_screenFilesystem_printLineColumns() {
     mutex = 0;
     u8 y = SCREENFILESYSTEM_LINE_START_Y;
     for (int c = 0; c < (SCREENFILESYSTEM_NB_LINES_ON_SCREEN); c++) {
-        ham_DrawText(SCREENFILESYSTEM_LINE_X, y, FAT_FORMAT_LINE, c);
+        hel_BgTextPrintF(TEXT_LAYER,SCREENFILESYSTEM_LINE_X, y, 0, FAT_FORMAT_LINE, c);
         y += 1;
     }
     mutex = 1;
@@ -96,7 +96,7 @@ void FAT_screenFilesystem_printAllTracksName() {
     u8 track = 0;
     u8 y = SCREENFILESYSTEM_LINE_START_Y;
     while (track < MAX_TRACKS) {
-        ham_DrawText(SCREENFILESYSTEM_LINE_TRACKNAME_X, y, "%.8s %.2x", FAT_filesystem_getTrackName(track),
+        hel_BgTextPrintF(TEXT_LAYER,SCREENFILESYSTEM_LINE_TRACKNAME_X, y, 0, "%.8s %.2x", FAT_filesystem_getTrackName(track),
                 FAT_filesystem_getTrackNbWork(track));
         track++;
         y++;
@@ -111,10 +111,10 @@ void FAT_screenFilesystem_printAllTracksName() {
  */
 void FAT_screenFilesystem_printInfos() {
     mutex = 0;
-    ham_DrawText(16, 5, "line %.2x", FAT_screenFilesystem_currentSelectedLine);
-    ham_DrawText(16, 6, "Name %.8s", FAT_filesystem_getTrackName(FAT_screenFilesystem_currentSelectedLine));
-    ham_DrawText(16, 7, "size %.4x", FAT_filesystem_getTrackSizeChecked(FAT_screenFilesystem_currentSelectedLine));
-    ham_DrawText(16, 8, "work %.2x", FAT_filesystem_getTrackNbWork(FAT_screenFilesystem_currentSelectedLine));
+    hel_BgTextPrintF(TEXT_LAYER,16, 5, 0, "Line %.2x", FAT_screenFilesystem_currentSelectedLine);
+    hel_BgTextPrintF(TEXT_LAYER,16, 6, 0,"Name %.8s", FAT_filesystem_getTrackName(FAT_screenFilesystem_currentSelectedLine));
+    hel_BgTextPrintF(TEXT_LAYER,16, 7, 0, "Size %.4x", FAT_filesystem_getTrackSizeChecked(FAT_screenFilesystem_currentSelectedLine));
+    hel_BgTextPrintF(TEXT_LAYER,16, 8, 0, "Work %.2x", FAT_filesystem_getTrackNbWork(FAT_screenFilesystem_currentSelectedLine));
     mutex = 1;
 }
 

@@ -88,13 +88,13 @@ void FAT_screenComposer_mainFunc() {
  */
 void FAT_screenComposer_printInfos() {
     mutex = 0;
-    ham_DrawText(19, 3, "COMPOSER %.1x", 0);
-    ham_DrawText(19, 4, "LINE    %.2x",
+    hel_BgTextPrintF(TEXT_LAYER, 19, 3, 0, "Composer %.1x", 0);
+    hel_BgTextPrintF(TEXT_LAYER, 19, 4, 0, "Line    %.2x",
             FAT_screenComposer_currentSelectedLine);
     //ham_DrawText(21, 4, "CHAN %2x", FAT_screenSong_currentSelectedColumn+1);
 
-    ham_DrawText(1, 3, "TRANSPOSE  %.2x", FAT_tracker.composer.transpose);
-    ham_DrawText(1, 4, "KEY REPEAT %.2x", FAT_tracker.composer.keyRepeat);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 3, 0, "Transpose  %.2x", FAT_tracker.composer.transpose);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Key Repeat %.2x", FAT_tracker.composer.keyRepeat);
     mutex = 1;
 }
 
@@ -110,8 +110,8 @@ void FAT_screenComposer_printNote(u8 line) {
 
         if (FAT_data_composer_getChannel(line) > INSTRUMENT_TYPE_NOISE) {
 
-            ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
-                    line + SCREENCOMPOSER_LINE_START_Y,
+            hel_BgTextPrintF(TEXT_LAYER, SCREENCOMPOSER_NOTE_LINE_X,
+                    line + SCREENCOMPOSER_LINE_START_Y, 0,
                     "S%.2x %.2x      %.1x\0",
                     actualNote->freq, actualNote->instrument,
                     FAT_tracker.composer.channels[line] + 1
@@ -119,8 +119,8 @@ void FAT_screenComposer_printNote(u8 line) {
 
         } else {
 
-            ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
-                    line + SCREENCOMPOSER_LINE_START_Y,
+            hel_BgTextPrintF(TEXT_LAYER, SCREENCOMPOSER_NOTE_LINE_X,
+                    line + SCREENCOMPOSER_LINE_START_Y, 0,
                     "%s%1x %.2x      %.1x\0",
                     noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument,
                     //                FAT_data_getInstrumentType(actualNote->instrument) + 1
@@ -128,8 +128,8 @@ void FAT_screenComposer_printNote(u8 line) {
                     );
         }
     } else {
-        ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
-                line + SCREENCOMPOSER_LINE_START_Y, "             \0");
+        hel_BgTextPrint(TEXT_LAYER, SCREENCOMPOSER_NOTE_LINE_X,
+                line + SCREENCOMPOSER_LINE_START_Y, 0, "             ");
     }
     mutex = 1;
 }
@@ -151,9 +151,9 @@ void FAT_screenComposer_printAllNote() {
  */
 void FAT_screenComposer_printLocking() {
     if (FAT_screenComposer_isLocked) {
-        ham_DrawText(7, 16, "MODE   LOCKED");
+        hel_BgTextPrint(TEXT_LAYER, 7, 16, 0, "MODE   LOCKED");
     } else {
-        ham_DrawText(7, 16, "MODE UNLOCKED");
+        hel_BgTextPrint(TEXT_LAYER, 7, 16, 0, "MODE UNLOCKED");
     }
 }
 
@@ -170,14 +170,14 @@ void FAT_screenComposer_printAllScreenText() {
  */
 void FAT_screenComposer_printColumns() {
     mutex = 0;
-    ham_DrawText(7, 7, " L");
-    ham_DrawText(7, 8, " R");
-    ham_DrawText(7, 9, " A");
-    ham_DrawText(7, 10, " B");
-    ham_DrawText(7, 11, "UP");
-    ham_DrawText(7, 12, "RT");
-    ham_DrawText(7, 13, "DW");
-    ham_DrawText(7, 14, "LF");
+    hel_BgTextPrint(TEXT_LAYER, 7, 7, 0, " L");
+    hel_BgTextPrint(TEXT_LAYER, 7, 8, 0, " R");
+    hel_BgTextPrint(TEXT_LAYER, 7, 9, 0, " A");
+    hel_BgTextPrint(TEXT_LAYER, 7, 10, 0, " B");
+    hel_BgTextPrint(TEXT_LAYER, 7, 11, 0, "UP");
+    hel_BgTextPrint(TEXT_LAYER, 7, 12, 0, "RT");
+    hel_BgTextPrint(TEXT_LAYER, 7, 13, 0, "DW");
+    hel_BgTextPrint(TEXT_LAYER, 7, 14, 0, "LF");
     mutex = 1;
 }
 
@@ -238,7 +238,7 @@ void FAT_screenComposer_checkButtons() {
             if (!FAT_screenComposer_isLocked) {
                 if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_NOTES) {
                     FAT_cursors_showCursor3();
-                } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CHANNEL){
+                } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CHANNEL) {
                     FAT_cursors_showCursor1();
                 } else {
                     FAT_cursors_showCursor2();

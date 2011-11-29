@@ -50,7 +50,7 @@
  */
 #define FAT_VERSION "0.3.0"
 
-#include <mygba.h>
+#include <hel2.h>
 #include <stdarg.h>
 
 #include "soundApi/soundApi.h"

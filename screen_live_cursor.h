@@ -7,7 +7,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-*/
+ */
 
 /**
  * \file screen_song_cursor.h
@@ -17,6 +17,9 @@
 
 #ifndef _SCREENLIVECURSOR_H_
 #define _SCREENLIVECURSOR_H_
+
+#include "screen_live.h"
+
 
 /** \brief Taille d'un bloc d'affichage séquence 16*8 en pixels. */
 #define SCREENLIVE_BLOCK_SIZE_X 16
@@ -53,7 +56,7 @@ void FAT_screenLive_initCursor() {
     FAT_screenSong_currentSelectedLine = 0;
     FAT_screenSong_currentStartLine = 0;
     FAT_screenSong_currentSelectedColumn = 0;
-    
+
 };
 
 /**
@@ -135,7 +138,7 @@ void FAT_screenLive_movePageUp() {
  * \brief Déplace le curseur tout en haut du tableau. 
  */
 void FAT_screenLive_moveCursorAllUp() {
-    FAT_screenSong_cursorY = SCREENLIVE_FIRST_BLOCK_Y-1;
+    FAT_screenSong_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1;
     FAT_screenSong_currentStartLine = 0;
     FAT_screenSong_currentSelectedLine = 0;
     FAT_screenLive_printAllScreenText();
@@ -167,7 +170,11 @@ void FAT_screenLive_moveCursorUp() {
  * \brief Valide le déplacement du curseur sur l'écran. 
  */
 void FAT_screenLive_commitCursorMove() {
-    ham_SetObjXY(FAT_cursor2_obj, FAT_screenSong_cursorX, FAT_screenSong_cursorY);
+    if (FAT_screenLive_isCursorInSequencer) {
+        ham_SetObjXY(FAT_cursor2_obj, FAT_screenSong_cursorX, FAT_screenSong_cursorY);
+    } else {
+        ham_SetObjXY(FAT_cursor3_obj, FAT_screenSong_cursorX - 8, FAT_screenSong_cursorY);
+    }
 }
 
 #endif

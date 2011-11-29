@@ -73,7 +73,7 @@ void FAT_screenNotes_printLineColumns() {
     mutex = 0;
     u8 y = SCREENNOTES_LINE_START_Y;
     for (int c = 0; c < (SCREENNOTES_NB_LINES_ON_SCREEN); c++) {
-        ham_DrawText(SCREENNOTES_LINE_X, y, FAT_FORMAT_LINE, c);
+        hel_BgTextPrintF(TEXT_LAYER,SCREENNOTES_LINE_X, y, 0, FAT_FORMAT_LINE, c);
         y += SCREENNOTES_LINE_SIZE_Y;
     }
     mutex = 1;
@@ -85,7 +85,7 @@ void FAT_screenNotes_printLineColumns() {
  */
 void FAT_screenNotes_printInfos() {
     mutex = 0;
-    ham_DrawText(18, 4, "LINE     %.2x", FAT_screenNotes_currentSelectedLine);
+    hel_BgTextPrintF(TEXT_LAYER,18, 4, 0,"Line     %.2x", FAT_screenNotes_currentSelectedLine);
     //ham_DrawText(21, 4, "CHAN %2x", FAT_screenSong_currentSelectedColumn+1);
     mutex = 1;
 }
@@ -103,17 +103,17 @@ void FAT_screenNotes_printNote(u8 line) {
 
         if (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA) {
 
-            ham_DrawText(SCREENNOTES_NOTE_LINE_X,
-                    line + SCREENNOTES_LINE_START_Y,
+            hel_BgTextPrintF(TEXT_LAYER,SCREENNOTES_NOTE_LINE_X,
+                    line + SCREENNOTES_LINE_START_Y,0,
                     "%s%1x %.2x\0", noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument);
         } else {
-            ham_DrawText(SCREENNOTES_NOTE_LINE_X,
-                    line + SCREENNOTES_LINE_START_Y,
+            hel_BgTextPrintF(TEXT_LAYER,SCREENNOTES_NOTE_LINE_X,
+                    line + SCREENNOTES_LINE_START_Y,0,
                     "S%.2x %.2x\0", actualNote->freq, actualNote->instrument);
         }
     } else {
-        ham_DrawText(SCREENNOTES_NOTE_LINE_X,
-                line + SCREENNOTES_LINE_START_Y, "      \0");
+        hel_BgTextPrint(TEXT_LAYER,SCREENNOTES_NOTE_LINE_X,
+                line + SCREENNOTES_LINE_START_Y, 0, "      ");
     }
     mutex = 1;
 }
@@ -130,10 +130,10 @@ void FAT_screenNotes_printEffect(u8 line) {
 
         effect* effect = FAT_data_note_getEffect(FAT_screenNotes_currentBlockId, line);
 
-        ham_DrawText(SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y,
+        hel_BgTextPrintF(TEXT_LAYER,SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y,0,
                 "%.2s%.2x\0", noteEffectName[(effect->name & 0xfe) >> 1], effect->value);
     } else {
-        ham_DrawText(SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y,
+        hel_BgTextPrint(TEXT_LAYER,SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y,0,
                 "    ");
     }
     mutex = 1;
@@ -156,7 +156,7 @@ void FAT_screenNotes_printAllNotes() {
  */
 void FAT_screenNotes_printBlockNumber() {
     mutex = 0;
-    ham_DrawText(18, 3, "BLOCK    %.2x", FAT_screenNotes_currentBlockId);
+    hel_BgTextPrintF(TEXT_LAYER,18, 3, 0,"Block    %.2x", FAT_screenNotes_currentBlockId);
     mutex = 1;
 }
 

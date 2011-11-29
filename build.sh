@@ -2,7 +2,7 @@
 VERSION="0.3.0"
 echo "### Nettoyage"
 make clean
-rm *.elf *.gba *.s
+rm *.elf *.gba
 rm soundApi/*.o
 echo "### Compilation"
 make
