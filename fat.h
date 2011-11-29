@@ -152,8 +152,6 @@ bool FAT_isCurrentlyPlaying = 0;
 
 #include "player.h"
 
-#include "ResourceData.h"
-
 /**
  * \brief Fonction callback associée avec un TIMER: permet de décompter le temps
  * d'attente pour l'appui sur une touche. 
