@@ -36,18 +36,14 @@ u8 param1;
  * \brief Fonction principale de la boite de dialog SAVE
  */
 void FAT_yesno_dialogSave_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
+    ham_CopyObjToOAM();
 
-        if (hel_PadQuery()->Pressed.L) {
-            FAT_yesno_close();
-        } else if (hel_PadQuery()->Pressed.R) {
-            mutex = 0;
-            FAT_filesystem_saveRaw(param1);
-            FAT_yesno_close();
-            hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Saved ");
-            mutex = 1;
-        }
+    if (hel_PadQuery()->Pressed.L) {
+        FAT_yesno_close();
+    } else if (hel_PadQuery()->Pressed.R) {
+        FAT_filesystem_saveRaw(param1);
+        FAT_yesno_close();
+        hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Saved ");
     }
 }
 
@@ -55,20 +51,16 @@ void FAT_yesno_dialogSave_mainFunc() {
  * \brief Fonction principale de la boite de dialog LOAD
  */
 void FAT_yesno_dialogLoad_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
+    ham_CopyObjToOAM();
 
-        if (hel_PadQuery()->Pressed.L) {
-            FAT_yesno_close();
-        } else if (hel_PadQuery()->Pressed.R) {
-            mutex = 0;
-            FAT_player_stopPlayer();
-            FAT_filesystem_loadRaw(param1);
-            FAT_currentScreen = SCREEN_PROJECT_ID;
-            FAT_yesno_close();
-            hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Loaded");
-            mutex = 1;
-        }
+    if (hel_PadQuery()->Pressed.L) {
+        FAT_yesno_close();
+    } else if (hel_PadQuery()->Pressed.R) {
+        FAT_player_stopPlayer();
+        FAT_filesystem_loadRaw(param1);
+        FAT_currentScreen = SCREEN_PROJECT_ID;
+        FAT_yesno_close();
+        hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Loaded");
     }
 }
 
@@ -76,14 +68,12 @@ void FAT_yesno_dialogLoad_mainFunc() {
  * \brief Fonction principale de la boite de dialog KEYBOARD
  */
 void FAT_yesno_dialogKeyboard_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
+    ham_CopyObjToOAM();
 
-        if (hel_PadQuery()->Pressed.L) {
-            FAT_yesno_close();
-        } else if (hel_PadQuery()->Pressed.R) {
-            FAT_yesno_close();
-        }
+    if (hel_PadQuery()->Pressed.L) {
+        FAT_yesno_close();
+    } else if (hel_PadQuery()->Pressed.R) {
+        FAT_yesno_close();
     }
 }
 
@@ -91,20 +81,16 @@ void FAT_yesno_dialogKeyboard_mainFunc() {
  * \brief Fonction principale de la boite de dialog NEW PROJECT.
  */
 void FAT_yesno_dialogNewProject_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
+    ham_CopyObjToOAM();
 
-        if (hel_PadQuery()->Pressed.L) {
-            FAT_yesno_close();
-        } else if (hel_PadQuery()->Pressed.R) {
-            mutex = 0;
-            FAT_player_stopPlayer();
-            FAT_data_initData();
-            FAT_currentScreen = SCREEN_SONG_ID;
-            FAT_yesno_close();
-            hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Go new");
-            mutex = 1;
-        }
+    if (hel_PadQuery()->Pressed.L) {
+        FAT_yesno_close();
+    } else if (hel_PadQuery()->Pressed.R) {
+        FAT_player_stopPlayer();
+        FAT_data_initData();
+        FAT_currentScreen = SCREEN_SONG_ID;
+        FAT_yesno_close();
+        hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Go new");
     }
 }
 
@@ -112,11 +98,9 @@ void FAT_yesno_dialogNewProject_mainFunc() {
  * \brief Fonction principale pour une boite ou il suffit de répondre "OUI" 
  */
 void FAT_onlyyes_dialog_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        if (hel_PadQuery()->Pressed.R) {
-            FAT_yesno_close();
-        }
+    ham_CopyObjToOAM();
+    if (hel_PadQuery()->Pressed.R) {
+        FAT_yesno_close();
     }
 }
 
@@ -124,10 +108,8 @@ void FAT_onlyyes_dialog_mainFunc() {
  * \brief Ferme la boite de dialogue et reinitialise la popup (qui est sur le même layer). 
  */
 void FAT_yesno_close() {
-    mutex = 0;
     FAT_popup_init();
     FAT_switchToScreen(FAT_currentScreen);
-    mutex = 1;
 }
 
 /**
@@ -153,7 +135,7 @@ void FAT_yesno_dialogLoad() {
     ham_InitBg(DIALOG_LAYER, 1, 0, 0);
 
     hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogLoad_mainFunc);
-    
+
 
 }
 

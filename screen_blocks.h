@@ -65,13 +65,11 @@ void FAT_screenBlocks_pressB();
  * \brief Fonction de routine qui affiche les numéros de ligne. 
  */
 void FAT_screenBlocks_printLineColumns() {
-    mutex = 0;
     u8 y = SCREENBLOCKS_LINE_START_Y;
     for (int c = 0; c < (SCREENBLOCKS_NB_LINES_ON_SCREEN); c++) {
         hel_BgTextPrintF(TEXT_LAYER, SCREENBLOCKS_LINE_X, y, 0, FAT_FORMAT_LINE, c);
         y += SCREENBLOCKS_LINE_SIZE_Y;
     }
-    mutex = 1;
 }
 
 /**
@@ -81,9 +79,7 @@ void FAT_screenBlocks_printLineColumns() {
  * en cours d'édition. 
  */
 void FAT_screenBlocks_printInfos() {
-    mutex = 0;
     hel_BgTextPrintF(TEXT_LAYER, 18, 4, 0, "Line     %.2x", FAT_screenBlocks_currentSelectedLine);
-    mutex = 1;
 }
 
 /**
@@ -93,9 +89,7 @@ void FAT_screenBlocks_printInfos() {
  * peu de fois.  
  */
 void FAT_screenBlocks_printSequenceNumber() {
-    mutex = 0;
     hel_BgTextPrintF(TEXT_LAYER, 18, 3, 0, "Sequence %.2x", FAT_screenBlocks_currentSequenceId);
-    mutex = 1;
 }
 
 /**
@@ -104,7 +98,6 @@ void FAT_screenBlocks_printSequenceNumber() {
  * @param line le numéro de la ligne du block à écrire
  */
 void FAT_screenBlocks_printBlock(u8 line) {
-    mutex = 0;
     if (FAT_data_getBlock(FAT_screenBlocks_currentSequenceId, line) != NULL_VALUE) {
         hel_BgTextPrintF(TEXT_LAYER, SCREENBLOCKS_BLOCK_LINE_X,
                 line + SCREENBLOCKS_LINE_START_Y, 0,
@@ -113,7 +106,6 @@ void FAT_screenBlocks_printBlock(u8 line) {
         hel_BgTextPrint(TEXT_LAYER, SCREENBLOCKS_BLOCK_LINE_X,
                 line + SCREENBLOCKS_LINE_START_Y, 0, "  ");
     }
-    mutex = 1;
 }
 
 /**
@@ -122,7 +114,6 @@ void FAT_screenBlocks_printBlock(u8 line) {
  * @param line le numéro de ligne du block
  */
 void FAT_screenBlocks_printTranspose(u8 line) {
-    mutex = 0;
     if (!FAT_data_block_isTransposeEmpty(FAT_screenBlocks_currentSequenceId, line)) {
         hel_BgTextPrintF(TEXT_LAYER, SCREENBLOCKS_TRANSPOSE_LINE_X, line + SCREENBLOCKS_LINE_START_Y, 0,
                 "%.2x\0", FAT_data_block_getTranspose(FAT_screenBlocks_currentSequenceId, line));
@@ -130,7 +121,6 @@ void FAT_screenBlocks_printTranspose(u8 line) {
         hel_BgTextPrint(TEXT_LAYER, SCREENBLOCKS_TRANSPOSE_LINE_X, line + SCREENBLOCKS_LINE_START_Y, 0,
                 "  ");
     }
-    mutex = 1;
 }
 
 /**
@@ -139,7 +129,6 @@ void FAT_screenBlocks_printTranspose(u8 line) {
  * @param line le numéro de ligne du block
  */
 void FAT_screenBlocks_printEffect(u8 line) {
-    mutex = 0;
     if (!FAT_data_block_isEffectEmpty(FAT_screenBlocks_currentSequenceId, line)) {
 
         effect* effect = FAT_data_block_getEffect(FAT_screenBlocks_currentSequenceId, line);
@@ -150,20 +139,17 @@ void FAT_screenBlocks_printEffect(u8 line) {
         hel_BgTextPrint(TEXT_LAYER, SCREENBLOCKS_EFFECT_LINE_X, line + SCREENBLOCKS_LINE_START_Y, 0,
                 "    ");
     }
-    mutex = 1;
 }
 
 /**
  * \brief Affiche tous les blocks pour la séquence courante.
  */
 void FAT_screenBlocks_printAllBlocks() {
-    mutex = 0;
     for (u8 b = 0; b < SCREENBLOCKS_NB_LINES_ON_SCREEN; b++) {
         FAT_screenBlocks_printBlock(b);
         FAT_screenBlocks_printTranspose(b);
         FAT_screenBlocks_printEffect(b);
     }
-    mutex = 1;
 }
 
 /**
@@ -173,18 +159,6 @@ void FAT_screenBlocks_printAllScreenText() {
     FAT_screenBlocks_printLineColumns();
     FAT_screenBlocks_printAllBlocks();
     FAT_screenBlocks_printInfos();
-}
-
-/**
- * \brief Fonction temporisée: coeur de l'écran BLOCK (callback). 
- */
-void FAT_screenBlocks_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        FAT_screenBlocks_checkButtons();
-    }
-
-    hel_IntrAcknowledge(INT_TYPE_VBL);
 }
 
 /**

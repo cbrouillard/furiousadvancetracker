@@ -61,24 +61,10 @@ void FAT_screenInstrument_hideAllEnvdirSprites();
 void FAT_screenInstrument_hideAllWavedutySprite();
 
 /**
- * \brief Fonction principale de l'écran (callback). 
- */
-void FAT_screenInstrument_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        FAT_screenInstrument_checkButtons();
-    }
-    
-    hel_IntrAcknowledge(INT_TYPE_VBL);
-}
-
-/**
  * \brief Affiche le numéro de l'écran en cours d'édition dans le cadre en haut à droite. 
  */
 void FAT_screenInstrument_printInstrumentNumber() {
-    mutex = 0;
     hel_BgTextPrintF(TEXT_LAYER, 16, 3, 0, "Instrument %.2x", FAT_screenInstrument_currentInstrumentId);
-    mutex = 1;
 }
 
 /**
@@ -87,7 +73,6 @@ void FAT_screenInstrument_printInstrumentNumber() {
  * @param type le type de l'instrument
  */
 void FAT_screenInstrument_printAllText(u8 type) {
-    mutex = 0;
     switch (type) {
         case INSTRUMENT_TYPE_PULSE:
         case INSTRUMENT_TYPE_PULSE2:
@@ -175,7 +160,6 @@ void FAT_screenInstrument_printAllText(u8 type) {
 
             break;
     }
-    mutex = 1;
 }
 
 /**

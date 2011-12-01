@@ -72,22 +72,9 @@ void FAT_screenComposer_playAffectedNotes();
 #include "screen_composer_cursor.h"
 
 /**
- * \brief Fonction callback principale pour l'écran COMPOSER.
- */
-void FAT_screenComposer_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        FAT_screenComposer_checkButtons();
-    }
-
-    hel_IntrAcknowledge(INT_TYPE_VBL);
-}
-
-/**
  * \brief Affiche les informations "dynamiques" dans l'écran COMPOSER (numéro de ligne, ...). 
  */
 void FAT_screenComposer_printInfos() {
-    mutex = 0;
     hel_BgTextPrintF(TEXT_LAYER, 19, 3, 0, "Composer %.1x", 0);
     hel_BgTextPrintF(TEXT_LAYER, 19, 4, 0, "Line    %.2x",
             FAT_screenComposer_currentSelectedLine);
@@ -95,7 +82,6 @@ void FAT_screenComposer_printInfos() {
 
     hel_BgTextPrintF(TEXT_LAYER, 1, 3, 0, "Transpose  %.2x", FAT_tracker.composer.transpose);
     hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Key Repeat %.2x", FAT_tracker.composer.keyRepeat);
-    mutex = 1;
 }
 
 /**
@@ -104,7 +90,6 @@ void FAT_screenComposer_printInfos() {
  * @param line le numéro de ligne à afficher
  */
 void FAT_screenComposer_printNote(u8 line) {
-    mutex = 0;
     if (!FAT_data_composer_isNoteEmpty(line)) {
         note* actualNote = FAT_data_composer_getNote(line);
 
@@ -131,18 +116,15 @@ void FAT_screenComposer_printNote(u8 line) {
         hel_BgTextPrint(TEXT_LAYER, SCREENCOMPOSER_NOTE_LINE_X,
                 line + SCREENCOMPOSER_LINE_START_Y, 0, "             ");
     }
-    mutex = 1;
 }
 
 /**
  * \brief Affiche toutes les notes du COMPOSER. 
  */
 void FAT_screenComposer_printAllNote() {
-    mutex = 0;
     for (u8 b = 0; b < SCREENCOMPOSER_NB_LINES_ON_SCREEN; b++) {
         FAT_screenComposer_printNote(b);
     }
-    mutex = 1;
 }
 
 /**
@@ -169,7 +151,6 @@ void FAT_screenComposer_printAllScreenText() {
  * \brief Fonction appelée à l'initialisation afin d'imprimer le numéro des lignes sur l'écran. 
  */
 void FAT_screenComposer_printColumns() {
-    mutex = 0;
     hel_BgTextPrint(TEXT_LAYER, 7, 7, 0, " L");
     hel_BgTextPrint(TEXT_LAYER, 7, 8, 0, " R");
     hel_BgTextPrint(TEXT_LAYER, 7, 9, 0, " A");
@@ -178,7 +159,6 @@ void FAT_screenComposer_printColumns() {
     hel_BgTextPrint(TEXT_LAYER, 7, 12, 0, "RT");
     hel_BgTextPrint(TEXT_LAYER, 7, 13, 0, "DW");
     hel_BgTextPrint(TEXT_LAYER, 7, 14, 0, "LF");
-    mutex = 1;
 }
 
 /**

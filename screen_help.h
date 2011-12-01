@@ -29,18 +29,6 @@ void FAT_screenHelp_init(u8 screenIdForHelp);
 void FAT_screenHelp_checkButtons();
 
 /**
- * \brief Fonction principale de l'écran (callback). 
- */
-void FAT_screenHelp_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        FAT_screenHelp_checkButtons();
-    }
-
-    hel_IntrAcknowledge(INT_TYPE_VBL);
-}
-
-/**
  * \brief Initialisation de l'écran. 
  */
 void FAT_screenHelp_init(u8 screenIdForHelp) {
@@ -84,9 +72,6 @@ void FAT_screenHelp_init(u8 screenIdForHelp) {
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
     FAT_cursors_hideAllCursors();
-
-    // démarrage du cycle pour l'écran
-    hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenHelp_mainFunc);
 
     isHelpActivated = 1;
 }

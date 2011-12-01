@@ -229,7 +229,6 @@ u16 FAT_filesystem_getTrackSizeChecked(u8 trackNumber) {
  * 
  */
 void FAT_filesystem_saveRaw(u8 trackNumber) {
-    mutex = 0;
     FAT_tracker.nbWork++;
 
     u8* tracker = (u8*) & FAT_tracker;
@@ -256,7 +255,6 @@ void FAT_filesystem_saveRaw(u8 trackNumber) {
     FAT_filesystem_setTrackSize(trackNumber, trackSize);
 
     gamepak[offset + counter] = 0x5a;
-    mutex = 1;
 }
 
 /**
@@ -264,7 +262,6 @@ void FAT_filesystem_saveRaw(u8 trackNumber) {
  * 
  */
 void FAT_filesystem_loadRaw(u8 trackNumber) {
-    mutex = 0;
     u8* tracker = (u8*) & FAT_tracker;
     u32 trackSize = FAT_filesystem_getTrackSize(trackNumber);
     u16 offset = FAT_filesystem_getTrackOffset(trackNumber);
@@ -280,7 +277,6 @@ void FAT_filesystem_loadRaw(u8 trackNumber) {
             counter++;
         }
     }
-    mutex = 1;
 }
 
 

@@ -33,21 +33,9 @@ void FAT_screenProject_checkButtons();
 void FAT_screenProject_pressOrHeldA();
 
 /**
- * \brief Fonction principale de l'écran (callback). 
- */
-void FAT_screenProject_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        FAT_screenProject_checkButtons();
-    }
-    hel_IntrAcknowledge(INT_TYPE_VBL);
-}
-
-/**
  * \brief Affiche les infos du projet sur l'écran. 
  */
 void FAT_screenProject_printInfos() {
-    mutex = 0;
     hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Tempo     %3d", FAT_tracker.tempo);
     hel_BgTextPrintF(TEXT_LAYER, 1, 5, 0, "Transpose %.2x", FAT_tracker.transpose);
     hel_BgTextPrintF(TEXT_LAYER, 1, 8, 0, "KeyRepeat %.2x", FAT_tracker.keyRepeat);
@@ -57,7 +45,6 @@ void FAT_screenProject_printInfos() {
     hel_BgTextPrintF(TEXT_LAYER, 1, 14, 0, "Load Prj  OK");
 
     hel_BgTextPrintF(TEXT_LAYER, 1, 1, 0, "FAT project v%s", FAT_VERSION);
-    mutex = 1;
 }
 
 /**
@@ -65,11 +52,9 @@ void FAT_screenProject_printInfos() {
  * le nombre de fois enregistré, ...) 
  */
 void FAT_screenProject_printProject() {
-    mutex = 0;
     hel_BgTextPrintF(TEXT_LAYER, 16, 3, 0, "Name %.8s", FAT_tracker.songName);
     hel_BgTextPrintF(TEXT_LAYER, 16, 4, 0, "Size %.4x", sizeof (FAT_tracker));
     hel_BgTextPrintF(TEXT_LAYER, 16, 5, 0, "Work %.2x", FAT_tracker.nbWork);
-    mutex = 1;
 
 }
 

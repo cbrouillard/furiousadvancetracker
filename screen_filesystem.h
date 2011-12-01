@@ -45,17 +45,6 @@ void FAT_screenFilesystem_pressOrHeldA();
 
 #include "screen_filesystem_cursor.h"
 
-/**
- * \brief Fonction principale de l'écran (callback). 
- */
-void FAT_screenFilesystem_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        FAT_screenFilesystem_checkButtons();
-    }
-
-    hel_IntrAcknowledge(INT_TYPE_VBL);
-}
 
 /**
  * \brief Change le mode pour l'écran filesystem.
@@ -69,9 +58,7 @@ void FAT_screenFilesystem_setMode(u8 modeId) {
  * \brief Affiche le mode sur la partie droite de l'interface. 
  */
 void FAT_screenFilesystem_printMode() {
-    mutex = 0;
     hel_BgTextPrintF(TEXT_LAYER, 16, 3, 0, "Mode %s", modes[FAT_filesystem_actualMode]);
-    mutex = 1;
 }
 
 /**
@@ -79,20 +66,17 @@ void FAT_screenFilesystem_printMode() {
  * gauche de l'interface. 
  */
 void FAT_screenFilesystem_printLineColumns() {
-    mutex = 0;
     u8 y = SCREENFILESYSTEM_LINE_START_Y;
     for (int c = 0; c < (SCREENFILESYSTEM_NB_LINES_ON_SCREEN); c++) {
         hel_BgTextPrintF(TEXT_LAYER, SCREENFILESYSTEM_LINE_X, y, 0, FAT_FORMAT_LINE, c);
         y += 1;
     }
-    mutex = 1;
 }
 
 /**
  * \brief Affiche tous les noms des chansons déjà enregistrées. 
  */
 void FAT_screenFilesystem_printAllTracksName() {
-    mutex = 0;
     u8 track = 0;
     u8 y = SCREENFILESYSTEM_LINE_START_Y;
     while (track < MAX_TRACKS) {
@@ -102,7 +86,6 @@ void FAT_screenFilesystem_printAllTracksName() {
         y++;
     }
 
-    mutex = 1;
 }
 
 /**
@@ -110,12 +93,10 @@ void FAT_screenFilesystem_printAllTracksName() {
  * sélectionnée, ... 
  */
 void FAT_screenFilesystem_printInfos() {
-    mutex = 0;
     hel_BgTextPrintF(TEXT_LAYER, 16, 5, 0, "Line %.2x", FAT_screenFilesystem_currentSelectedLine);
     hel_BgTextPrintF(TEXT_LAYER, 16, 6, 0, "Name %.8s", FAT_filesystem_getTrackName(FAT_screenFilesystem_currentSelectedLine));
     hel_BgTextPrintF(TEXT_LAYER, 16, 7, 0, "Size %.4x", FAT_filesystem_getTrackSizeChecked(FAT_screenFilesystem_currentSelectedLine));
     hel_BgTextPrintF(TEXT_LAYER, 16, 8, 0, "Work %.2x", FAT_filesystem_getTrackNbWork(FAT_screenFilesystem_currentSelectedLine));
-    mutex = 1;
 }
 
 /**

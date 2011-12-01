@@ -54,23 +54,6 @@
  être pondéré avec une valeur paramétrable. */
 #define WAIT_FOR_START 50
 
-/**
- * \brief Cette variable sert à gérer les contextes conflictuels (notamment dans les
- * boucles affichant du texte à gogo). 
- * 
- * Si le mutex est à zéro alors aucun affichage ne pourra avoir lieu.
- * 
- * Usage:
- * <code>void printBeaucoupTexte() {
- *      mutex = 0;
- *      print text1
- *      print text2
- *      mutex = 1;
- * }</code>
- * <b>NE PAS TOUCHER !</b>
- */
-bool mutex = 1;
-
 /** \brief Définition globale du format d'affichage des numéros de lignes. */
 #define FAT_FORMAT_LINE "%.2x"
 
@@ -305,16 +288,9 @@ void FAT_reinitScreen() {
  * Performance warning ! Afficher du texte via HAM est lent !
  */
 void FAT_forceClearTextLayer() {
-    mutex = 0;
-    //    for (u8 l = 1; l < 20; l++) {
-    //        hel_BgTextPrint(1, 0, l, 0, "                              ");
-    //    }
-    hel_BgTextPrint(1, 0, 0, 0, "                              \n                              \n                              \n                              \n                              \n");
     hel_BgTextPrint(1, 0, 5, 0, "                              \n                              \n                              \n                              \n                              \n");
     hel_BgTextPrint(1, 0, 10, 0, "                              \n                              \n                              \n                              \n                              \n");
     hel_BgTextPrint(1, 0, 15, 0, "                              \n                              \n                              \n                              \n                              \n");
-
-    mutex = 1;
 }
 
 /**
