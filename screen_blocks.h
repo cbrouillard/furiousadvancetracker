@@ -56,7 +56,7 @@ u8 FAT_screenBlocks_currentSequenceId;
 void FAT_screenBlocks_init();
 void FAT_screenBlocks_checkButtons();
 void FAT_screenBlocks_printInfos();
-void FAT_screenBlocks_pressA();
+void FAT_screenBlocks_pressOrHeldA();
 void FAT_screenBlocks_pressB();
 
 #include "screen_blocks_cursor.h"
@@ -181,10 +181,10 @@ void FAT_screenBlocks_printAllScreenText() {
 void FAT_screenBlocks_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenBlocks_checkButtons();
-        }
+        FAT_screenBlocks_checkButtons();
     }
+
+    hel_IntrAcknowledge(INT_TYPE_VBL);
 }
 
 /**
@@ -211,8 +211,7 @@ void FAT_screenBlocks_init() {
     FAT_screenBlocks_printAllScreenText();
 
     // démarrage du cycle pour l'écran
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenBlocks_mainFunc);
+    //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenBlocks_mainFunc);
 
     // affichage du curseur
     FAT_cursors_hideCursor2();
@@ -227,7 +226,9 @@ void FAT_screenBlocks_init() {
  * La gestion des touches A et B est déportée dans des fonctions externes. 
  */
 void FAT_screenBlocks_checkButtons() {
-    if (F_CTRLINPUT_SELECT_PRESSED) {
+    hel_PadCapture();
+
+    if (hel_PadQuery()->Held.Select) {
         if (!FAT_screenBlocks_isPopuped) {
             FAT_cursors_hideCursor2();
             FAT_cursors_hideCursorChange();
@@ -249,17 +250,16 @@ void FAT_screenBlocks_checkButtons() {
             }
         }
 
-        if (F_CTRLINPUT_A_PRESSED) {
+        if (hel_PadQuery()->Held.A || hel_PadQuery()->Pressed.A) {
             // on agit selon la colonne actuellement séléctionné
-            FAT_screenBlocks_pressA();
+            FAT_screenBlocks_pressOrHeldA();
 
         } else {
 
-            if (F_CTRLINPUT_R_PRESSED) {
+            if (hel_PadQuery()->Held.R) {
                 FAT_cursors_showCursorChange();
 
-                if (F_CTRLINPUT_RIGHT_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Right) {
                     if (FAT_screenBlocks_currentSequenceId < NB_MAX_SEQUENCES - 1) {
                         FAT_screenBlocks_currentSequenceId++;
                         FAT_screenBlocks_printSequenceNumber();
@@ -267,8 +267,7 @@ void FAT_screenBlocks_checkButtons() {
                     }
                 }
 
-                if (F_CTRLINPUT_LEFT_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Left) {
                     if (FAT_screenBlocks_currentSequenceId > 0) {
                         FAT_screenBlocks_currentSequenceId--;
                         FAT_screenBlocks_printSequenceNumber();
@@ -276,21 +275,18 @@ void FAT_screenBlocks_checkButtons() {
                     }
                 }
 
-                if (F_CTRLINPUT_DOWN_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Down) {
                     // TODO passer à la séquence qui suit si elle existe
                 }
 
-                if (F_CTRLINPUT_UP_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Up) {
                     // TODO passer à la séquence précédente si elle existe
                 }
 
             } else {
                 FAT_cursors_hideCursorChange();
 
-                if (F_CTRLINPUT_START_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Start) {
                     if (!FAT_isCurrentlyPlaying) {
                         FAT_player_startPlayerFromBlocks(FAT_screenBlocks_currentSequenceId,
                                 FAT_screenBlocks_currentSelectedLine, FAT_screenSong_currentSelectedColumn);
@@ -299,24 +295,20 @@ void FAT_screenBlocks_checkButtons() {
                     }
                 }
 
-                if (F_CTRLINPUT_B_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.B) {
                     FAT_screenBlocks_pressB();
                 }
 
-                if (F_CTRLINPUT_RIGHT_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Right) {
                     FAT_screenBlocks_moveCursorRight();
                 }
 
-                if (F_CTRLINPUT_LEFT_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Left) {
                     FAT_screenBlocks_moveCursorLeft();
                 }
 
-                if (F_CTRLINPUT_DOWN_PRESSED) {
-                    iCanPressAKey = 0;
-                    if (F_CTRLINPUT_L_PRESSED) {
+                if (hel_PadQuery()->Pressed.Down) {
+                    if (hel_PadQuery()->Held.L) {
                         FAT_screenBlocks_moveCursorAllDown();
                     } else {
                         FAT_screenBlocks_moveCursorDown();
@@ -324,9 +316,8 @@ void FAT_screenBlocks_checkButtons() {
 
                 }
 
-                if (F_CTRLINPUT_UP_PRESSED) {
-                    iCanPressAKey = 0;
-                    if (F_CTRLINPUT_L_PRESSED) {
+                if (hel_PadQuery()->Pressed.Up) {
+                    if (hel_PadQuery()->Held.L) {
                         FAT_screenBlocks_moveCursorAllUp();
                     } else {
                         FAT_screenBlocks_moveCursorUp();
@@ -336,14 +327,13 @@ void FAT_screenBlocks_checkButtons() {
                 FAT_screenBlocks_commitCursorMove();
             }
 
-            if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.R && hel_PadQuery()->Pressed.L) {
                 FAT_showHelp(SCREEN_BLOCKS_ID);
             }
 
         }
-        FAT_keys_waitForAnotherKeyTouch();
     }
+
 }
 
 /**
@@ -352,7 +342,7 @@ void FAT_screenBlocks_checkButtons() {
 void FAT_screenBlocks_pressB() {
     switch (FAT_screenBlocks_currentSelectedColumn) {
         case SCREENBLOCKS_COLUMN_ID_BLK:
-            if (F_CTRLINPUT_L_PRESSED) {
+            if (hel_PadQuery()->Held.L) {
                 if (FAT_data_isBlockAllocatable(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine)) {
                     // espace libre
@@ -390,12 +380,11 @@ void FAT_screenBlocks_pressB() {
 /**
  * \brief Fonction pour gérer la touche A sur l'écran BLOCKS.
  */
-void FAT_screenBlocks_pressA() {
+void FAT_screenBlocks_pressOrHeldA() {
     switch (FAT_screenBlocks_currentSelectedColumn) {
         case SCREENBLOCKS_COLUMN_ID_BLK:
 
-            if (F_CTRLINPUT_L_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Held.L) {
                 FAT_data_smartAllocateBlock(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine);
             } else {
@@ -403,26 +392,22 @@ void FAT_screenBlocks_pressA() {
                         FAT_screenBlocks_currentSelectedLine);
             }
 
-            if (F_CTRLINPUT_RIGHT_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Right) {
                 FAT_data_block_changeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, 1); // ajout de 1
             }
 
-            if (F_CTRLINPUT_LEFT_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Left) {
                 FAT_data_block_changeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, -1); // retrait de 1
             }
 
-            if (F_CTRLINPUT_UP_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Up) {
                 FAT_data_block_changeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, 16);
             }
 
-            if (F_CTRLINPUT_DOWN_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Down) {
                 FAT_data_block_changeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, -16);
             }
@@ -434,26 +419,22 @@ void FAT_screenBlocks_pressA() {
             FAT_data_block_allocateTranspose(FAT_screenBlocks_currentSequenceId,
                     FAT_screenBlocks_currentSelectedLine);
 
-            if (F_CTRLINPUT_LEFT_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Left) {
                 FAT_data_block_changeTransposeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, -1);
             }
 
-            if (F_CTRLINPUT_RIGHT_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Right) {
                 FAT_data_block_changeTransposeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, 1);
             }
 
-            if (F_CTRLINPUT_DOWN_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Down) {
                 FAT_data_block_changeTransposeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, -16);
             }
 
-            if (F_CTRLINPUT_UP_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Up) {
                 FAT_data_block_changeTransposeValue(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine, 16);
             }

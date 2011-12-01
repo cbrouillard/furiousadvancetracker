@@ -34,10 +34,10 @@ void FAT_screenHelp_checkButtons();
 void FAT_screenHelp_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenHelp_checkButtons();
-        }
+        FAT_screenHelp_checkButtons();
     }
+
+    hel_IntrAcknowledge(INT_TYPE_VBL);
 }
 
 /**
@@ -86,9 +86,8 @@ void FAT_screenHelp_init(u8 screenIdForHelp) {
     FAT_cursors_hideAllCursors();
 
     // démarrage du cycle pour l'écran
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenHelp_mainFunc);
-    
+    hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenHelp_mainFunc);
+
     isHelpActivated = 1;
 }
 
@@ -96,7 +95,9 @@ void FAT_screenHelp_init(u8 screenIdForHelp) {
  * \brief Cette fonction permet de tester les actions utilisateurs sur l'écran. 
  */
 void FAT_screenHelp_checkButtons() {
-    if (F_CTRLINPUT_SELECT_PRESSED) {
+    hel_PadCapture();
+
+    if (hel_PadQuery()->Held.Select) {
         if (!FAT_screenHelp_isPopuped) {
             // TODO hide project cursor
             FAT_popup_show();
@@ -118,14 +119,11 @@ void FAT_screenHelp_checkButtons() {
             }
         }
 
-        if (F_CTRLINPUT_B_PRESSED) {
-            iCanPressAKey = 0;
+        if (hel_PadQuery()->Pressed.B) {
             isHelpActivated = 0;
             FAT_switchToScreen(FAT_currentScreen);
         }
 
-        // TODO commit project cursor move
-        FAT_keys_waitForAnotherKeyTouch();
     }
 }
 

@@ -44,7 +44,7 @@
 void FAT_screenNotes_init();
 void FAT_screenNotes_checkButtons();
 void FAT_screenNotes_printLineColumns();
-void FAT_screenNotes_pressA();
+void FAT_screenNotes_pressOrHeldA();
 void FAT_screenNotes_pressB();
 void FAT_screenNotes_printInfos();
 
@@ -59,10 +59,10 @@ u8 FAT_screenNotes_currentBlockId;
 void FAT_screenNotes_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenNotes_checkButtons();
-        }
+        FAT_screenNotes_checkButtons();
     }
+    
+    hel_IntrAcknowledge(INT_TYPE_VBL);
 }
 
 /**
@@ -73,7 +73,7 @@ void FAT_screenNotes_printLineColumns() {
     mutex = 0;
     u8 y = SCREENNOTES_LINE_START_Y;
     for (int c = 0; c < (SCREENNOTES_NB_LINES_ON_SCREEN); c++) {
-        hel_BgTextPrintF(TEXT_LAYER,SCREENNOTES_LINE_X, y, 0, FAT_FORMAT_LINE, c);
+        hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_LINE_X, y, 0, FAT_FORMAT_LINE, c);
         y += SCREENNOTES_LINE_SIZE_Y;
     }
     mutex = 1;
@@ -85,7 +85,7 @@ void FAT_screenNotes_printLineColumns() {
  */
 void FAT_screenNotes_printInfos() {
     mutex = 0;
-    hel_BgTextPrintF(TEXT_LAYER,18, 4, 0,"Line     %.2x", FAT_screenNotes_currentSelectedLine);
+    hel_BgTextPrintF(TEXT_LAYER, 18, 4, 0, "Line     %.2x", FAT_screenNotes_currentSelectedLine);
     //ham_DrawText(21, 4, "CHAN %2x", FAT_screenSong_currentSelectedColumn+1);
     mutex = 1;
 }
@@ -103,16 +103,16 @@ void FAT_screenNotes_printNote(u8 line) {
 
         if (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA) {
 
-            hel_BgTextPrintF(TEXT_LAYER,SCREENNOTES_NOTE_LINE_X,
-                    line + SCREENNOTES_LINE_START_Y,0,
+            hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_NOTE_LINE_X,
+                    line + SCREENNOTES_LINE_START_Y, 0,
                     "%s%1x %.2x\0", noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument);
         } else {
-            hel_BgTextPrintF(TEXT_LAYER,SCREENNOTES_NOTE_LINE_X,
-                    line + SCREENNOTES_LINE_START_Y,0,
+            hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_NOTE_LINE_X,
+                    line + SCREENNOTES_LINE_START_Y, 0,
                     "S%.2x %.2x\0", actualNote->freq, actualNote->instrument);
         }
     } else {
-        hel_BgTextPrint(TEXT_LAYER,SCREENNOTES_NOTE_LINE_X,
+        hel_BgTextPrint(TEXT_LAYER, SCREENNOTES_NOTE_LINE_X,
                 line + SCREENNOTES_LINE_START_Y, 0, "      ");
     }
     mutex = 1;
@@ -130,10 +130,10 @@ void FAT_screenNotes_printEffect(u8 line) {
 
         effect* effect = FAT_data_note_getEffect(FAT_screenNotes_currentBlockId, line);
 
-        hel_BgTextPrintF(TEXT_LAYER,SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y,0,
+        hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
                 "%.2s%.2x\0", noteEffectName[(effect->name & 0xfe) >> 1], effect->value);
     } else {
-        hel_BgTextPrint(TEXT_LAYER,SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y,0,
+        hel_BgTextPrint(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
                 "    ");
     }
     mutex = 1;
@@ -156,7 +156,7 @@ void FAT_screenNotes_printAllNotes() {
  */
 void FAT_screenNotes_printBlockNumber() {
     mutex = 0;
-    hel_BgTextPrintF(TEXT_LAYER,18, 3, 0,"Block    %.2x", FAT_screenNotes_currentBlockId);
+    hel_BgTextPrintF(TEXT_LAYER, 18, 3, 0, "Block    %.2x", FAT_screenNotes_currentBlockId);
     mutex = 1;
 }
 
@@ -189,8 +189,7 @@ void FAT_screenNotes_init() {
     FAT_screenNotes_printAllScreenText();
 
     // démarrage du cycle pour l'écran
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenNotes_mainFunc);
+    //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenNotes_mainFunc);
 
     // affichage du curseur
     FAT_cursors_hideCursor2();
@@ -208,7 +207,9 @@ void FAT_screenNotes_init() {
  * \brief Test des actions utilisateurs sur les touches. 
  */
 void FAT_screenNotes_checkButtons() {
-    if (F_CTRLINPUT_SELECT_PRESSED) {
+    hel_PadCapture();
+    
+    if (hel_PadQuery()->Held.Select) {
         if (!FAT_screenNotes_isPopuped) {
             FAT_cursors_hideCursor3();
             FAT_cursors_hideCursor2();
@@ -236,16 +237,15 @@ void FAT_screenNotes_checkButtons() {
         }
 
 
-        if (F_CTRLINPUT_A_PRESSED) {
-            FAT_screenNotes_pressA();
+        if (hel_PadQuery()->Held.A || hel_PadQuery()->Pressed.A) {
+            FAT_screenNotes_pressOrHeldA();
 
         } else {
 
-            if (F_CTRLINPUT_R_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Held.R) {
                 FAT_cursors_showCursorChange();
 
-                if (F_CTRLINPUT_RIGHT_PRESSED) {
+                if (hel_PadQuery()->Pressed.Right) {
                     if (FAT_screenNotes_currentBlockId < NB_MAX_BLOCKS - 1) {
                         FAT_screenNotes_currentBlockId++;
                         FAT_screenNotes_printBlockNumber();
@@ -253,7 +253,7 @@ void FAT_screenNotes_checkButtons() {
                     }
                 }
 
-                if (F_CTRLINPUT_LEFT_PRESSED) {
+                if (hel_PadQuery()->Pressed.Left) {
                     if (FAT_screenNotes_currentBlockId > 0) {
                         FAT_screenNotes_currentBlockId--;
                         FAT_screenNotes_printBlockNumber();
@@ -261,27 +261,23 @@ void FAT_screenNotes_checkButtons() {
                     }
                 }
 
-                if (F_CTRLINPUT_DOWN_PRESSED) {
+                if (hel_PadQuery()->Pressed.Down) {
                     // TODO passer au block suivant dans la séquence
-                    iCanPressAKey = 0;
                 }
 
-                if (F_CTRLINPUT_UP_PRESSED) {
+                if (hel_PadQuery()->Pressed.Up) {
                     // TODO passer au block précédent dans la séquence
-                    iCanPressAKey = 0;
                 }
 
             } else {
 
                 FAT_cursors_hideCursorChange();
 
-                if (F_CTRLINPUT_B_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.B) {
                     FAT_screenNotes_pressB();
                 }
 
-                if (F_CTRLINPUT_START_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Start) {
                     if (!FAT_isCurrentlyPlaying) {
                         FAT_player_startPlayerFromNotes(FAT_screenNotes_currentBlockId,
                                 0, FAT_screenSong_currentSelectedColumn);
@@ -290,28 +286,24 @@ void FAT_screenNotes_checkButtons() {
                     }
                 }
 
-                if (F_CTRLINPUT_RIGHT_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Right) {
                     FAT_screenNotes_moveCursorRight();
                 }
 
-                if (F_CTRLINPUT_LEFT_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Left) {
                     FAT_screenNotes_moveCursorLeft();
                 }
 
-                if (F_CTRLINPUT_DOWN_PRESSED) {
-                    iCanPressAKey = 0;
-                    if (F_CTRLINPUT_L_PRESSED) {
+                if (hel_PadQuery()->Pressed.Down) {
+                    if (hel_PadQuery()->Held.L) {
                         FAT_screenNotes_moveCursorAllDown();
                     } else {
                         FAT_screenNotes_moveCursorDown();
                     }
                 }
 
-                if (F_CTRLINPUT_UP_PRESSED) {
-                    iCanPressAKey = 0;
-                    if (F_CTRLINPUT_L_PRESSED) {
+                if (hel_PadQuery()->Pressed.Up) {
+                    if (hel_PadQuery()->Held.L) {
                         FAT_screenNotes_moveCursorAllUp();
                     } else {
                         FAT_screenNotes_moveCursorUp();
@@ -320,14 +312,11 @@ void FAT_screenNotes_checkButtons() {
 
                 FAT_screenNotes_commitCursorMove();
             }
-            
-            if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED) {
-                iCanPressAKey = 0;
+
+            if (hel_PadQuery()->Pressed.R && hel_PadQuery()->Pressed.L) {
                 FAT_showHelp(SCREEN_NOTES_ID);
             }
         }
-
-        FAT_keys_waitForAnotherKeyTouch();
     }
 }
 
@@ -360,7 +349,7 @@ void FAT_screenNotes_pressB() {
 /**
  * \brief Cette fonction est dédiée aux interactions avec la touche A. 
  */
-void FAT_screenNotes_pressA() {
+void FAT_screenNotes_pressOrHeldA() {
     switch (FAT_screenNotes_currentSelectedColumn) {
         case SCREENNOTES_COLUMN_ID_NOTES:
             if (FAT_data_isNoteEmpty(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine)) {
@@ -370,27 +359,23 @@ void FAT_screenNotes_pressA() {
 
             }
 
-            if (F_CTRLINPUT_RIGHT_PRESSED) {
-                iCanPressAKey = 0;
-                FAT_data_note_changeValue(FAT_screenSong_currentSelectedColumn,FAT_screenNotes_currentBlockId,
+            if (hel_PadQuery()->Pressed.Right) {
+                FAT_data_note_changeValue(FAT_screenSong_currentSelectedColumn, FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, 1); // ajout de 1
             }
 
-            if (F_CTRLINPUT_LEFT_PRESSED) {
-                iCanPressAKey = 0;
-                FAT_data_note_changeValue(FAT_screenSong_currentSelectedColumn,FAT_screenNotes_currentBlockId,
+            if (hel_PadQuery()->Pressed.Left) {
+                FAT_data_note_changeValue(FAT_screenSong_currentSelectedColumn, FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, -1); // retrait de 1
             }
 
 
-            if (F_CTRLINPUT_UP_PRESSED && (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA)) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Up && (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA)) {
                 FAT_data_note_changeOctave(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, 1);
             }
 
-            if (F_CTRLINPUT_DOWN_PRESSED && (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA)) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Down && (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA)) {
                 FAT_data_note_changeOctave(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, -1);
             }
@@ -404,32 +389,27 @@ void FAT_screenNotes_pressA() {
 
         case SCREENNOTES_COLUMN_ID_INST:
 
-            if (F_CTRLINPUT_L_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Held.L) {
                 FAT_data_note_smartChangeInstrument(FAT_screenSong_currentSelectedColumn, FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine);
             } else {
 
-                if (F_CTRLINPUT_RIGHT_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Right) {
                     FAT_data_note_changeInstrument(FAT_screenSong_currentSelectedColumn, FAT_screenNotes_currentBlockId,
                             FAT_screenNotes_currentSelectedLine, 1);
                 }
 
-                if (F_CTRLINPUT_LEFT_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Left) {
                     FAT_data_note_changeInstrument(FAT_screenSong_currentSelectedColumn, FAT_screenNotes_currentBlockId,
                             FAT_screenNotes_currentSelectedLine, -1);
                 }
 
-                if (F_CTRLINPUT_UP_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Up) {
                     FAT_data_note_changeInstrument(FAT_screenSong_currentSelectedColumn, FAT_screenNotes_currentBlockId,
                             FAT_screenNotes_currentSelectedLine, 16);
                 }
 
-                if (F_CTRLINPUT_DOWN_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Down) {
                     FAT_data_note_changeInstrument(FAT_screenSong_currentSelectedColumn, FAT_screenNotes_currentBlockId,
                             FAT_screenNotes_currentSelectedLine, -16);
                 }
@@ -451,14 +431,12 @@ void FAT_screenNotes_pressA() {
 
             }
 
-            if (F_CTRLINPUT_RIGHT_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Right) {
                 FAT_data_note_changeEffectName(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, 1);
             }
 
-            if (F_CTRLINPUT_LEFT_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Left) {
                 FAT_data_note_changeEffectName(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, -1);
             }
@@ -474,26 +452,22 @@ void FAT_screenNotes_pressA() {
 
             }
 
-            if (F_CTRLINPUT_RIGHT_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Right) {
                 FAT_data_note_changeEffectValue(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, 1);
             }
 
-            if (F_CTRLINPUT_LEFT_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Left) {
                 FAT_data_note_changeEffectValue(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, -1);
             }
 
-            if (F_CTRLINPUT_UP_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Up) {
                 FAT_data_note_changeEffectValue(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, 16);
             }
 
-            if (F_CTRLINPUT_DOWN_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Down) {
                 FAT_data_note_changeEffectValue(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, -16);
             }

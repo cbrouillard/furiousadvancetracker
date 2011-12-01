@@ -41,7 +41,7 @@ const char* modes[2] = {"SAVE", "LOAD"};
 void FAT_screenFilesystem_init();
 void FAT_screenFilesystem_checkButtons();
 void FAT_screenFilesystem_printInfos();
-void FAT_screenFilesystem_pressA();
+void FAT_screenFilesystem_pressOrHeldA();
 
 #include "screen_filesystem_cursor.h"
 
@@ -51,10 +51,10 @@ void FAT_screenFilesystem_pressA();
 void FAT_screenFilesystem_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenFilesystem_checkButtons();
-        }
+        FAT_screenFilesystem_checkButtons();
     }
+
+    hel_IntrAcknowledge(INT_TYPE_VBL);
 }
 
 /**
@@ -70,7 +70,7 @@ void FAT_screenFilesystem_setMode(u8 modeId) {
  */
 void FAT_screenFilesystem_printMode() {
     mutex = 0;
-    hel_BgTextPrintF(TEXT_LAYER,16, 3, 0,"Mode %s", modes[FAT_filesystem_actualMode]);
+    hel_BgTextPrintF(TEXT_LAYER, 16, 3, 0, "Mode %s", modes[FAT_filesystem_actualMode]);
     mutex = 1;
 }
 
@@ -82,7 +82,7 @@ void FAT_screenFilesystem_printLineColumns() {
     mutex = 0;
     u8 y = SCREENFILESYSTEM_LINE_START_Y;
     for (int c = 0; c < (SCREENFILESYSTEM_NB_LINES_ON_SCREEN); c++) {
-        hel_BgTextPrintF(TEXT_LAYER,SCREENFILESYSTEM_LINE_X, y, 0, FAT_FORMAT_LINE, c);
+        hel_BgTextPrintF(TEXT_LAYER, SCREENFILESYSTEM_LINE_X, y, 0, FAT_FORMAT_LINE, c);
         y += 1;
     }
     mutex = 1;
@@ -96,7 +96,7 @@ void FAT_screenFilesystem_printAllTracksName() {
     u8 track = 0;
     u8 y = SCREENFILESYSTEM_LINE_START_Y;
     while (track < MAX_TRACKS) {
-        hel_BgTextPrintF(TEXT_LAYER,SCREENFILESYSTEM_LINE_TRACKNAME_X, y, 0, "%.8s %.2x", FAT_filesystem_getTrackName(track),
+        hel_BgTextPrintF(TEXT_LAYER, SCREENFILESYSTEM_LINE_TRACKNAME_X, y, 0, "%.8s %.2x", FAT_filesystem_getTrackName(track),
                 FAT_filesystem_getTrackNbWork(track));
         track++;
         y++;
@@ -111,10 +111,10 @@ void FAT_screenFilesystem_printAllTracksName() {
  */
 void FAT_screenFilesystem_printInfos() {
     mutex = 0;
-    hel_BgTextPrintF(TEXT_LAYER,16, 5, 0, "Line %.2x", FAT_screenFilesystem_currentSelectedLine);
-    hel_BgTextPrintF(TEXT_LAYER,16, 6, 0,"Name %.8s", FAT_filesystem_getTrackName(FAT_screenFilesystem_currentSelectedLine));
-    hel_BgTextPrintF(TEXT_LAYER,16, 7, 0, "Size %.4x", FAT_filesystem_getTrackSizeChecked(FAT_screenFilesystem_currentSelectedLine));
-    hel_BgTextPrintF(TEXT_LAYER,16, 8, 0, "Work %.2x", FAT_filesystem_getTrackNbWork(FAT_screenFilesystem_currentSelectedLine));
+    hel_BgTextPrintF(TEXT_LAYER, 16, 5, 0, "Line %.2x", FAT_screenFilesystem_currentSelectedLine);
+    hel_BgTextPrintF(TEXT_LAYER, 16, 6, 0, "Name %.8s", FAT_filesystem_getTrackName(FAT_screenFilesystem_currentSelectedLine));
+    hel_BgTextPrintF(TEXT_LAYER, 16, 7, 0, "Size %.4x", FAT_filesystem_getTrackSizeChecked(FAT_screenFilesystem_currentSelectedLine));
+    hel_BgTextPrintF(TEXT_LAYER, 16, 8, 0, "Work %.2x", FAT_filesystem_getTrackNbWork(FAT_screenFilesystem_currentSelectedLine));
     mutex = 1;
 }
 
@@ -142,15 +142,16 @@ void FAT_screenFilesystem_init() {
     FAT_screenFilesystem_commitCursorMove();
 
     // démarrage du cycle pour l'écran
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenFilesystem_mainFunc);
+    //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenFilesystem_mainFunc);
 }
 
 /**
  * \brief Cette fonction permet de tester les actions utilisateurs sur l'écran. 
  */
 void FAT_screenFilesystem_checkButtons() {
-    if (F_CTRLINPUT_SELECT_PRESSED) {
+    hel_PadCapture();
+
+    if (hel_PadQuery()->Held.Select) {
         if (!FAT_screenFilesystem_isPopuped) {
             FAT_cursors_hideCursor8();
             FAT_cursors_hideCursor2();
@@ -175,45 +176,36 @@ void FAT_screenFilesystem_checkButtons() {
             }
         }
 
-        if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED) {
-            iCanPressAKey = 0;
+        if (hel_PadQuery()->Pressed.R && hel_PadQuery()->Pressed.L) {
             FAT_showHelp(SCREEN_FILESYSTEM_ID);
         }
 
-        if (F_CTRLINPUT_RIGHT_PRESSED) {
-            iCanPressAKey = 0;
+        if (hel_PadQuery()->Pressed.Right) {
         }
 
-        if (F_CTRLINPUT_LEFT_PRESSED) {
-            iCanPressAKey = 0;
+        if (hel_PadQuery()->Pressed.Left) {
         }
 
-        if (F_CTRLINPUT_DOWN_PRESSED) {
-            iCanPressAKey = 0;
+        if (hel_PadQuery()->Pressed.Down) {
             FAT_screenFilesystem_moveCursorDown();
         }
 
-        if (F_CTRLINPUT_UP_PRESSED) {
-            iCanPressAKey = 0;
+        if (hel_PadQuery()->Pressed.Up) {
             FAT_screenFilesystem_moveCursorUp();
         }
 
-        if (F_CTRLINPUT_A_PRESSED) {
-            FAT_screenFilesystem_pressA();
+        if (hel_PadQuery()->Pressed.A || hel_PadQuery()->Held.A) {
+            FAT_screenFilesystem_pressOrHeldA();
         }
 
         FAT_screenFilesystem_commitCursorMove();
-
-        // TODO commit project cursor move
-        FAT_keys_waitForAnotherKeyTouch();
     }
 }
 
 /**
  * \brief Fonction dédicacée à la gestion de la touche A sur l'écran filesystem. 
  */
-void FAT_screenFilesystem_pressA() {
-    iCanPressAKey = 0;
+void FAT_screenFilesystem_pressOrHeldA() {
 
     if (FAT_screenFilesystem_currentSelectedLine >= MAX_TRACKS_WITHOUT_COMPRESSION) {
 

@@ -91,16 +91,17 @@ void FAT_forceClearTextLayer();
 void FAT_waitVSync();
 void FAT_blockCPU(u16 time);
 
+void VBLInterruptHandler(void) {
+    ham_CopyObjToOAM();
+    // acknowledge interrupt
+    hel_IntrAcknowledge(INT_TYPE_VBL);
+}
+
 #include "gfx.h"
 
 #include "data.h"
 #include "filesystem.h"
 #include "cursors.h"
-
-/**
- * \brief Permet de savoir si l'utilisateur a le droit d'appuyer sur une touche
- */
-u8 iCanPressAKey = 1;
 
 /** \brief Prototype. Fonction définie dans player.h. */
 void FAT_player_startPlayerFromSequences(u8 startLine);
@@ -112,24 +113,6 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel);
 void FAT_player_stopPlayer();
 /** \brief Prototype. Fonction définie dans player.h. */
 void FAT_player_playComposerNote(u8 noteLine);
-
-
-/**
- * \brief Compteur pour décompter le temps d'attente entre 2 appuis de la touche START.
- */
-u16 waitForStart = 0;
-
-/**
- * \brief Fonction attachée à un timer permettant de resetter la possibilités d'appuyer
- * sur une touche. 
- */
-void FAT_player_timerFunc_iCanPressAKey();
-
-/**
- * \brief Cette fonction déclanche le timer permettant d'attendre élégamment un temps
- * donné avant d'autoriser la répétition d'une touche. 
- */
-void FAT_keys_waitForAnotherKeyTouch();
 
 /**
  * \brief Permet de savoir si le player est en train de jouer la chanson.
@@ -151,40 +134,6 @@ bool FAT_isCurrentlyPlaying = 0;
 #include "screen_help.h"
 
 #include "player.h"
-
-/**
- * \brief Fonction callback associée avec un TIMER: permet de décompter le temps
- * d'attente pour l'appui sur une touche. 
- */
-void FAT_player_timerFunc_iCanPressAKey() {
-    waitForStart++;
-    if (waitForStart >= (WAIT_FOR_START + FAT_tracker.keyRepeat) && !iCanPressAKey) {
-        iCanPressAKey = 1;
-        waitForStart = 0;
-        M_TIM2CNT_IRQ_DISABLE
-        M_TIM2CNT_TIMER_STOP
-#ifdef DEBUG_ON
-                ham_DrawText(21, 16, "KEY ON ");
-#endif
-    }
-}
-
-/**
- * \brief Cette fonction déclanche le timer permettant d'attendre élégamment un temps
- * donné avant d'autoriser la répétition d'une touche. 
- */
-void FAT_keys_waitForAnotherKeyTouch() {
-#ifdef DEBUG_ON
-    ham_DrawText(21, 16, "KEY OFF");
-#endif
-    if (!iCanPressAKey) {
-        ham_StartIntHandler(INT_TYPE_TIM2, (void*) &FAT_player_timerFunc_iCanPressAKey);
-
-        R_TIM2CNT = 0;
-        M_TIM2CNT_IRQ_ENABLE
-        M_TIM2CNT_TIMER_START
-    }
-}
 
 // A buffer of memory which the Background Text
 // System uses to manage internal states.
@@ -224,12 +173,16 @@ const char CHARORDER[] =
 void FAT_init() {
     // HAM !
     ham_Init();
-    //hel_SysSetPrefetch(TRUE);
+    hel_SysSetPrefetch(TRUE);
 
     FAT_filesystem_checkFs();
 
     hel_BgSetMode(0);
     hel_BgTextInit((void*) g_BgTextSystemMemory);
+
+    hel_PadInit();
+    hel_PadSetRepeatDelay(PAD_BUTTON_R | PAD_BUTTON_L | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT | PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_A | PAD_BUTTON_B | PAD_BUTTON_START, 1);
+    hel_PadSetRepeatRate(PAD_BUTTON_R | PAD_BUTTON_L | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT | PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_A | PAD_BUTTON_B | PAD_BUTTON_START, 10);
 
     // Initialize the tileset and an empty
     // mapset using regular HAMlib functions
@@ -328,6 +281,8 @@ void FAT_showIntro() {
 
     ham_InitBg(SCREEN_LAYER, 0, 3, 0);
     FAT_initScreenPalette();
+
+    hel_IntrStartHandler(INT_TYPE_VBL, (void*) &VBLInterruptHandler);
 }
 
 /**
@@ -374,6 +329,52 @@ void FAT_initSpritePalette() {
  */
 void FAT_initScreenPalette() {
     ham_LoadBGPal((void*) screen_Palette, 256);
+}
+
+void FAT_allScreen_singleCheckButtons() {
+    switch (FAT_currentScreen) {
+        case SCREEN_PROJECT_ID:
+            FAT_screenProject_checkButtons();
+            break;
+        case SCREEN_LIVE_ID:
+            FAT_screenLive_checkButtons();
+            break;
+        case SCREEN_SONG_ID:
+            FAT_screenSong_checkButtons();
+            break;
+        case SCREEN_BLOCKS_ID:
+            FAT_screenBlocks_checkButtons();
+            break;
+        case SCREEN_NOTES_ID:
+            FAT_screenNotes_checkButtons();
+            break;
+        case SCREEN_EFFECTS_ID:
+            FAT_screenEffects_checkButtons();
+            break;
+        case SCREEN_COMPOSER_ID:
+            FAT_screenComposer_checkButtons();
+            break;
+        case SCREEN_INSTRUMENTS_ID:
+            FAT_screenInstrument_checkButtons();
+            break;
+        case SCREEN_FILESYSTEM_ID:
+            FAT_screenFilesystem_checkButtons();
+            break;
+    }
+}
+
+void FAT_mainLoop() {
+    for (;;) {
+
+        if (FAT_isCurrentlyPlaying){
+            FAT_player_continueToPlay();
+        }
+        
+        FAT_allScreen_singleCheckButtons();
+        // Wait for Vertical Blank
+        hel_SwiVBlankIntrWait();
+
+    }
 }
 
 /**

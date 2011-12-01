@@ -30,7 +30,7 @@ bool FAT_screenProject_isPopuped = 0;
 
 // prototypes
 void FAT_screenProject_checkButtons();
-void FAT_screenProject_pressA();
+void FAT_screenProject_pressOrHeldA();
 
 /**
  * \brief Fonction principale de l'écran (callback). 
@@ -38,10 +38,9 @@ void FAT_screenProject_pressA();
 void FAT_screenProject_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenProject_checkButtons();
-        }
+        FAT_screenProject_checkButtons();
     }
+    hel_IntrAcknowledge(INT_TYPE_VBL);
 }
 
 /**
@@ -67,9 +66,9 @@ void FAT_screenProject_printInfos() {
  */
 void FAT_screenProject_printProject() {
     mutex = 0;
-    hel_BgTextPrintF(TEXT_LAYER,16, 3, 0, "Name %.8s", FAT_tracker.songName);
-    hel_BgTextPrintF(TEXT_LAYER,16, 4, 0, "Size %.4x", sizeof (FAT_tracker));
-    hel_BgTextPrintF(TEXT_LAYER,16, 5, 0, "Work %.2x", FAT_tracker.nbWork);
+    hel_BgTextPrintF(TEXT_LAYER, 16, 3, 0, "Name %.8s", FAT_tracker.songName);
+    hel_BgTextPrintF(TEXT_LAYER, 16, 4, 0, "Size %.4x", sizeof (FAT_tracker));
+    hel_BgTextPrintF(TEXT_LAYER, 16, 5, 0, "Work %.2x", FAT_tracker.nbWork);
     mutex = 1;
 
 }
@@ -97,15 +96,16 @@ void FAT_screenProject_init() {
     FAT_screenProject_displayGoodCursor();
 
     // démarrage du cycle pour l'écran
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenProject_mainFunc);
+    //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenProject_mainFunc);
 }
 
 /**
  * \brief Teste les actions utilisateurs sur l'écran. 
  */
 void FAT_screenProject_checkButtons() {
-    if (F_CTRLINPUT_SELECT_PRESSED) {
+    hel_PadCapture();
+    
+    if (hel_PadQuery()->Held.Select) {
         if (!FAT_screenProject_isPopuped) {
             FAT_cursors_hideCursor2();
             FAT_cursors_hideCursor3();
@@ -128,12 +128,11 @@ void FAT_screenProject_checkButtons() {
             }
         }
 
-        if (F_CTRLINPUT_A_PRESSED) {
-            FAT_screenProject_pressA();
+        if (hel_PadQuery()->Held.A || hel_PadQuery()->Pressed.A) {
+            FAT_screenProject_pressOrHeldA();
         } else {
 
-            if (F_CTRLINPUT_START_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Start) {
                 if (!FAT_isCurrentlyPlaying) {
                     FAT_player_startPlayerFromSequences(FAT_screenSong_currentSelectedLine);
                 } else {
@@ -141,58 +140,47 @@ void FAT_screenProject_checkButtons() {
                 }
             }
 
-            if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.R && hel_PadQuery()->Pressed.L) {
                 FAT_showHelp(SCREEN_PROJECT_ID);
             }
 
-            if (F_CTRLINPUT_RIGHT_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Right) {
             }
 
-            if (F_CTRLINPUT_LEFT_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Left) {
             }
 
-            if (F_CTRLINPUT_DOWN_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Down) {
                 FAT_screenProject_moveCursorDown();
             }
 
-            if (F_CTRLINPUT_UP_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Up) {
                 FAT_screenProject_moveCursorUp();
             }
 
             FAT_screenProject_commitCursorMove();
         }
-
-        FAT_keys_waitForAnotherKeyTouch();
     }
 }
 
 /**
  * \brief Cette fonction est dédiée à la gestion de l'interaction avec la touche A. 
  */
-void FAT_screenProject_pressA() {
+void FAT_screenProject_pressOrHeldA() {
     s8 addedValue = 0;
-    if (F_CTRLINPUT_LEFT_PRESSED) {
-        iCanPressAKey = 0;
+    if (hel_PadQuery()->Pressed.Left) {
         addedValue = -1;
     }
 
-    if (F_CTRLINPUT_RIGHT_PRESSED) {
-        iCanPressAKey = 0;
+    if (hel_PadQuery()->Pressed.Right) {
         addedValue = 1;
     }
 
-    if (F_CTRLINPUT_UP_PRESSED) {
-        iCanPressAKey = 0;
+    if (hel_PadQuery()->Pressed.Up) {
         addedValue = 16;
     }
 
-    if (F_CTRLINPUT_DOWN_PRESSED) {
-        iCanPressAKey = 0;
+    if (hel_PadQuery()->Pressed.Down) {
         addedValue = -16;
     }
 
@@ -209,7 +197,6 @@ void FAT_screenProject_pressA() {
             // TODO afficher la boite de dialogue
             //FAT_yesno_show(DIALOG_SAVE);
             //FAT_data_project_save();
-            iCanPressAKey = 0;
             FAT_cursors_hideCursor3();
             FAT_cursors_hideCursor2();
             FAT_screenFilesystem_setMode(FILESYSTEM_MODE_SAVE);
@@ -219,7 +206,6 @@ void FAT_screenProject_pressA() {
             // TODO afficher la boite de dialogue
             //FAT_yesno_show(DIALOG_LOAD);
             //            FAT_data_project_load();
-            iCanPressAKey = 0;
             FAT_cursors_hideCursor3();
             FAT_cursors_hideCursor2();
             FAT_screenFilesystem_setMode(FILESYSTEM_MODE_LOAD);

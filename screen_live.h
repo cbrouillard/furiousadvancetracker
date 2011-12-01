@@ -48,10 +48,10 @@ bool FAT_screenLive_isCursorInSequencer = 1;
 void FAT_screenLive_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenLive_checkButtons();
-        }
+        FAT_screenLive_checkButtons();
     }
+
+    hel_IntrAcknowledge(INT_TYPE_VBL);
 }
 
 /**
@@ -220,8 +220,7 @@ void FAT_screenLive_init() {
     FAT_cursors_showCursor2();
 
     // démarrage du cycle pour l'écran
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenLive_mainFunc);
+    //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenLive_mainFunc);
 
 }
 
@@ -248,7 +247,9 @@ void FAT_screenLive_switchActivePart(bool part) {
  * \brief Teste les actions utilisateurs. 
  */
 void FAT_screenLive_checkButtons() {
-    if (F_CTRLINPUT_SELECT_PRESSED) {
+    hel_PadCapture();
+
+    if (hel_PadQuery()->Held.Select) {
         if (!FAT_screenLive_isPopuped) {
             FAT_cursors_hideCursor2();
             FAT_popup_show();
@@ -269,51 +270,45 @@ void FAT_screenLive_checkButtons() {
             }
         }
 
-        if (F_CTRLINPUT_RIGHT_PRESSED) {
-            iCanPressAKey = 0;
+        if (hel_PadQuery()->Pressed.Right) {
             FAT_screenLive_moveCursorRight();
         }
 
-        if (F_CTRLINPUT_LEFT_PRESSED) {
-            iCanPressAKey = 0;
+        if (hel_PadQuery()->Pressed.Left) {
             FAT_screenLive_moveCursorLeft();
         }
 
-        if (F_CTRLINPUT_DOWN_PRESSED) {
-            iCanPressAKey = 0;
-            if (F_CTRLINPUT_R_PRESSED) {
+        if (hel_PadQuery()->Pressed.Down) {
+            if (hel_PadQuery()->Held.R) {
                 //FAT_screenLive_movePageDown();
                 // changer de portion d'écran -> du séquenceur vers la table
                 FAT_screenLive_switchActivePart(0);
 
-            } else if (F_CTRLINPUT_L_PRESSED) {
+            } else if (hel_PadQuery()->Held.L) {
                 FAT_screenLive_moveCursorAllDown();
             } else {
                 FAT_screenLive_moveCursorDown();
             }
         }
 
-        if (F_CTRLINPUT_UP_PRESSED) {
-            iCanPressAKey = 0;
-            if (F_CTRLINPUT_R_PRESSED) {
+        if (hel_PadQuery()->Pressed.Up) {
+            if (hel_PadQuery()->Held.R) {
                 //FAT_screenLive_movePageUp();
                 // changer de portion d'écran -> de la table vers le sequenceur
                 FAT_screenLive_switchActivePart(1);
 
-            } else if (F_CTRLINPUT_L_PRESSED) {
+            } else if (hel_PadQuery()->Held.L) {
                 FAT_screenLive_moveCursorAllUp();
             } else {
                 FAT_screenLive_moveCursorUp();
             }
         }
 
-        if (F_CTRLINPUT_A_PRESSED) {
-            iCanPressAKey = 0;
+        if (hel_PadQuery()->Pressed.A || hel_PadQuery()->Held.A) {
 
         }
 
         FAT_screenLive_commitCursorMove();
-        FAT_keys_waitForAnotherKeyTouch();
     }
 }
 

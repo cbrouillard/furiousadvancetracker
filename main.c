@@ -67,9 +67,10 @@ int main() {
 
     FAT_showIntro();
     FAT_screenSong_init();
-    
-    while (1) {
-    }
+
+    // Boucle infinie branchée sur la gestion des boutons de tous les écrans.
+    FAT_mainLoop();
+
     return 0;
 }
 

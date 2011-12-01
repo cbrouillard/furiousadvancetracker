@@ -64,7 +64,7 @@ void FAT_screenComposer_checkButtons();
 void FAT_screenComposer_printInfos();
 void FAT_screenComposer_printAllScreenText();
 void FAT_screenComposer_printColumns();
-void FAT_screenComposer_pressA();
+void FAT_screenComposer_pressOrHeldA();
 void FAT_screenComposer_pressB();
 void FAT_screenComposer_switchLocking();
 void FAT_screenComposer_playAffectedNotes();
@@ -77,10 +77,10 @@ void FAT_screenComposer_playAffectedNotes();
 void FAT_screenComposer_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenComposer_checkButtons();
-        }
+        FAT_screenComposer_checkButtons();
     }
+
+    hel_IntrAcknowledge(INT_TYPE_VBL);
 }
 
 /**
@@ -200,8 +200,7 @@ void FAT_screenComposer_init() {
     FAT_screenComposer_printLocking();
 
     // démarrage du cycle pour l'écran
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenComposer_mainFunc);
+    //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenComposer_mainFunc);
 
     // curseur
     FAT_cursors_hideCursor2();
@@ -221,7 +220,9 @@ void FAT_screenComposer_init() {
  * \brief Permet de tester l'appui sur les boutons et de réagir en conséquence. 
  */
 void FAT_screenComposer_checkButtons() {
-    if (F_CTRLINPUT_SELECT_PRESSED) {
+    hel_PadCapture();
+
+    if (hel_PadQuery()->Held.Select) {
         if (!FAT_screenComposer_isPopuped) {
             FAT_cursors_hideCursor3();
             FAT_cursors_hideCursor2();
@@ -260,50 +261,42 @@ void FAT_screenComposer_checkButtons() {
             FAT_screenComposer_playAffectedNotes();
 
         } else {
-            if (F_CTRLINPUT_A_PRESSED) {
-                FAT_screenComposer_pressA();
+            if (hel_PadQuery()->Held.A || hel_PadQuery()->Pressed.A) {
+                FAT_screenComposer_pressOrHeldA();
             } else {
 
-                if (F_CTRLINPUT_B_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.B) {
                     FAT_screenComposer_pressB();
                 }
 
-                if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.R && hel_PadQuery()->Pressed.L) {
                     FAT_showHelp(SCREEN_COMPOSER_ID);
                 }
 
-                if (F_CTRLINPUT_START_PRESSED) {
+                if (hel_PadQuery()->Pressed.Start) {
                     // lock/unlock le compositeur
-                    iCanPressAKey = 0;
                     FAT_screenComposer_switchLocking();
                 }
 
-                if (F_CTRLINPUT_RIGHT_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Right) {
                     FAT_screenComposer_moveCursorRight();
                 }
 
-                if (F_CTRLINPUT_LEFT_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Left) {
                     FAT_screenComposer_moveCursorLeft();
                 }
 
-                if (F_CTRLINPUT_DOWN_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Down) {
                     FAT_screenComposer_moveCursorDown();
                 }
 
-                if (F_CTRLINPUT_UP_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Up) {
                     FAT_screenComposer_moveCursorUp();
 
                 }
                 FAT_screenComposer_commitCursorMove();
             }
 
-            FAT_keys_waitForAnotherKeyTouch();
         }
     }
 }
@@ -311,7 +304,7 @@ void FAT_screenComposer_checkButtons() {
 /**
  * \brief Fonction spécialisée dans la gestion de la touche A. 
  */
-void FAT_screenComposer_pressA() {
+void FAT_screenComposer_pressOrHeldA() {
 
     if (FAT_screenComposer_currentSelectedLine >= SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN) {
         u8 realLine = FAT_screenComposer_currentSelectedLine - SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN;
@@ -322,23 +315,19 @@ void FAT_screenComposer_pressA() {
                     FAT_data_composer_addDefaultNote(realLine);
                 }
 
-                if (F_CTRLINPUT_RIGHT_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Right) {
                     FAT_data_composer_changeValue(realLine, 1); // ajout de 1
                 }
 
-                if (F_CTRLINPUT_LEFT_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Left) {
                     FAT_data_composer_changeValue(realLine, -1);
                 }
 
-                if (F_CTRLINPUT_UP_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Up) {
                     FAT_data_composer_changeOctave(realLine, 1); // ajout de 1
                 }
 
-                if (F_CTRLINPUT_DOWN_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Down) {
                     FAT_data_composer_changeOctave(realLine, -1);
                 }
 
@@ -348,28 +337,23 @@ void FAT_screenComposer_pressA() {
 
                 break;
             case SCREENCOMPOSER_COLUMN_ID_INST:
-                if (F_CTRLINPUT_L_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Held.L) {
                     FAT_data_composer_smartChangeInstrument(realLine);
                 } else {
 
-                    if (F_CTRLINPUT_RIGHT_PRESSED) {
-                        iCanPressAKey = 0;
+                    if (hel_PadQuery()->Pressed.Right) {
                         FAT_data_composer_changeInstrument(realLine, 1);
                     }
 
-                    if (F_CTRLINPUT_LEFT_PRESSED) {
-                        iCanPressAKey = 0;
+                    if (hel_PadQuery()->Pressed.Left) {
                         FAT_data_composer_changeInstrument(realLine, -1);
                     }
 
-                    if (F_CTRLINPUT_UP_PRESSED) {
-                        iCanPressAKey = 0;
+                    if (hel_PadQuery()->Pressed.Up) {
                         FAT_data_composer_changeInstrument(realLine, 16);
                     }
 
-                    if (F_CTRLINPUT_DOWN_PRESSED) {
-                        iCanPressAKey = 0;
+                    if (hel_PadQuery()->Pressed.Down) {
                         FAT_data_composer_changeInstrument(realLine, -16);
                     }
 
@@ -386,18 +370,15 @@ void FAT_screenComposer_pressA() {
                 break;
             case SCREENCOMPOSER_COLUMN_ID_CHANNEL:
 
-                if (F_CTRLINPUT_L_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Held.L) {
                     FAT_data_composer_resetAffectedChannel(realLine);
                 } else {
 
-                    if (F_CTRLINPUT_RIGHT_PRESSED) {
-                        iCanPressAKey = 0;
+                    if (hel_PadQuery()->Pressed.Right) {
                         FAT_data_composer_changeAffectedChannelValue(realLine, 1);
                     }
 
-                    if (F_CTRLINPUT_LEFT_PRESSED) {
-                        iCanPressAKey = 0;
+                    if (hel_PadQuery()->Pressed.Left) {
                         FAT_data_composer_changeAffectedChannelValue(realLine, -1);
                     }
                 }
@@ -415,38 +396,30 @@ void FAT_screenComposer_pressA() {
         // on joue avec les paramètres
         switch (FAT_screenComposer_currentSelectedLine) {
             case 0: // param transpose
-                if (F_CTRLINPUT_RIGHT_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Right) {
                     FAT_data_composer_changeTranspose(0, 1);
                 }
-                if (F_CTRLINPUT_UP_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Up) {
                     FAT_data_composer_changeTranspose(0, 16);
                 }
-                if (F_CTRLINPUT_LEFT_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Left) {
                     FAT_data_composer_changeTranspose(0, -1);
                 }
-                if (F_CTRLINPUT_DOWN_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Down) {
                     FAT_data_composer_changeTranspose(0, -16);
                 }
                 break;
             case 1: // param key repeat
-                if (F_CTRLINPUT_RIGHT_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Right) {
                     FAT_data_composer_changeKeyRepeat(0, 1);
                 }
-                if (F_CTRLINPUT_UP_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Up) {
                     FAT_data_composer_changeKeyRepeat(0, 16);
                 }
-                if (F_CTRLINPUT_LEFT_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Left) {
                     FAT_data_composer_changeKeyRepeat(0, -1);
                 }
-                if (F_CTRLINPUT_DOWN_PRESSED) {
-                    iCanPressAKey = 0;
+                if (hel_PadQuery()->Pressed.Down) {
                     FAT_data_composer_changeKeyRepeat(0, -16);
                 }
                 break;
@@ -499,50 +472,49 @@ void FAT_screenComposer_switchLocking() {
  * teste elle même l'appui sur les touches.
  */
 void FAT_screenComposer_playAffectedNotes() {
-    if (FAT_tracker.composer.keyRepeat) {
-        iCanPressAKey = 0;
-    }
+    //    if (FAT_tracker.composer.keyRepeat) {
+    //        iCanPressAKey = 0;
+    //    }
 
-    if (F_CTRLINPUT_START_PRESSED) {
-        iCanPressAKey = 0;
+    if (hel_PadQuery()->Pressed.Start) {
         FAT_screenComposer_switchLocking();
     }
 
-    if (F_CTRLINPUT_A_PRESSED) {
+    if (hel_PadQuery()->Pressed.A) {
         FAT_player_playComposerNote(SCREENCOMPOSER_BTN_A);
     }
 
-    if (F_CTRLINPUT_B_PRESSED) {
+    if (hel_PadQuery()->Pressed.B) {
         FAT_player_playComposerNote(SCREENCOMPOSER_BTN_B);
     }
 
-    if (F_CTRLINPUT_R_PRESSED) {
+    if (hel_PadQuery()->Pressed.R) {
         FAT_player_playComposerNote(SCREENCOMPOSER_BTN_R);
     }
 
-    if (F_CTRLINPUT_L_PRESSED) {
+    if (hel_PadQuery()->Pressed.L) {
         FAT_player_playComposerNote(SCREENCOMPOSER_BTN_L);
     }
 
-    if (F_CTRLINPUT_UP_PRESSED) {
+    if (hel_PadQuery()->Pressed.Up) {
         FAT_player_playComposerNote(SCREENCOMPOSER_BTN_UP);
     }
 
-    if (F_CTRLINPUT_RIGHT_PRESSED) {
+    if (hel_PadQuery()->Pressed.Right) {
         FAT_player_playComposerNote(SCREENCOMPOSER_BTN_RIGHT);
     }
 
-    if (F_CTRLINPUT_DOWN_PRESSED) {
+    if (hel_PadQuery()->Pressed.Down) {
         FAT_player_playComposerNote(SCREENCOMPOSER_BTN_DOWN);
     }
 
-    if (F_CTRLINPUT_LEFT_PRESSED) {
+    if (hel_PadQuery()->Pressed.Left) {
         FAT_player_playComposerNote(SCREENCOMPOSER_BTN_LEFT);
     }
 
-    if (FAT_tracker.composer.keyRepeat || iCanPressAKey == 0) {
-        FAT_keys_waitForAnotherKeyTouch();
-    }
+    //    if (FAT_tracker.composer.keyRepeat || iCanPressAKey == 0) {
+    //        FAT_keys_waitForAnotherKeyTouch();
+    //    }
 }
 
 #endif	/* SCREEN_COMPOSER_H */

@@ -32,10 +32,10 @@ void FAT_screenEffects_checkButtons();
 void FAT_screenEffects_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenEffects_checkButtons();
-        }
+        FAT_screenEffects_checkButtons();
     }
+
+    hel_IntrAcknowledge(INT_TYPE_VBL);
 }
 
 /**
@@ -52,15 +52,16 @@ void FAT_screenEffects_init() {
     // affichage d'un peu de texte
 
     // démarrage du cycle pour l'écran
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenEffects_mainFunc);
+    //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenEffects_mainFunc);
 }
 
 /**
  * \brief Cette fonction permet de tester les actions utilisateurs sur l'écran. 
  */
 void FAT_screenEffects_checkButtons() {
-    if (F_CTRLINPUT_SELECT_PRESSED) {
+    hel_PadCapture();
+
+    if (hel_PadQuery()->Held.Select) {
         if (!FAT_screenEffects_isPopuped) {
             // TODO hide project cursor
             FAT_popup_show();
@@ -81,28 +82,22 @@ void FAT_screenEffects_checkButtons() {
             }
         }
 
-        if (F_CTRLINPUT_RIGHT_PRESSED) {
-            iCanPressAKey = 0;
+        if (hel_PadQuery()->Pressed.Right) {
         }
 
-        if (F_CTRLINPUT_LEFT_PRESSED) {
-            iCanPressAKey = 0;
+        if (hel_PadQuery()->Pressed.Left) {
         }
 
-        if (F_CTRLINPUT_DOWN_PRESSED) {
-            iCanPressAKey = 0;
+        if (hel_PadQuery()->Pressed.Down) {
         }
 
-        if (F_CTRLINPUT_UP_PRESSED) {
-            iCanPressAKey = 0;
+        if (hel_PadQuery()->Pressed.Up) {
         }
 
-        if (F_CTRLINPUT_A_PRESSED) {
-            iCanPressAKey = 0;
+        if (hel_PadQuery()->Pressed.A || hel_PadQuery()->Held.A) {
         }
 
         // TODO commit project cursor move
-        FAT_keys_waitForAnotherKeyTouch();
     }
 }
 

@@ -27,7 +27,7 @@
 #define DIALOG_NEW 4
 
 // Prototypes
-void FAT_yesno_close ();
+void FAT_yesno_close();
 
 /** \brief Variable pour stocker un premier paramètre (variable) pour une boite de dialogue. */
 u8 param1;
@@ -38,19 +38,15 @@ u8 param1;
 void FAT_yesno_dialogSave_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            
-            if (F_CTRLINPUT_L_PRESSED){
-                FAT_yesno_close();
-            }
-            
-            else if (F_CTRLINPUT_R_PRESSED){
-                mutex = 0;
-                FAT_filesystem_saveRaw(param1);
-                FAT_yesno_close();
-                ham_DrawText(24, 16, "SAVED ");
-                mutex = 1;
-            }
+
+        if (hel_PadQuery()->Pressed.L) {
+            FAT_yesno_close();
+        } else if (hel_PadQuery()->Pressed.R) {
+            mutex = 0;
+            FAT_filesystem_saveRaw(param1);
+            FAT_yesno_close();
+            hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Saved ");
+            mutex = 1;
         }
     }
 }
@@ -61,21 +57,17 @@ void FAT_yesno_dialogSave_mainFunc() {
 void FAT_yesno_dialogLoad_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            
-            if (F_CTRLINPUT_L_PRESSED){
-                FAT_yesno_close();
-            }
-            
-            else if (F_CTRLINPUT_R_PRESSED){
-                mutex = 0;
-                FAT_player_stopPlayer();
-                FAT_filesystem_loadRaw(param1);
-                FAT_currentScreen = SCREEN_PROJECT_ID;
-                FAT_yesno_close();
-                ham_DrawText(24, 16, "LOADED");
-                mutex = 1;
-            }
+
+        if (hel_PadQuery()->Pressed.L) {
+            FAT_yesno_close();
+        } else if (hel_PadQuery()->Pressed.R) {
+            mutex = 0;
+            FAT_player_stopPlayer();
+            FAT_filesystem_loadRaw(param1);
+            FAT_currentScreen = SCREEN_PROJECT_ID;
+            FAT_yesno_close();
+            hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Loaded");
+            mutex = 1;
         }
     }
 }
@@ -86,15 +78,11 @@ void FAT_yesno_dialogLoad_mainFunc() {
 void FAT_yesno_dialogKeyboard_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            
-            if (F_CTRLINPUT_L_PRESSED){
-                FAT_yesno_close();
-            }
-            
-            else if (F_CTRLINPUT_R_PRESSED){
-                FAT_yesno_close ();
-            }
+
+        if (hel_PadQuery()->Pressed.L) {
+            FAT_yesno_close();
+        } else if (hel_PadQuery()->Pressed.R) {
+            FAT_yesno_close();
         }
     }
 }
@@ -105,21 +93,17 @@ void FAT_yesno_dialogKeyboard_mainFunc() {
 void FAT_yesno_dialogNewProject_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            
-            if (F_CTRLINPUT_L_PRESSED){
-                FAT_yesno_close();
-            }
-            
-            else if (F_CTRLINPUT_R_PRESSED){
-                mutex = 0;
-                FAT_player_stopPlayer();
-                FAT_data_initData();
-                FAT_currentScreen = SCREEN_SONG_ID;
-                FAT_yesno_close();
-                ham_DrawText(24, 16, "GOGOGO");
-                mutex = 1;
-            }
+
+        if (hel_PadQuery()->Pressed.L) {
+            FAT_yesno_close();
+        } else if (hel_PadQuery()->Pressed.R) {
+            mutex = 0;
+            FAT_player_stopPlayer();
+            FAT_data_initData();
+            FAT_currentScreen = SCREEN_SONG_ID;
+            FAT_yesno_close();
+            hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Go new");
+            mutex = 1;
         }
     }
 }
@@ -127,13 +111,11 @@ void FAT_yesno_dialogNewProject_mainFunc() {
 /**
  * \brief Fonction principale pour une boite ou il suffit de répondre "OUI" 
  */
-void FAT_onlyyes_dialog_mainFunc (){
+void FAT_onlyyes_dialog_mainFunc() {
     if (mutex) {
         ham_CopyObjToOAM();
-        if (iCanPressAKey) {          
-            if (F_CTRLINPUT_R_PRESSED){
-                FAT_yesno_close();
-            }
+        if (hel_PadQuery()->Pressed.R) {
+            FAT_yesno_close();
         }
     }
 }
@@ -141,9 +123,8 @@ void FAT_onlyyes_dialog_mainFunc (){
 /**
  * \brief Ferme la boite de dialogue et reinitialise la popup (qui est sur le même layer). 
  */
-void FAT_yesno_close (){
+void FAT_yesno_close() {
     mutex = 0;
-    ham_StopIntHandler(INT_TYPE_VBL);
     FAT_popup_init();
     FAT_switchToScreen(FAT_currentScreen);
     mutex = 1;
@@ -152,29 +133,28 @@ void FAT_yesno_close (){
 /**
  * \brief Ouvre la boite de dialogue (modale) permettant la sauvegarde du projet.
  */
-void FAT_yesno_dialogSave (){
- 
+void FAT_yesno_dialogSave() {
+
     ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*) screen_dialog_save_Tiles, SIZEOF_16BIT(screen_dialog_save_Tiles), 1, 1);
     ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void *) screen_dialog_save_Map, 1024, 0, 0);
     ham_InitBg(DIALOG_LAYER, 1, 0, 0);
-    
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogSave_mainFunc);
-    
+
+    hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogSave_mainFunc);
+
 }
 
 /**
  * \brief Ouvre la boite de dialogue (modale) pour le chargement du projet.
  */
-void FAT_yesno_dialogLoad (){
- 
+void FAT_yesno_dialogLoad() {
+
     ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*) screen_dialog_load_Tiles, SIZEOF_16BIT(screen_dialog_load_Tiles), 1, 1);
     ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void *) screen_dialog_load_Map, 1024, 0, 0);
     ham_InitBg(DIALOG_LAYER, 1, 0, 0);
+
+    hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogLoad_mainFunc);
     
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogLoad_mainFunc);
-    
+
 }
 
 /**
@@ -182,43 +162,40 @@ void FAT_yesno_dialogLoad (){
  * 
  * \todo Supprimer cette boite de dialogue dès que FAT est capable de gérer la compression.
  */
-void FAT_yes_dialogSorrySave (){
+void FAT_yes_dialogSorrySave() {
     ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*) screen_dialog_sorrysave_Tiles, SIZEOF_16BIT(screen_dialog_sorrysave_Tiles), 1, 1);
     ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void *) screen_dialog_sorrysave_Map, 1024, 0, 0);
     ham_InitBg(DIALOG_LAYER, 1, 0, 0);
-    
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_onlyyes_dialog_mainFunc);
+
+    hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_onlyyes_dialog_mainFunc);
 }
 
 /**
  * \brief Boite de dialogue indiquant pour la confirmation d'un nouveau projet. 
  * 
  */
-void FAT_yesno_dialogNewProject (){
+void FAT_yesno_dialogNewProject() {
     ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*) screen_dialog_new_Tiles, SIZEOF_16BIT(screen_dialog_new_Tiles), 1, 1);
     ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void *) screen_dialog_new_Map, 1024, 0, 0);
     ham_InitBg(DIALOG_LAYER, 1, 0, 0);
-    
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogNewProject_mainFunc);
+
+    hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogNewProject_mainFunc);
 }
 
 /**
  * \brief Boite de dialogue pour le clavier. 
  * 
  */
-void FAT_yesno_dialogKeyboard (){
+void FAT_yesno_dialogKeyboard() {
     ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*) screen_dialog_keyboard_Tiles, SIZEOF_16BIT(screen_dialog_keyboard_Tiles), 1, 1);
     ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void *) screen_dialog_keyboard_Map, 1024, 0, 0);
     ham_InitBg(DIALOG_LAYER, 1, 0, 0);
-    
-    ham_DrawText (6, 5, "A");    
-    
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogKeyboard_mainFunc);
-    
-    
+
+    //ham_DrawText(6, 5, "A");
+
+    hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogKeyboard_mainFunc);
+
+
 }
 
 /**
@@ -226,17 +203,17 @@ void FAT_yesno_dialogKeyboard (){
  *
  * @param idDialog l'id de la boite de dialogue
  */
-void FAT_yesno_show (u8 idDialog, ... ){
-    
+void FAT_yesno_show(u8 idDialog, ...) {
+
     va_list params;
-    va_start (params, idDialog);
-    
+    va_start(params, idDialog);
+
     if (ham_bg[POPUP_LAYER].ti) {
         ham_DeInitTileSet(ham_bg[POPUP_LAYER].ti);
         ham_DeInitMapSet(ham_bg[POPUP_LAYER].mi);
     }
-    
-    switch (idDialog){
+
+    switch (idDialog) {
         case DIALOG_SAVE:
             param1 = va_arg(params, int);
             FAT_yesno_dialogSave();
@@ -246,7 +223,7 @@ void FAT_yesno_show (u8 idDialog, ... ){
             FAT_yesno_dialogLoad();
             break;
         case DIALOG_SORRY_SAVE:
-            FAT_yes_dialogSorrySave ();
+            FAT_yes_dialogSorrySave();
             break;
         case DIALOG_KEYBOARD:
             FAT_yesno_dialogKeyboard();
@@ -255,7 +232,7 @@ void FAT_yesno_show (u8 idDialog, ... ){
             FAT_yesno_dialogNewProject();
             break;
     }
-    
+
     va_end(params);
 }
 

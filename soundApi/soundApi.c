@@ -394,7 +394,8 @@ const u8 snd_countAvailableKits() {
 
 void snd_init_kits() {
     R_TIM0COUNT = 0xffff;
-    ham_StartIntHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sample);
+    R_TIM0CNT = 0x00C3;
+    hel_IntrStartHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sample);
 
     snd_countAvailableKits();
     u8 cpt = 0;
@@ -479,7 +480,7 @@ char* snd_getSampleNameById(u8 kitId, u8 sampleId) {
 
 void snd_timerFunc_sample() {
     if (playSnASample) {
-        if (!(snASampleOffset & 3) && snASampleOffset < snASmpSize) {
+        if (!(snASampleOffset & 3) && snASampleOffset < snASmpSize && (snASampleOffset >> 2) < snASmpSize) {
             SND_REG_SGFIFOA = snASample[snASampleOffset >> 2]; // u32
         }
 
@@ -493,7 +494,7 @@ void snd_timerFunc_sample() {
     }
 
     if (playSnBSample) {
-        if (!(snBSampleOffset & 3) && snBSampleOffset < snBSmpSize) {
+        if (!(snBSampleOffset & 3) && snBSampleOffset < snBSmpSize && (snBSampleOffset >> 2) < snBSmpSize) {
             SND_REG_SGFIFOB = snBSample[snBSampleOffset >> 2]; // u32
         }
 
@@ -506,9 +507,11 @@ void snd_timerFunc_sample() {
         }
     }
 
-    if (!playSnASample && !playSnBSample) {
-        R_TIM0CNT = 0;
-    }
+    /*
+        if (!playSnASample && !playSnBSample) {
+            R_TIM0CNT = 0;
+        }
+     */
 
 }
 
@@ -522,9 +525,6 @@ void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
             snASampleOffset = 0;
         }
         playSnASample = 1;
-        if (R_TIM0CNT == 0) {
-            R_TIM0CNT = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
-        }
     }
 }
 

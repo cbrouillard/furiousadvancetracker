@@ -44,7 +44,7 @@ void FAT_screenSong_printLineColumns();
 void FAT_screenSong_printAllScreenText();
 void FAT_screenSong_printChannelFollower();
 void FAT_screenSong_printInfos();
-void FAT_screenSong_pressA();
+void FAT_screenSong_pressOrHeldA();
 void FAT_screenSong_pressB();
 ////////////////////////////////////////////////////
 
@@ -57,12 +57,11 @@ const char* CHANNEL_NAME[6] = {"PU1\0", "PU2\0", "WAV\0", "NOI\0", "SNA\0", "SNB
  * \brief Fonction principale de l'écran (callback).
  */
 void FAT_screenSong_mainFunc() {
-    if (mutex) {
-        ham_CopyObjToOAM();
-        if (iCanPressAKey) {
-            FAT_screenSong_checkButtons();
-        }
-    }
+    ham_CopyObjToOAM();
+    hel_IntrAcknowledge(INT_TYPE_VBL);
+
+    FAT_screenSong_checkButtons();
+
 }
 
 /**
@@ -83,8 +82,7 @@ void FAT_screenSong_init() {
     FAT_screenSong_printChannelFollower();
 
     // démarrage du cycle pour l'écran
-    ham_StopIntHandler(INT_TYPE_VBL);
-    ham_StartIntHandler(INT_TYPE_VBL, (void*) &FAT_screenSong_mainFunc);
+    //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenSong_mainFunc);
 
     // affichage du curseur
     FAT_cursors_hideCursor2();
@@ -207,7 +205,9 @@ void FAT_screenSong_printAllScreenText() {
  */
 void FAT_screenSong_checkButtons() {
 
-    if (F_CTRLINPUT_SELECT_PRESSED) {
+    hel_PadCapture();
+
+    if (hel_PadQuery()->Held.Select) {
         if (!FAT_screenSong_isPopuped) {
             FAT_cursors_hideCursor2();
             FAT_popup_show();
@@ -228,14 +228,13 @@ void FAT_screenSong_checkButtons() {
             }
         }
 
-        if (F_CTRLINPUT_A_PRESSED) {
+        if (hel_PadQuery()->Pressed.A || hel_PadQuery()->Held.A) {
 
-            FAT_screenSong_pressA();
+            FAT_screenSong_pressOrHeldA();
 
         } else {
 
-            if (F_CTRLINPUT_START_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Start) {
                 if (!FAT_isCurrentlyPlaying) {
                     FAT_player_startPlayerFromSequences(FAT_screenSong_currentSelectedLine);
                 } else {
@@ -243,42 +242,36 @@ void FAT_screenSong_checkButtons() {
                 }
             }
 
-            if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.R && hel_PadQuery()->Pressed.L) {
                 FAT_showHelp(SCREEN_SONG_ID);
             }
 
-            if (F_CTRLINPUT_B_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.B) {
                 FAT_screenSong_pressB();
             }
 
-            if (F_CTRLINPUT_RIGHT_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Right) {
                 FAT_screenSong_moveCursorRight();
             }
 
-            if (F_CTRLINPUT_LEFT_PRESSED) {
-                iCanPressAKey = 0;
+            if (hel_PadQuery()->Pressed.Left) {
                 FAT_screenSong_moveCursorLeft();
             }
 
-            if (F_CTRLINPUT_DOWN_PRESSED) {
-                iCanPressAKey = 0;
-                if (F_CTRLINPUT_R_PRESSED) {
+            if (hel_PadQuery()->Pressed.Down) {
+                if (hel_PadQuery()->Held.R) {
                     FAT_screenSong_movePageDown();
-                } else if (F_CTRLINPUT_L_PRESSED) {
+                } else if (hel_PadQuery()->Held.L) {
                     FAT_screenSong_moveCursorAllDown();
                 } else {
                     FAT_screenSong_moveCursorDown();
                 }
             }
 
-            if (F_CTRLINPUT_UP_PRESSED) {
-                iCanPressAKey = 0;
-                if (F_CTRLINPUT_R_PRESSED) {
+            if (hel_PadQuery()->Pressed.Up) {
+                if (hel_PadQuery()->Held.R) {
                     FAT_screenSong_movePageUp();
-                } else if (F_CTRLINPUT_L_PRESSED) {
+                } else if (hel_PadQuery()->Held.L) {
                     FAT_screenSong_moveCursorAllUp();
                 } else {
                     FAT_screenSong_moveCursorUp();
@@ -287,7 +280,6 @@ void FAT_screenSong_checkButtons() {
             FAT_screenSong_commitCursorMove();
         }
 
-        FAT_keys_waitForAnotherKeyTouch();
     }
 
 }
@@ -296,7 +288,7 @@ void FAT_screenSong_checkButtons() {
  * \brief Cette fonction est dédiée à l'interaction avec la touche B. 
  */
 void FAT_screenSong_pressB() {
-    if (F_CTRLINPUT_L_PRESSED) {
+    if (hel_PadQuery()->Held.L) {
 
         if (FAT_data_isSequenceAllocatable(FAT_screenSong_currentSelectedColumn,
                 FAT_screenSong_currentSelectedLine)) {
@@ -323,9 +315,8 @@ void FAT_screenSong_pressB() {
 /**
  * \brief Cette fonction est dédiée à l'interaction avec la touche A. 
  */
-void FAT_screenSong_pressA() {
-    if (F_CTRLINPUT_L_PRESSED) {
-        iCanPressAKey = 0;
+void FAT_screenSong_pressOrHeldA() {
+    if (hel_PadQuery()->Held.L) {
         FAT_data_smartAllocateSequence(FAT_screenSong_currentSelectedColumn,
                 FAT_screenSong_currentSelectedLine);
     } else {
@@ -334,26 +325,22 @@ void FAT_screenSong_pressA() {
                 FAT_screenSong_currentSelectedLine);
     }
 
-    if (F_CTRLINPUT_RIGHT_PRESSED) {
-        iCanPressAKey = 0;
+    if (hel_PadQuery()->Pressed.Right) {
         FAT_data_sequence_changeValue(FAT_screenSong_currentSelectedColumn,
                 FAT_screenSong_currentSelectedLine, 1); // ajout de 1
     }
 
-    if (F_CTRLINPUT_LEFT_PRESSED) {
-        iCanPressAKey = 0;
+    if (hel_PadQuery()->Pressed.Left) {
         FAT_data_sequence_changeValue(FAT_screenSong_currentSelectedColumn,
                 FAT_screenSong_currentSelectedLine, -1); // retrait de 1
     }
 
-    if (F_CTRLINPUT_UP_PRESSED) {
-        iCanPressAKey = 0;
+    if (hel_PadQuery()->Pressed.Up) {
         FAT_data_sequence_changeValue(FAT_screenSong_currentSelectedColumn,
                 FAT_screenSong_currentSelectedLine, 16);
     }
 
-    if (F_CTRLINPUT_DOWN_PRESSED) {
-        iCanPressAKey = 0;
+    if (hel_PadQuery()->Pressed.Down) {
         FAT_data_sequence_changeValue(FAT_screenSong_currentSelectedColumn,
                 FAT_screenSong_currentSelectedLine, -16);
     }

@@ -60,20 +60,22 @@ u8 FAT_cursor_playerSequences_obj[6];
  * est réinitialisé ensuite.
  * Dans le cas contraire, on attend sans jouer de note.
  */
-u32 tempoReach = ((60000 / 128) / 4) / 2;;
+u32 tempoReach = ((60000 / 128) / 4) / 2;
+
+u8 FAT_player_isPlayingFrom;
 
 /**
  * \brief Function temporisée qui lit toutes les séquences. (callback)
  */
-void FAT_player_timerFunc_playSequences();
+void FAT_player_playFromSequences();
 /**
  * \brief Fonction temporisée qui lit tous les blocks d'une séquence. (callback)
  */
-void FAT_player_timerFunc_playBlocks();
+void FAT_player_playFromBlocks();
 /**
  * \brief Fonction temporisée qui lit toutes les notes d'un block. (callback)
  */
-void FAT_player_timerFunc_playNotes();
+void FAT_player_playFromNotes();
 
 void FAT_player_moveOrHideCursor(u8 channel, note* note);
 void FAT_player_hideAllCursors();
@@ -82,6 +84,7 @@ void FAT_player_hideBlockCursor();
 void FAT_player_hideNoteCursor();
 void FAT_player_playNote(note* note, u8 channel);
 void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose);
+void FAT_player_timerFunc();
 
 /**
  * \brief Initialisation du curseur player pour les notes.
@@ -142,62 +145,73 @@ void FAT_player_playNote(note* note, u8 channel) {
  */
 void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
     if (note->freq != NULL_VALUE) {
+
         instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
-        u16 sweepshifts = (inst->sweep & 0x70) >> 4;
-        u16 sweeptime = (inst->sweep & 0x0F);
-        u16 sweepdir = 1;
-        if (sweeptime > 7) {
-            sweeptime -= 8;
-            sweepdir = 0;
+        if (channel != 4 && channel != 5) {
+
+            u16 sweepshifts = (inst->sweep & 0x70) >> 4;
+            u16 sweeptime = (inst->sweep & 0x0F);
+            u16 sweepdir = 1;
+            if (sweeptime > 7) {
+                sweeptime -= 8;
+                sweepdir = 0;
+            }
+
+            switch (channel) {
+                case 0: // PU1
+                    //ham_DrawText (23, 16, "PU1");
+                    snd_playSoundOnChannel1(
+                            sweeptime, sweepdir, sweepshifts,
+                            inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->wavedutyOrPolynomialStep,
+                            inst->soundlength, inst->loopmode,
+                            inst->output,
+                            note->freq, transpose + FAT_tracker.transpose);
+                    break;
+                case 1: // PU2
+                    //ham_DrawText (23, 16, "PU2");
+                    snd_playSoundOnChannel2(inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5,
+                            inst->wavedutyOrPolynomialStep,
+                            inst->soundlength, inst->loopmode,
+                            inst->output,
+                            note->freq, transpose + FAT_tracker.transpose);
+                    break;
+
+                case 2: // WAV
+                    snd_playSoundOnChannel3(inst->volumeRatio, inst->soundlength, inst->loopmode, inst->voiceAndBank & 0x1f,
+                            (inst->voiceAndBank & 0x20) >> 5, (inst->voiceAndBank & 0x40) >> 6,
+                            inst->output, note->freq, transpose + FAT_tracker.transpose);
+                    break;
+                case 3: // NOISE
+                    //ham_DrawText (23, 16, "NOI");
+                    snd_playSoundOnChannel4(inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->soundlength,
+                            inst->loopmode, inst->output, note->note & 0x0f, inst->wavedutyOrPolynomialStep,
+                            note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
+                    break;
+                    //                case 4: // SNA 
+                    //                    //snd_playSampleOnChannelAById(inst->kitNumber, note->freq);
+                    //                    snd_playChannelASample(inst->kitNumber, note->freq, inst->volumeRatio,
+                    //                            inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
+                    //                            (inst->envelope & 0xe0) >> 5, inst->soundlength, inst->offset);
+                    //                    break;
+                    //                case 5: // SNB
+                    //                    snd_playChannelBSample(inst->kitNumber, note->freq, inst->volumeRatio,
+                    //                            inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
+                    //                            (inst->envelope & 0xe0) >> 5, inst->soundlength, inst->offset);
+                    //                    break;
+            }
+
+            if (note->effect.name != NULL_VALUE) {
+                snd_tryToApplyEffect(channel, noteEffectNum[note->effect.name >> 1], note->effect.value);
+            }
+
+        } else {
+            if (channel == 4) {
+                snd_playSampleOnChannelAById(inst->kitNumber, note->freq);
+            } else if (channel == 5) {
+                snd_playSampleOnChannelBById(inst->kitNumber, note->freq);
+            }
+
         }
-
-        switch (channel) {
-            case 0: // PU1
-                //ham_DrawText (23, 16, "PU1");
-                snd_playSoundOnChannel1(
-                        sweeptime, sweepdir, sweepshifts,
-                        inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->wavedutyOrPolynomialStep,
-                        inst->soundlength, inst->loopmode,
-                        inst->output,
-                        note->freq, transpose + FAT_tracker.transpose);
-                break;
-            case 1: // PU2
-                //ham_DrawText (23, 16, "PU2");
-                snd_playSoundOnChannel2(inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5,
-                        inst->wavedutyOrPolynomialStep,
-                        inst->soundlength, inst->loopmode,
-                        inst->output,
-                        note->freq, transpose + FAT_tracker.transpose);
-                break;
-
-            case 2: // WAV
-                snd_playSoundOnChannel3(inst->volumeRatio, inst->soundlength, inst->loopmode, inst->voiceAndBank & 0x1f,
-                        (inst->voiceAndBank & 0x20) >> 5, (inst->voiceAndBank & 0x40) >> 6,
-                        inst->output, note->freq, transpose + FAT_tracker.transpose);
-                break;
-            case 3: // NOISE
-                //ham_DrawText (23, 16, "NOI");
-                snd_playSoundOnChannel4(inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->soundlength,
-                        inst->loopmode, inst->output, note->note & 0x0f, inst->wavedutyOrPolynomialStep,
-                        note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
-                break;
-            case 4: // SNA 
-                //snd_playSampleOnChannelAById(inst->kitNumber, note->freq);
-                snd_playChannelASample(inst->kitNumber, note->freq, inst->volumeRatio,
-                        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
-                        (inst->envelope & 0xe0) >> 5, inst->soundlength, inst->offset);
-                break;
-            case 5: // SNB
-                snd_playChannelBSample(inst->kitNumber, note->freq, inst->volumeRatio,
-                        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
-                        (inst->envelope & 0xe0) >> 5, inst->soundlength, inst->offset);
-                break;
-        }
-
-    }
-
-    if (note->effect.name != NULL_VALUE) {
-        snd_tryToApplyEffect(channel, noteEffectNum[note->effect.name >> 1], note->effect.value);
     }
 }
 
@@ -213,12 +227,11 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
 
     tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     FAT_isCurrentlyPlaying = 1;
-    ham_StartIntHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc_playSequences);
+    FAT_player_isPlayingFrom = SCREEN_SONG_ID;
 
     R_TIM3COUNT = 0xffc0;
     R_TIM3CNT = 0x00C3;
-
-    FAT_keys_waitForAnotherKeyTouch();
+    hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
 
 }
 
@@ -241,12 +254,11 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
 
     tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     FAT_isCurrentlyPlaying = 1;
-    ham_StartIntHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc_playBlocks);
+    FAT_player_isPlayingFrom = SCREEN_BLOCKS_ID;
 
     R_TIM3COUNT = 0xffc0;
     R_TIM3CNT = 0x00C3;
-
-    FAT_keys_waitForAnotherKeyTouch();
+    hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
 }
 
 /**
@@ -257,7 +269,7 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
  * @param channel le numéro de channel sur lequel on joue
  */
 void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
-    
+
     memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
     memset(actualBlocksForChannel, NULL_VALUE, sizeof (u8)*6);
     memset(actualNotesForChannel, 0, sizeof (u8)*6);
@@ -267,20 +279,22 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
 
     tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     FAT_isCurrentlyPlaying = 1;
-    ham_StartIntHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc_playNotes);
+    FAT_player_isPlayingFrom = SCREEN_NOTES_ID;
 
     R_TIM3COUNT = 0xffc0;
     R_TIM3CNT = 0x00C3;
-    //M_TIM3CNT_IRQ_ENABLE
-    //M_TIM3CNT_TIMER_START
+    hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
 
-    FAT_keys_waitForAnotherKeyTouch();
+}
+
+void FAT_player_timerFunc() {
+    tempoReach--;
+    hel_IntrAcknowledge(INT_TYPE_TIM3);
 }
 
 // DEJA DOCUMENTEE
 
-void FAT_player_timerFunc_playSequences() {
-    tempoReach--;
+void FAT_player_playFromSequences() {
     if (tempoReach <= 0) {
 
         for (u8 i = 0; i < 6; i++) {
@@ -334,13 +348,13 @@ void FAT_player_timerFunc_playSequences() {
 
         tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     }
+
 }
 
 // DEJA DOCUMENTEE
 
-void FAT_player_timerFunc_playBlocks() {
+void FAT_player_playFromBlocks() {
 
-    tempoReach--;
     if (tempoReach <= 0) {
         if (FAT_currentPlayedSequence != NULL_VALUE) {
             // lire la séquence actuelle
@@ -376,13 +390,13 @@ void FAT_player_timerFunc_playBlocks() {
         tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     }
 
-
 }
+
+
 
 // DEJA DOCUMENTEE
 
-void FAT_player_timerFunc_playNotes() {
-    tempoReach--;
+void FAT_player_playFromNotes() {
     if (tempoReach <= 0) {
         if (FAT_currentPlayedBlock != NULL_VALUE) {
             block* block = &FAT_tracker.allBlocks[FAT_currentPlayedBlock];
@@ -403,6 +417,21 @@ void FAT_player_timerFunc_playNotes() {
 
         tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     }
+
+}
+
+void FAT_player_continueToPlay() {
+    switch (FAT_player_isPlayingFrom) {
+        case SCREEN_SONG_ID:
+            FAT_player_playFromSequences();
+            break;
+        case SCREEN_BLOCKS_ID:
+            FAT_player_playFromBlocks();
+            break;
+        case SCREEN_NOTES_ID:
+            FAT_player_playFromNotes();
+            break;
+    }
 }
 
 /**
@@ -410,9 +439,10 @@ void FAT_player_timerFunc_playNotes() {
  */
 void FAT_player_stopPlayer() {
 
-    R_TIM3CNT = 0;
+    //R_TIM3CNT = 0;
     //M_TIM3CNT_TIMER_STOP
     //M_TIM3CNT_IRQ_DISABLE
+    hel_IntrStopHandler(INT_TYPE_TIM3);
 
     // stop le son
     snd_stopAllSounds();
@@ -422,8 +452,6 @@ void FAT_player_stopPlayer() {
 
     // la lecture est terminée.
     FAT_isCurrentlyPlaying = 0;
-
-    FAT_keys_waitForAnotherKeyTouch();
 }
 
 /**
