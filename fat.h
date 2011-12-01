@@ -288,9 +288,19 @@ void FAT_reinitScreen() {
  * Performance warning ! Afficher du texte via HAM est lent !
  */
 void FAT_forceClearTextLayer() {
-    hel_BgTextPrint(1, 0, 5, 0, "                              \n                              \n                              \n                              \n                              \n");
-    hel_BgTextPrint(1, 0, 10, 0, "                              \n                              \n                              \n                              \n                              \n");
-    hel_BgTextPrint(1, 0, 15, 0, "                              \n                              \n                              \n                              \n                              \n");
+    //    hel_BgTextPrint(1, 0, 5, 0, "                              \n                              \n                              \n                              \n                              \n");
+    //    hel_BgTextPrint(1, 0, 10, 0, "                              \n                              \n                              \n                              \n                              \n");
+    //    hel_BgTextPrint(1, 0, 15, 0, "                              \n                              \n                              \n                              \n                              \n");
+
+    if (ham_bg[TEXT_LAYER].ti) {
+        //        ham_InitBg(2, 0, 3, 0);
+        ham_DeInitTileSet(ham_bg[TEXT_LAYER].ti);
+        ham_DeInitMapSet(ham_bg[TEXT_LAYER].mi);
+
+        ham_bg[TEXT_LAYER].ti = ham_InitTileSet((void*) text_Tiles, SIZEOF_16BIT(text_Tiles), 1, 1);
+        ham_bg[TEXT_LAYER].mi = ham_InitMapEmptySet(1024, 0);
+    }
+
 }
 
 /**
@@ -345,10 +355,10 @@ void FAT_allScreen_singleCheckButtons() {
 void FAT_mainLoop() {
     for (;;) {
 
-        if (FAT_isCurrentlyPlaying){
+        if (FAT_isCurrentlyPlaying) {
             FAT_player_continueToPlay();
         }
-        
+
         FAT_allScreen_singleCheckButtons();
         // Wait for Vertical Blank
         hel_SwiVBlankIntrWait();
