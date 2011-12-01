@@ -285,10 +285,14 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
     R_TIM3CNT = 0x00C3;
     hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
 
+    //hel_BgTextPrint(TEXT_LAYER, 0, 0, 0, "Playing from notes");
+
 }
 
 void FAT_player_timerFunc() {
-    tempoReach--;
+    if (tempoReach > 0) {
+        tempoReach--;
+    }
     hel_IntrAcknowledge(INT_TYPE_TIM3);
 }
 
@@ -452,6 +456,7 @@ void FAT_player_stopPlayer() {
 
     // la lecture est terminée.
     FAT_isCurrentlyPlaying = 0;
+    FAT_player_isPlayingFrom = 0;
 }
 
 /**

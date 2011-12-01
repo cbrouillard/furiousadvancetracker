@@ -336,6 +336,9 @@ void FAT_allScreen_singleCheckButtons() {
         case SCREEN_FILESYSTEM_ID:
             FAT_screenFilesystem_checkButtons();
             break;
+        case SCREEN_HELP_ID:
+            FAT_screenHelp_checkButtons();
+            break;
     }
 }
 
