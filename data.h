@@ -188,7 +188,7 @@ const char* noteName[NB_NOTE] = {"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ",
 /**
  * \brief Tableau constant contenant tous les noms d'effets disponibles pour les notes.
  */
-const char* noteEffectName[NB_NOTE_EFFECT] = {"HO", "KL", "OU" ,"SW", "VO"};
+const char* noteEffectName[NB_NOTE_EFFECT] = {"HO", "KL", "OU", "SW", "VO"};
 /**
  * \brief Mapping entre le nom de l'effet et son numéro dans la soundApi. Si le mapping 
  * a pour valeur NULL_VALUE, alors l'effet n'est pas géré par la soundAPI.
@@ -379,7 +379,7 @@ typedef struct INSTRUMENT {
     u8 output; /*!< Stocke la sortie d'un son : gauche ou droite. 0 __ / 1 L_ / 2 R_ / 3 RL */
 
     u8 table; /*!< Numéro de table de commandes à appliquer pour chaque note assignée à cet instrument. */
-    
+
     u8 kitNumber; /*!< Numéro du kit utilisé pour un instrument de type SAMPLE.*/
     u8 offset; /*!< Offset de départ pour la lecture d'un sample. 0 = début du sample, 0xff = fin. */
     // 0x 000 0    0000
@@ -387,15 +387,15 @@ typedef struct INSTRUMENT {
     // loop -> speedOrLooping >> 4
     // speed -> speedOrLooping & 0x0f
     u8 speedOrLooping; /*!< Contient les valeurs pour la vitesse et le mode looping d'un sample. */
-    
-    u8 voice; /*!< Lien vers une voix pour un instrument de type SAMPLE. de 0 a MAX_VOICE. NULL_VALUE = pas de lien.*/
+
+    u8 voice; /*!< Lien vers une voix pour un instrument de type WAVE. de 0 a MAX_VOICE. NULL_VALUE = pas de lien.*/
 } instrument;
 
 /**
  * \struct LIVE
  * \brief Cette structure embarque toutes les données relatives au mode LIVE.
  */
-typedef struct LIVE {    
+typedef struct LIVE {
     bool liveMode; /*!< Le live mode permet de définir le mode de défilement des séquences: 0 = automatique 1 = manuel*/
     u8 volume[6]; /*!< Tableau des valeurs de volumes affectés à chaque canal.*/
 } livedata;
@@ -458,7 +458,7 @@ void FAT_data_initData() {
     memset(&FAT_tracker, NULL_VALUE, sizeof (tracker));
     FAT_tracker.tempo = 128;
     FAT_tracker.transpose = 0;
-    FAT_tracker.keyRepeat = 0;
+    FAT_tracker.keyRepeat = 10;
     FAT_tracker.nbWork = 0;
     strcpy(FAT_tracker.songName, "SONGNAME\0");
 
@@ -484,8 +484,8 @@ void FAT_data_initData() {
     FAT_data_blockClipboard = NULL_VALUE;
     memset(&FAT_data_noteClipboard, NULL_VALUE, sizeof (note));
     memset(&FAT_data_lastEffectWritten, NULL_VALUE, sizeof (effect));
-    
-    memset(&FAT_tracker.liveData.volume, 100, sizeof(u8)*6);
+
+    memset(&FAT_tracker.liveData.volume, 100, sizeof (u8)*6);
 }
 
 /**
@@ -1111,14 +1111,14 @@ void FAT_data_note_changeValue(u8 channel, u8 block, u8 noteLine, s8 addedValue)
         u8 nbMaxSample = snd_countSamplesInKitById(inst->kitNumber);
         //if (FAT_tracker.allBlocks[block].notes[noteLine].freq >= nbMaxSample){
         //    FAT_tracker.allBlocks[block].notes[noteLine].freq = nbMaxSample;
-            /*< \todo changer l'intitulé noteName et noteOctave pour affichage correct. */
+        /*< \todo changer l'intitulé noteName et noteOctave pour affichage correct. */
         //}
-        if ((addedValue > 0 && FAT_tracker.allBlocks[block].notes[noteLine].freq < nbMaxSample-1) ||
+        if ((addedValue > 0 && FAT_tracker.allBlocks[block].notes[noteLine].freq < nbMaxSample - 1) ||
                 (addedValue < 0 && FAT_tracker.allBlocks[block].notes[noteLine].freq > 0)) {
             FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue;
         }
     } else {
-        
+
         if (addedValue < 0) {
 
             if (noteName > 0) {
@@ -1131,8 +1131,8 @@ void FAT_data_note_changeValue(u8 channel, u8 block, u8 noteLine, s8 addedValue)
                 noteName = NB_NOTE - 1;
                 noteOctave -= 1;
             }
-            
-            if (FAT_tracker.allBlocks[block].notes[noteLine].freq > 0){
+
+            if (FAT_tracker.allBlocks[block].notes[noteLine].freq > 0) {
                 FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue;
             }
 
@@ -1147,8 +1147,8 @@ void FAT_data_note_changeValue(u8 channel, u8 block, u8 noteLine, s8 addedValue)
                 noteName = 0;
                 noteOctave += 1;
             }
-            
-            if (FAT_tracker.allBlocks[block].notes[noteLine].freq < NB_FREQUENCES){
+
+            if (FAT_tracker.allBlocks[block].notes[noteLine].freq < NB_FREQUENCES) {
                 FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue;
             }
         }
@@ -1603,7 +1603,6 @@ void FAT_data_instrumentSample_changeOutput(u8 instrumentId, s8 value) {
     FAT_data_instrumentPulse_changeOutput(instrumentId, value);
 }
 
-
 /**
  * \brief Change le paramètre "soundlength" (durée du son) pour un instrument de type PULSE.
  *  
@@ -1655,7 +1654,6 @@ void FAT_data_instrumentWave_changeSoundLength(u8 instrumentId, s8 value) {
 void FAT_data_instrumentSample_changeSoundLength(u8 instrumentId, s8 value) {
     FAT_data_instrumentWave_changeSoundLength(instrumentId, value);
 }
-
 
 /**
  * \brief Change le paramètre "sweep" (effet sweep) pour un instrument de type PULSE.
@@ -1838,7 +1836,6 @@ void FAT_data_instrumentSample_changeOffset(u8 instrumentId, s8 value) {
     }
 }
 
-
 /**
  * \brief Modifie le tempo pour le projet en cours.
  *  
@@ -1932,8 +1929,8 @@ note* FAT_data_composer_getNote(u8 line) {
  * @param line le numéro de ligne sur lequel la note est posée
  * @return le numéro de channel entre 0 et 5
  */
-u8 FAT_data_composer_getChannel (u8 line){
-   return FAT_tracker.composer.channels[line];
+u8 FAT_data_composer_getChannel(u8 line) {
+    return FAT_tracker.composer.channels[line];
 }
 
 /**
@@ -1955,19 +1952,19 @@ void FAT_data_composer_changeValue(u8 line, s8 addedValue) {
 
     u8 channel = FAT_data_composer_getChannel(line);
     instrument* inst = &(FAT_tracker.allInstruments[FAT_tracker.composer.notes[line].instrument]);
-    
+
     if (channel >= INSTRUMENT_TYPE_SAMPLEA) {
         u8 nbMaxSample = snd_countSamplesInKitById(inst->kitNumber);
-        if (FAT_tracker.composer.notes[line].freq >= nbMaxSample){
+        if (FAT_tracker.composer.notes[line].freq >= nbMaxSample) {
             FAT_tracker.composer.notes[line].freq = nbMaxSample - 1;
             /*< \todo changer l'intitulé noteName et noteOctave pour affichage correct. */
         }
-        if ((addedValue > 0 && FAT_tracker.composer.notes[line].freq < nbMaxSample-1) ||
+        if ((addedValue > 0 && FAT_tracker.composer.notes[line].freq < nbMaxSample - 1) ||
                 (addedValue < 0 && FAT_tracker.composer.notes[line].freq > 0)) {
             FAT_tracker.composer.notes[line].freq += addedValue;
         }
     } else {
-        
+
         if (addedValue < 0) {
 
             if (noteName > 0) {
@@ -1980,8 +1977,8 @@ void FAT_data_composer_changeValue(u8 line, s8 addedValue) {
                 noteName = NB_NOTE - 1;
                 noteOctave -= 1;
             }
-            
-            if (FAT_tracker.composer.notes[line].freq > 0){
+
+            if (FAT_tracker.composer.notes[line].freq > 0) {
                 FAT_tracker.composer.notes[line].freq += addedValue;
             }
 
@@ -1996,14 +1993,14 @@ void FAT_data_composer_changeValue(u8 line, s8 addedValue) {
                 noteName = 0;
                 noteOctave += 1;
             }
-            
-            if (FAT_tracker.composer.notes[line].freq < NB_FREQUENCES){
+
+            if (FAT_tracker.composer.notes[line].freq < NB_FREQUENCES) {
                 FAT_tracker.composer.notes[line].freq += addedValue;
             }
         }
-        
+
     }
-    
+
     FAT_tracker.composer.notes[line].note = (noteName << 4) + noteOctave;
 
     FAT_data_lastNoteWritten.freq = FAT_tracker.composer.notes[line].freq;
@@ -2156,6 +2153,8 @@ void FAT_data_project_changeKeyRepeat(s8 addedValue) {
 
             ) {
         FAT_tracker.keyRepeat += addedValue;
+        hel_PadSetRepeatRate(PAD_BUTTON_R | PAD_BUTTON_L | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT | PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_A | PAD_BUTTON_B | PAD_BUTTON_START, FAT_tracker.keyRepeat);
+        hel_PadSetRepeatDelay(PAD_BUTTON_R | PAD_BUTTON_L | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT | PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_A | PAD_BUTTON_B | PAD_BUTTON_START, FAT_tracker.keyRepeat > 9 ? FAT_tracker.keyRepeat - 9 : 1);
     }
 }
 
