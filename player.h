@@ -178,7 +178,7 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                     break;
 
                 case 2: // WAV
-                    snd_playSoundOnChannel3(inst->volumeRatio, inst->soundlength, inst->loopmode, inst->voiceAndBank & 0x1f,
+                    snd_playSoundOnChannel3(inst->volumeRatio & 0x0f, inst->soundlength, inst->loopmode, inst->voiceAndBank & 0x1f,
                             (inst->voiceAndBank & 0x20) >> 5, (inst->voiceAndBank & 0x40) >> 6,
                             inst->output, note->freq, transpose + FAT_tracker.transpose);
                     break;
