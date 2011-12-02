@@ -38,6 +38,7 @@ u8 param1;
 void FAT_yesno_dialogSave_mainFunc() {
     ham_CopyObjToOAM();
 
+    hel_PadCapture();
     if (hel_PadQuery()->Pressed.L) {
         FAT_yesno_close();
     } else if (hel_PadQuery()->Pressed.R) {
@@ -53,6 +54,7 @@ void FAT_yesno_dialogSave_mainFunc() {
 void FAT_yesno_dialogLoad_mainFunc() {
     ham_CopyObjToOAM();
 
+    hel_PadCapture();
     if (hel_PadQuery()->Pressed.L) {
         FAT_yesno_close();
     } else if (hel_PadQuery()->Pressed.R) {
@@ -70,6 +72,7 @@ void FAT_yesno_dialogLoad_mainFunc() {
 void FAT_yesno_dialogKeyboard_mainFunc() {
     ham_CopyObjToOAM();
 
+    hel_PadCapture();
     if (hel_PadQuery()->Pressed.L) {
         FAT_yesno_close();
     } else if (hel_PadQuery()->Pressed.R) {
@@ -83,6 +86,7 @@ void FAT_yesno_dialogKeyboard_mainFunc() {
 void FAT_yesno_dialogNewProject_mainFunc() {
     ham_CopyObjToOAM();
 
+    hel_PadCapture();
     if (hel_PadQuery()->Pressed.L) {
         FAT_yesno_close();
     } else if (hel_PadQuery()->Pressed.R) {
@@ -90,7 +94,7 @@ void FAT_yesno_dialogNewProject_mainFunc() {
         FAT_data_initData();
         FAT_currentScreen = SCREEN_SONG_ID;
         FAT_yesno_close();
-        hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Go new");
+        hel_BgTextPrint(TEXT_LAYER, 22, 16, 0, "Created");
     }
 }
 
@@ -99,6 +103,7 @@ void FAT_yesno_dialogNewProject_mainFunc() {
  */
 void FAT_onlyyes_dialog_mainFunc() {
     ham_CopyObjToOAM();
+    hel_PadCapture();
     if (hel_PadQuery()->Pressed.R) {
         FAT_yesno_close();
     }

@@ -151,7 +151,7 @@
     Et donc ... un grand merci à toi qui lit ce manuel probablement pour essayer \FAT. J'espère qu'il te plaira !
   
     \subsection{Pourquoi \FAT ?}
-    En 2011, il existe déjà quelques solutions pour composer de la musique sur une Gameboy Advance:\medskip
+    A l'époque de la création du projet, début 2011, il existe déjà quelques solutions pour composer de la musique sur une Gameboy Advance:\medskip
     
     \begin{itemize}
         \item{Nanoloop 2.3/2.5}
@@ -159,7 +159,7 @@
         \item{et probablement d'autres que je n'ai su trouver...}
     \end{itemize}\medskip
     
-    Toutes ces solutions ne me semblent pas viables (quoique parfaitement fonctionnelles!).\medskip
+    Toutes ces solutions ne me semblent pas complètement viables (quoique parfaitement fonctionnelles!).\medskip
     
     \begin{itemize}
         \item{Nanoloop 2.3/2.5 est un excellent logiciel ! mais sa disponibilité quasi nulle (et donc par effet de "marché", son prix rédhibitoire) en fait une solution finalement pas si simple d'accès.}
@@ -176,7 +176,7 @@
     
     Mais l'avantage d'une Gameboy, c'est la portabilité ! D'autant plus qu'un son émulé n'égalera jamais l'original. Pour exécuter \FAT sur une vraie Gameboy Advance, il vous faudra:
     \begin{itemize}
-        \item{une vraie Gameboy Advance(scoop!)}
+        \item{une vraie Gameboy Advance(scoop!) ou une Gameboy Micro. Personnellement je préfère l'écran de cette dernière mais certains le trouvent trop petit.}
         \item{une cartouche EZ-Flash, SuperCardToSD, ou autre ... par exemple ici: \href{http://www.flashlinker-shop.com/ez-flash-iv-minisd-slot-2-p-443.html}{www.flashlinker-shop.com}}
         \item{une carte SD qui va bien avec la cartouche (si vous optez pour une cartouche basée sur SD)} 
     \end{itemize}\medskip
@@ -288,14 +288,22 @@
     
     Liste des changements pour cette version de \FAT: \medskip
     \begin{itemize}
-        \item{sauvergarde et chargement : 3 chansons (pas de compression) sont gérées}
-        \item{première commande: la commande K (KILL)}
-        \item{la gestion des touches est meilleure (plus précise)}
-        \item{les instruments de type WAVE ont été stabilisés}
-        \item{la gestion du mode de sortie du son a été ajoutée (droite/gauche/les deux/rien)}
-        \item{ajout du paramètrage sur l'écran COMPOSER (Transpose et KeyRepeat)}
-        \item{ajout des écrans d'aide}
-        \item{corrections de bugs divers (curseur écran instrument, ...)}
+        \item{la gestion des samples a été implémentée : il est possible de les lancer depuis les channels SNA et SNB}
+        \item{la gestion des kits fait ses premier pas: branchez à chaud vos samples dans la ROM !}
+        \item{apparition de l'écran LIVE: expérimental}
+        \item{refonte complète de la gestion des touches}
+        \item{refonte complète du système d'affichage: la police est plus jolie}
+    \end{itemize}
+    
+    \subsection{Roadmap pour la version suivante}
+    
+    La version suivante sera la \fatnextversion. \medskip    
+    \begin{itemize}
+        \item{compression de la sauvegarde (algorithme RLE)}
+        \item{ajout de commandes}
+        \item{gestion des paramètres avancés sur les samples}
+        \item{stabilisation générale} 
+        \item{recherche de documentation sur la synthèse FM (si vous en avez je suis preneur)}
     \end{itemize}
     
     \subsection{Premier son}
@@ -343,7 +351,7 @@
         
         \paragraph{Canal 2 : PU2} Le canal 2 est exactement le même que le 1 à la différence qu'il n'est pas capable de gérer un sweep.
         
-        \ColoredAnnotation{Vous pouvez utiliser ce canal générer la mélodie.}
+        \ColoredAnnotation{Vous pouvez utiliser ce canal pour jouer une mélodie.}
         
         \paragraph{Canal 3 : WAVE} Le canal 3 est capable de lire des minis-samples répartis dans 2 banques. 
         
@@ -355,11 +363,11 @@
         
         \paragraph{Canal 5 : SOUNDA} Ce canal sait jouer des samples et du son plus proches des machines actuelles que du "vrai" chiptunes. 
         
-        \ColoredAnnotation{Ce canal n'est pas dispo pour cette version de \FAT. Il pourra être utilisable pour lire les samples pré-embarqués dans la ROM}
+        \ColoredAnnotation{Ce canal fait ses premiers pas dans cette version de \FAT. Certains de ses paramètres ne sont pas encore appliqués.}
         
         \paragraph{Canal 6 : SOUNDB} Ce canal sait jouer des samples et du son plus proches des machines actuelles que du "vrai" chiptunes. 
         
-        \ColoredAnnotation{Ce canal n'est pas dispo pour cette version de \FAT. Il pourra être utilisable pour lire les samples pré-embarqués dans la ROM}
+        \ColoredAnnotation{Ce canal fait ses premiers pas dans cette version de \FAT. Certains de ses paramètres ne sont pas encore appliqués.}
         
         \subsubsection{Les différences avec la Gameboy}
         
@@ -587,7 +595,7 @@
         \item{le type SAMPLE}
     \end{itemize}\medskip
     
-     \ColoredAnnotation{Notez que cette version de \FAT n'implémente pas encore les instruments de type SAMPLE. Dans le futur, cette catégorie sera probablement renommée ou subdivisée en 2 parties: les samples embarqués dans la ROM et une partie synthétiseur.}
+     \ColoredAnnotation{Notez que cette version de \FAT n'implémente pas encore totalement les instruments de type SAMPLE. Dans le futur, cette catégorie sera probablement renommée ou subdivisée en 2 parties: les samples embarqués dans la ROM et une partie synthétiseur FM.}
      
      Chaque instrument est spécialisé dans la lecture de notes {\bf sur un certain canal}. Rappelez-vous, l'écran SONG est composé de 6 colonnes. Ces 6 colonnes représentent en fait chacun des 6 canaux de la GBA. Ainsi, 
      
