@@ -70,6 +70,10 @@ void FAT_screenComposer_switchLocking();
 void FAT_screenComposer_playAffectedNotes();
 
 #include "screen_composer_cursor.h"
+<<<<<<< HEAD
+#include "data.h"
+=======
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 
 /**
  * \brief Affiche les informations "dynamiques" dans l'écran COMPOSER (numéro de ligne, ...). 
@@ -95,8 +99,13 @@ void FAT_screenComposer_printNote(u8 line) {
 
         if (FAT_data_composer_getChannel(line) > INSTRUMENT_TYPE_NOISE) {
 
+<<<<<<< HEAD
+            ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
+                    line + SCREENCOMPOSER_LINE_START_Y,
+=======
             hel_BgTextPrintF(TEXT_LAYER, SCREENCOMPOSER_NOTE_LINE_X,
                     line + SCREENCOMPOSER_LINE_START_Y, 0,
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
                     "S%.2x %.2x      %.1x\0",
                     actualNote->freq, actualNote->instrument,
                     FAT_tracker.composer.channels[line] + 1
@@ -104,8 +113,13 @@ void FAT_screenComposer_printNote(u8 line) {
 
         } else {
 
+<<<<<<< HEAD
+            ham_DrawText(SCREENCOMPOSER_NOTE_LINE_X,
+                    line + SCREENCOMPOSER_LINE_START_Y,
+=======
             hel_BgTextPrintF(TEXT_LAYER, SCREENCOMPOSER_NOTE_LINE_X,
                     line + SCREENCOMPOSER_LINE_START_Y, 0,
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
                     "%s%1x %.2x      %.1x\0",
                     noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument,
                     //                FAT_data_getInstrumentType(actualNote->instrument) + 1
@@ -179,9 +193,12 @@ void FAT_screenComposer_init() {
     FAT_screenComposer_printAllScreenText();
     FAT_screenComposer_printLocking();
 
+<<<<<<< HEAD
+=======
     // démarrage du cycle pour l'écran
     //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenComposer_mainFunc);
 
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
     // curseur
     FAT_cursors_hideCursor2();
     FAT_cursors_hideCursor3();
@@ -303,16 +320,27 @@ void FAT_screenComposer_pressOrHeldA() {
                     FAT_data_composer_changeValue(realLine, -1);
                 }
 
+<<<<<<< HEAD
+                if (F_CTRLINPUT_UP_PRESSED) {
+                    iCanPressAKey = 0;
+                    if (FAT_data_composer_getChannel(realLine) <= INSTRUMENT_TYPE_NOISE) {
+                        FAT_data_composer_changeOctave(realLine, 1); // ajout de 1
+                    }
+                }
+
+                if (F_CTRLINPUT_DOWN_PRESSED) {
+                    iCanPressAKey = 0;
+                    if (FAT_data_composer_getChannel(realLine) <= INSTRUMENT_TYPE_NOISE) {
+                        FAT_data_composer_changeOctave(realLine, -1);
+                    }
+=======
                 if (hel_PadQuery()->Pressed.Up) {
-					if (FAT_data_composer_getChannel(realLine) <= INSTRUMENT_TYPE_NOISE){	
                     FAT_data_composer_changeOctave(realLine, 1); // ajout de 1
-					}
                 }
 
                 if (hel_PadQuery()->Pressed.Down) {
-					if (FAT_data_composer_getChannel(realLine) <= INSTRUMENT_TYPE_NOISE) {
                     FAT_data_composer_changeOctave(realLine, -1);
-					}
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
                 }
 
                 if (FAT_data_isPreviewEnabled()) {

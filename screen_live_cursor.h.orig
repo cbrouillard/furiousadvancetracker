@@ -7,7 +7,11 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+<<<<<<< HEAD
+*/
+=======
  */
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 
 /**
  * \file screen_song_cursor.h
@@ -18,9 +22,12 @@
 #ifndef _SCREENLIVECURSOR_H_
 #define _SCREENLIVECURSOR_H_
 
+<<<<<<< HEAD
+=======
 #include "screen_live.h"
 
 
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 /** \brief Taille d'un bloc d'affichage séquence 16*8 en pixels. */
 #define SCREENLIVE_BLOCK_SIZE_X 16
 /** \brief Taille d'un bloc d'affichage séquence 16*8 en pixels. */
@@ -38,6 +45,18 @@
 /** \brief Abscisse du premier bloc en haut à gauche (px). */
 #define SCREENLIVE_FIRST_BLOCK_Y 16
 
+<<<<<<< HEAD
+/** \brief Position actuelle du curseur de sélection sur l'écran. */
+u8 FAT_screenLive_cursorX; 
+/** \brief Position actuelle du curseur de sélection sur l'écran. */
+u8 FAT_screenLive_cursorY;
+/** \brief Numéro de ligne actuellement sélectionnée. */
+u8 FAT_screenLive_currentSelectedLine; 
+/** \brief Numéro de colonne actuellement sélectionnée. */
+u8 FAT_screenLive_currentSelectedColumn;
+
+=======
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 // prototypes
 void FAT_screenLive_initCursor();
 void FAT_screenLive_moveCursorRight();
@@ -51,21 +70,36 @@ void FAT_screenLive_commitCursorMove();
  * des valeurs de ligne et colonne sélectionnées. 
  */
 void FAT_screenLive_initCursor() {
+<<<<<<< HEAD
+    FAT_screenLive_cursorX = SCREENLIVE_FIRST_BLOCK_X - 1;
+    FAT_screenLive_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1;
+    FAT_screenLive_currentSelectedLine = 0;
+    FAT_screenLive_currentStartLine = 0;
+    FAT_screenLive_currentSelectedColumn = 0;
+    
+=======
     FAT_screenSong_cursorX = SCREENLIVE_FIRST_BLOCK_X - 1;
     FAT_screenSong_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1;
     FAT_screenSong_currentSelectedLine = 0;
     FAT_screenSong_currentStartLine = 0;
     FAT_screenSong_currentSelectedColumn = 0;
 
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 };
 
 /**
  * \brief Déplace le curseur vers la droite. 
  */
 void FAT_screenLive_moveCursorRight() {
+<<<<<<< HEAD
+    if (!(FAT_screenLive_cursorX >= SCREENLIVE_LAST_BLOCK_X - 1)) {
+        FAT_screenLive_cursorX += SCREENLIVE_BLOCK_SIZE_X + SCREENLIVE_WHITE_SPACE_X;
+        FAT_screenLive_currentSelectedColumn++;
+=======
     if (!(FAT_screenSong_cursorX >= SCREENLIVE_LAST_BLOCK_X - 1)) {
         FAT_screenSong_cursorX += SCREENLIVE_BLOCK_SIZE_X + SCREENLIVE_WHITE_SPACE_X;
         FAT_screenSong_currentSelectedColumn++;
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
         FAT_screenLive_printInfos();
     }
 }
@@ -74,9 +108,15 @@ void FAT_screenLive_moveCursorRight() {
  * \brief Déplace le curseur vers la gauche. 
  */
 void FAT_screenLive_moveCursorLeft() {
+<<<<<<< HEAD
+    if (!(FAT_screenLive_cursorX <= SCREENLIVE_FIRST_BLOCK_X)) {
+        FAT_screenLive_cursorX -= SCREENLIVE_BLOCK_SIZE_X + SCREENLIVE_WHITE_SPACE_X;
+        FAT_screenLive_currentSelectedColumn--;
+=======
     if (!(FAT_screenSong_cursorX <= SCREENLIVE_FIRST_BLOCK_X)) {
         FAT_screenSong_cursorX -= SCREENLIVE_BLOCK_SIZE_X + SCREENLIVE_WHITE_SPACE_X;
         FAT_screenSong_currentSelectedColumn--;
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
         FAT_screenLive_printInfos();
     }
 }
@@ -85,9 +125,15 @@ void FAT_screenLive_moveCursorLeft() {
  * \brief Déplace le curseur d'une page vers le bas. 
  */
 void FAT_screenLive_movePageDown() {
+<<<<<<< HEAD
+    if (FAT_screenLive_currentSelectedLine < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN) {
+        FAT_screenLive_currentStartLine += SCREENLIVE_NB_LINES_ON_SCREEN;
+        FAT_screenLive_currentSelectedLine += SCREENLIVE_NB_LINES_ON_SCREEN;
+=======
     if (FAT_screenSong_currentSelectedLine < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN) {
         FAT_screenSong_currentStartLine += SCREENLIVE_NB_LINES_ON_SCREEN;
         FAT_screenSong_currentSelectedLine += SCREENLIVE_NB_LINES_ON_SCREEN;
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
         FAT_screenLive_printAllScreenText();
     }
 }
@@ -96,9 +142,15 @@ void FAT_screenLive_movePageDown() {
  * \brief Déplace le curseur tout en bas du tableau. 
  */
 void FAT_screenLive_moveCursorAllDown() {
+<<<<<<< HEAD
+    FAT_screenLive_cursorY = SCREENLIVE_LAST_BLOCK_Y;
+    FAT_screenLive_currentStartLine = NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN;
+    FAT_screenLive_currentSelectedLine = NB_SEQUENCES_IN_ONE_CHANNEL - 1;
+=======
     FAT_screenSong_cursorY = SCREENLIVE_LAST_BLOCK_Y;
     FAT_screenSong_currentStartLine = NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN;
     FAT_screenSong_currentSelectedLine = NB_SEQUENCES_IN_ONE_CHANNEL - 1;
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
     FAT_screenLive_printAllScreenText();
 }
 
@@ -106,6 +158,19 @@ void FAT_screenLive_moveCursorAllDown() {
  * \brief Déplace le curseur vers le bas. 
  */
 void FAT_screenLive_moveCursorDown() {
+<<<<<<< HEAD
+    if (FAT_screenLive_currentSelectedLine < NB_SEQUENCES_IN_ONE_CHANNEL) {
+        if (FAT_screenLive_cursorY >= SCREENLIVE_LAST_BLOCK_Y - 1) {
+            if (FAT_screenLive_currentStartLine < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN) {
+                // on n'avance pas mais on change de ligne
+                FAT_screenLive_currentStartLine++;
+                FAT_screenLive_currentSelectedLine++;
+                FAT_screenLive_printAllScreenText();
+            }
+        } else {
+            FAT_screenLive_cursorY += SCREENLIVE_BLOCK_SIZE_Y;
+            FAT_screenLive_currentSelectedLine++;
+=======
     if (FAT_screenSong_currentSelectedLine < NB_SEQUENCES_IN_ONE_CHANNEL) {
         if (FAT_screenSong_cursorY >= SCREENLIVE_LAST_BLOCK_Y - 1) {
             if (FAT_screenSong_currentStartLine < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN) {
@@ -117,6 +182,7 @@ void FAT_screenLive_moveCursorDown() {
         } else {
             FAT_screenSong_cursorY += SCREENLIVE_BLOCK_SIZE_Y;
             FAT_screenSong_currentSelectedLine++;
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
             FAT_screenLive_printInfos();
         }
     }
@@ -126,10 +192,17 @@ void FAT_screenLive_moveCursorDown() {
  * \brief Déplace le curseur d'une page vers le haut. 
  */
 void FAT_screenLive_movePageUp() {
+<<<<<<< HEAD
+    if (FAT_screenLive_currentSelectedLine >= SCREENLIVE_NB_LINES_ON_SCREEN
+            && FAT_screenLive_currentStartLine >= SCREENLIVE_NB_LINES_ON_SCREEN) {
+        FAT_screenLive_currentStartLine -= SCREENLIVE_NB_LINES_ON_SCREEN;
+        FAT_screenLive_currentSelectedLine -= SCREENLIVE_NB_LINES_ON_SCREEN;
+=======
     if (FAT_screenSong_currentSelectedLine >= SCREENLIVE_NB_LINES_ON_SCREEN
             && FAT_screenSong_currentStartLine >= SCREENLIVE_NB_LINES_ON_SCREEN) {
         FAT_screenSong_currentStartLine -= SCREENLIVE_NB_LINES_ON_SCREEN;
         FAT_screenSong_currentSelectedLine -= SCREENLIVE_NB_LINES_ON_SCREEN;
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
         FAT_screenLive_printAllScreenText();
     }
 }
@@ -138,9 +211,15 @@ void FAT_screenLive_movePageUp() {
  * \brief Déplace le curseur tout en haut du tableau. 
  */
 void FAT_screenLive_moveCursorAllUp() {
+<<<<<<< HEAD
+    FAT_screenLive_cursorY = SCREENLIVE_FIRST_BLOCK_Y-1;
+    FAT_screenLive_currentStartLine = 0;
+    FAT_screenLive_currentSelectedLine = 0;
+=======
     FAT_screenSong_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1;
     FAT_screenSong_currentStartLine = 0;
     FAT_screenSong_currentSelectedLine = 0;
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
     FAT_screenLive_printAllScreenText();
 }
 
@@ -149,6 +228,19 @@ void FAT_screenLive_moveCursorAllUp() {
  */
 void FAT_screenLive_moveCursorUp() {
 
+<<<<<<< HEAD
+    if (FAT_screenLive_currentSelectedLine > 0) {
+        if (FAT_screenLive_cursorY <= SCREENLIVE_FIRST_BLOCK_Y - 1) {
+            if (FAT_screenLive_currentStartLine > 0) {
+                // on ne recule pas mais on change de ligne
+                FAT_screenLive_currentStartLine--;
+                FAT_screenLive_currentSelectedLine--;
+                FAT_screenLive_printAllScreenText();
+            }
+        } else {
+            FAT_screenLive_cursorY -= SCREENLIVE_BLOCK_SIZE_Y;
+            FAT_screenLive_currentSelectedLine--;
+=======
     if (FAT_screenSong_currentSelectedLine > 0) {
         if (FAT_screenSong_cursorY <= SCREENLIVE_FIRST_BLOCK_Y - 1) {
             if (FAT_screenSong_currentStartLine > 0) {
@@ -160,6 +252,7 @@ void FAT_screenLive_moveCursorUp() {
         } else {
             FAT_screenSong_cursorY -= SCREENLIVE_BLOCK_SIZE_Y;
             FAT_screenSong_currentSelectedLine--;
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
             FAT_screenLive_printInfos();
         }
     }
@@ -170,11 +263,15 @@ void FAT_screenLive_moveCursorUp() {
  * \brief Valide le déplacement du curseur sur l'écran. 
  */
 void FAT_screenLive_commitCursorMove() {
+<<<<<<< HEAD
+    ham_SetObjXY(FAT_cursor2_obj, FAT_screenLive_cursorX, FAT_screenLive_cursorY);
+=======
     if (FAT_screenLive_isCursorInSequencer) {
         ham_SetObjXY(FAT_cursor2_obj, FAT_screenSong_cursorX, FAT_screenSong_cursorY);
     } else {
         ham_SetObjXY(FAT_cursor3_obj, FAT_screenSong_cursorX - 8, FAT_screenSong_cursorY);
     }
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 }
 
 #endif

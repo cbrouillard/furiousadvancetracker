@@ -88,12 +88,21 @@ void FAT_screenNotes_printNote(u8 line) {
 
         if (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA) {
 
+<<<<<<< HEAD
+            ham_DrawText(SCREENNOTES_NOTE_LINE_X,
+                    line + SCREENNOTES_LINE_START_Y,
+                    "%s%1x %.2x\0", noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument);
+        } else {
+            ham_DrawText(SCREENNOTES_NOTE_LINE_X,
+                    line + SCREENNOTES_LINE_START_Y,
+=======
             hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_NOTE_LINE_X,
                     line + SCREENNOTES_LINE_START_Y, 0,
                     "%s%1x %.2x\0", noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument);
         } else {
             hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_NOTE_LINE_X,
                     line + SCREENNOTES_LINE_START_Y, 0,
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
                     "S%.2x %.2x\0", actualNote->freq, actualNote->instrument);
         }
     } else {
@@ -166,9 +175,12 @@ void FAT_screenNotes_init() {
     FAT_screenNotes_printBlockNumber();
     FAT_screenNotes_printAllScreenText();
 
+<<<<<<< HEAD
+=======
     // démarrage du cycle pour l'écran
     //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenNotes_mainFunc);
 
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
     // affichage du curseur
     FAT_cursors_hideCursor2();
     FAT_cursors_hideCursor3();
@@ -291,7 +303,12 @@ void FAT_screenNotes_checkButtons() {
                 FAT_screenNotes_commitCursorMove();
             }
 
+<<<<<<< HEAD
+            if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED) {
+                iCanPressAKey = 0;
+=======
             if (hel_PadQuery()->Pressed.R && hel_PadQuery()->Pressed.L) {
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
                 FAT_showHelp(SCREEN_NOTES_ID);
             }
         }
@@ -337,23 +354,43 @@ void FAT_screenNotes_pressOrHeldA() {
 
             }
 
+<<<<<<< HEAD
+            if (F_CTRLINPUT_RIGHT_PRESSED) {
+                iCanPressAKey = 0;
+=======
             if (hel_PadQuery()->Pressed.Right) {
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
                 FAT_data_note_changeValue(FAT_screenSong_currentSelectedColumn, FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, 1); // ajout de 1
             }
 
+<<<<<<< HEAD
+            if (F_CTRLINPUT_LEFT_PRESSED) {
+                iCanPressAKey = 0;
+=======
             if (hel_PadQuery()->Pressed.Left) {
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
                 FAT_data_note_changeValue(FAT_screenSong_currentSelectedColumn, FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, -1); // retrait de 1
             }
 
+<<<<<<< HEAD
+            if (F_CTRLINPUT_UP_PRESSED && (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA)) {
+                iCanPressAKey = 0;
+=======
 
             if (hel_PadQuery()->Pressed.Up && (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA)) {
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
                 FAT_data_note_changeOctave(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, 1);
             }
 
+<<<<<<< HEAD
+            if (F_CTRLINPUT_DOWN_PRESSED && (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA)) {
+                iCanPressAKey = 0;
+=======
             if (hel_PadQuery()->Pressed.Down && (FAT_screenSong_currentSelectedColumn < INSTRUMENT_TYPE_SAMPLEA)) {
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
                 FAT_data_note_changeOctave(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine, -1);
             }

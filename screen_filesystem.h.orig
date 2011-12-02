@@ -45,7 +45,10 @@ void FAT_screenFilesystem_pressOrHeldA();
 
 #include "screen_filesystem_cursor.h"
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 /**
  * \brief Change le mode pour l'écran filesystem.
  * @param modeId
@@ -120,9 +123,12 @@ void FAT_screenFilesystem_init() {
     FAT_cursors_showCursor8();
     FAT_cursors_showCursor2();
     FAT_screenFilesystem_commitCursorMove();
+<<<<<<< HEAD
+=======
 
     // démarrage du cycle pour l'écran
     //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenFilesystem_mainFunc);
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 }
 
 /**

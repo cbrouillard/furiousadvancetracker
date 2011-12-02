@@ -96,8 +96,13 @@ void FAT_screenInstrument_printAllText(u8 type) {
                     noteName[(FAT_data_simulator.note & 0xf0) >> 4], FAT_data_simulator.note & 0x0f);
             break;
         case INSTRUMENT_TYPE_WAVE:
+<<<<<<< HEAD
+            ham_DrawText(1, 4, "VOLUME    %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].volumeRatio & 0x0f);
+            ham_DrawText(1, 7, "TIMED     %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
+=======
             hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Volume    %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].volumeRatio & 0x0f);
             hel_BgTextPrintF(TEXT_LAYER, 1, 7, 0, "Timed     %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
             if (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
                 hel_BgTextPrintF(TEXT_LAYER, 1, 8, 0, "Length    %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
             } else {
@@ -136,6 +141,29 @@ void FAT_screenInstrument_printAllText(u8 type) {
             break;
         case INSTRUMENT_TYPE_SAMPLEA:
         case INSTRUMENT_TYPE_SAMPLEB:
+<<<<<<< HEAD
+            ham_DrawText(16, 4, "NB SAMPLES %.2x", snd_countSamplesInKitById(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].sweep));
+            //ham_DrawText(16, 5, "NB KITS    %.2x", snd_countAvailableKits ());
+
+            ham_DrawText(1, 4, "NAME %s", snd_getKitNameById(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].kitNumber));
+            ham_DrawText(1, 7, "VOLUME    %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].volumeRatio >> 4);
+            ham_DrawText(1, 10, "SPEED     %.1xx", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].speedOrLooping & 0x0f);
+            if (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].speedOrLooping >> 4) {
+                ham_DrawText(1, 11, "LOOP      %s", "YES");
+            } else {
+                ham_DrawText(1, 11, "LOOP      %s", "NOP");
+            }
+            ham_DrawText(1, 12, "TIMED     %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
+            if (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
+                ham_DrawText(1, 13, "LENGTH    %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
+            } else {
+                ham_DrawText(1, 13, "LENGTH    NA");
+            }
+            ham_DrawText(1, 14, "OFFSET    %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].offset);
+            FAT_screenInstrument_showOutput(1, 15, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
+
+            ham_DrawText(16, 12, "TEST IT   %s%1x\0", "SM", 1);
+=======
             hel_BgTextPrintF(TEXT_LAYER, 16, 4, 0, "Nb samples %.2x", snd_countSamplesInKitById(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].kitNumber));
             //ham_DrawText(16, 5, "NB KITS    %.2x", snd_countAvailableKits ());
 
@@ -157,6 +185,7 @@ void FAT_screenInstrument_printAllText(u8 type) {
             FAT_screenInstrument_showOutput(1, 15, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
 
             hel_BgTextPrintF(TEXT_LAYER, 16, 12, 0, "Test it!  %s%1x\0", "SM", 1);
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 
             break;
     }
@@ -183,9 +212,12 @@ void FAT_screenInstrument_init() {
 
     // initialisation des autre curseurs
     FAT_cursors_moveCursorChange(INPUT_R_CURSOR_CHANGE_X, INPUT_R_CURSOR_CHANGE_Y);
+<<<<<<< HEAD
+=======
 
     // démarrage du cycle pour l'écran
     //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenInstrument_mainFunc);
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 }
 
 /**
@@ -402,7 +434,13 @@ void FAT_screenInstrument_checkButtons() {
             }
         }
 
+<<<<<<< HEAD
+        if (F_CTRLINPUT_R_PRESSED && F_CTRLINPUT_L_PRESSED) {
+
+            iCanPressAKey = 0;
+=======
         if (hel_PadQuery()->Pressed.R && hel_PadQuery()->Pressed.L) {
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
             FAT_screenInstrument_hideTabulationCursor();
             FAT_showHelp(SCREEN_INSTRUMENTS_ID);
         }
@@ -485,7 +523,11 @@ void FAT_screenInstrument_showEnvdir(u8 envdirValue, u8 spriteX, u8 spriteY) {
  */
 void FAT_screenInstrument_showOutput(u8 x, u8 y, u8 output) {
 
+<<<<<<< HEAD
+    ham_DrawText(x, y, "OUTPUT    %.2s", outputText[output]);
+=======
     hel_BgTextPrintF(TEXT_LAYER, x, y, 0, "Output    %.2s", outputText[output]);
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 }
 
 /**
@@ -533,7 +575,13 @@ s8 FAT_screenInstrument_giveMeAddedValue() {
         addedValue = 16;
     }
 
+<<<<<<< HEAD
+    if (F_CTRLINPUT_DOWN_PRESSED) {
+
+        iCanPressAKey = 0;
+=======
     if (hel_PadQuery()->Pressed.Down) {
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
         addedValue = -16;
     }
 
@@ -663,6 +711,7 @@ void FAT_screenInstrument_noise_pressA() {
  */
 void FAT_screenInstrument_sample_pressA() {
     s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
+<<<<<<< HEAD
 
     switch (FAT_screenInstruments_currentSelectedLine) {
         case 0: // KIT COLLECTION
@@ -691,6 +740,36 @@ void FAT_screenInstrument_sample_pressA() {
             break;
     }
 
+=======
+
+    switch (FAT_screenInstruments_currentSelectedLine) {
+        case 0: // KIT COLLECTION
+            //FAT_data_instrumentSample_changeKitNumber(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 1: // VOLUME
+            FAT_data_instrumentSample_changeVolume(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 2: // SPEED
+            FAT_data_instrumentSample_changeSpeed(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 3: // LOOP
+            FAT_data_instrumentSample_changeLooping(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 4: //TIMED
+            FAT_data_instrumentSample_changeLoopmode(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 5: // LENGTH
+            FAT_data_instrumentSample_changeSoundLength(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 6: // OFFSET
+            FAT_data_instrumentSample_changeOffset(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 7: // OUTPUT
+            FAT_data_instrumentSample_changeOutput(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+    }
+
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
     FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
 }
 

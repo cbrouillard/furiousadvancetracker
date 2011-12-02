@@ -30,7 +30,11 @@ bool FAT_screenProject_isPopuped = 0;
 
 // prototypes
 void FAT_screenProject_checkButtons();
+<<<<<<< HEAD
+void FAT_screenProject_pressA();
+=======
 void FAT_screenProject_pressOrHeldA();
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 
 /**
  * \brief Affiche les infos du projet sur l'écran. 
@@ -79,9 +83,12 @@ void FAT_screenProject_init() {
     // init du curseur
     FAT_screenProject_initCursor();
     FAT_screenProject_displayGoodCursor();
+<<<<<<< HEAD
+=======
 
     // démarrage du cycle pour l'écran
     //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenProject_mainFunc);
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 }
 
 /**

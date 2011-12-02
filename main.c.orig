@@ -42,7 +42,11 @@
  * \brief Si cette variable est positionné à 1, le mode DEBUG pour FAT est activé. Certaines,
  * informations seront affichées.
  */
+<<<<<<< HEAD
+#define DEBUG_ON 1
+=======
 #define DEBUG_ON "YES"
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 #undef DEBUG_ON
 
 /**
@@ -55,8 +59,80 @@
 
 #include "soundApi/soundApi.h"
 
+/**
+ * \brief Cette variable sert à gérer les contextes conflictuels (notamment dans les
+ * boucles affichant du texte à gogo). 
+ * 
+ * Si le mutex est à zéro alors aucun affichage ne pourra avoir lieu.
+ * 
+ * Usage:
+ * <code>void printBeaucoupTexte() {
+ *      mutex = 0;
+ *      print text1
+ *      print text2
+ *      mutex = 1;
+ * }</code>
+ * <b>NE PAS TOUCHER !</b>
+ */
+bool mutex = 1;
+
+/**
+ * \brief Permet de savoir si l'utilisateur a le droit d'appuyer sur une touche
+ */
+u8 iCanPressAKey = 1;
+
+void FAT_checkButtons();
+
+void FAT_mainVbl_func() {
+    if (mutex) {
+        ham_CopyObjToOAM();
+        
+        if (iCanPressAKey) {
+            FAT_checkButtons();
+        }
+    }
+}
+
 #include "fat.h"
 
+<<<<<<< HEAD
+void FAT_checkButtons() {
+    switch (FAT_currentScreen) {
+        case SCREEN_PROJECT_ID:
+            FAT_screenProject_checkButtons();
+            break;
+        case SCREEN_LIVE_ID:
+            FAT_screenLive_checkButtons();
+            break;
+        case SCREEN_SONG_ID:
+            FAT_screenSong_checkButtons();
+            break;
+        case SCREEN_BLOCKS_ID:
+            FAT_screenBlocks_checkButtons();
+            break;
+        case SCREEN_NOTES_ID:
+            FAT_screenNotes_checkButtons();
+            break;
+        case SCREEN_EFFECTS_ID:
+            FAT_screenEffects_checkButtons();
+            break;
+        case SCREEN_COMPOSER_ID:
+            FAT_screenComposer_checkButtons();
+            break;
+        case SCREEN_INSTRUMENTS_ID:
+            FAT_screenInstrument_checkButtons();
+            break;
+        case SCREEN_FILESYSTEM_ID:
+            FAT_screenFilesystem_checkButtons();
+            break;
+        case SCREEN_HELP_ID:
+            FAT_screenHelp_checkButtons();
+            break;
+    }
+}
+
+=======
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 /**
  * \brief Fonction main. Si vous lisez le code source, il est judicieux de commencer par comprendre cette fonction.
  */
@@ -67,11 +143,22 @@ int main() {
     snd_init_soundApi();
     snd_init_kits();
 
+<<<<<<< HEAD
+    //FAT_showIntro();
+
+    FAT_switchToScreen(SCREEN_SONG_ID);    
+    
+    while (1) {
+        FAT_waitVSync();
+        FAT_mainVbl_func();
+    }
+=======
     FAT_showIntro();
     FAT_screenSong_init();
 
     // Boucle infinie branchée sur la gestion des boutons de tous les écrans.
     FAT_mainLoop();
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 
     return 0;
 }

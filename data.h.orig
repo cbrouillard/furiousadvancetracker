@@ -27,7 +27,7 @@
  * \def NB_MAX_SEQUENCES
  * \brief Nombre de séquences disponibles <b>au total</b> en mémoire. 0x80 = 128
  */
-#define NB_MAX_SEQUENCES 64
+#define NB_MAX_SEQUENCES 64 //0x80
 /**
  * \brief Nombre de séquences référençables par canal. 0x40 = 64
  */
@@ -379,7 +379,11 @@ typedef struct INSTRUMENT {
     u8 output; /*!< Stocke la sortie d'un son : gauche ou droite. 0 __ / 1 L_ / 2 R_ / 3 RL */
 
     u8 table; /*!< Numéro de table de commandes à appliquer pour chaque note assignée à cet instrument. */
+<<<<<<< HEAD
+
+=======
     
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
     u8 kitNumber; /*!< Numéro du kit utilisé pour un instrument de type SAMPLE.*/
     u8 offset; /*!< Offset de départ pour la lecture d'un sample. 0 = début du sample, 0xff = fin. */
     // 0x 000 0    0000
@@ -485,7 +489,11 @@ void FAT_data_initData() {
     memset(&FAT_data_noteClipboard, NULL_VALUE, sizeof (note));
     memset(&FAT_data_lastEffectWritten, NULL_VALUE, sizeof (effect));
     
+<<<<<<< HEAD
+    memset(&FAT_tracker.liveData.volume, NULL_VALUE / 2, sizeof(u8)*6);
+=======
     memset(&FAT_tracker.liveData.volume, 100, sizeof(u8)*6);
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 }
 
 /**
@@ -957,7 +965,10 @@ void FAT_data_addDefaultNote(u8 block, u8 noteLine, u8 channel) {
     FAT_tracker.allBlocks[block].notes[noteLine].freq = FAT_data_lastNoteWritten.freq;
     FAT_tracker.allBlocks[block].notes[noteLine].instrument = FAT_data_lastNoteWritten.instrument;
     FAT_tracker.allBlocks[block].notes[noteLine].note = FAT_data_lastNoteWritten.note;
+<<<<<<< HEAD
 
+=======
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 }
 
 /**
@@ -1603,7 +1614,10 @@ void FAT_data_instrumentSample_changeOutput(u8 instrumentId, s8 value) {
     FAT_data_instrumentPulse_changeOutput(instrumentId, value);
 }
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 /**
  * \brief Change le paramètre "soundlength" (durée du son) pour un instrument de type PULSE.
  *  
@@ -1656,7 +1670,10 @@ void FAT_data_instrumentSample_changeSoundLength(u8 instrumentId, s8 value) {
     FAT_data_instrumentWave_changeSoundLength(instrumentId, value);
 }
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 /**
  * \brief Change le paramètre "sweep" (effet sweep) pour un instrument de type PULSE.
  *  
@@ -1838,7 +1855,10 @@ void FAT_data_instrumentSample_changeOffset(u8 instrumentId, s8 value) {
     }
 }
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> f2316a3bfa6eae57eac5f79de57994c18be921a2
 /**
  * \brief Modifie le tempo pour le projet en cours.
  *  
