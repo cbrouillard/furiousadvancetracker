@@ -174,7 +174,7 @@ void FAT_screenFilesystem_checkButtons() {
             FAT_screenFilesystem_moveCursorUp();
         }
 
-        if (hel_PadQuery()->Pressed.A || hel_PadQuery()->Held.A) {
+        if (hel_PadQuery()->Pressed.A) {
             FAT_screenFilesystem_pressOrHeldA();
         }
 

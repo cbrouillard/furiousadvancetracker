@@ -1,9 +1,7 @@
 V0-02:
 - OK bug SoundLength sur instru wav
-- refactoring pour les types d'effets : structure, ponctuel, long (refactoring_effects)
 - OK commande SW (Sweep) (version 0-02)
 - OK command OU (Output) 
-
 - OK documentation: faire un tableau comparatif des cartouches
 - OK documentation: compléter la section technique
 
@@ -13,15 +11,27 @@ V0-02:
 
 
 v0-03:
-- design de l'écran effets (version 0-03)
-- jouer des samples sur les deux channels qui reste
-- deep clone
+- OK jouer des samples sur les deux channels qui reste
+- bug de "fréquence" lorsqu'utilisation du channel sample (currentNote)
 - commande H (Hop) (version 0-02)
 - commande EN (Enveloppe) (version 0-02)
 - commande VL (Volume) 
+- refactoring pour les types d'effets : structure, ponctuel, long (refactoring_effects)
+- deep clone
+- terminer l'écran LIVE
 
-v0-0x:
+v0-04:
+- design de l'écran effets (version 0-04) (TABLES !)
 - réfléchir à la commande C , V , P (les commandes qui sont actives sur toute la durée
-de la note en cours de lecture) (version 0-0x (x>2))
+de la note en cours de lecture) (version 0-0x (x>2))  (UTILISATION DU TIMER 1 et 2)
+- refactoring de la sauvegarde -> compression RLE
+
+v0-05:
+- mini-jeu avec Mr Fury'FAT'cat
+- réfléchir à l'implémentation du GROOVE
+- gros travail de stabilisation et de clean + phase de tests poussés -> composition d'une dizaine de tracks
+- utilisation massive des outils "Burger"
+
+=> RELEASE DE LA VERSION 1.0
 
 Idée: faire un mini jeu style TGPA avec un Chat qui tire sur des notes de musiques branchées sur des samples. 

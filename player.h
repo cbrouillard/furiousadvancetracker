@@ -188,26 +188,19 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                             inst->loopmode, inst->output, note->note & 0x0f, inst->wavedutyOrPolynomialStep,
                             note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
                     break;
-                    //                case 4: // SNA 
-                    //                    //snd_playSampleOnChannelAById(inst->kitNumber, note->freq);
-                    //                    snd_playChannelASample(inst->kitNumber, note->freq, inst->volumeRatio,
-                    //                            inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
-                    //                            (inst->envelope & 0xe0) >> 5, inst->soundlength, inst->offset);
-                    //                    break;
-                    //                case 5: // SNB
-                    //                    snd_playChannelBSample(inst->kitNumber, note->freq, inst->volumeRatio,
-                    //                            inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
-                    //                            (inst->envelope & 0xe0) >> 5, inst->soundlength, inst->offset);
-                    //                    break;
             }
-
-
 
         } else {
             if (channel == 4) {
-                snd_playSampleOnChannelAById(inst->kitNumber, note->freq);
+                //snd_playSampleOnChannelAById(inst->kitNumber, note->freq);
+                snd_playChannelASample(inst->kitNumber, note->freq, inst->volumeRatio >> 4,
+                        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
+                        (inst->envelope & 0xe0) >> 5, inst->soundlength, inst->offset);
             } else if (channel == 5) {
-                snd_playSampleOnChannelBById(inst->kitNumber, note->freq);
+                //snd_playSampleOnChannelBById(inst->kitNumber, note->freq);
+                snd_playChannelBSample(inst->kitNumber, note->freq, inst->volumeRatio >> 4,
+                        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
+                        (inst->envelope & 0xe0) >> 5, inst->soundlength, inst->offset);
             }
 
         }

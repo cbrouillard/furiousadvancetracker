@@ -14,7 +14,7 @@ typedef unsigned short int u16;
 typedef unsigned int u32;
  */
 
-#include <mygba.h>
+#include <hel2.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "soundApi.h"
@@ -467,11 +467,11 @@ char* snd_getSampleNameById(u8 kitId, u8 sampleId) {
             sampleName[2] = buffer[2];
 
         } else {
-            sprintf(sampleName, "XXX");
+            sprintf(sampleName, "---");
         }
 
     } else {
-        sprintf(sampleName, "XXX");
+        sprintf(sampleName, "---");
     }
 
     sampleName[3] = '\0';
@@ -537,7 +537,20 @@ void snd_playSampleOnChannelAById(u8 kitId, u8 sampleNumber) {
 
 void snd_playChannelASample(u8 kitId, u8 sampleNumber,
         u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset) {
-    snd_playSampleOnChannelAById(kitId, sampleNumber);
+
+    kit* kit = kits[kitId];
+    if (kit) {
+
+        playSnASample = 0;
+        snASample = gbfs_get_nth_obj(dat, sampleNumber + 1, NULL, &snASmpSize);
+
+        if (snASample) {
+            snASampleOffset = snASmpSize * offset / 100;
+            playSnASample = 1;
+        }
+
+    }
+
 }
 
 void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber) {

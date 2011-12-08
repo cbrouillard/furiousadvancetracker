@@ -1441,6 +1441,27 @@ void FAT_data_instrumentWave_changeVolume(u8 instrumentId, s8 value) {
 }
 
 /**
+ * \brief Change le numéro de kit affecté
+ * 
+ * @param instrumentId
+ * @param addedValue
+ */
+void FAT_data_instrumentSample_changeKitNumber(u8 instrumentId, s8 value) {
+    u8 kitNumber = FAT_tracker.allInstruments[instrumentId].kitNumber;
+    u8 nbKits = snd_countAvailableKits();
+
+    if (
+            (value < 0 && kitNumber > (-value - 1)) ||
+            (value > 0 && kitNumber < nbKits - value)
+
+            ) {
+        kitNumber += value;
+        FAT_tracker.allInstruments[instrumentId].kitNumber = kitNumber;
+    }
+
+}
+
+/**
  * \brief Change le volume pour un instrument de type SAMPLE.
  * 
  * @param instrumentId l'id de l'instrument à modifier

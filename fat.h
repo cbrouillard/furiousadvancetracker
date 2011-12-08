@@ -173,7 +173,7 @@ void FAT_init() {
     // mapset using regular HAMlib functions
     //ham_bg[TEXT_LAYER].ti = ham_InitTileSet(ResData(RES_CHARSET8X8_RAW), RES_CHARSET8X8_RAW_SIZE16, COLORS_16, TRUE);
     ham_bg[TEXT_LAYER].ti = ham_InitTileSet((void*) text_Tiles, SIZEOF_16BIT(text_Tiles), 1, 1);
-    ham_bg[TEXT_LAYER].mi = ham_InitMapEmptySet((u8)1024, 0);
+    ham_bg[TEXT_LAYER].mi = ham_InitMapEmptySet((u8) 1024, 0);
 
     //ham_InitText(1);
     hel_BgTextCreate(
@@ -194,7 +194,9 @@ void FAT_init() {
             FX_LAYER_SELECT(0, 0, 1, 1, 0, 0),
             FX_MODE_ALPHABLEND);
     ham_SetFxAlphaLevel(7, 7);
-    
+
+    hel_IntrStartHandler(INT_TYPE_VBL, (void*) &VBLInterruptHandler);
+
     // initialisation des palettes.
     FAT_initScreenPalette();
     FAT_initSpritePalette();
@@ -250,25 +252,35 @@ void FAT_showIntro() {
     ham_InitBg(SCREEN_LAYER, 1, 0, 0);
 
 #ifdef DEBUG_ON
-    ham_DrawText(1, 15, "DEBUG ON");
-    ham_DrawText(1, 16, "SIZE %d octets", (sizeof (tracker)));
+    hel_BgTextPrint(TEXT_LAYER, 1, 15, 0, "DEBUG ON");
+    hel_BgTextPrintF(TEXT_LAYER, 1, 16, 0, "SIZE %d octets", (sizeof (tracker)));
 #endif
     hel_BgTextPrintF(TEXT_LAYER, 0, 19, 0, " version %s       %.3d kits", FAT_VERSION, snd_countAvailableKits());
 
-    //hel_BgTextPrint(TEXT_LAYER, 0,5,0," BCDEFGHIJKLMNOPQRSTUVWXYZabcd\nefghijklmnopqrstuvwxyz01234567\n89?ÖÄÜöäü,.-;:A#^+*@!\"§%\%&/()=?|\\<>[]{}¹²³°");
-    //hel_BgTextPrint(TEXT_LAYER, 0, 0, 0, "opqrstuvwxyz0123456789?ÖÄÜöäü,.-;:A#^+*@");
+    while (1) {
 
-    while (!F_CTRLINPUT_START_PRESSED && !F_CTRLINPUT_A_PRESSED && !F_CTRLINPUT_B_PRESSED
-            && !F_CTRLINPUT_DOWN_PRESSED && !F_CTRLINPUT_LEFT_PRESSED && !F_CTRLINPUT_RIGHT_PRESSED && !F_CTRLINPUT_UP_PRESSED
-            && !F_CTRLINPUT_L_PRESSED && !F_CTRLINPUT_R_PRESSED
-            && !F_CTRLINPUT_SELECT_PRESSED) {
+        hel_PadCapture();
 
+        if (hel_PadQuery()->Pressed.Start ||
+                hel_PadQuery()->Pressed.Select ||
+                hel_PadQuery()->Pressed.A ||
+                hel_PadQuery()->Pressed.B ||
+                hel_PadQuery()->Pressed.Up ||
+                hel_PadQuery()->Pressed.Down ||
+                hel_PadQuery()->Pressed.Right ||
+                hel_PadQuery()->Pressed.Left ||
+                hel_PadQuery()->Pressed.R ||
+                hel_PadQuery()->Pressed.L
+                ) {
+            break;
+        }
+
+        // Wait for Vertical Blank
+        hel_SwiVBlankIntrWait();
     }
-
+    
     ham_InitBg(SCREEN_LAYER, 0, 3, 0);
     FAT_initScreenPalette();
-
-    hel_IntrStartHandler(INT_TYPE_VBL, (void*) &VBLInterruptHandler);
 }
 
 /**
@@ -279,6 +291,7 @@ void FAT_showIntro() {
 void FAT_reinitScreen() {
     if (ham_bg[SCREEN_LAYER].ti) {
         //        ham_InitBg(2, 0, 3, 0);
+
         ham_DeInitTileSet(ham_bg[SCREEN_LAYER].ti);
         ham_DeInitMapSet(ham_bg[SCREEN_LAYER].mi);
         FAT_forceClearTextLayer();
@@ -297,11 +310,12 @@ void FAT_forceClearTextLayer() {
 
     if (ham_bg[TEXT_LAYER].ti) {
         //        ham_InitBg(2, 0, 3, 0);
+
         ham_DeInitTileSet(ham_bg[TEXT_LAYER].ti);
         ham_DeInitMapSet(ham_bg[TEXT_LAYER].mi);
 
         ham_bg[TEXT_LAYER].ti = ham_InitTileSet((void*) text_Tiles, SIZEOF_16BIT(text_Tiles), 1, 1);
-        ham_bg[TEXT_LAYER].mi = ham_InitMapEmptySet((u8)1024, 0);
+        ham_bg[TEXT_LAYER].mi = ham_InitMapEmptySet((u8) 1024, 0);
     }
 
 }
@@ -310,6 +324,7 @@ void FAT_forceClearTextLayer() {
  * \brief La palette pour l'écran d'introduction est différente: cette fonction la charge au bon endroit.
  */
 void FAT_initSpritePalette() {
+
     ham_LoadObjPal((void*) sprite_Palette, 256);
 }
 
@@ -317,6 +332,7 @@ void FAT_initSpritePalette() {
  * \brief Charge la palette pour les écrans: les sprites sont exclus. 
  */
 void FAT_initScreenPalette() {
+
     ham_LoadBGPal((void*) screen_Palette, 256);
 }
 
@@ -351,6 +367,7 @@ void FAT_allScreen_singleCheckButtons() {
             break;
         case SCREEN_HELP_ID:
             FAT_screenHelp_checkButtons();
+
             break;
     }
 }
@@ -359,6 +376,7 @@ void FAT_mainLoop() {
     for (;;) {
 
         if (FAT_isCurrentlyPlaying) {
+
             FAT_player_continueToPlay();
         }
 
@@ -403,6 +421,7 @@ void FAT_switchToScreen(u8 screenId) {
             break;
         case SCREEN_FILESYSTEM_ID:
             FAT_screenFilesystem_init();
+
             break;
     }
 
@@ -414,6 +433,7 @@ void FAT_switchToScreen(u8 screenId) {
  * \param screenId le numéro d'écran actuellement consulté. 
  */
 void FAT_showHelp(u8 screenId) {
+
     FAT_screenHelp_init(screenId);
 }
 
@@ -431,6 +451,7 @@ void FAT_waitVSync() {
  */
 void FAT_wait(u32 nbFrames) {
     u32 i = 0;
+
     while (i++ < nbFrames)
         FAT_waitVSync();
 }

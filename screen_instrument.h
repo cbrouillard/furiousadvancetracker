@@ -666,7 +666,7 @@ void FAT_screenInstrument_sample_pressA() {
 
     switch (FAT_screenInstruments_currentSelectedLine) {
         case 0: // KIT COLLECTION
-            //FAT_data_instrumentSample_changeKitNumber(FAT_screenInstrument_currentInstrumentId, addedValue);
+            FAT_data_instrumentSample_changeKitNumber(FAT_screenInstrument_currentInstrumentId, addedValue);
             break;
         case 1: // VOLUME
             FAT_data_instrumentSample_changeVolume(FAT_screenInstrument_currentInstrumentId, addedValue);
