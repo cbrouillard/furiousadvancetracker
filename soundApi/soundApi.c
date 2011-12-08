@@ -542,7 +542,7 @@ void snd_playChannelASample(u8 kitId, u8 sampleNumber,
     if (kit) {
 
         playSnASample = 0;
-        snASample = gbfs_get_nth_obj(dat, sampleNumber + 1, NULL, &snASmpSize);
+        snASample = gbfs_get_nth_obj(kit, sampleNumber + 1, NULL, &snASmpSize);
 
         if (snASample) {
             snASampleOffset = snASmpSize * offset / 100;
