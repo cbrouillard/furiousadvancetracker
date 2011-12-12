@@ -82,7 +82,7 @@ const unsigned long voices[] = {
 
 const u32 sinTableSize = 256; // Look Up Table size: has to be power of 2 so that the modulo LUTsize
 // can be done by picking bits from the phase avoiding arithmetic
-const u8 sintable[256] = {// already biased with +127
+const u32 sintable[256] = {// already biased with +127
     127, 130, 133, 136, 139, 143, 146, 149, 152, 155, 158, 161, 164, 167, 170, 173,
     176, 179, 182, 184, 187, 190, 193, 195, 198, 200, 203, 205, 208, 210, 213, 215,
     217, 219, 221, 224, 226, 228, 229, 231, 233, 235, 236, 238, 239, 241, 242, 244,
@@ -102,7 +102,7 @@ const u8 sintable[256] = {// already biased with +127
 };
 
 #define MAX_KITS 32
-kit* kits[MAX_KITS];
+kit * kits[MAX_KITS];
 
 int snASampleOffset = 1;
 int snBSampleOffset = 1;
@@ -431,7 +431,7 @@ void snd_init_kits() {
     }
 }
 
-kit* snd_loadKit(u8 numKit) {
+kit * snd_loadKit(u8 numKit) {
     u8 cpt = 0;
     const GBFS_FILE* kit = find_first_gbfs_file(find_first_gbfs_file);
     while (cpt < numKit) {
@@ -442,7 +442,7 @@ kit* snd_loadKit(u8 numKit) {
     return kit;
 }
 
-u8 snd_countSamplesInKit(kit* dat) {
+u8 snd_countSamplesInKit(kit * dat) {
     return gbfs_count_objs(dat) - 1; // -1 car le fichier info ne doit pas être compté.
 }
 
@@ -500,15 +500,26 @@ char* snd_getSampleNameById(u8 kitId, u8 sampleId) {
 }
 
 void snd_timerFunc_sample() {
-    u32 tst;
+    u32 sampleChunk;
+    s32 val1, val2, val3, val4;
     if (playSnASample) {
         if (!(snASampleOffset & 3) && snASampleOffset < snASmpSize && (snASampleOffset >> 2) < snASmpSize) {
             //SND_REG_SGFIFOA = snASample[snASampleOffset >> 2]; // u32
-            tst = snASample[snASampleOffset >> 2];
-            SND_REG_SGFIFOA = (((1) * sintable [((tst & 0xff000000) >> 24) % 256])) << 24 |
-                    (((1) * sintable [((tst & 0x00ff0000) >> 16) % 256])) << 16 |
-                    (((1) * sintable [((tst & 0x0000ff00) >> 8) % 256]))<< 8 |
-                    (((1) * sintable [(tst & 0x000000ff) % 256]));
+            //sampleChunk = snASample[snASampleOffset >> 2];
+            /*
+                        SND_REG_SGFIFOA = (((1) * sintable [(1) * ((sampleChunk & 0xff000000) >> 24) % 256])) << 24 |
+                                (((1) * sintable [(1) * ((sampleChunk & 0x00ff0000) >> 16) % 256])) << 16 |
+                                (((1) * sintable [(1) * ((sampleChunk & 0x0000ff00) >> 8) % 256])) << 8 |
+                                (((1) * sintable [(1) * (sampleChunk & 0x000000ff) % 256]));
+             */
+            sampleChunk = snASampleOffset;
+            val1 = (((1) * sintable [(1) * ((sampleChunk)) % sinTableSize]));
+            //val2 = (((1) * sintable [(1) * ((sampleChunk)) % sinTableSize])) - 127;
+            //val3 = (((1) * sintable [(1) * ((sampleChunk)) % sinTableSize])) - 127;
+            //val4 = (((1) * sintable [(1) * (sampleChunk) % sinTableSize])) - 127;
+
+            SND_REG_SGFIFOA = val1; //(val1 << 24 | val2 << 16 | val3 << 8 | val4);
+
         }
         //snASampleOffset += 4;
         snASampleOffset++;
