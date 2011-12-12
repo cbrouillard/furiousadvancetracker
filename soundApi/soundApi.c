@@ -501,7 +501,7 @@ char* snd_getSampleNameById(u8 kitId, u8 sampleId) {
 
 void snd_timerFunc_sample() {
     u32 sampleChunk;
-    s32 val1, val2, val3, val4;
+    u32 val1, val2, val3, val4;
     if (playSnASample) {
         if (!(snASampleOffset & 3) && snASampleOffset < snASmpSize && (snASampleOffset >> 2) < snASmpSize) {
             //SND_REG_SGFIFOA = snASample[snASampleOffset >> 2]; // u32
@@ -514,15 +514,16 @@ void snd_timerFunc_sample() {
              */
             sampleChunk = snASampleOffset;
             val1 = (((1) * sintable [(1) * ((sampleChunk)) % sinTableSize]));
-            //val2 = (((1) * sintable [(1) * ((sampleChunk)) % sinTableSize])) - 127;
-            //val3 = (((1) * sintable [(1) * ((sampleChunk)) % sinTableSize])) - 127;
-            //val4 = (((1) * sintable [(1) * (sampleChunk) % sinTableSize])) - 127;
+            val2 = (((1) * sintable [(1) * ((sampleChunk + 1)) % sinTableSize]));
+            val3 = (((1) * sintable [(1) * ((sampleChunk + 2)) % sinTableSize]));
+            val4 = (((1) * sintable [(1) * (sampleChunk + 3) % sinTableSize]));
 
-            SND_REG_SGFIFOA = val1; //(val1 << 24 | val2 << 16 | val3 << 8 | val4);
+            //SND_REG_SGFIFOA = (val1 << 24 | val2 << 16 | val3 << 8 | val4);
+            SND_REG_SGFIFOA = (val1 << 24) + (val2 << 16) | (val3 << 8) | val4;
 
         }
         //snASampleOffset += 4;
-        snASampleOffset++;
+        snASampleOffset += 4;
         if (snASampleOffset > snASmpSize) {
             //sample finished!
             playSnASample = 0;
