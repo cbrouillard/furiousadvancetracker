@@ -80,9 +80,9 @@ const unsigned long voices[] = {
 
 };
 
-const u32 sinTableSize = 256; // Look Up Table size: has to be power of 2 so that the modulo LUTsize
+const u32 sinTableSize = 101; // Look Up Table size: has to be power of 2 so that the modulo LUTsize
 // can be done by picking bits from the phase avoiding arithmetic
-const u32 sintable[256] = {// already biased with +127
+const s8 sintable_first[256] = {// already biased with +127
     127, 130, 133, 136, 139, 143, 146, 149, 152, 155, 158, 161, 164, 167, 170, 173,
     176, 179, 182, 184, 187, 190, 193, 195, 198, 200, 203, 205, 208, 210, 213, 215,
     217, 219, 221, 224, 226, 228, 229, 231, 233, 235, 236, 238, 239, 241, 242, 244,
@@ -101,11 +101,25 @@ const u32 sintable[256] = {// already biased with +127
     78, 81, 84, 87, 90, 93, 96, 99, 102, 105, 108, 111, 115, 118, 121, 124
 };
 
+const u32 sintable_bis[18] = {0x00050B10, 0x161B1F24, 0x282C3033, 0x36393B3C,
+    0x3D3E3D3E, 0x3D3B3A37, 0x35322F2B, 0x27221E19,
+    0x140F0904, 0xFEF9F3ED, 0xE8E4DEDA, 0xD5D1CDCA,
+    0xC7C4C2C0, 0xBFBEBDBE, 0xBEBFC1C3, 0xC6C9CCCF,
+    0xD3D8DCE1, 0xE6ECF1F7};
+
+const u8 sintable[101] = {0x00, 0x08, 0x10, 0x17, 0x1F, 0x27, 0x2F, 0x36, 0x3D, 0x44, 0x4B, 0x51, 0x57, 0x5D, 0x62, 0x67, 0x6B, 0x70, 0x73, 0x76,
+    0x79, 0x7B, 0x7D, 0x7E, 0x7F, 0x7F, 0x7F, 0x7F, 0x7D, 0x7C, 0x79, 0x77, 0x74, 0x70, 0x6C, 0x67, 0x63, 0x5D, 0x58, 0x52,
+    0x4B, 0x45, 0x3E, 0x37, 0x2F, 0x28, 0x20, 0x18, 0x10, 0x08, 0x00, 0xF8, 0xF0, 0xE8, 0xE1, 0xD9, 0xD1, 0xCA, 0xC3, 0xBC,
+    0xB5, 0xAF, 0xA9, 0xA3, 0x9E, 0x99, 0x94, 0x90, 0x8C, 0x89, 0x86, 0x84, 0x82, 0x81, 0x80, 0x80, 0x80, 0x80, 0x82, 0x83,
+    0x85, 0x88, 0x8B, 0x8F, 0x93, 0x97, 0x9C, 0xA1, 0xA7, 0xAD, 0xB3, 0xBA, 0xC0, 0xC7, 0xCF, 0xD6, 0xDE, 0xE6, 0xEE, 0xF6,
+    0xFE};
+
+
 #define MAX_KITS 32
 kit * kits[MAX_KITS];
 
-int snASampleOffset = 1;
-int snBSampleOffset = 1;
+u32 snASampleOffset = 1;
+u32 snBSampleOffset = 1;
 
 u32 snASmpSize;
 u32 snBSmpSize;
@@ -499,35 +513,67 @@ char* snd_getSampleNameById(u8 kitId, u8 sampleId) {
     return sampleName;
 }
 
+inline u8 snd_oscillator(u32 offset, u32 frequency, u8 amplitude) {
+    return amplitude * sintable [(((frequency * sinTableSize) * offset) / 16780) % sinTableSize]; // 1 = Amplitude
+}
+
 void snd_timerFunc_sample() {
-    u32 sampleChunk;
-    s32 val1, val2, val3, val4;
+    //u32 sampleChunk;
+    u32 val1 = 0, val2 = 0, val3 = 0, val4 = 0;
     if (playSnASample) {
-        if (!(snASampleOffset & 3) && snASampleOffset < snASmpSize && (snASampleOffset >> 2) < snASmpSize) {
-            //SND_REG_SGFIFOA = snASample[snASampleOffset >> 2]; // u32
-            //sampleChunk = snASample[snASampleOffset >> 2];
-            /*
-                        SND_REG_SGFIFOA = (((1) * sintable [(1) * ((sampleChunk & 0xff000000) >> 24) % 256])) << 24 |
-                                (((1) * sintable [(1) * ((sampleChunk & 0x00ff0000) >> 16) % 256])) << 16 |
-                                (((1) * sintable [(1) * ((sampleChunk & 0x0000ff00) >> 8) % 256])) << 8 |
-                                (((1) * sintable [(1) * (sampleChunk & 0x000000ff) % 256]));
-             */
-            sampleChunk = snASampleOffset;
-            val1 = (((1) * sintable [(1) * ((sampleChunk)) % sinTableSize]));
-            //val2 = (((1) * sintable [(1) * ((sampleChunk)) % sinTableSize])) - 127;
-            //val3 = (((1) * sintable [(1) * ((sampleChunk)) % sinTableSize])) - 127;
-            //val4 = (((1) * sintable [(1) * (sampleChunk) % sinTableSize])) - 127;
 
-            SND_REG_SGFIFOA = val1; //(val1 << 24 | val2 << 16 | val3 << 8 | val4);
+        if (snASampleOffset < (snASmpSize - 4)) {
+            if (!(snASampleOffset & 3)) {
 
-        }
-        //snASampleOffset += 4;
-        snASampleOffset++;
-        if (snASampleOffset > snASmpSize) {
-            //sample finished!
+                //sampleChunk = snASample[snASampleOffset >> 2];
+
+                val1 = snd_oscillator(snASampleOffset, 440, 1);
+                val2 = snd_oscillator(snASampleOffset, 440, 1);
+                val3 = snd_oscillator(snASampleOffset, 440, 1);
+                val4 = snd_oscillator(snASampleOffset, 440, 1);
+
+                /*
+                                val1 = (((1) * sintable [((snASampleOffset + ((sampleChunk & 0x000000ff))) % sinTableSize)]));
+                                val2 = (((1) * sintable [(((snASampleOffset + 1) + ((sampleChunk & 0x0000ff00) >> 8)) % sinTableSize)]));
+                                val3 = (((1) * sintable [(((snASampleOffset + 2) + ((sampleChunk & 0x00ff0000) >> 16)) % sinTableSize)]));
+                                val4 = (((1) * sintable [(((snASampleOffset + 3) + ((sampleChunk & 0xff000000) >> 24)) % sinTableSize)]));
+                 */
+
+                SND_REG_SGFIFOA = (val4 << 24) | (val3 << 16) | (val2 << 8) | (val1);
+            }
+            snASampleOffset++;
+        } else {
             playSnASample = 0;
             snASampleOffset = 0;
         }
+
+
+        /*
+                if (!(snASampleOffset & 3)) {
+                    //SND_REG_SGFIFOA = snASample[snASampleOffset >> 2]; // u32
+                    //SND_REG_SGFIFOA = sintable[snASampleOffset >> 2]; // u32
+                    //sampleChunk = snASample[snASampleOffset >> 2];
+                    /*
+                                SND_REG_SGFIFOA = (((1) * sintable [(1) * ((sampleChunk & 0xff000000) >> 24) % 256])) << 24 |
+                                        (((1) * sintable [(1) * ((sampleChunk & 0x00ff0000) >> 16) % 256])) << 16 |
+                                        (((1) * sintable [(1) * ((sampleChunk & 0x0000ff00) >> 8) % 256])) << 8 |
+                                        (((1) * sintable [(1) * (sampleChunk & 0x000000ff) % 256]));
+             
+                    val1 = (((1) * sintable [(1) * ((snASampleOffset)) % sinTableSize]));
+                    val2 = (((1) * sintable [(1) * ((snASampleOffset + 1)) % sinTableSize]));
+                    val3 = (((1) * sintable [(1) * ((snASampleOffset + 2)) % sinTableSize]));
+                    val4 = (((1) * sintable [(1) * (snASampleOffset + 3) % sinTableSize]));
+
+                    SND_REG_SGFIFOA = (val4 << 24) | (val3 << 16) | (val2 << 8) | (val1);
+
+                }
+                snASampleOffset += 4;
+                if (snASampleOffset > snASmpSize) {
+                    //sample finished!
+                    playSnASample = 0;
+                    snASampleOffset = 0;
+                }
+         */
     }
 
     if (playSnBSample) {
