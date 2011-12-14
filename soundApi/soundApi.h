@@ -27,6 +27,13 @@
 
 typedef const GBFS_FILE kit;
 
+typedef struct OSCILLATOR {
+    s32 phase;
+    s32 increment;
+    u16 frequency;
+    u8 amplitude;
+} oscillator;
+
 /**
  * \brief Initialise le mode audio sur la Gameboy: active les 4 canaux.
  **/
