@@ -498,9 +498,18 @@ char* snd_getSampleNameById(u8 kitId, u8 sampleId) {
     return sampleName;
 }
 
+void snd_resetFIFOA (){
+    REG_SOUNDCNT_H |= 1 << 0xB;
+}
+
+void snd_resetFIFOB (){
+    REG_SOUNDCNT_H |= 1 << 0xF;
+}
+
 void snd_timerFunc_sample() {
     if (playSnASample) {
-        if (!(snASampleOffset & 3) && snASampleOffset < snASmpSize && (snASampleOffset >> 2) < snASmpSize) {
+        REG_SOUNDCNT_H &= ~(1 << 0xB);
+        if (!(snASampleOffset & 3)) {
             SND_REG_SGFIFOA = snASample[snASampleOffset >> 2]; // u32
         }
 
@@ -510,11 +519,12 @@ void snd_timerFunc_sample() {
             //R_TIM0CNT = 0;
             playSnASample = 0;
             snASampleOffset = 0;
+            snd_resetFIFOA();
         }
     }
 
     if (playSnBSample) {
-        if (!(snBSampleOffset & 3) && snBSampleOffset < snBSmpSize && (snBSampleOffset >> 2) < snBSmpSize) {
+        if (!(snBSampleOffset & 3)) {
             SND_REG_SGFIFOB = snBSample[snBSampleOffset >> 2]; // u32
         }
 
@@ -524,6 +534,7 @@ void snd_timerFunc_sample() {
             //R_TIM0CNT = 0;
             playSnBSample = 0;
             snBSampleOffset = 0;
+            snd_resetFIFOB();
         }
     }
 
