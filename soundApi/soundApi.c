@@ -502,11 +502,7 @@ void snd_timerFunc_sample() {
 
     if (playSnBSample) {
 
-        if (!(snBSampleOffset & 3)) {
-            SND_REG_SGFIFOA = bufferSampleB;
-        }
-
-        snBSampleOffset++;
+        snd_processSampleB();
     }
     hel_IntrAcknowledge(INT_TYPE_TIM0);
 }
@@ -526,7 +522,6 @@ void snd_bufferingSampleA() {
     val4 = snd_playOscillator(&oscillators);
 
     bufferSampleA = (val4 << 24) | (val3 << 16) | (val2 << 8) | (val1);
-    hel_BgTextPrintF(1, 15, 13, 0, "BUFFER %x", bufferSampleA);
     //SND_REG_SGFIFOA = oscillated; //sampleChunk;
 
     //snASampleOffset++;
@@ -545,7 +540,7 @@ void snd_processSampleB() {
             SND_REG_SGFIFOB = snBSample[snBSampleOffset >> 2]; // u32
         }
 
-        //snBSampleOffset++;
+        snBSampleOffset++;
         if (snBSampleOffset > snBSmpSize) {
             //sample finished!
             //R_TIM0CNT = 0;
