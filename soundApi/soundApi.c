@@ -17,7 +17,9 @@ typedef unsigned int u32;
 #include <hel2.h>
 #include <stdlib.h>
 #include <stdio.h>
+
 #include "soundApi.h"
+#include "oscillator.h"
 
 #define NULL_VALUE 0xff
 
@@ -78,107 +80,6 @@ const unsigned long voices[] = {
     0x02468ace, 0xffffffff, 0xeca86420, 0x00448844,
     0x2064a8ec, 0xffffffff, 0xce8a4602, 0x00448844
 
-};
-
-const s32 sinTableSize = 101; // Look Up Table size: has to be power of 2 so that the modulo LUTsize
-// can be done by picking bits from the phase avoiding arithmetic
-const s8 sintable_first[256] = {// already biased with +127
-    127, 130, 133, 136, 139, 143, 146, 149, 152, 155, 158, 161, 164, 167, 170, 173,
-    176, 179, 182, 184, 187, 190, 193, 195, 198, 200, 203, 205, 208, 210, 213, 215,
-    217, 219, 221, 224, 226, 228, 229, 231, 233, 235, 236, 238, 239, 241, 242, 244,
-    245, 246, 247, 248, 249, 250, 251, 251, 252, 253, 253, 254, 254, 254, 254, 254,
-    255, 254, 254, 254, 254, 254, 253, 253, 252, 251, 251, 250, 249, 248, 247, 246,
-    245, 244, 242, 241, 239, 238, 236, 235, 233, 231, 229, 228, 226, 224, 221, 219,
-    217, 215, 213, 210, 208, 205, 203, 200, 198, 195, 193, 190, 187, 184, 182, 179,
-    176, 173, 170, 167, 164, 161, 158, 155, 152, 149, 146, 143, 139, 136, 133, 130,
-    127, 124, 121, 118, 115, 111, 108, 105, 102, 99, 96, 93, 90, 87, 84, 81,
-    78, 75, 72, 70, 67, 64, 61, 59, 56, 54, 51, 49, 46, 44, 41, 39,
-    37, 35, 33, 30, 28, 26, 25, 23, 21, 19, 18, 16, 15, 13, 12, 10,
-    9, 8, 7, 6, 5, 4, 3, 3, 2, 1, 1, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1, 1, 2, 3, 3, 4, 5, 6, 7, 8,
-    9, 10, 12, 13, 15, 16, 18, 19, 21, 23, 25, 26, 28, 30, 33, 35,
-    37, 39, 41, 44, 46, 49, 51, 54, 56, 59, 61, 64, 67, 70, 72, 75,
-    78, 81, 84, 87, 90, 93, 96, 99, 102, 105, 108, 111, 115, 118, 121, 124
-};
-
-const u32 sintable_bis[18] = {0x00050B10, 0x161B1F24, 0x282C3033, 0x36393B3C,
-    0x3D3E3D3E, 0x3D3B3A37, 0x35322F2B, 0x27221E19,
-    0x140F0904, 0xFEF9F3ED, 0xE8E4DEDA, 0xD5D1CDCA,
-    0xC7C4C2C0, 0xBFBEBDBE, 0xBEBFC1C3, 0xC6C9CCCF,
-    0xD3D8DCE1, 0xE6ECF1F7};
-
-const u8 sintable_ter[101] = {0x00, 0x08, 0x10, 0x17, 0x1F, 0x27, 0x2F, 0x36, 0x3D, 0x44, 0x4B, 0x51, 0x57, 0x5D, 0x62, 0x67, 0x6B, 0x70, 0x73, 0x76,
-    0x79, 0x7B, 0x7D, 0x7E, 0x7F, 0x7F, 0x7F, 0x7F, 0x7D, 0x7C, 0x79, 0x77, 0x74, 0x70, 0x6C, 0x67, 0x63, 0x5D, 0x58, 0x52,
-    0x4B, 0x45, 0x3E, 0x37, 0x2F, 0x28, 0x20, 0x18, 0x10, 0x08, 0x00, 0xF8, 0xF0, 0xE8, 0xE1, 0xD9, 0xD1, 0xCA, 0xC3, 0xBC,
-    0xB5, 0xAF, 0xA9, 0xA3, 0x9E, 0x99, 0x94, 0x90, 0x8C, 0x89, 0x86, 0x84, 0x82, 0x81, 0x80, 0x80, 0x80, 0x80, 0x82, 0x83,
-    0x85, 0x88, 0x8B, 0x8F, 0x93, 0x97, 0x9C, 0xA1, 0xA7, 0xAD, 0xB3, 0xBA, 0xC0, 0xC7, 0xCF, 0xD6, 0xDE, 0xE6, 0xEE, 0xF6,
-    0xFE};
-
-const u16 sin_lut[512] = {
-    0x0000, 0x0032, 0x0064, 0x0096, 0x00C8, 0x00FB, 0x012D, 0x015F,
-    0x0191, 0x01C3, 0x01F5, 0x0227, 0x0259, 0x028A, 0x02BC, 0x02ED,
-    0x031F, 0x0350, 0x0381, 0x03B2, 0x03E3, 0x0413, 0x0444, 0x0474,
-    0x04A5, 0x04D5, 0x0504, 0x0534, 0x0563, 0x0593, 0x05C2, 0x05F0,
-    0x061F, 0x064D, 0x067B, 0x06A9, 0x06D7, 0x0704, 0x0731, 0x075E,
-    0x078A, 0x07B7, 0x07E2, 0x080E, 0x0839, 0x0864, 0x088F, 0x08B9,
-    0x08E3, 0x090D, 0x0936, 0x095F, 0x0987, 0x09B0, 0x09D7, 0x09FF,
-    0x0A26, 0x0A4D, 0x0A73, 0x0A99, 0x0ABE, 0x0AE3, 0x0B08, 0x0B2C,
-    0x0B50, 0x0B73, 0x0B96, 0x0BB8, 0x0BDA, 0x0BFC, 0x0C1D, 0x0C3E,
-    0x0C5E, 0x0C7D, 0x0C9D, 0x0CBB, 0x0CD9, 0x0CF7, 0x0D14, 0x0D31,
-    0x0D4D, 0x0D69, 0x0D84, 0x0D9F, 0x0DB9, 0x0DD2, 0x0DEB, 0x0E04,
-    0x0E1C, 0x0E33, 0x0E4A, 0x0E60, 0x0E76, 0x0E8B, 0x0EA0, 0x0EB4,
-    0x0EC8, 0x0EDB, 0x0EED, 0x0EFF, 0x0F10, 0x0F21, 0x0F31, 0x0F40,
-    0x0F4F, 0x0F5D, 0x0F6B, 0x0F78, 0x0F85, 0x0F91, 0x0F9C, 0x0FA7,
-    0x0FB1, 0x0FBA, 0x0FC3, 0x0FCB, 0x0FD3, 0x0FDA, 0x0FE1, 0x0FE7,
-    0x0FEC, 0x0FF0, 0x0FF4, 0x0FF8, 0x0FFB, 0x0FFD, 0x0FFE, 0x0FFF,
-    0x0FFF, 0x0FFF, 0x0FFE, 0x0FFD, 0x0FFB, 0x0FF8, 0x0FF4, 0x0FF0,
-    0x0FEC, 0x0FE7, 0x0FE1, 0x0FDA, 0x0FD3, 0x0FCB, 0x0FC3, 0x0FBA,
-    0x0FB1, 0x0FA7, 0x0F9C, 0x0F91, 0x0F85, 0x0F78, 0x0F6B, 0x0F5D,
-    0x0F4F, 0x0F40, 0x0F31, 0x0F21, 0x0F10, 0x0EFF, 0x0EED, 0x0EDB,
-    0x0EC8, 0x0EB4, 0x0EA0, 0x0E8B, 0x0E76, 0x0E60, 0x0E4A, 0x0E33,
-    0x0E1C, 0x0E04, 0x0DEB, 0x0DD2, 0x0DB9, 0x0D9F, 0x0D84, 0x0D69,
-    0x0D4D, 0x0D31, 0x0D14, 0x0CF7, 0x0CD9, 0x0CBB, 0x0C9D, 0x0C7D,
-    0x0C5E, 0x0C3E, 0x0C1D, 0x0BFC, 0x0BDA, 0x0BB8, 0x0B96, 0x0B73,
-    0x0B50, 0x0B2C, 0x0B08, 0x0AE3, 0x0ABE, 0x0A99, 0x0A73, 0x0A4D,
-    0x0A26, 0x09FF, 0x09D7, 0x09B0, 0x0987, 0x095F, 0x0936, 0x090D,
-    0x08E3, 0x08B9, 0x088F, 0x0864, 0x0839, 0x080E, 0x07E2, 0x07B7,
-    0x078A, 0x075E, 0x0731, 0x0704, 0x06D7, 0x06A9, 0x067B, 0x064D,
-    0x061F, 0x05F0, 0x05C2, 0x0593, 0x0563, 0x0534, 0x0504, 0x04D5,
-    0x04A5, 0x0474, 0x0444, 0x0413, 0x03E3, 0x03B2, 0x0381, 0x0350,
-    0x031F, 0x02ED, 0x02BC, 0x028A, 0x0259, 0x0227, 0x01F5, 0x01C3,
-    0x0191, 0x015F, 0x012D, 0x00FB, 0x00C8, 0x0096, 0x0064, 0x0032,
-    0x0000, 0xFFCE, 0xFF9C, 0xFF6A, 0xFF38, 0xFF05, 0xFED3, 0xFEA1,
-    0xFE6F, 0xFE3D, 0xFE0B, 0xFDD9, 0xFDA7, 0xFD76, 0xFD44, 0xFD13,
-    0xFCE1, 0xFCB0, 0xFC7F, 0xFC4E, 0xFC1D, 0xFBED, 0xFBBC, 0xFB8C,
-    0xFB5B, 0xFB2B, 0xFAFC, 0xFACC, 0xFA9D, 0xFA6D, 0xFA3E, 0xFA10,
-    0xF9E1, 0xF9B3, 0xF985, 0xF957, 0xF929, 0xF8FC, 0xF8CF, 0xF8A2,
-    0xF876, 0xF849, 0xF81E, 0xF7F2, 0xF7C7, 0xF79C, 0xF771, 0xF747,
-    0xF71D, 0xF6F3, 0xF6CA, 0xF6A1, 0xF679, 0xF650, 0xF629, 0xF601,
-    0xF5DA, 0xF5B3, 0xF58D, 0xF567, 0xF542, 0xF51D, 0xF4F8, 0xF4D4,
-    0xF4B0, 0xF48D, 0xF46A, 0xF448, 0xF426, 0xF404, 0xF3E3, 0xF3C2,
-    0xF3A2, 0xF383, 0xF363, 0xF345, 0xF327, 0xF309, 0xF2EC, 0xF2CF,
-    0xF2B3, 0xF297, 0xF27C, 0xF261, 0xF247, 0xF22E, 0xF215, 0xF1FC,
-    0xF1E4, 0xF1CD, 0xF1B6, 0xF1A0, 0xF18A, 0xF175, 0xF160, 0xF14C,
-    0xF138, 0xF125, 0xF113, 0xF101, 0xF0F0, 0xF0DF, 0xF0CF, 0xF0C0,
-    0xF0B1, 0xF0A3, 0xF095, 0xF088, 0xF07B, 0xF06F, 0xF064, 0xF059,
-    0xF04F, 0xF046, 0xF03D, 0xF035, 0xF02D, 0xF026, 0xF01F, 0xF019,
-    0xF014, 0xF010, 0xF00C, 0xF008, 0xF005, 0xF003, 0xF002, 0xF001,
-    0xF001, 0xF001, 0xF002, 0xF003, 0xF005, 0xF008, 0xF00C, 0xF010,
-    0xF014, 0xF019, 0xF01F, 0xF026, 0xF02D, 0xF035, 0xF03D, 0xF046,
-    0xF04F, 0xF059, 0xF064, 0xF06F, 0xF07B, 0xF088, 0xF095, 0xF0A3,
-    0xF0B1, 0xF0C0, 0xF0CF, 0xF0DF, 0xF0F0, 0xF101, 0xF113, 0xF125,
-    0xF138, 0xF14C, 0xF160, 0xF175, 0xF18A, 0xF1A0, 0xF1B6, 0xF1CD,
-    0xF1E4, 0xF1FC, 0xF215, 0xF22E, 0xF247, 0xF261, 0xF27C, 0xF297,
-    0xF2B3, 0xF2CF, 0xF2EC, 0xF309, 0xF327, 0xF345, 0xF363, 0xF383,
-    0xF3A2, 0xF3C2, 0xF3E3, 0xF404, 0xF426, 0xF448, 0xF46A, 0xF48D,
-    0xF4B0, 0xF4D4, 0xF4F8, 0xF51D, 0xF542, 0xF567, 0xF58D, 0xF5B3,
-    0xF5DA, 0xF601, 0xF629, 0xF650, 0xF679, 0xF6A1, 0xF6CA, 0xF6F3,
-    0xF71D, 0xF747, 0xF771, 0xF79C, 0xF7C7, 0xF7F2, 0xF81E, 0xF849,
-    0xF876, 0xF8A2, 0xF8CF, 0xF8FC, 0xF929, 0xF957, 0xF985, 0xF9B3,
-    0xF9E1, 0xFA10, 0xFA3E, 0xFA6D, 0xFA9D, 0xFACC, 0xFAFC, 0xFB2B,
-    0xFB5B, 0xFB8C, 0xFBBC, 0xFBED, 0xFC1D, 0xFC4E, 0xFC7F, 0xFCB0,
-    0xFCE1, 0xFD13, 0xFD44, 0xFD76, 0xFDA7, 0xFDD9, 0xFE0B, 0xFE3D,
-    0xFE6F, 0xFEA1, 0xFED3, 0xFF05, 0xFF38, 0xFF6A, 0xFF9C, 0xFFCE,
 };
 
 #define MAX_KITS 32
@@ -579,111 +480,72 @@ char* snd_getSampleNameById(u8 kitId, u8 sampleId) {
     return sampleName;
 }
 
-inline u16 snd_oscillator(u32 offset, u32 frequency, u8 amplitude) {
-    //u32 tmp = ((frequency * sinTableSize) * offset);
-    u32 tmp = FIXED_FROMINT(((frequency * 512) * offset));
-
-    return amplitude * sin_lut [FIXED_DIV(tmp, FIXED_FROMINT(16780)) % 512]; // 1 = Amplitude
-}
-
-inline u8 snd_oscillator_struct(oscillator* osc) {
-    u8 tmp = sintable_ter [ FIXED_TOINT(osc->phase) ];
-    osc->phase = osc->phase + osc->increment;
-    if (osc->phase >= FIXED_FROMINT(sinTableSize)) {
-        osc->phase -= FIXED_FROMINT(sinTableSize);
-    }
-    
-    return tmp;
-}
-oscillator firstOsc;
-
-oscillator* snd_initOscillator(s32 frequency) {
-    firstOsc.phase = 0;
-    firstOsc.amplitude = 0;
-    firstOsc.frequency = frequency;
-    //FIXED 20.12
-    firstOsc.increment = FIXED_FROMFLOAT( ((float)(frequency * sinTableSize) / 16780));
-/*
-            FIXED_DIV(
-            FIXED_FROMINT(frequency * sinTableSize)
-            , FIXED_FROMINT(16780));
-*/
-    hel_BgTextPrintF(1, 15, 13, 0, "INCREMENT %x", firstOsc.increment);
-    return &firstOsc;
-};
+u32 bufferSampleA = 0, bufferSampleB = 0;
 
 void snd_timerFunc_sample() {
+    //snd_processSampleA();
+    //snd_processSampleB();
+    if (playSnASample) {
+        if (!(snASampleOffset & 3)) {
+            SND_REG_SGFIFOA = bufferSampleA; //test[snASampleOffset>>2];//bufferSampleA;
+            //SND_REG_SGFIFOA = 0x3D271000;
+        }
+
+        snASampleOffset++;
+        if (snASampleOffset >= snASmpSize) {
+            playSnASample = 0;
+        }
+        bufferSampleA = bufferSampleA >> 8;
+        u32 oscillatorValue = snd_playOscillator(&oscillators);
+        bufferSampleA |= oscillatorValue << 24;
+    }
+
+    if (playSnBSample) {
+
+        if (!(snBSampleOffset & 3)) {
+            SND_REG_SGFIFOA = bufferSampleB;
+        }
+
+        snBSampleOffset++;
+    }
+    hel_IntrAcknowledge(INT_TYPE_TIM0);
+}
+
+void snd_bufferingSampleA() {
     //u32 sampleChunk;
     u32 val1 = 0, val2 = 0, val3 = 0, val4 = 0;
-    if (playSnASample) {
+    //if (playSnASample) {
 
-        if (snASampleOffset < (snASmpSize - 4)) {
-            if (!(snASampleOffset & 3)) {
+    //if (snASampleOffset < (snASmpSize - 4)) {
 
-                //sampleChunk = snASample[snASampleOffset >> 2];
+    //sampleChunk = snASample[snASampleOffset >> 2];
 
-                val1 = snd_oscillator_struct(&firstOsc);
-                val2 = snd_oscillator_struct(&firstOsc);
-                val3 = snd_oscillator_struct(&firstOsc);
-                val4 = snd_oscillator_struct(&firstOsc);
+    val1 = snd_playOscillator(&oscillators);
+    val2 = snd_playOscillator(&oscillators);
+    val3 = snd_playOscillator(&oscillators);
+    val4 = snd_playOscillator(&oscillators);
 
-                /*
-                                val1 = snd_oscillator(snASampleOffset, 440, 1);
-                                val2 = snd_oscillator(snASampleOffset + 1, 440, 1);
-                                val3 = snd_oscillator(snASampleOffset + 2, 440, 1);
-                                val4 = snd_oscillator(snASampleOffset + 3, 440, 1);
-                 */
+    bufferSampleA = (val4 << 24) | (val3 << 16) | (val2 << 8) | (val1);
+    hel_BgTextPrintF(1, 15, 13, 0, "BUFFER %x", bufferSampleA);
+    //SND_REG_SGFIFOA = oscillated; //sampleChunk;
 
-                /*
-                                val1 = (((1) * sintable [((snASampleOffset + ((sampleChunk & 0x000000ff))) % sinTableSize)]));
-                                val2 = (((1) * sintable [(((snASampleOffset + 1) + ((sampleChunk & 0x0000ff00) >> 8)) % sinTableSize)]));
-                                val3 = (((1) * sintable [(((snASampleOffset + 2) + ((sampleChunk & 0x00ff0000) >> 16)) % sinTableSize)]));
-                                val4 = (((1) * sintable [(((snASampleOffset + 3) + ((sampleChunk & 0xff000000) >> 24)) % sinTableSize)]));
-                 */
-
-                SND_REG_SGFIFOA = (val4 << 24) | (val3 << 16) | (val2 << 8) | (val1);
-            }
-            snASampleOffset++;
+    //snASampleOffset++;
+    /*
         } else {
             playSnASample = 0;
             snASampleOffset = 0;
         }
+     */
+    //}
+}
 
-
-        /*
-                if (!(snASampleOffset & 3)) {
-                    //SND_REG_SGFIFOA = snASample[snASampleOffset >> 2]; // u32
-                    //SND_REG_SGFIFOA = sintable[snASampleOffset >> 2]; // u32
-                    //sampleChunk = snASample[snASampleOffset >> 2];
-                    /*
-                                SND_REG_SGFIFOA = (((1) * sintable [(1) * ((sampleChunk & 0xff000000) >> 24) % 256])) << 24 |
-                                        (((1) * sintable [(1) * ((sampleChunk & 0x00ff0000) >> 16) % 256])) << 16 |
-                                        (((1) * sintable [(1) * ((sampleChunk & 0x0000ff00) >> 8) % 256])) << 8 |
-                                        (((1) * sintable [(1) * (sampleChunk & 0x000000ff) % 256]));
-             
-                    val1 = (((1) * sintable [(1) * ((snASampleOffset)) % sinTableSize]));
-                    val2 = (((1) * sintable [(1) * ((snASampleOffset + 1)) % sinTableSize]));
-                    val3 = (((1) * sintable [(1) * ((snASampleOffset + 2)) % sinTableSize]));
-                    val4 = (((1) * sintable [(1) * (snASampleOffset + 3) % sinTableSize]));
-
-                    SND_REG_SGFIFOA = (val4 << 24) | (val3 << 16) | (val2 << 8) | (val1);
-
-                }
-                snASampleOffset += 4;
-                if (snASampleOffset > snASmpSize) {
-                    //sample finished!
-                    playSnASample = 0;
-                    snASampleOffset = 0;
-                }
-         */
-    }
-
+void snd_processSampleB() {
     if (playSnBSample) {
         if (!(snBSampleOffset & 3) && snBSampleOffset < snBSmpSize && (snBSampleOffset >> 2) < snBSmpSize) {
             SND_REG_SGFIFOB = snBSample[snBSampleOffset >> 2]; // u32
         }
 
-        snBSampleOffset++;
+        //snBSampleOffset++;
         if (snBSampleOffset > snBSmpSize) {
             //sample finished!
             //R_TIM0CNT = 0;
@@ -691,13 +553,6 @@ void snd_timerFunc_sample() {
             snBSampleOffset = 0;
         }
     }
-
-    /*
-        if (!playSnASample && !playSnBSample) {
-            R_TIM0CNT = 0;
-        }
-     */
-
 }
 
 void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
@@ -733,6 +588,7 @@ void snd_playChannelASample(u8 kitId, u8 sampleNumber,
 
         if (snASample) {
             snASampleOffset = snASmpSize * offset / 100;
+            snd_bufferingSampleA();
             playSnASample = 1;
         }
 

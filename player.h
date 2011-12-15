@@ -433,6 +433,17 @@ void FAT_player_continueToPlay() {
 }
 
 /**
+ * 
+ */
+void FAT_player_continueToProcessSampleA (){
+    snd_bufferingSampleA();
+}
+
+void FAT_player_continueToProcessSampleB (){
+    snd_processSampleB();
+}
+
+/**
  * \brief Arrète la lecture de la track.
  */
 void FAT_player_stopPlayer() {

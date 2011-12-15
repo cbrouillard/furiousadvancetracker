@@ -27,13 +27,6 @@
 
 typedef const GBFS_FILE kit;
 
-typedef struct OSCILLATOR {
-    s32 phase;
-    s32 increment;
-    u16 frequency;
-    u8 amplitude;
-} oscillator;
-
 /**
  * \brief Initialise le mode audio sur la Gameboy: active les 4 canaux.
  **/
@@ -213,6 +206,7 @@ void snd_playSampleOnChannelAById(u8 kitId, u8 sampleNumber);
  */
 void snd_playChannelASample(u8 kitId, u8 sampleNumber, u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset);
 
+void snd_bufferingSampleA ();
 
 /**
  * \brief Joue un sample sur le canal directsound B. Attention, il est nécessaire d'avoir
@@ -236,6 +230,8 @@ void snd_playSampleOnChannelBById(u8 kitId, u8 sampleNumber);
  * @param offset permet de spécifier a partir de quel moment le sample démarre de 0 = début à 255 = fin
  */
 void snd_playChannelBSample(u8 kitId, u8 sampleNumber, u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset);
+
+void snd_processSampleB ();
 
 /**
  * \brief Renvoie le nom du kit en donnant l'id de celui-ci (de 0 à 255).

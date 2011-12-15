@@ -379,7 +379,7 @@ void FAT_mainLoop() {
 
             FAT_player_continueToPlay();
         }
-
+       
         FAT_allScreen_singleCheckButtons();
         // Wait for Vertical Blank
         hel_SwiVBlankIntrWait();
