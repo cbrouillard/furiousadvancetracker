@@ -513,8 +513,8 @@ void snd_processSampleA() {
         if (!(snASampleOffset & 3)) {
             SND_REG_SGFIFOA = snASample[snASampleOffset >> 2]; // u32
         }
-
         snASampleOffset++;
+        HEL_DEBUG_MSG ("o: %d s: %d", snASampleOffset, snASmpSize);
         if (snASampleOffset > snASmpSize) {
             //sample finished!
             //R_TIM0CNT = 0;
@@ -522,6 +522,8 @@ void snd_processSampleA() {
             snASampleOffset = 0;
             snd_resetFIFOA();
         }
+
+
     }
 
 }
@@ -532,8 +534,10 @@ void snd_processSampleB() {
         if (!(snBSampleOffset & 3)) {
             SND_REG_SGFIFOB = snBSample[snBSampleOffset >> 2]; // u32
         }
-
+        
         snBSampleOffset++;
+        
+        HEL_DEBUG_MSG ("o: %d s: %d", snBSampleOffset, snBSmpSize);
         if (snBSampleOffset > snBSmpSize) {
             //sample finished!
             //R_TIM0CNT = 0;
@@ -548,12 +552,6 @@ void snd_timerFunc_sample() {
     snd_processSampleA();
     snd_processSampleB();
     hel_IntrAcknowledge(INT_TYPE_TIM0);
-    /*
-        if (!playSnASample && !playSnBSample) {
-            R_TIM0CNT = 0;
-        }
-     */
-
 }
 
 void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
