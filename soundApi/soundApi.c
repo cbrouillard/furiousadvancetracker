@@ -81,39 +81,40 @@ const unsigned long voices[] = {
 };
 
 const u32 sinTableSize = 256; // Look Up Table size: has to be power of 2 so that the modulo LUTsize
-                            // can be done by picking bits from the phase avoiding arithmetic
-const u8 sintable[256] = { // already biased with +127
-  127,130,133,136,139,143,146,149,152,155,158,161,164,167,170,173,
-  176,179,182,184,187,190,193,195,198,200,203,205,208,210,213,215,
-  217,219,221,224,226,228,229,231,233,235,236,238,239,241,242,244,
-  245,246,247,248,249,250,251,251,252,253,253,254,254,254,254,254,
-  255,254,254,254,254,254,253,253,252,251,251,250,249,248,247,246,
-  245,244,242,241,239,238,236,235,233,231,229,228,226,224,221,219,
-  217,215,213,210,208,205,203,200,198,195,193,190,187,184,182,179,
-  176,173,170,167,164,161,158,155,152,149,146,143,139,136,133,130,
-  127,124,121,118,115,111,108,105,102,99,96,93,90,87,84,81,
-  78,75,72,70,67,64,61,59,56,54,51,49,46,44,41,39,
-  37,35,33,30,28,26,25,23,21,19,18,16,15,13,12,10,
-  9,8,7,6,5,4,3,3,2,1,1,0,0,0,0,0,
-  0,0,0,0,0,0,1,1,2,3,3,4,5,6,7,8,
-  9,10,12,13,15,16,18,19,21,23,25,26,28,30,33,35,
-  37,39,41,44,46,49,51,54,56,59,61,64,67,70,72,75,
-  78,81,84,87,90,93,96,99,102,105,108,111,115,118,121,124};
+// can be done by picking bits from the phase avoiding arithmetic
+const u8 sintable[256] = {// already biased with +127
+    127, 130, 133, 136, 139, 143, 146, 149, 152, 155, 158, 161, 164, 167, 170, 173,
+    176, 179, 182, 184, 187, 190, 193, 195, 198, 200, 203, 205, 208, 210, 213, 215,
+    217, 219, 221, 224, 226, 228, 229, 231, 233, 235, 236, 238, 239, 241, 242, 244,
+    245, 246, 247, 248, 249, 250, 251, 251, 252, 253, 253, 254, 254, 254, 254, 254,
+    255, 254, 254, 254, 254, 254, 253, 253, 252, 251, 251, 250, 249, 248, 247, 246,
+    245, 244, 242, 241, 239, 238, 236, 235, 233, 231, 229, 228, 226, 224, 221, 219,
+    217, 215, 213, 210, 208, 205, 203, 200, 198, 195, 193, 190, 187, 184, 182, 179,
+    176, 173, 170, 167, 164, 161, 158, 155, 152, 149, 146, 143, 139, 136, 133, 130,
+    127, 124, 121, 118, 115, 111, 108, 105, 102, 99, 96, 93, 90, 87, 84, 81,
+    78, 75, 72, 70, 67, 64, 61, 59, 56, 54, 51, 49, 46, 44, 41, 39,
+    37, 35, 33, 30, 28, 26, 25, 23, 21, 19, 18, 16, 15, 13, 12, 10,
+    9, 8, 7, 6, 5, 4, 3, 3, 2, 1, 1, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1, 1, 2, 3, 3, 4, 5, 6, 7, 8,
+    9, 10, 12, 13, 15, 16, 18, 19, 21, 23, 25, 26, 28, 30, 33, 35,
+    37, 39, 41, 44, 46, 49, 51, 54, 56, 59, 61, 64, 67, 70, 72, 75,
+    78, 81, 84, 87, 90, 93, 96, 99, 102, 105, 108, 111, 115, 118, 121, 124
+};
 
 #define MAX_KITS 32
 kit* kits[MAX_KITS];
 
-int snASampleOffset = 1;
-int snBSampleOffset = 1;
+vu32 snASampleOffset = 1;
+vu32 snBSampleOffset = 1;
 
 u32 snASmpSize;
 u32 snBSmpSize;
 
-const u32* snASample;
-const u32* snBSample;
+const vu32* snASample;
+const vu32* snBSample;
 
-bool playSnASample = 0;
-bool playSnBSample = 0;
+volatile bool playSnASample = 0;
+volatile bool playSnBSample = 0;
 
 void snd_timerFunc_sample();
 
@@ -498,15 +499,15 @@ char* snd_getSampleNameById(u8 kitId, u8 sampleId) {
     return sampleName;
 }
 
-void snd_resetFIFOA (){
+void snd_resetFIFOA() {
     REG_SOUNDCNT_H |= 1 << 0xB;
 }
 
-void snd_resetFIFOB (){
+void snd_resetFIFOB() {
     REG_SOUNDCNT_H |= 1 << 0xF;
 }
 
-void snd_timerFunc_sample() {
+void snd_processSampleA() {
     if (playSnASample) {
         REG_SOUNDCNT_H &= ~(1 << 0xB);
         if (!(snASampleOffset & 3)) {
@@ -523,7 +524,11 @@ void snd_timerFunc_sample() {
         }
     }
 
+}
+
+void snd_processSampleB() {
     if (playSnBSample) {
+        REG_SOUNDCNT_H &= ~(1 << 0xF);
         if (!(snBSampleOffset & 3)) {
             SND_REG_SGFIFOB = snBSample[snBSampleOffset >> 2]; // u32
         }
@@ -537,7 +542,12 @@ void snd_timerFunc_sample() {
             snd_resetFIFOB();
         }
     }
+}
 
+void snd_timerFunc_sample() {
+    snd_processSampleA();
+    snd_processSampleB();
+    hel_IntrAcknowledge(INT_TYPE_TIM0);
     /*
         if (!playSnASample && !playSnBSample) {
             R_TIM0CNT = 0;
