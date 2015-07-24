@@ -67,7 +67,8 @@ void FAT_screenFilesystem_printMode() {
  */
 void FAT_screenFilesystem_printLineColumns() {
     u8 y = SCREENFILESYSTEM_LINE_START_Y;
-    for (int c = 0; c < (SCREENFILESYSTEM_NB_LINES_ON_SCREEN); c++) {
+    int c;
+    for (c = 0; c < (SCREENFILESYSTEM_NB_LINES_ON_SCREEN); c++) {
         hel_BgTextPrintF(TEXT_LAYER, SCREENFILESYSTEM_LINE_X, y, 0, FAT_FORMAT_LINE, c);
         y += 1;
     }

@@ -133,7 +133,8 @@ void FAT_screenSong_printInfos() {
  */
 void FAT_screenSong_printLineColumns() {
     u8 y = SCREENSONG_LINE_START_Y;
-    for (int c = FAT_screenSong_currentStartLine; c < (SCREENSONG_NB_LINES_ON_SCREEN + FAT_screenSong_currentStartLine); c++) {
+    int c;
+    for (c = FAT_screenSong_currentStartLine; c < (SCREENSONG_NB_LINES_ON_SCREEN + FAT_screenSong_currentStartLine); c++) {
         hel_BgTextPrintF(TEXT_LAYER, SCREENSONG_LINE_X, y, 0, FAT_FORMAT_LINE, c);
         y += SCREENSONG_LINE_SIZE_Y;
     }
@@ -144,7 +145,8 @@ void FAT_screenSong_printLineColumns() {
  */
 void FAT_screenSong_printSequences() {
     u8 c;
-    for (u8 v = 0; v < SCREENSONG_NB_LINES_ON_SCREEN; v++) {
+    u8 v;
+    for (v = 0; v < SCREENSONG_NB_LINES_ON_SCREEN; v++) {
 
         for (c = 0; c < 6; c++) {
             if (FAT_tracker.channels[c].sequences[v + FAT_screenSong_currentStartLine] == NULL_VALUE) {

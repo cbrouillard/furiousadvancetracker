@@ -122,7 +122,8 @@ void FAT_screenComposer_printNote(u8 line) {
  * \brief Affiche toutes les notes du COMPOSER. 
  */
 void FAT_screenComposer_printAllNote() {
-    for (u8 b = 0; b < SCREENCOMPOSER_NB_LINES_ON_SCREEN; b++) {
+    u8 b;
+    for (b = 0; b < SCREENCOMPOSER_NB_LINES_ON_SCREEN; b++) {
         FAT_screenComposer_printNote(b);
     }
 }

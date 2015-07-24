@@ -94,7 +94,8 @@ void FAT_screenLive_printTransposes() {
  */
 void FAT_screenLive_printLineColumns() {
     u8 y = SCREENLIVE_LINE_START_Y;
-    for (int c = FAT_screenSong_currentStartLine; c < (SCREENLIVE_NB_LINES_ON_SCREEN + FAT_screenSong_currentStartLine); c++) {
+    int c;
+    for (c = FAT_screenSong_currentStartLine; c < (SCREENLIVE_NB_LINES_ON_SCREEN + FAT_screenSong_currentStartLine); c++) {
         hel_BgTextPrintF(TEXT_LAYER, SCREENLIVE_LINE_X, y, 0, FAT_FORMAT_LINE, c);
         y += SCREENLIVE_LINE_SIZE_Y;
     }
@@ -136,7 +137,8 @@ void FAT_screenLive_printSequence(u8 channel, u8 lineOnScreen, u8 realLine) {
  */
 void FAT_screenLive_printSequences() {
     u8 c;
-    for (u8 v = 0; v < SCREENLIVE_NB_LINES_ON_SCREEN; v++) {
+    u8 v;
+    for (v = 0; v < SCREENLIVE_NB_LINES_ON_SCREEN; v++) {
 
         for (c = 0; c < 6; c++) {
             if (FAT_tracker.channels[c].sequences[v + FAT_screenSong_currentStartLine] == NULL_VALUE) {

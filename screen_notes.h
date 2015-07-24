@@ -61,7 +61,8 @@ u8 FAT_screenNotes_currentBlockId;
  */
 void FAT_screenNotes_printLineColumns() {
     u8 y = SCREENNOTES_LINE_START_Y;
-    for (int c = 0; c < (SCREENNOTES_NB_LINES_ON_SCREEN); c++) {
+    int c;
+    for (c = 0; c < (SCREENNOTES_NB_LINES_ON_SCREEN); c++) {
         hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_LINE_X, y, 0, FAT_FORMAT_LINE, c);
         y += SCREENNOTES_LINE_SIZE_Y;
     }
@@ -125,7 +126,8 @@ void FAT_screenNotes_printEffect(u8 line) {
  * \brief Affiche toutes les notes et leurs effets.
  */
 void FAT_screenNotes_printAllNotes() {
-    for (u8 b = 0; b < SCREENNOTES_NB_LINES_ON_SCREEN; b++) {
+    u8 b;
+    for (b = 0; b < SCREENNOTES_NB_LINES_ON_SCREEN; b++) {
         FAT_screenNotes_printNote(b);
         FAT_screenNotes_printEffect(b);
     }

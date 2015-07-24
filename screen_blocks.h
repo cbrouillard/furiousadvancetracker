@@ -66,7 +66,8 @@ void FAT_screenBlocks_pressB();
  */
 void FAT_screenBlocks_printLineColumns() {
     u8 y = SCREENBLOCKS_LINE_START_Y;
-    for (int c = 0; c < (SCREENBLOCKS_NB_LINES_ON_SCREEN); c++) {
+    int c;
+    for (c = 0; c < (SCREENBLOCKS_NB_LINES_ON_SCREEN); c++) {
         hel_BgTextPrintF(TEXT_LAYER, SCREENBLOCKS_LINE_X, y, 0, FAT_FORMAT_LINE, c);
         y += SCREENBLOCKS_LINE_SIZE_Y;
     }
@@ -145,7 +146,8 @@ void FAT_screenBlocks_printEffect(u8 line) {
  * \brief Affiche tous les blocks pour la séquence courante.
  */
 void FAT_screenBlocks_printAllBlocks() {
-    for (u8 b = 0; b < SCREENBLOCKS_NB_LINES_ON_SCREEN; b++) {
+    u8 b;
+    for (b = 0; b < SCREENBLOCKS_NB_LINES_ON_SCREEN; b++) {
         FAT_screenBlocks_printBlock(b);
         FAT_screenBlocks_printTranspose(b);
         FAT_screenBlocks_printEffect(b);

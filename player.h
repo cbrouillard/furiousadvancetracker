@@ -104,7 +104,8 @@ void FAT_player_initCursors() {
     ham_SetObjPrio(FAT_cursor_player2_obj, 3);
 
     // on clone les sprites pour la lecture des 6 séquences à la fois
-    for (u8 i = 0; i < 6; i++) {
+    u8 i;
+    for (i = 0; i < 6; i++) {
         FAT_cursor_playerSequences_obj[i] = ham_CloneObj(FAT_cursor_player2_obj, 0, 0);
         ham_SetObjPrio(FAT_cursor_playerSequences_obj[i], 3);
     }
@@ -294,7 +295,8 @@ void FAT_player_timerFunc() {
 void FAT_player_playFromSequences() {
     if (tempoReach <= 0) {
 
-        for (u8 i = 0; i < 6; i++) {
+        u8 i;
+        for (i = 0; i < 6; i++) {
             FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
             if (FAT_currentPlayedSequence != NULL_VALUE) {
                 // lire la séquence actuelle
