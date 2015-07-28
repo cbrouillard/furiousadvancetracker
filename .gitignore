@@ -6,6 +6,8 @@ nbproject
 *.o
 *.zip
 *.sav
+*.gba
+*.iml
 manual/tmp
 manual/FAT_documentation_FR.iso
 manual/*.pdf

@@ -48,14 +48,13 @@
 /**
  * \brief Version actuelle de FAT.
  */
-#define FAT_VERSION "0.3.0"
+#define FAT_VERSION "1.0.0"
 
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "soundApi/soundApi.h"
-
-#include "fat.h"
+#include "src/soundApi/soundApi.h"
+#include "src/fat.h"
 
 /**
  * \brief Fonction main. Si vous lisez le code source, il est judicieux de commencer par comprendre cette fonction.
@@ -63,9 +62,9 @@
 int main() {
 
     FAT_init();
-    
-    snd_init_soundApi();
+
     snd_init_kits();
+    snd_init_soundApi();
 
     FAT_showIntro();
     FAT_screenSong_init();
