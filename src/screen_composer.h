@@ -169,8 +169,8 @@ void FAT_screenComposer_init() {
     FAT_reinitScreen();
 
     // initialisation du fond (interface)
-    ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_composer_Tiles, SIZEOF_16BIT(screen_composer_Tiles), 1, 1);
-    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_composer_Map, 1024, 0, 0);
+    ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_COMPOSER_RAW), RES_SCREEN_COMPOSER_RAW_SIZE16, 1, 1);
+    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_COMPOSER_MAP), 1024, 0, 0);
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
     FAT_screenComposer_isLocked = 0;

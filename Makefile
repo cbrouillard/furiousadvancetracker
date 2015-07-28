@@ -36,7 +36,8 @@ include $(HAMDIR)/system/standard-targets.mak
 .PHONY gfx: makefile
 	$(HAMDIR)/tools/linux/gfx2gba -c16 -t8 -m -fraw -b15 -osrc/gfx/raw -ptext.pal src/gfx/img/text.bmp
 	$(HAMDIR)/tools/linux/gfx2gba -t8 -m -fraw -b15 -osrc/gfx/raw -pintro.pal src/gfx/img/screens/intro*.bmp
-	$(HAMDIR)/tools/linux/gfx2gba -t8 -m -fraw -b15 -osrc/gfx/raw -pscreen.pal src/gfx/img/screens/screen_*.bmp
+	$(HAMDIR)/tools/linux/gfx2gba -t8 -m -fraw -osrc/gfx/raw -pscreen.pal src/gfx/img/screens/screen_*.bmp
+	$(HAMDIR)/tools/linux/gfx2gba -t8 -D -fraw -osrc/gfx/raw -psprites.pal src/gfx/img/sprites/*.bmp
 	wine $(HAMDIR)/tools/win32/katie.exe --output-asm-arm --output-h --output-h-filename src/gfx/ResourceData.h --output-asm-arm-filename src/gfx/ResourceData.s src/gfx/raw/*.*
 	
 

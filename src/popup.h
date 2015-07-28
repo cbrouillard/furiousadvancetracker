@@ -122,22 +122,13 @@ void FAT_popup_checkButtons() {
  * jusqu'à extinction du programme. 
  */
 void FAT_popup_init() {
-    //    map_fragment_info_ptr popup;
-    //
-    //    // initialisation de la popup de déplacement (cachée)
-    //    ham_bg[POPUP_LAYER].ti = ham_InitTileSet((void*) popup_Tiles, SIZEOF_16BIT(popup_Tiles), 1, 1);
-    //    ham_bg[POPUP_LAYER].mi = ham_InitMapEmptySet(0, 0);
-    //    popup = ham_InitMapFragment((void*) popup_Map, 30, 20, 0, 0, 30, 20, 0);
-    //    ham_InsertMapFragment(popup, POPUP_LAYER, 0, 0);
-    //    ham_InitBg(POPUP_LAYER, 1, 0, 0);
     if (ham_bg[POPUP_LAYER].ti) {
-        //        ham_InitBg(2, 0, 3, 0);
         ham_DeInitTileSet(ham_bg[POPUP_LAYER].ti);
         ham_DeInitMapSet(ham_bg[POPUP_LAYER].mi);
     }
 
-    ham_bg[POPUP_LAYER].ti = ham_InitTileSet((void*) popup_Tiles, SIZEOF_16BIT(popup_Tiles), 1, 1);
-    ham_bg[POPUP_LAYER].mi = ham_InitMapSet((void *) popup_Map, 1024, 0, 0);
+    ham_bg[POPUP_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_POPUP_RAW), RES_SCREEN_POPUP_RAW_SIZE16, 1, 1);
+    ham_bg[POPUP_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_POPUP_MAP), 1024, 0, 0);
     ham_InitBg(POPUP_LAYER, 1, 0, 0);
 
     FAT_popup_hide();

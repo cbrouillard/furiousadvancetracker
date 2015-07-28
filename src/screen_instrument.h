@@ -204,24 +204,24 @@ void FAT_screenInstrument_switchScreen(u8 type) {
     switch (type) {
         case INSTRUMENT_TYPE_PULSE:
         case INSTRUMENT_TYPE_PULSE2:
-            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_instrument_pulse_Tiles, SIZEOF_16BIT(screen_instrument_pulse_Tiles), 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_instrument_pulse_Map, 1024, 0, 0);
+            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_INSTRUMENT_PULSE_RAW), RES_SCREEN_INSTRUMENT_PULSE_RAW_SIZE16, 1, 1);
+            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_INSTRUMENT_PULSE_MAP), 1024, 0, 0);
             FAT_screenInstrument_printInstrumentNumber();
             FAT_screenInstrument_printAllText(type);
             FAT_screenInstrument_initCursor(type);
             FAT_screenInstrument_displayGoodCursor(type);
             break;
         case INSTRUMENT_TYPE_WAVE:
-            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_instrument_wave_Tiles, SIZEOF_16BIT(screen_instrument_wave_Tiles), 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_instrument_wave_Map, 1024, 0, 0);
+            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_INSTRUMENT_WAVE_RAW), RES_SCREEN_INSTRUMENT_WAVE_RAW_SIZE16, 1, 1);
+            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_INSTRUMENT_WAVE_MAP), 1024, 0, 0);
             FAT_screenInstrument_printInstrumentNumber();
             FAT_screenInstrument_printAllText(type);
             FAT_screenInstrument_initCursor(type);
             FAT_screenInstrument_displayGoodCursor(type);
             break;
         case INSTRUMENT_TYPE_NOISE:
-            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_instrument_noise_Tiles, SIZEOF_16BIT(screen_instrument_noise_Tiles), 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_instrument_noise_Map, 1024, 0, 0);
+            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_INSTRUMENT_NOISE_RAW), RES_SCREEN_INSTRUMENT_NOISE_RAW_SIZE16, 1, 1);
+            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_INSTRUMENT_NOISE_MAP), 1024, 0, 0);
             FAT_screenInstrument_printInstrumentNumber();
             FAT_screenInstrument_printAllText(type);
             FAT_screenInstrument_initCursor(type);
@@ -229,9 +229,8 @@ void FAT_screenInstrument_switchScreen(u8 type) {
             break;
         case INSTRUMENT_TYPE_SAMPLEA:
         case INSTRUMENT_TYPE_SAMPLEB:
-            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_instrument_sample_Tiles, SIZEOF_16BIT(screen_instrument_sample_Tiles), 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_instrument_sample_Map, 1024, 0, 0);
-
+            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_INSTRUMENT_SAMPLE_RAW), RES_SCREEN_INSTRUMENT_SAMPLE_RAW_SIZE16, 1, 1);
+            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_INSTRUMENT_SAMPLE_MAP), 1024, 0, 0);
             FAT_screenInstrument_printInstrumentNumber();
             FAT_screenInstrument_printAllText(type);
             FAT_screenInstrument_initCursor(type);

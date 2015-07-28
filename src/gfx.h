@@ -20,70 +20,9 @@
 
 // PALETTES
 #include "gfx/sprite.pal.c"
-#include "gfx/screen.pal.c"
-#include "gfx/intro.pal.c"
-
-// SCREENS
-#include "gfx/popup.raw.c"
-#include "gfx/popup.map.c"
-
-#include "gfx/screen_intro.raw.c"
-#include "gfx/screen_intro.map.c"
-
-#include "gfx/screen_projet.raw.c"
-#include "gfx/screen_projet.map.c"
-
-#include "gfx/screen_live.raw.c"
-#include "gfx/screen_live.map.c"
-
-#include "gfx/screen_composer.raw.c"
-#include "gfx/screen_composer.map.c"
-
-#include "gfx/screen_song.raw.c"
-#include "gfx/screen_song.map.c"
-
-#include "gfx/screen_notes.raw.c"
-#include "gfx/screen_notes.map.c"
-
-#include "gfx/screen_blocks.raw.c"
-#include "gfx/screen_blocks.map.c"
-
-#include "gfx/screen_instrument_pulse.raw.c"
-#include "gfx/screen_instrument_pulse.map.c"
-
-#include "gfx/screen_instrument_wave.raw.c"
-#include "gfx/screen_instrument_wave.map.c"
-
-#include "gfx/screen_instrument_noise.raw.c"
-#include "gfx/screen_instrument_noise.map.c"
-
-#include "gfx/screen_instrument_sample.raw.c"
-#include "gfx/screen_instrument_sample.map.c"
-
-#include "gfx/screen_effects.raw.c"
-#include "gfx/screen_effects.map.c"
-
-#include "gfx/screen_filesystem.raw.c"
-#include "gfx/screen_filesystem.map.c"
 
 #include "gfx/text.raw.c"
 #include "gfx/text.map.c"
-
-// ECRANS D'AIDE
-#include "gfx/screen_help_projet.raw.c"
-#include "gfx/screen_help_projet.map.c"
-#include "gfx/screen_help_filesystem.raw.c"
-#include "gfx/screen_help_filesystem.map.c"
-#include "gfx/screen_help_composer.raw.c"
-#include "gfx/screen_help_composer.map.c"
-#include "gfx/screen_help_song.raw.c"
-#include "gfx/screen_help_song.map.c"
-#include "gfx/screen_help_blocks.raw.c"
-#include "gfx/screen_help_blocks.map.c"
-#include "gfx/screen_help_notes.raw.c"
-#include "gfx/screen_help_notes.map.c"
-#include "gfx/screen_help_instrument.raw.c"
-#include "gfx/screen_help_instrument.map.c"
 
 // DIALOGUES
 #include "gfx/screen_dialog_save.raw.c"

@@ -40,36 +40,36 @@ void FAT_screenHelp_init(u8 screenIdForHelp) {
     // initialisation du fond (interface)
     switch (screenIdForHelp) {
         case SCREEN_PROJECT_ID:
-            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_help_projet_Tiles, SIZEOF_16BIT(screen_help_projet_Tiles), 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_help_projet_Map, 1024, 0, 0);
+            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_PROJET_RAW), RES_SCREEN_HELP_PROJET_RAW_SIZE16, 1, 1);
+            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_PROJET_MAP), 1024, 0, 0);
             break;
         case SCREEN_LIVE_ID:
             break;
         case SCREEN_SONG_ID:
-            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_help_song_Tiles, SIZEOF_16BIT(screen_help_song_Tiles), 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_help_song_Map, 1024, 0, 0);
+            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_SONG_RAW), RES_SCREEN_HELP_SONG_RAW_SIZE16, 1, 1);
+            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_SONG_MAP), 1024, 0, 0);
             break;
         case SCREEN_BLOCKS_ID:
-            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_help_blocks_Tiles, SIZEOF_16BIT(screen_help_blocks_Tiles), 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_help_blocks_Map, 1024, 0, 0);
+            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_BLOCKS_RAW), RES_SCREEN_HELP_BLOCKS_RAW_SIZE16, 1, 1);
+            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_BLOCKS_MAP), 1024, 0, 0);
             break;
         case SCREEN_NOTES_ID:
-            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_help_notes_Tiles, SIZEOF_16BIT(screen_help_notes_Tiles), 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_help_notes_Map, 1024, 0, 0);
+            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_NOTES_RAW), RES_SCREEN_HELP_NOTES_RAW_SIZE16, 1, 1);
+            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_NOTES_MAP), 1024, 0, 0);
             break;
         case SCREEN_EFFECTS_ID:
             break;
         case SCREEN_COMPOSER_ID:
-            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_help_composer_Tiles, SIZEOF_16BIT(screen_help_composer_Tiles), 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_help_composer_Map, 1024, 0, 0);
+            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_COMPOSER_RAW), RES_SCREEN_HELP_COMPOSER_RAW_SIZE16, 1, 1);
+            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_COMPOSER_MAP), 1024, 0, 0);
             break;
         case SCREEN_INSTRUMENTS_ID:
-            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_help_instrument_Tiles, SIZEOF_16BIT(screen_help_instrument_Tiles), 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_help_instrument_Map, 1024, 0, 0);
+            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_INSTRUMENT_RAW), RES_SCREEN_HELP_INSTRUMENT_RAW_SIZE16, 1, 1);
+            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_INSTRUMENT_MAP), 1024, 0, 0);
             break;
         case SCREEN_FILESYSTEM_ID:
-            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*) screen_help_filesystem_Tiles, SIZEOF_16BIT(screen_help_filesystem_Tiles), 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void *) screen_help_filesystem_Map, 1024, 0, 0);
+            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_FILESYSTEM_RAW), RES_SCREEN_HELP_FILESYSTEM_RAW_SIZE16, 1, 1);
+            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_FILESYSTEM_MAP), 1024, 0, 0);
             break;
     }
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);

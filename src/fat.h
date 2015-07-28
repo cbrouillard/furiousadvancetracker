@@ -19,6 +19,7 @@
 #ifndef _FAT_H_
 #define _FAT_H_
 
+#define TEXT_LAYER 1
 #define SCREEN_LAYER 3
 
 /** \brief Id écran projet */
@@ -54,11 +55,8 @@
  être pondéré avec une valeur paramétrable. */
 #define WAIT_FOR_START 40
 
-
 /** \brief Définition globale du format d'affichage des numéros de lignes. */
 #define FAT_FORMAT_LINE "%.2x"
-
-#define TEXT_LAYER 1
 
 /** \brief Stocke l'id de l'écran sur lequel l'utilisateur se situe. */
 u8 FAT_currentScreen = SCREEN_SONG_ID;
@@ -176,7 +174,6 @@ void FAT_init() {
     ham_bg[TEXT_LAYER].ti = ham_InitTileSet((void*) text_Tiles, SIZEOF_16BIT(text_Tiles), 1, 1);
     ham_bg[TEXT_LAYER].mi = ham_InitMapEmptySet((u8) RES_TEXT_RAW_SIZE16, 0);
 
-    //ham_InitText(1);
     hel_BgTextCreate(
             TEXT_LAYER, // BgNo
             1, // Width of one character specified in tiles
@@ -188,8 +185,6 @@ void FAT_init() {
             BGTEXT_FLAGS_GENERATELUT); // Flags that control creation and print behaviour
 
     ham_InitBg(TEXT_LAYER, TRUE, 0, FALSE);
-
-    //ham_SetTextCol(TEXT_COLOR, 0);
 
     ham_SetFxMode(FX_LAYER_SELECT(0, 0, 0, 0, 1, 0),
             FX_LAYER_SELECT(0, 0, 1, 1, 0, 0),
@@ -248,9 +243,9 @@ void FAT_showIntro() {
 
     FAT_initIntroPalette();
 
-    ham_bg[SCREEN_LAYER].ti = ham_InitTileSet(ResData(RES_SCREEN_INTRO_RAW), RES_SCREEN_INTRO_RAW_SIZE16, 1, 1);
-    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet(ResData(RES_SCREEN_INTRO_MAP), 1024, 0, 0);
-    ham_InitBg(SCREEN_LAYER, 1, 0, 0);
+    ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_INTRO_RAW), RES_SCREEN_INTRO_RAW_SIZE16, 1, 1);
+    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_INTRO_MAP), 1024, 0, 0);
+    ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
 #ifdef DEBUG_ON
     hel_BgTextPrint(TEXT_LAYER, 1, 14, 0, "DEBUG ON");
@@ -285,14 +280,12 @@ void FAT_showIntro() {
 }
 
 /**
- * \brief Méthode qui permet de réinitialiser le BG2 proprement. 
+ * \brief Méthode qui permet de réinitialiser le BG SCREEN_LAYER proprement.
  * 
  * <b>NE PAS TOUCHER !  </b>
  */
 void FAT_reinitScreen() {
     if (ham_bg[SCREEN_LAYER].ti) {
-        //        ham_InitBg(2, 0, 3, 0);
-
         ham_DeInitTileSet(ham_bg[SCREEN_LAYER].ti);
         ham_DeInitMapSet(ham_bg[SCREEN_LAYER].mi);
         FAT_forceClearTextLayer();
@@ -305,12 +298,7 @@ void FAT_reinitScreen() {
  * Performance warning ! Afficher du texte via HAM est lent !
  */
 void FAT_forceClearTextLayer() {
-    //    hel_BgTextPrint(1, 0, 5, 0, "                              \n                              \n                              \n                              \n                              \n");
-    //    hel_BgTextPrint(1, 0, 10, 0, "                              \n                              \n                              \n                              \n                              \n");
-    //    hel_BgTextPrint(1, 0, 15, 0, "                              \n                              \n                              \n                              \n                              \n");
-
     if (ham_bg[TEXT_LAYER].ti) {
-        //        ham_InitBg(2, 0, 3, 0);
 
         ham_DeInitTileSet(ham_bg[TEXT_LAYER].ti);
         ham_DeInitMapSet(ham_bg[TEXT_LAYER].mi);
@@ -332,7 +320,6 @@ void FAT_initSpritePalette() {
  * \brief Charge la palette pour les écrans: les sprites sont exclus. 
  */
 void FAT_initScreenPalette() {
-    //ham_LoadBGPal((void*) screen_Palette, 256);
     hel_PalBgLoad256(ResData16(RES_SCREEN_PAL));
 }
 
