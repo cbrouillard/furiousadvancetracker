@@ -12,14 +12,14 @@ make gfx
 make
 
 echo "### Padbin pour execution du GBFS"
-#wine padbin.exe 256 FAT_v$VERSION.gba
+wine padbin.exe 256 FAT_v$VERSION.gba
 
 echo "### Generation du SAMPLE filesystem"
-#rm *.gbfs
+rm *.gbfs
     #objcopy -v -I binary -O elf32-little --rename-section .data=.rodata in_file out_file
-#wine gbfs.exe infos.gbfs samples/0nbkit
-#wine gbfs.exe default_samples.gbfs samples/0infos samples/*.snd
-#wine gbfs.exe battery_samples.gbfs samples/battery/0infos samples/battery/*.raw
+wine gbfs.exe infos.gbfs samples/0nbkit
+wine gbfs.exe default_samples.gbfs samples/0infos samples/*.snd
+wine gbfs.exe battery_samples.gbfs samples/battery/0infos samples/battery/*.raw
 
 echo "### Patch du GBA pour inclusion des samples"
 cat FAT_v$VERSION.gba infos.gbfs default_samples.gbfs battery_samples.gbfs > TMP.gba

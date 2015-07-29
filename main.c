@@ -65,7 +65,7 @@ int main() {
 
     FAT_init();
 
-    //snd_init_kits();
+    snd_init_kits();
     snd_init_soundApi();
 
     FAT_showIntro();
