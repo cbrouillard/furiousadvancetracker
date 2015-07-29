@@ -5,7 +5,7 @@
 #HAMDIR = /home/cyril/Coding/GBA/devkit/ham-271-linux-full
 include $(HAMDIR)/system/master.mak
 
-ADD_LIBS += $(GCCARM)/lib/libhel2_d.a
+ADD_LIBS += $(GCCARM)/lib/libhel2.a
 
 #
 # Set the name of your desired GBA image name here
@@ -34,10 +34,9 @@ include $(HAMDIR)/system/standard-targets.mak
 # custom  Makefile targets start here
 ######################################
 .PHONY gfx: makefile
-	$(HAMDIR)/tools/linux/gfx2gba -c16 -t8 -m -fraw -b15 -osrc/gfx/raw -ptext.pal src/gfx/img/text.bmp
-	$(HAMDIR)/tools/linux/gfx2gba -t8 -m -fraw -b15 -osrc/gfx/raw -pintro.pal src/gfx/img/screens/intro*.bmp
-	$(HAMDIR)/tools/linux/gfx2gba -t8 -m -fraw -osrc/gfx/raw -pscreen.pal src/gfx/img/screens/screen_*.bmp
-	$(HAMDIR)/tools/linux/gfx2gba -t8 -D -fraw -osrc/gfx/raw -psprites.pal src/gfx/img/sprites/*.bmp
+	$(HAMDIR)/tools/linux/gfx2gba -t8 -m -fraw -b15 -osrc/gfx/raw -pintro.pal src/gfx/img/screens/intro.bmp
+	$(HAMDIR)/tools/linux/gfx2gba -t8 -m -fraw -osrc/gfx/raw -pscreen.pal src/gfx/img/screens/screen*.bmp src/gfx/img/text.bmp
+	$(HAMDIR)/tools/linux/gfx2gba -t8 -D -c16 -fraw -osrc/gfx/raw -psprites.pal src/gfx/img/sprites/*.bmp
 	wine $(HAMDIR)/tools/win32/katie.exe --output-asm-arm --output-h --output-h-filename src/gfx/ResourceData.h --output-asm-arm-filename src/gfx/ResourceData.s src/gfx/raw/*.*
 	
 

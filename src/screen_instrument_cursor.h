@@ -59,7 +59,7 @@ u8 FAT_screenInstrument_tabCursorX;
 /** \brief Position actuelle du curseur de tabulation. */
 u8 FAT_screenInstrument_tabCursorY;
 /** \brief Objet sprite pour le curseur de tabulation. */
-u8 FAT_screenInstrument_tabCursorObj;
+THandle FAT_screenInstrument_tabCursorObj;
 
 /** \brief Positions des emplacements de paramètre dans l'écran PULSE. */
 const u8 INST_PULSE_BLOCK_Y[SCREENINSTRUMENT_PULSE_NB_LINES_ON_SCREEN] = {31, 39, 47, 55, 79, 87, 95, 103, 127};
@@ -74,14 +74,14 @@ const u8 INST_SAMPLE_BLOCK_Y[SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN] = {31, 
  * \brief Cache le curseur de tabulation. 
  */
 void FAT_screenInstrument_hideTabulationCursor() {
-    ham_SetObjVisible(FAT_screenInstrument_tabCursorObj, 0);
+    hel_ObjSetVisible(FAT_screenInstrument_tabCursorObj, 0);
 }
 
 /**
  * \brief Affiche le curseur de tabulation. 
  */
 void FAT_screenInstrument_showTabulationCursor() {
-    ham_SetObjVisible(FAT_screenInstrument_tabCursorObj, 1);
+    hel_ObjSetVisible(FAT_screenInstrument_tabCursorObj, 1);
 }
 
 /**
@@ -95,20 +95,20 @@ void FAT_screenInstrument_moveTabulationCursor(u8 instrumentType) {
         case INSTRUMENT_TYPE_PULSE:
         case INSTRUMENT_TYPE_PULSE2:
             FAT_screenInstrument_tabCursorX = SCREENINSTRUMENT_TABULATION_CURSOR_PULSE_X;
-            ham_SetObjXY(FAT_screenInstrument_tabCursorObj, FAT_screenInstrument_tabCursorX, FAT_screenInstrument_tabCursorY);
+            hel_ObjSetXY(FAT_screenInstrument_tabCursorObj, FAT_screenInstrument_tabCursorX, FAT_screenInstrument_tabCursorY);
             break;
         case INSTRUMENT_TYPE_WAVE:
             FAT_screenInstrument_tabCursorX = SCREENINSTRUMENT_TABULATION_CURSOR_WAVE_X;
-            ham_SetObjXY(FAT_screenInstrument_tabCursorObj, FAT_screenInstrument_tabCursorX, FAT_screenInstrument_tabCursorY);
+            hel_ObjSetXY(FAT_screenInstrument_tabCursorObj, FAT_screenInstrument_tabCursorX, FAT_screenInstrument_tabCursorY);
             break;
         case INSTRUMENT_TYPE_NOISE:
             FAT_screenInstrument_tabCursorX = SCREENINSTRUMENT_TABULATION_CURSOR_NOISE_X;
-            ham_SetObjXY(FAT_screenInstrument_tabCursorObj, FAT_screenInstrument_tabCursorX, FAT_screenInstrument_tabCursorY);
+            hel_ObjSetXY(FAT_screenInstrument_tabCursorObj, FAT_screenInstrument_tabCursorX, FAT_screenInstrument_tabCursorY);
             break;
         case INSTRUMENT_TYPE_SAMPLEA:
         case INSTRUMENT_TYPE_SAMPLEB:
             FAT_screenInstrument_tabCursorX = SCREENINSTRUMENT_TABULATION_CURSOR_SAMPLE_X;
-            ham_SetObjXY(FAT_screenInstrument_tabCursorObj, FAT_screenInstrument_tabCursorX, FAT_screenInstrument_tabCursorY);
+            hel_ObjSetXY(FAT_screenInstrument_tabCursorObj, FAT_screenInstrument_tabCursorX, FAT_screenInstrument_tabCursorY);
             break;
     }
 }
@@ -122,10 +122,20 @@ void FAT_screenInstrument_tabCursorInit() {
     FAT_screenInstrument_tabCursorX = SCREENINSTRUMENT_TABULATION_CURSOR_DEFAULT_X;
     FAT_screenInstrument_tabCursorY = SCREENINSTRUMENT_TABULATION_CURSOR_DEFAULT_Y;
 
-    FAT_screenInstrument_tabCursorObj = ham_CreateObj((void*) cursor_instrument_tabulation_Bitmap, OBJ_SIZE_64X32,
-            OBJ_MODE_SEMITRANSPARENT, 1, 0, 0, 0, 0, 0, 0, FAT_screenInstrument_tabCursorX, FAT_screenInstrument_tabCursorY);
-
-    ham_SetObjPrio(FAT_screenInstrument_tabCursorObj, 1);
+    FAT_screenInstrument_tabCursorObj = hel_ObjCreate(        ResData(RES_CURSOR_INSTRUMENT_TABULATION_RAW), // Pointer to source graphic
+                                                              OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                                              3,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                              OBJ_MODE_SEMITRANSPARENT,        // Obj Mode
+                                                              COLORS_16,              // Use 16 color mode
+                                                              0,                      // Palette number. Only neccessary in 16 color mode
+                                                              FALSE,                  // Don't use mosaic
+                                                              FALSE,                  // Don't flip the sprite horizontally
+                                                              FALSE,                  // Don't flip the object vertically
+                                                              1,                      // Priority against background. 0=higest
+                                                              FALSE,                  // Don't make the object double-sized
+                                                              FAT_screenInstrument_tabCursorX,                    // Destination horzintal screen coordinate in pixels
+                                                              FAT_screenInstrument_tabCursorY                      // Destination vertical screen coordinate in pixels
+                                                              );
     FAT_screenInstrument_hideTabulationCursor();
 }
 
@@ -138,17 +148,17 @@ void FAT_screenInstrument_pulse_commitCursorMove() {
         case 1:
         case 2:
         case 4:
-            ham_SetObjXY(FAT_cursor1_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            hel_ObjSetXY(FAT_cursor1_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
 
         case 3:
         case 5:
         case 6:
         case 7:
-            ham_SetObjXY(FAT_cursor2_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            hel_ObjSetXY(FAT_cursor2_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
         case 8:
-            ham_SetObjXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            hel_ObjSetXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
     }
 }
@@ -161,17 +171,17 @@ void FAT_screenInstrument_wave_commitCursorMove() {
         case 0:
         case 1:
         case 4:
-            ham_SetObjXY(FAT_cursor1_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            hel_ObjSetXY(FAT_cursor1_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
 
         case 2:
         case 3:
         case 6:
-            ham_SetObjXY(FAT_cursor2_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            hel_ObjSetXY(FAT_cursor2_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
         case 5:
         case 7:
-            ham_SetObjXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            hel_ObjSetXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
     }
 }
@@ -186,15 +196,15 @@ void FAT_screenInstrument_noise_commitCursorMove() {
         case 2:
         case 3:
         case 4:
-            ham_SetObjXY(FAT_cursor1_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            hel_ObjSetXY(FAT_cursor1_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
 
         case 5:
         case 6:
-            ham_SetObjXY(FAT_cursor2_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            hel_ObjSetXY(FAT_cursor2_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
         case 7:
-            ham_SetObjXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            hel_ObjSetXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
     }
 }
@@ -206,22 +216,22 @@ void FAT_screenInstrument_noise_commitCursorMove() {
 void FAT_screenInstrument_sample_commitCursorMove() {
     switch (FAT_screenInstruments_currentSelectedLine) {
         case 0:
-            ham_SetObjXY(FAT_cursor8_obj, 48, FAT_screenInstrument_cursorY + 1);
+            hel_ObjSetXY(FAT_cursor8_obj, 48, FAT_screenInstrument_cursorY + 1);
             break;
         case 1:
         case 4:
-            ham_SetObjXY(FAT_cursor1_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            hel_ObjSetXY(FAT_cursor1_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
             
         case 2:
         case 5:
         case 6:
         case 7:
-            ham_SetObjXY(FAT_cursor2_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            hel_ObjSetXY(FAT_cursor2_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
             
         case 3:
-            ham_SetObjXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            hel_ObjSetXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
     }
 }

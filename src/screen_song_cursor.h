@@ -176,7 +176,7 @@ void FAT_screenSong_moveCursorUp() {
  * \brief Valide le déplacement du curseur sur l'écran. 
  */
 void FAT_screenSong_commitCursorMove() {
-    ham_SetObjXY(FAT_cursor2_obj, FAT_screenSong_cursorX, FAT_screenSong_cursorY);
+    hel_ObjSetXY(FAT_cursor2_obj, FAT_screenSong_cursorX, FAT_screenSong_cursorY);
 }
 
 #endif

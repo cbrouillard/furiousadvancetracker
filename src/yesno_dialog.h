@@ -36,7 +36,7 @@ u8 param1;
  * \brief Fonction principale de la boite de dialog SAVE
  */
 void FAT_yesno_dialogSave_mainFunc() {
-    ham_CopyObjToOAM();
+    hel_ObjTransmit();
 
     hel_PadCapture();
     if (hel_PadQuery()->Pressed.L) {
@@ -52,7 +52,7 @@ void FAT_yesno_dialogSave_mainFunc() {
  * \brief Fonction principale de la boite de dialog LOAD
  */
 void FAT_yesno_dialogLoad_mainFunc() {
-    ham_CopyObjToOAM();
+    hel_ObjTransmit();
 
     hel_PadCapture();
     if (hel_PadQuery()->Pressed.L) {
@@ -70,7 +70,7 @@ void FAT_yesno_dialogLoad_mainFunc() {
  * \brief Fonction principale de la boite de dialog KEYBOARD
  */
 void FAT_yesno_dialogKeyboard_mainFunc() {
-    ham_CopyObjToOAM();
+    hel_ObjTransmit();
 
     hel_PadCapture();
     if (hel_PadQuery()->Pressed.L) {
@@ -84,7 +84,7 @@ void FAT_yesno_dialogKeyboard_mainFunc() {
  * \brief Fonction principale de la boite de dialog NEW PROJECT.
  */
 void FAT_yesno_dialogNewProject_mainFunc() {
-    ham_CopyObjToOAM();
+    hel_ObjTransmit();
 
     hel_PadCapture();
     if (hel_PadQuery()->Pressed.L) {
@@ -102,7 +102,7 @@ void FAT_yesno_dialogNewProject_mainFunc() {
  * \brief Fonction principale pour une boite ou il suffit de répondre "OUI" 
  */
 void FAT_onlyyes_dialog_mainFunc() {
-    ham_CopyObjToOAM();
+    hel_ObjTransmit();
     hel_PadCapture();
     if (hel_PadQuery()->Pressed.R) {
         FAT_yesno_close();
@@ -123,8 +123,8 @@ void FAT_yesno_close() {
  */
 void FAT_yesno_dialogSave() {
 
-    ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*) screen_dialog_save_Tiles, SIZEOF_16BIT(screen_dialog_save_Tiles), 1, 1);
-    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void *) screen_dialog_save_Map, 1024, 0, 0);
+    ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_DIALOG_SAVE_RAW), RES_SCREEN_DIALOG_SAVE_RAW_SIZE16, 1, 1);
+    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_DIALOG_SAVE_MAP), 1024, 0, 0);
     ham_InitBg(DIALOG_LAYER, 1, 0, 0);
 
     hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogSave_mainFunc);
@@ -136,8 +136,8 @@ void FAT_yesno_dialogSave() {
  */
 void FAT_yesno_dialogLoad() {
 
-    ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*) screen_dialog_load_Tiles, SIZEOF_16BIT(screen_dialog_load_Tiles), 1, 1);
-    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void *) screen_dialog_load_Map, 1024, 0, 0);
+    ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_DIALOG_LOAD_RAW), RES_SCREEN_DIALOG_LOAD_RAW_SIZE16, 1, 1);
+    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_DIALOG_LOAD_MAP), 1024, 0, 0);
     ham_InitBg(DIALOG_LAYER, 1, 0, 0);
 
     hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogLoad_mainFunc);
@@ -151,8 +151,8 @@ void FAT_yesno_dialogLoad() {
  * \todo Supprimer cette boite de dialogue dès que FAT est capable de gérer la compression.
  */
 void FAT_yes_dialogSorrySave() {
-    ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*) screen_dialog_sorrysave_Tiles, SIZEOF_16BIT(screen_dialog_sorrysave_Tiles), 1, 1);
-    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void *) screen_dialog_sorrysave_Map, 1024, 0, 0);
+    ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_DIALOG_SORRYSAVE_RAW), RES_SCREEN_DIALOG_SORRYSAVE_RAW_SIZE16, 1, 1);
+    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_DIALOG_SORRYSAVE_MAP), 1024, 0, 0);
     ham_InitBg(DIALOG_LAYER, 1, 0, 0);
 
     hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_onlyyes_dialog_mainFunc);
@@ -163,8 +163,8 @@ void FAT_yes_dialogSorrySave() {
  * 
  */
 void FAT_yesno_dialogNewProject() {
-    ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*) screen_dialog_new_Tiles, SIZEOF_16BIT(screen_dialog_new_Tiles), 1, 1);
-    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void *) screen_dialog_new_Map, 1024, 0, 0);
+    ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_DIALOG_NEW_RAW), RES_SCREEN_DIALOG_NEW_RAW_SIZE16, 1, 1);
+    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_DIALOG_NEW_MAP), 1024, 0, 0);
     ham_InitBg(DIALOG_LAYER, 1, 0, 0);
 
     hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogNewProject_mainFunc);
@@ -175,15 +175,11 @@ void FAT_yesno_dialogNewProject() {
  * 
  */
 void FAT_yesno_dialogKeyboard() {
-    ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*) screen_dialog_keyboard_Tiles, SIZEOF_16BIT(screen_dialog_keyboard_Tiles), 1, 1);
-    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void *) screen_dialog_keyboard_Map, 1024, 0, 0);
+    ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_DIALOG_KEYBOARD_RAW), RES_SCREEN_DIALOG_KEYBOARD_RAW_SIZE16, 1, 1);
+    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_DIALOG_KEYBOARD_MAP), 1024, 0, 0);
     ham_InitBg(DIALOG_LAYER, 1, 0, 0);
 
-    //ham_DrawText(6, 5, "A");
-
     hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogKeyboard_mainFunc);
-
-
 }
 
 /**

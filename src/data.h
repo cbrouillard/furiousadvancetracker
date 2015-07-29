@@ -429,7 +429,7 @@ typedef struct FAT {
  * C'est cette variable qui est utilisée (écrite sur la ram) lors de la sauvegarde
  * et vice versa pour le chargement. 
  */
-tracker FAT_tracker;
+tracker ATTR_EWRAM FAT_tracker;
 
 /**
  * \brief Stocke le numéro de la prochaine séquence disponible.
@@ -460,7 +460,7 @@ void FAT_data_initData() {
     FAT_tracker.transpose = 0;
     FAT_tracker.keyRepeat = 10;
     FAT_tracker.nbWork = 0;
-    strcpy(FAT_tracker.songName, "SONGNAME\0");
+    strcpy(FAT_tracker.songName, "FATSONG!\0");
 
     // init des variables du composer
     FAT_tracker.composer.transpose = 0;

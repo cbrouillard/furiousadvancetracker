@@ -20,23 +20,23 @@
 /**
  * ID technique HAM pour le cursor de taille 1.
  */
-u8 FAT_cursor1_obj;
+THandle FAT_cursor1_obj;
 /**
  * ID technique HAM pour le cursor de taille 2.
  */
-u8 FAT_cursor2_obj;
+THandle FAT_cursor2_obj;
 /**
  * ID technique HAM pour le cursor de taille 3.
  */
-u8 FAT_cursor3_obj;
+THandle FAT_cursor3_obj;
 /**
  * ID technique HAM pour le cursor de taille 8.
  */
-u8 FAT_cursor8_obj;
+THandle FAT_cursor8_obj;
 /**
  * ID technique HAM pour le cursor de changement d'onglet (partie instrument).
  */
-u8 FAT_cursorChange_obj;
+THandle FAT_cursorChange_obj;
 
 /**
  * \brief Initialisation du curseur taille 1.
@@ -45,11 +45,22 @@ u8 FAT_cursorChange_obj;
  * comme invisible par défaut. 
  */
 void FAT_initCursor1() {
-    FAT_cursor1_obj = ham_CreateObj((void*) cursor1_Bitmap, OBJ_SIZE_16X16,
-            OBJ_MODE_SEMITRANSPARENT, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    FAT_cursor1_obj = hel_ObjCreate(ResData(RES_CURSOR1_RAW), // Pointer to source graphic
+                                                          OBJ_SHAPE_SQUARE,       // Obj Shape
+                                                          1,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                          OBJ_MODE_SEMITRANSPARENT,        // Obj Mode
+                                                          COLORS_16,              // Use 16 color mode
+                                                          0,                      // Palette number. Only neccessary in 16 color mode
+                                                          FALSE,                  // Don't use mosaic
+                                                          FALSE,                  // Don't flip the sprite horizontally
+                                                          FALSE,                  // Don't flip the object vertically
+                                                          1,                      // Priority against background. 0=higest
+                                                          FALSE,                  // Don't make the object double-sized
+                                                          0,                    // Destination horzintal screen coordinate in pixels
+                                                          0                      // Destination vertical screen coordinate in pixels
+                                                          );
 
-    ham_SetObjVisible(FAT_cursor1_obj, 0);
-    ham_SetObjPrio(FAT_cursor1_obj, 1);
+    hel_ObjSetVisible(FAT_cursor1_obj, 0);
 }
 
 /**
@@ -59,11 +70,22 @@ void FAT_initCursor1() {
  * comme invisible par défaut. 
  */
 void FAT_initCursor2() {
-    FAT_cursor2_obj = ham_CreateObj((void*) cursor2_Bitmap, OBJ_SIZE_32X16,
-            OBJ_MODE_SEMITRANSPARENT, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    FAT_cursor2_obj = hel_ObjCreate(ResData(RES_CURSOR2_RAW), // Pointer to source graphic
+                                    OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                    2,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                    OBJ_MODE_SEMITRANSPARENT,        // Obj Mode
+                                    COLORS_16,              // Use 16 color mode
+                                    0,                      // Palette number. Only neccessary in 16 color mode
+                                    FALSE,                  // Don't use mosaic
+                                    FALSE,                  // Don't flip the sprite horizontally
+                                    FALSE,                  // Don't flip the object vertically
+                                    1,                      // Priority against background. 0=higest
+                                    FALSE,                  // Don't make the object double-sized
+                                    0,                    // Destination horzintal screen coordinate in pixels
+                                    0                      // Destination vertical screen coordinate in pixels
+                                    );
 
-    ham_SetObjVisible(FAT_cursor2_obj, 0);
-    ham_SetObjPrio(FAT_cursor2_obj, 1);
+    hel_ObjSetVisible(FAT_cursor2_obj, 0);
 }
 
 /**
@@ -73,11 +95,22 @@ void FAT_initCursor2() {
  * comme invisible par défaut. 
  */
 void FAT_initCursor3() {
-    FAT_cursor3_obj = ham_CreateObj((void*) cursor3_Bitmap, OBJ_SIZE_32X16,
-            OBJ_MODE_SEMITRANSPARENT, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    FAT_cursor3_obj = hel_ObjCreate(  ResData(RES_CURSOR3_RAW), // Pointer to source graphic
+                                      OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                      2,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                      OBJ_MODE_SEMITRANSPARENT,        // Obj Mode
+                                      COLORS_16,              // Use 16 color mode
+                                      0,                      // Palette number. Only neccessary in 16 color mode
+                                      FALSE,                  // Don't use mosaic
+                                      FALSE,                  // Don't flip the sprite horizontally
+                                      FALSE,                  // Don't flip the object vertically
+                                      1,                      // Priority against background. 0=higest
+                                      FALSE,                  // Don't make the object double-sized
+                                      0,                    // Destination horzintal screen coordinate in pixels
+                                      0                      // Destination vertical screen coordinate in pixels
+                                      );
 
-    ham_SetObjVisible(FAT_cursor3_obj, 0);
-    ham_SetObjPrio(FAT_cursor3_obj, 1);
+    hel_ObjSetVisible(FAT_cursor3_obj, 0);
 }
 
 /**
@@ -87,11 +120,22 @@ void FAT_initCursor3() {
  * comme invisible par défaut. 
  */
 void FAT_initCursor8() {
-    FAT_cursor8_obj = ham_CreateObj((void*) cursor8_Bitmap, OBJ_SIZE_64X32,
-            OBJ_MODE_SEMITRANSPARENT, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    FAT_cursor8_obj = hel_ObjCreate(  ResData(RES_CURSOR8_RAW), // Pointer to source graphic
+                                                            OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                                            3,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                            OBJ_MODE_SEMITRANSPARENT,        // Obj Mode
+                                                            COLORS_16,              // Use 16 color mode
+                                                            0,                      // Palette number. Only neccessary in 16 color mode
+                                                            FALSE,                  // Don't use mosaic
+                                                            FALSE,                  // Don't flip the sprite horizontally
+                                                            FALSE,                  // Don't flip the object vertically
+                                                            1,                      // Priority against background. 0=higest
+                                                            FALSE,                  // Don't make the object double-sized
+                                                            0,                    // Destination horzintal screen coordinate in pixels
+                                                            0                      // Destination vertical screen coordinate in pixels
+                                                            );
 
-    ham_SetObjVisible(FAT_cursor8_obj, 0);
-    ham_SetObjPrio(FAT_cursor8_obj, 1);
+    hel_ObjSetVisible(FAT_cursor8_obj, 0);
 }
 
 /**
@@ -101,11 +145,22 @@ void FAT_initCursor8() {
  * comme invisible par défaut.  
  */
 void FAT_initCursorChange() {
-    FAT_cursorChange_obj = ham_CreateObj((void*) cursor_change_Bitmap, OBJ_SIZE_32X16,
-            OBJ_MODE_SEMITRANSPARENT, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    FAT_cursorChange_obj = hel_ObjCreate(  ResData(RES_CURSOR_CHANGE_RAW), // Pointer to source graphic
+                                           OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                           2,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                           OBJ_MODE_SEMITRANSPARENT,        // Obj Mode
+                                           COLORS_16,              // Use 16 color mode
+                                           0,                      // Palette number. Only neccessary in 16 color mode
+                                           FALSE,                  // Don't use mosaic
+                                           FALSE,                  // Don't flip the sprite horizontally
+                                           FALSE,                  // Don't flip the object vertically
+                                           1,                      // Priority against background. 0=higest
+                                           FALSE,                  // Don't make the object double-sized
+                                           0,                    // Destination horzintal screen coordinate in pixels
+                                           0                      // Destination vertical screen coordinate in pixels
+                                           );
 
-    ham_SetObjVisible(FAT_cursorChange_obj, 0);
-    ham_SetObjPrio(FAT_cursorChange_obj, 1);
+    hel_ObjSetVisible(FAT_cursorChange_obj, 0);
 }
 
 /**
@@ -116,7 +171,7 @@ void FAT_initCursorChange() {
  * au prochain commit.
  */
 void FAT_cursors_showCursor1() {
-    ham_SetObjVisible(FAT_cursor1_obj, 1);
+    hel_ObjSetVisible(FAT_cursor1_obj, 1);
 }
 
 /**
@@ -127,7 +182,7 @@ void FAT_cursors_showCursor1() {
  * au prochain commit.
  */
 void FAT_cursors_showCursor2() {
-    ham_SetObjVisible(FAT_cursor2_obj, 1);
+    hel_ObjSetVisible(FAT_cursor2_obj, 1);
 }
 
 /**
@@ -138,7 +193,7 @@ void FAT_cursors_showCursor2() {
  * au prochain commit.
  */
 void FAT_cursors_showCursor3() {
-    ham_SetObjVisible(FAT_cursor3_obj, 1);
+    hel_ObjSetVisible(FAT_cursor3_obj, 1);
 }
 
 /**
@@ -149,7 +204,7 @@ void FAT_cursors_showCursor3() {
  * au prochain commit.
  */
 void FAT_cursors_showCursor8() {
-    ham_SetObjVisible(FAT_cursor8_obj, 1);
+    hel_ObjSetVisible(FAT_cursor8_obj, 1);
 }
 
 /**
@@ -160,7 +215,7 @@ void FAT_cursors_showCursor8() {
  * au prochain commit.
  */
 void FAT_cursors_hideCursor1() {
-    ham_SetObjVisible(FAT_cursor1_obj, 0);
+    hel_ObjSetVisible(FAT_cursor1_obj, 0);
 }
 
 /**
@@ -171,7 +226,7 @@ void FAT_cursors_hideCursor1() {
  * au prochain commit.
  */
 void FAT_cursors_hideCursor2() {
-    ham_SetObjVisible(FAT_cursor2_obj, 0);
+    hel_ObjSetVisible(FAT_cursor2_obj, 0);
 }
 
 /**
@@ -182,7 +237,7 @@ void FAT_cursors_hideCursor2() {
  * au prochain commit.
  */
 void FAT_cursors_hideCursor3() {
-    ham_SetObjVisible(FAT_cursor3_obj, 0);
+    hel_ObjSetVisible(FAT_cursor3_obj, 0);
 }
 
 /**
@@ -193,7 +248,7 @@ void FAT_cursors_hideCursor3() {
  * au prochain commit.
  */
 void FAT_cursors_hideCursor8() {
-    ham_SetObjVisible(FAT_cursor8_obj, 0);
+    hel_ObjSetVisible(FAT_cursor8_obj, 0);
 }
 
 
@@ -205,7 +260,7 @@ void FAT_cursors_hideCursor8() {
  * au prochain commit.
  */
 void FAT_cursors_showCursorChange() {
-    ham_SetObjVisible(FAT_cursorChange_obj, 1);
+    hel_ObjSetVisible(FAT_cursorChange_obj, 1);
 }
 
 /**
@@ -216,7 +271,7 @@ void FAT_cursors_showCursorChange() {
  * au prochain commit.
  */
 void FAT_cursors_hideCursorChange() {
-    ham_SetObjVisible(FAT_cursorChange_obj, 0);
+    hel_ObjSetVisible(FAT_cursorChange_obj, 0);
 }
 
 /**
@@ -226,7 +281,7 @@ void FAT_cursors_hideCursorChange() {
  * \param y ordonnée (en px)
  */
 void FAT_cursors_moveCursorChange(u8 x, u8 y) {
-    ham_SetObjXY(FAT_cursorChange_obj, x, y);
+    hel_ObjSetXY(FAT_cursorChange_obj, x, y);
 }
 
 /**

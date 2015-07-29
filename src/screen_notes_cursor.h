@@ -70,9 +70,9 @@ void FAT_screenNotes_initCursor() {
  */
 void FAT_screenNotes_commitCursorMove() {
     if (FAT_screenNotes_currentSelectedColumn == 0) {
-        ham_SetObjXY(FAT_cursor3_obj, FAT_screenNotes_cursorX, FAT_screenNotes_cursorY);
+        hel_ObjSetXY(FAT_cursor3_obj, FAT_screenNotes_cursorX, FAT_screenNotes_cursorY);
     } else {
-        ham_SetObjXY(FAT_cursor2_obj, FAT_screenNotes_cursorX, FAT_screenNotes_cursorY);
+        hel_ObjSetXY(FAT_cursor2_obj, FAT_screenNotes_cursorX, FAT_screenNotes_cursorY);
     }
 }
 

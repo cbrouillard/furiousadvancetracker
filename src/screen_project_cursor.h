@@ -48,13 +48,13 @@ void FAT_screenProject_commitCursorMove() {
     switch (FAT_screenProject_currentSelectedLine) {
         case 0:
         case 3:
-            ham_SetObjXY(FAT_cursor3_obj, FAT_screenProject_cursorX, FAT_screenProject_cursorY);
+            hel_ObjSetXY(FAT_cursor3_obj, FAT_screenProject_cursorX, FAT_screenProject_cursorY);
         case 1:
         case 2:
         case 4:
         case 5:
         case 6:
-            ham_SetObjXY(FAT_cursor2_obj, FAT_screenProject_cursorX, FAT_screenProject_cursorY);
+            hel_ObjSetXY(FAT_cursor2_obj, FAT_screenProject_cursorX, FAT_screenProject_cursorY);
             break;
 
     }

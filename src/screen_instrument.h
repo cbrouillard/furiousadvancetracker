@@ -29,17 +29,17 @@ u8 FAT_screenInstrument_currentInstrumentId;
 
 // sprites utiles à l'affichage de certaines données
 /** \brief Sprite pour la direction de l'enveloppe: valeur 0. */
-u8 FAT_instrument_envdir0_obj;
+THandle FAT_instrument_envdir0_obj;
 /** \brief Sprite pour la direction de l'enveloppe: valeur 1. */
-u8 FAT_instrument_envdir1_obj;
+THandle FAT_instrument_envdir1_obj;
 /** \brief Sprite pour le paramètre waveduty: valeur 0. */
-u8 FAT_instrument_waveduty0_obj;
+THandle FAT_instrument_waveduty0_obj;
 /** \brief Sprite pour le paramètre waveduty: valeur 1. */
-u8 FAT_instrument_waveduty1_obj;
+THandle FAT_instrument_waveduty1_obj;
 /** \brief Sprite pour le paramètre waveduty: valeur 2. */
-u8 FAT_instrument_waveduty2_obj;
+THandle FAT_instrument_waveduty2_obj;
 /** \brief Sprite pour le paramètre waveduty: valeur 3. */
-u8 FAT_instrument_waveduty3_obj;
+THandle FAT_instrument_waveduty3_obj;
 
 /**
  * \brief Tableau constant de chaines utiles à l'affichage du paramètre output d'un instrument.
@@ -417,19 +417,95 @@ void FAT_screenInstrument_checkButtons() {
  */
 void FAT_screenInstrument_initSpritesForInstrument() {
 
-    FAT_instrument_envdir0_obj = ham_CreateObj((void*) envdir_0_Bitmap, OBJ_SIZE_8X8,
-            OBJ_MODE_NORMAL, 1, 0, 0, 0, 0, 0, 0, 0, 0);
-    FAT_instrument_envdir1_obj = ham_CreateObj((void*) envdir_1_Bitmap, OBJ_SIZE_8X8,
-            OBJ_MODE_NORMAL, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    FAT_instrument_envdir0_obj = hel_ObjCreate(   ResData(RES_ENVDIR_0_RAW), // Pointer to source graphic
+                                                  OBJ_SHAPE_SQUARE,       // Obj Shape
+                                                  0,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                  OBJ_MODE_NORMAL,        // Obj Mode
+                                                  COLORS_16,              // Use 16 color mode
+                                                  0,                      // Palette number. Only neccessary in 16 color mode
+                                                  FALSE,                  // Don't use mosaic
+                                                  FALSE,                  // Don't flip the sprite horizontally
+                                                  FALSE,                  // Don't flip the object vertically
+                                                  0,                      // Priority against background. 0=higest
+                                                  FALSE,                  // Don't make the object double-sized
+                                                  0,                    // Destination horzintal screen coordinate in pixels
+                                                  0                      // Destination vertical screen coordinate in pixels
+                                                  );
 
-    FAT_instrument_waveduty0_obj = ham_CreateObj((void*) waveduty_0_Bitmap, OBJ_SIZE_16X8,
-            OBJ_MODE_NORMAL, 1, 0, 0, 0, 0, 0, 0, 0, 0);
-    FAT_instrument_waveduty1_obj = ham_CreateObj((void*) waveduty_1_Bitmap, OBJ_SIZE_16X8,
-            OBJ_MODE_NORMAL, 1, 0, 0, 0, 0, 0, 0, 0, 0);
-    FAT_instrument_waveduty2_obj = ham_CreateObj((void*) waveduty_2_Bitmap, OBJ_SIZE_16X8,
-            OBJ_MODE_NORMAL, 1, 0, 0, 0, 0, 0, 0, 0, 0);
-    FAT_instrument_waveduty3_obj = ham_CreateObj((void*) waveduty_3_Bitmap, OBJ_SIZE_16X8,
-            OBJ_MODE_NORMAL, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    FAT_instrument_envdir1_obj = hel_ObjCreate(   ResData(RES_ENVDIR_1_RAW), // Pointer to source graphic
+                                                  OBJ_SHAPE_SQUARE,       // Obj Shape
+                                                  0,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                  OBJ_MODE_NORMAL,        // Obj Mode
+                                                  COLORS_16,              // Use 16 color mode
+                                                  0,                      // Palette number. Only neccessary in 16 color mode
+                                                  FALSE,                  // Don't use mosaic
+                                                  FALSE,                  // Don't flip the sprite horizontally
+                                                  FALSE,                  // Don't flip the object vertically
+                                                  0,                      // Priority against background. 0=higest
+                                                  FALSE,                  // Don't make the object double-sized
+                                                  0,                    // Destination horzintal screen coordinate in pixels
+                                                  0                      // Destination vertical screen coordinate in pixels
+                                                  );
+
+    FAT_instrument_waveduty0_obj = hel_ObjCreate(ResData(RES_WAVEDUTY_0_RAW), // Pointer to source graphic
+                                                 OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                                 0,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                 OBJ_MODE_NORMAL,        // Obj Mode
+                                                 COLORS_16,              // Use 16 color mode
+                                                 0,                      // Palette number. Only neccessary in 16 color mode
+                                                 FALSE,                  // Don't use mosaic
+                                                 FALSE,                  // Don't flip the sprite horizontally
+                                                 FALSE,                  // Don't flip the object vertically
+                                                 0,                      // Priority against background. 0=higest
+                                                 FALSE,                  // Don't make the object double-sized
+                                                 0,                    // Destination horzintal screen coordinate in pixels
+                                                 0                      // Destination vertical screen coordinate in pixels
+                                                 );
+
+    FAT_instrument_waveduty1_obj = hel_ObjCreate(ResData(RES_WAVEDUTY_1_RAW), // Pointer to source graphic
+                                                 OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                                 0,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                 OBJ_MODE_NORMAL,        // Obj Mode
+                                                 COLORS_16,              // Use 16 color mode
+                                                 0,                      // Palette number. Only neccessary in 16 color mode
+                                                 FALSE,                  // Don't use mosaic
+                                                 FALSE,                  // Don't flip the sprite horizontally
+                                                 FALSE,                  // Don't flip the object vertically
+                                                 0,                      // Priority against background. 0=higest
+                                                 FALSE,                  // Don't make the object double-sized
+                                                 0,                    // Destination horzintal screen coordinate in pixels
+                                                 0                      // Destination vertical screen coordinate in pixels
+                                                 );
+
+    FAT_instrument_waveduty2_obj = hel_ObjCreate(ResData(RES_WAVEDUTY_2_RAW), // Pointer to source graphic
+                                                 OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                                 0,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                 OBJ_MODE_NORMAL,        // Obj Mode
+                                                 COLORS_16,              // Use 16 color mode
+                                                 0,                      // Palette number. Only neccessary in 16 color mode
+                                                 FALSE,                  // Don't use mosaic
+                                                 FALSE,                  // Don't flip the sprite horizontally
+                                                 FALSE,                  // Don't flip the object vertically
+                                                 0,                      // Priority against background. 0=higest
+                                                 FALSE,                  // Don't make the object double-sized
+                                                 0,                    // Destination horzintal screen coordinate in pixels
+                                                 0                      // Destination vertical screen coordinate in pixels
+                                                 );
+
+    FAT_instrument_waveduty3_obj = hel_ObjCreate(ResData(RES_WAVEDUTY_3_RAW), // Pointer to source graphic
+                                                 OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                                 0,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                 OBJ_MODE_NORMAL,        // Obj Mode
+                                                 COLORS_16,              // Use 16 color mode
+                                                 0,                      // Palette number. Only neccessary in 16 color mode
+                                                 FALSE,                  // Don't use mosaic
+                                                 FALSE,                  // Don't flip the sprite horizontally
+                                                 FALSE,                  // Don't flip the object vertically
+                                                 0,                      // Priority against background. 0=higest
+                                                 FALSE,                  // Don't make the object double-sized
+                                                 0,                    // Destination horzintal screen coordinate in pixels
+                                                 0                      // Destination vertical screen coordinate in pixels
+                                                 );
 
     FAT_screenInstrument_hideAllEnvdirSprites();
     FAT_screenInstrument_hideAllWavedutySprite();
@@ -440,8 +516,8 @@ void FAT_screenInstrument_initSpritesForInstrument() {
  */
 void FAT_screenInstrument_hideAllEnvdirSprites() {
 
-    ham_SetObjVisible(FAT_instrument_envdir0_obj, 0);
-    ham_SetObjVisible(FAT_instrument_envdir1_obj, 0);
+    hel_ObjSetVisible(FAT_instrument_envdir0_obj, 0);
+    hel_ObjSetVisible(FAT_instrument_envdir1_obj, 0);
 }
 
 /**
@@ -449,10 +525,10 @@ void FAT_screenInstrument_hideAllEnvdirSprites() {
  */
 void FAT_screenInstrument_hideAllWavedutySprite() {
 
-    ham_SetObjVisible(FAT_instrument_waveduty0_obj, 0);
-    ham_SetObjVisible(FAT_instrument_waveduty1_obj, 0);
-    ham_SetObjVisible(FAT_instrument_waveduty2_obj, 0);
-    ham_SetObjVisible(FAT_instrument_waveduty3_obj, 0);
+    hel_ObjSetVisible(FAT_instrument_waveduty0_obj, 0);
+    hel_ObjSetVisible(FAT_instrument_waveduty1_obj, 0);
+    hel_ObjSetVisible(FAT_instrument_waveduty2_obj, 0);
+    hel_ObjSetVisible(FAT_instrument_waveduty3_obj, 0);
 }
 
 /**
@@ -465,12 +541,12 @@ void FAT_screenInstrument_hideAllWavedutySprite() {
 void FAT_screenInstrument_showEnvdir(u8 envdirValue, u8 spriteX, u8 spriteY) {
     FAT_screenInstrument_hideAllEnvdirSprites();
     if (envdirValue == 1) {
-        ham_SetObjXY(FAT_instrument_envdir1_obj, spriteX, spriteY);
-        ham_SetObjVisible(FAT_instrument_envdir1_obj, 1);
+        hel_ObjSetXY(FAT_instrument_envdir1_obj, spriteX, spriteY);
+        hel_ObjSetVisible(FAT_instrument_envdir1_obj, 1);
     } else {
 
-        ham_SetObjXY(FAT_instrument_envdir0_obj, spriteX, spriteY);
-        ham_SetObjVisible(FAT_instrument_envdir0_obj, 1);
+        hel_ObjSetXY(FAT_instrument_envdir0_obj, spriteX, spriteY);
+        hel_ObjSetVisible(FAT_instrument_envdir0_obj, 1);
     }
 
 }
@@ -498,18 +574,17 @@ void FAT_screenInstrument_showWaveduty(u8 wavedutyValue, u8 spriteX, u8 spriteY)
     FAT_screenInstrument_hideAllWavedutySprite();
 
     if (wavedutyValue == 0) {
-        ham_SetObjXY(FAT_instrument_waveduty0_obj, spriteX, spriteY);
-        ham_SetObjVisible(FAT_instrument_waveduty0_obj, 1);
+        hel_ObjSetXY(FAT_instrument_waveduty0_obj, spriteX, spriteY);
+        hel_ObjSetVisible(FAT_instrument_waveduty0_obj, 1);
     } else if (wavedutyValue == 1) {
-        ham_SetObjXY(FAT_instrument_waveduty1_obj, spriteX, spriteY);
-        ham_SetObjVisible(FAT_instrument_waveduty1_obj, 1);
+        hel_ObjSetXY(FAT_instrument_waveduty1_obj, spriteX, spriteY);
+        hel_ObjSetVisible(FAT_instrument_waveduty1_obj, 1);
     } else if (wavedutyValue == 2) {
-        ham_SetObjXY(FAT_instrument_waveduty2_obj, spriteX, spriteY);
-        ham_SetObjVisible(FAT_instrument_waveduty2_obj, 1);
+        hel_ObjSetXY(FAT_instrument_waveduty2_obj, spriteX, spriteY);
+        hel_ObjSetVisible(FAT_instrument_waveduty2_obj, 1);
     } else if (wavedutyValue == 3) {
-
-        ham_SetObjXY(FAT_instrument_waveduty3_obj, spriteX, spriteY);
-        ham_SetObjVisible(FAT_instrument_waveduty3_obj, 1);
+        hel_ObjSetXY(FAT_instrument_waveduty3_obj, spriteX, spriteY);
+        hel_ObjSetVisible(FAT_instrument_waveduty3_obj, 1);
     }
 }
 

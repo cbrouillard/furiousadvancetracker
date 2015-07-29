@@ -56,8 +56,8 @@ void FAT_screenFilesystem_initCursor() {
  * \brief Cette fonction permet de valider le déplacement du curseur sur l'écran. 
  */
 void FAT_screenFilesystem_commitCursorMove() {
-    ham_SetObjXY(FAT_cursor8_obj, SCREENFILESYSTEM_FIRST_BLOCK_X, FAT_screenFilesystem_cursorY+1);
-    ham_SetObjXY(FAT_cursor2_obj, SCREENFILESYSTEM_FIRST_ACTION_X, FAT_screenFilesystem_cursorY);
+    hel_ObjSetXY(FAT_cursor8_obj, SCREENFILESYSTEM_FIRST_BLOCK_X, FAT_screenFilesystem_cursorY+1);
+    hel_ObjSetXY(FAT_cursor2_obj, SCREENFILESYSTEM_FIRST_ACTION_X, FAT_screenFilesystem_cursorY);
 }
 
 /**

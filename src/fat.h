@@ -74,12 +74,11 @@ void FAT_waitVSync();
 void FAT_blockCPU(u16 time);
 
 void VBLInterruptHandler(void) {
-    ham_CopyObjToOAM();
+    hel_ObjTransmit();
     // acknowledge interrupt
     hel_IntrAcknowledge(INT_TYPE_VBL);
 }
 
-#include "gfx.h"
 #include "gfx/ResourceData.h"
 
 #include "data.h"
@@ -119,29 +118,14 @@ bool FAT_isCurrentlyPlaying = 0;
 
 #include "player.h"
 
-// A buffer of memory which the Background Text
-// System uses to manage internal states.
-// It must not be modified from outside as long as
-// any Background Text System is running.
 u8 ATTR_EWRAM ATTR_ALIGNED(4) g_BgTextSystemMemory[HEL_SUBSYSTEM_BGTEXT_REQUIREDMEMORY];
-
-// g_CharLUT will hold offsets to each character
-// in the map data. This array basically functions
-// as a lookup table. It must be 256 elements big,
-// which equals the maximum number of a characters
-// in ASCII (0..255).
-// This buffer is only neccessary when you pass
-// BGTEXT_FLAGS_GENERATELUT to hel_BgTextCreate.
-// Please see documentation for details.
 u16 ATTR_EWRAM g_CharLUT[256];
-
-// That's the order of characters how they
-// appear on the source graphic.
-// See hel/demos/sharedmedia/charset8x8.bmp
 const char CHARORDER[] =
         " BCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmn"\
     "opqrstuvwxyz0123456789XXXXXXX,.-;:A#^+*@"\
     "!\"§$\%&/()=?|\\<>[]{}¹²³°";
+
+u8 ATTR_EWRAM ATTR_ALIGNED(4) g_ObjSystemBuffer[HEL_SUBSYSTEM_OBJ_REQUIREDMEMORY];
 
 /**
  * \brief Initialisation de HAM et d'autres données propres à FAT. 
@@ -155,6 +139,7 @@ const char CHARORDER[] =
  * - les données du projet
  */
 void FAT_init() {
+//hel_ObjInit((void*)g_ObjSystemBuffer);
     // HAM !
     ham_Init();
     hel_SysSetPrefetch(TRUE);
@@ -162,7 +147,9 @@ void FAT_init() {
     FAT_filesystem_checkFs();
 
     hel_BgSetMode(0);
+
     hel_BgTextInit((void*) g_BgTextSystemMemory);
+    hel_ObjInit(g_ObjSystemBuffer);
 
     hel_PadInit();
     hel_PadSetRepeatDelay(PAD_BUTTON_R | PAD_BUTTON_L | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT | PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_A | PAD_BUTTON_B | PAD_BUTTON_START, 1);
@@ -171,25 +158,26 @@ void FAT_init() {
     // Initialize the tileset and an empty
     // mapset using regular HAMlib functions
     //ham_bg[TEXT_LAYER].ti = ham_InitTileSet(ResData(RES_TEXT_RAW), RES_TEXT_RAW_SIZE16, 1, 1);
-    ham_bg[TEXT_LAYER].ti = ham_InitTileSet((void*) text_Tiles, SIZEOF_16BIT(text_Tiles), 1, 1);
-    ham_bg[TEXT_LAYER].mi = ham_InitMapEmptySet((u8) RES_TEXT_RAW_SIZE16, 0);
+    ham_bg[TEXT_LAYER].ti = ham_InitTileSet((void*) ResData(RES_TEXT_RAW), RES_TEXT_RAW_SIZE16, 1, 1);
+    ham_bg[TEXT_LAYER].mi = ham_InitMapEmptySet((u8) 1024, 0);
 
     hel_BgTextCreate(
             TEXT_LAYER, // BgNo
             1, // Width of one character specified in tiles
             1, // Height of one character specified in tiles
             //ResData(RES_CHARSET8X8_MAP), // Pointer to character map
-            text_Map,
+            ResData(RES_TEXT_MAP),
             CHARORDER, // Pointer to array that reflects the order of characters on source graphic
             g_CharLUT, // Pointer to buffer that receives the generated lookup table
             BGTEXT_FLAGS_GENERATELUT); // Flags that control creation and print behaviour
 
     ham_InitBg(TEXT_LAYER, TRUE, 0, FALSE);
 
-    ham_SetFxMode(FX_LAYER_SELECT(0, 0, 0, 0, 1, 0),
-            FX_LAYER_SELECT(0, 0, 1, 1, 0, 0),
-            FX_MODE_ALPHABLEND);
-    ham_SetFxAlphaLevel(7, 7);
+    hel_FxInit();
+    hel_FxSetMode(  FX_LAYER_SELECT(0, 0, 0, 0, 1, 0),
+                    FX_LAYER_SELECT(0, 0, 1, 1, 0, 0),
+                    FX_MODE_ALPHABLEND);
+    hel_FxSetAlphaLevel(7, 0);
 
     hel_IntrStartHandler(INT_TYPE_VBL, (void*) &VBLInterruptHandler);
 
@@ -199,7 +187,6 @@ void FAT_init() {
 
     // initialisation de l'écran "Popup" (la map de déplacement)
     FAT_popup_init();
-    // initialisation du layer Dialog
 
     // initialisation des curseurs
     FAT_initCursor1();
@@ -243,15 +230,16 @@ void FAT_showIntro() {
 
     FAT_initIntroPalette();
 
-    ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_INTRO_RAW), RES_SCREEN_INTRO_RAW_SIZE16, 1, 1);
-    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_INTRO_MAP), 1024, 0, 0);
+    ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_INTRO_RAW), RES_INTRO_RAW_SIZE16, 1, 1);
+    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_INTRO_MAP), 1024, 0, 0);
+
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
 #ifdef DEBUG_ON
     hel_BgTextPrint(TEXT_LAYER, 1, 14, 0, "DEBUG ON");
     hel_BgTextPrintF(TEXT_LAYER, 1, 15, 0, "SIZE %d octets", (sizeof (tracker)));
 #endif
-    hel_BgTextPrintF(TEXT_LAYER, 0, 16, 0, " version %s       %.3d kits", FAT_VERSION, snd_countAvailableKits());
+    hel_BgTextPrintF(TEXT_LAYER, 22, 19, 0, "%.3d kits", snd_countAvailableKits());
 
     while (1) {
 
@@ -303,7 +291,7 @@ void FAT_forceClearTextLayer() {
         ham_DeInitTileSet(ham_bg[TEXT_LAYER].ti);
         ham_DeInitMapSet(ham_bg[TEXT_LAYER].mi);
 
-        ham_bg[TEXT_LAYER].ti = ham_InitTileSet((void*) text_Tiles, SIZEOF_16BIT(text_Tiles), 1, 1);
+        ham_bg[TEXT_LAYER].ti = ham_InitTileSet((void*) ResData(RES_TEXT_RAW), RES_TEXT_RAW_SIZE16, 1, 1);
         ham_bg[TEXT_LAYER].mi = ham_InitMapEmptySet((u8) 1024, 0);
     }
 
@@ -313,7 +301,7 @@ void FAT_forceClearTextLayer() {
  * \brief La palette pour les sprites est différente: cette fonction la charge au bon endroit.
  */
 void FAT_initSpritePalette() {
-    ham_LoadObjPal((void*) sprite_Palette, 256);
+    hel_PalObjLoad16(ResData16(RES_SPRITES_PAL), 0);
 }
 
 /**
@@ -420,7 +408,6 @@ void FAT_switchToScreen(u8 screenId) {
  * \param screenId le numéro d'écran actuellement consulté. 
  */
 void FAT_showHelp(u8 screenId) {
-
     FAT_screenHelp_init(screenId);
 }
 

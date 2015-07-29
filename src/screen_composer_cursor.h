@@ -77,15 +77,15 @@ void FAT_screenComposer_initCursor() {
 void FAT_screenComposer_commitCursorMove() {
     if (FAT_screenComposer_currentSelectedLine < 2) {
         // affichage du curseur dans les paramètres transpose ou key repeat
-        ham_SetObjXY(FAT_cursor2_obj, SCREENCOMPOSER_PARAMETER_BLOCK_X, FAT_screenComposer_cursorY);
+        hel_ObjSetXY(FAT_cursor2_obj, SCREENCOMPOSER_PARAMETER_BLOCK_X, FAT_screenComposer_cursorY);
     } else {
 
         if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_NOTES) {
-            ham_SetObjXY(FAT_cursor3_obj, FAT_screenComposer_cursorX, FAT_screenComposer_cursorY);
+            hel_ObjSetXY(FAT_cursor3_obj, FAT_screenComposer_cursorX, FAT_screenComposer_cursorY);
         } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CHANNEL) {
-            ham_SetObjXY(FAT_cursor1_obj, FAT_screenComposer_cursorX, FAT_screenComposer_cursorY);
+            hel_ObjSetXY(FAT_cursor1_obj, FAT_screenComposer_cursorX, FAT_screenComposer_cursorY);
         } else {
-            ham_SetObjXY(FAT_cursor2_obj, FAT_screenComposer_cursorX, FAT_screenComposer_cursorY);
+            hel_ObjSetXY(FAT_cursor2_obj, FAT_screenComposer_cursorX, FAT_screenComposer_cursorY);
         }
     }
 }

@@ -48,11 +48,11 @@ u8 FAT_currentPlayedChannel = NULL_VALUE;
 u8 FAT_currentPlayedBlock = NULL_VALUE;
 
 /** \brief Objet HAM pour référencer le sprite "curseur player" de taille 2. */
-u8 FAT_cursor_player3_obj;
+THandle FAT_cursor_player3_obj;
 /** \brief Objet HAM pour référencer le sprite "curseur player" de taille 3. */
-u8 FAT_cursor_player2_obj;
+THandle FAT_cursor_player2_obj;
 /** \brief Objet HAM pour référencer les sprites "curseur player" utilisés dans l'écran SONG. */
-u8 FAT_cursor_playerSequences_obj[6];
+THandle FAT_cursor_playerSequences_obj[6];
 
 /**
  * \brief Compteur pour le tempo.
@@ -93,21 +93,44 @@ void FAT_player_timerFunc();
  * S'occupe de créer les sprites et de les rendre invisibles. 
  */
 void FAT_player_initCursors() {
-    FAT_cursor_player3_obj = ham_CreateObj((void*) cursor3_player_Bitmap, OBJ_SIZE_32X16,
-            OBJ_MODE_SEMITRANSPARENT, 1, 0, 0, 0, 0, 0, 0, 0, 0);
-    FAT_cursor_player2_obj = ham_CreateObj((void*) cursor2_player_Bitmap, OBJ_SIZE_32X16,
-            OBJ_MODE_SEMITRANSPARENT, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+    FAT_cursor_player3_obj = hel_ObjCreate(    ResData(RES_CURSOR3_PLAYER_RAW), // Pointer to source graphic
+                                               OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                               2,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                               OBJ_MODE_SEMITRANSPARENT,        // Obj Mode
+                                               COLORS_16,              // Use 16 color mode
+                                               0,                      // Palette number. Only neccessary in 16 color mode
+                                               FALSE,                  // Don't use mosaic
+                                               FALSE,                  // Don't flip the sprite horizontally
+                                               FALSE,                  // Don't flip the object vertically
+                                               3,                      // Priority against background. 0=higest
+                                               FALSE,                  // Don't make the object double-sized
+                                               0,                    // Destination horzintal screen coordinate in pixels
+                                               0                      // Destination vertical screen coordinate in pixels
+                                               );
 
-    ham_SetObjVisible(FAT_cursor_player3_obj, 0);
-    ham_SetObjVisible(FAT_cursor_player2_obj, 0);
-    ham_SetObjPrio(FAT_cursor_player3_obj, 3);
-    ham_SetObjPrio(FAT_cursor_player2_obj, 3);
+    FAT_cursor_player2_obj = hel_ObjCreate(    ResData(RES_CURSOR2_PLAYER_RAW), // Pointer to source graphic
+                                               OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                               2,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                               OBJ_MODE_SEMITRANSPARENT,        // Obj Mode
+                                               COLORS_16,              // Use 16 color mode
+                                               0,                      // Palette number. Only neccessary in 16 color mode
+                                               FALSE,                  // Don't use mosaic
+                                               FALSE,                  // Don't flip the sprite horizontally
+                                               FALSE,                  // Don't flip the object vertically
+                                               3,                      // Priority against background. 0=higest
+                                               FALSE,                  // Don't make the object double-sized
+                                               0,                    // Destination horzintal screen coordinate in pixels
+                                               0                      // Destination vertical screen coordinate in pixels
+                                               );
+
+    hel_ObjSetVisible(FAT_cursor_player3_obj, 0);
+    hel_ObjSetVisible(FAT_cursor_player2_obj, 0);
 
     // on clone les sprites pour la lecture des 6 séquences à la fois
     u8 i;
     for (i = 0; i < 6; i++) {
-        FAT_cursor_playerSequences_obj[i] = ham_CloneObj(FAT_cursor_player2_obj, 0, 0);
-        ham_SetObjPrio(FAT_cursor_playerSequences_obj[i], 3);
+        FAT_cursor_playerSequences_obj[i] = hel_ObjClone(FAT_cursor_player2_obj, 0, 0);
+        hel_ObjSetPrio(FAT_cursor_playerSequences_obj[i], 3);
     }
 }
 
@@ -161,7 +184,6 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
 
             switch (channel) {
                 case 0: // PU1
-                    //ham_DrawText (23, 16, "PU1");
                     snd_playSoundOnChannel1(
                             sweeptime, sweepdir, sweepshifts,
                             inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->wavedutyOrPolynomialStep,
@@ -170,7 +192,6 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                             note->freq, transpose + FAT_tracker.transpose);
                     break;
                 case 1: // PU2
-                    //ham_DrawText (23, 16, "PU2");
                     snd_playSoundOnChannel2(inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5,
                             inst->wavedutyOrPolynomialStep,
                             inst->soundlength, inst->loopmode,
@@ -184,7 +205,6 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                             inst->output, note->freq, transpose + FAT_tracker.transpose);
                     break;
                 case 3: // NOISE
-                    //ham_DrawText (23, 16, "NOI");
                     snd_playSoundOnChannel4(inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->soundlength,
                             inst->loopmode, inst->output, note->note & 0x0f, inst->wavedutyOrPolynomialStep,
                             note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
@@ -468,26 +488,26 @@ void FAT_player_hideAllCursors() {
  * \brief Cache les curseurs utilisés lors de la lecture dans l'écran SONG. 
  */
 void FAT_player_hideSequencesCursors() {
-    ham_SetObjVisible(FAT_cursor_playerSequences_obj[0], 0);
-    ham_SetObjVisible(FAT_cursor_playerSequences_obj[1], 0);
-    ham_SetObjVisible(FAT_cursor_playerSequences_obj[2], 0);
-    ham_SetObjVisible(FAT_cursor_playerSequences_obj[3], 0);
-    ham_SetObjVisible(FAT_cursor_playerSequences_obj[4], 0);
-    ham_SetObjVisible(FAT_cursor_playerSequences_obj[5], 0);
+    hel_ObjSetVisible(FAT_cursor_playerSequences_obj[0], 0);
+    hel_ObjSetVisible(FAT_cursor_playerSequences_obj[1], 0);
+    hel_ObjSetVisible(FAT_cursor_playerSequences_obj[2], 0);
+    hel_ObjSetVisible(FAT_cursor_playerSequences_obj[3], 0);
+    hel_ObjSetVisible(FAT_cursor_playerSequences_obj[4], 0);
+    hel_ObjSetVisible(FAT_cursor_playerSequences_obj[5], 0);
 }
 
 /**
  * \brief Cache les curseurs utilisés lors de la lecture dans l'écran BLOCK. 
  */
 void FAT_player_hideBlockCursor() {
-    ham_SetObjVisible(FAT_cursor_player2_obj, 0);
+    hel_ObjSetVisible(FAT_cursor_player2_obj, 0);
 }
 
 /**
  * \brief Cache les curseurs utilisés lors de la lecture dans l'écran NOTE. 
  */
 void FAT_player_hideNoteCursor() {
-    ham_SetObjVisible(FAT_cursor_player3_obj, 0);
+    hel_ObjSetVisible(FAT_cursor_player3_obj, 0);
 }
 
 /**
@@ -505,10 +525,10 @@ void FAT_player_moveOrHideCursor(u8 channel, note* note) {
                     && actualSequencesForChannel[channel] >= FAT_screenSong_currentStartLine && !isHelpActivated) {
                 // la lecture a été lancée depuis l'écran SONG
                 // on dispose du numéro de ligne actuellement jouée dans actualSequencesForChannel[channel]
-                ham_SetObjXY(FAT_cursor_playerSequences_obj[channel],
+                hel_ObjSetXY(FAT_cursor_playerSequences_obj[channel],
                         23 + (channel * (8 + 16)),
                         15 + ((actualSequencesForChannel[channel] - FAT_screenSong_currentStartLine)*8));
-                ham_SetObjVisible(FAT_cursor_playerSequences_obj[channel], 1);
+                hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 1);
 
                 if (note->freq != NULL_VALUE) {
                     FAT_screenSong_showActualPlayedNote(channel, (note->note & 0xf0) >> 4, note->note & 0x0f, note->freq);
@@ -525,8 +545,8 @@ void FAT_player_moveOrHideCursor(u8 channel, note* note) {
             FAT_player_hideNoteCursor();
             if (actualBlocksForChannel[channel] != NULL_VALUE &&
                     FAT_currentPlayedSequence == FAT_screenBlocks_currentSequenceId && !isHelpActivated) {
-                ham_SetObjXY(FAT_cursor_player2_obj, 23, 15 + (actualBlocksForChannel[channel]*8));
-                ham_SetObjVisible(FAT_cursor_player2_obj, 1);
+                hel_ObjSetXY(FAT_cursor_player2_obj, 23, 15 + (actualBlocksForChannel[channel]*8));
+                hel_ObjSetVisible(FAT_cursor_player2_obj, 1);
             } else {
                 FAT_player_hideBlockCursor();
             }
@@ -537,8 +557,8 @@ void FAT_player_moveOrHideCursor(u8 channel, note* note) {
             FAT_player_hideBlockCursor();
             if (actualNotesForChannel[channel] != NULL_VALUE
                     && FAT_currentPlayedBlock == FAT_screenNotes_currentBlockId && !isHelpActivated) {
-                ham_SetObjXY(FAT_cursor_player3_obj, 23, 15 + (actualNotesForChannel[channel]*8));
-                ham_SetObjVisible(FAT_cursor_player3_obj, 1);
+                hel_ObjSetXY(FAT_cursor_player3_obj, 23, 15 + (actualNotesForChannel[channel]*8));
+                hel_ObjSetVisible(FAT_cursor_player3_obj, 1);
             } else {
                 FAT_player_hideNoteCursor();
             }

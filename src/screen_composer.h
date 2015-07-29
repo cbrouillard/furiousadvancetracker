@@ -78,7 +78,6 @@ void FAT_screenComposer_printInfos() {
     hel_BgTextPrintF(TEXT_LAYER, 19, 3, 0, "Composer %.1x", 0);
     hel_BgTextPrintF(TEXT_LAYER, 19, 4, 0, "Line    %.2x",
             FAT_screenComposer_currentSelectedLine);
-    //ham_DrawText(21, 4, "CHAN %2x", FAT_screenSong_currentSelectedColumn+1);
 
     hel_BgTextPrintF(TEXT_LAYER, 1, 3, 0, "Transpose  %.2x", FAT_tracker.composer.transpose);
     hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Key Repeat %.2x", FAT_tracker.composer.keyRepeat);

@@ -171,9 +171,9 @@ void FAT_screenLive_moveCursorUp() {
  */
 void FAT_screenLive_commitCursorMove() {
     if (FAT_screenLive_isCursorInSequencer) {
-        ham_SetObjXY(FAT_cursor2_obj, FAT_screenSong_cursorX, FAT_screenSong_cursorY);
+        hel_ObjSetXY(FAT_cursor2_obj, FAT_screenSong_cursorX, FAT_screenSong_cursorY);
     } else {
-        ham_SetObjXY(FAT_cursor3_obj, FAT_screenSong_cursorX - 8, FAT_screenSong_cursorY);
+        hel_ObjSetXY(FAT_cursor3_obj, FAT_screenSong_cursorX - 8, FAT_screenSong_cursorY);
     }
 }
 

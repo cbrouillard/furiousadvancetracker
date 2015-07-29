@@ -72,7 +72,7 @@ void FAT_screenBlocks_initCursor() {
  * \brief Valide le changement de position du curseur dans la mémoire de la GBA.
  */
 void FAT_screenBlocks_commitCursorMove() {
-    ham_SetObjXY(FAT_cursor2_obj, FAT_screenBlocks_cursorX, FAT_screenBlocks_cursorY);
+    hel_ObjSetXY(FAT_cursor2_obj, FAT_screenBlocks_cursorX, FAT_screenBlocks_cursorY);
 }
 
 /**

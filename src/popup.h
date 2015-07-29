@@ -49,9 +49,9 @@
 #define POPUP_LAST_ICON_X 206
 
 /** \brief Id Sprite pour l'objet curseur de sélection dans l'écran POPUP. */
-u8 FAT_popup_cursorSelectionObj;
+THandle FAT_popup_cursorSelectionObj;
 /** \brief Id Sprite pour l'objet curseur d'affichage de l'écran courant. */
-u8 FAT_popup_cursorActualScreenObj;
+THandle FAT_popup_cursorActualScreenObj;
 /** \brief Position actuelle du curseur de selection. */
 u8 FAT_popup_cursorSelectionX;
 /** \brief Position actuelle du curseur de selection. */
@@ -96,7 +96,7 @@ u8 FAT_popup_getSelectedIcon() {
  */
 void FAT_popup_moveSelectedScreenCursor() {
     FAT_popup_cursorActualScreenX = FAT_popup_cursorSelectionX + (POPUP_ICON_SIZE_X / 2) - 2;
-    ham_SetObjXY(FAT_popup_cursorActualScreenObj, FAT_popup_cursorActualScreenX, FAT_popup_cursorActualScreenY);
+    hel_ObjSetXY(FAT_popup_cursorActualScreenObj, FAT_popup_cursorActualScreenX, FAT_popup_cursorActualScreenY);
 }
 
 /**
@@ -147,11 +147,35 @@ void FAT_popup_initCursors() {
     FAT_popup_cursorActualScreenX = ACTUAL_SCREEN_CURSOR_DEFAULT_X;
     FAT_popup_cursorActualScreenY = ACTUAL_SCREEN_CURSOR_DEFAULT_Y;
 
-    FAT_popup_cursorSelectionObj = ham_CreateObj((void*) cursor_popup_Bitmap, OBJ_SIZE_32X64,
-            OBJ_MODE_NORMAL, 1, 0, 0, 0, 0, 0, 0, FAT_popup_cursorSelectionX, FAT_popup_cursorSelectionY);
+    FAT_popup_cursorSelectionObj = hel_ObjCreate(   ResData(RES_CURSOR_POPUP_RAW), // Pointer to source graphic
+                                                    OBJ_SHAPE_VERTICAL,       // Obj Shape
+                                                    3,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                    OBJ_MODE_SEMITRANSPARENT,        // Obj Mode
+                                                    COLORS_16,              // Use 16 color mode
+                                                    0,                      // Palette number. Only neccessary in 16 color mode
+                                                    FALSE,                  // Don't use mosaic
+                                                    FALSE,                  // Don't flip the sprite horizontally
+                                                    FALSE,                  // Don't flip the object vertically
+                                                    0,                      // Priority against background. 0=higest
+                                                    FALSE,                  // Don't make the object double-sized
+                                                    FAT_popup_cursorSelectionX,                    // Destination horzintal screen coordinate in pixels
+                                                    FAT_popup_cursorSelectionY                      // Destination vertical screen coordinate in pixels
+                                                    );
 
-    FAT_popup_cursorActualScreenObj = ham_CreateObj((void*) actual_screen_popup_Bitmap, OBJ_SIZE_8X8,
-            OBJ_MODE_NORMAL, 1, 0, 0, 0, 0, 0, 0, FAT_popup_cursorActualScreenX, FAT_popup_cursorActualScreenY);
+    FAT_popup_cursorActualScreenObj = hel_ObjCreate(   ResData(RES_ACTUAL_SCREEN_POPUP_RAW), // Pointer to source graphic
+                                                       OBJ_SHAPE_SQUARE,       // Obj Shape
+                                                       0,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                       OBJ_MODE_NORMAL,        // Obj Mode
+                                                       COLORS_16,              // Use 16 color mode
+                                                       0,                      // Palette number. Only neccessary in 16 color mode
+                                                       FALSE,                  // Don't use mosaic
+                                                       FALSE,                  // Don't flip the sprite horizontally
+                                                       FALSE,                  // Don't flip the object vertically
+                                                       0,                      // Priority against background. 0=higest
+                                                       FALSE,                  // Don't make the object double-sized
+                                                       FAT_popup_cursorActualScreenX,                    // Destination horzintal screen coordinate in pixels
+                                                       FAT_popup_cursorActualScreenY                      // Destination vertical screen coordinate in pixels
+                                                       );
 
     // cachés par défaut                    
     FAT_popup_hideCursors();
@@ -161,16 +185,16 @@ void FAT_popup_initCursors() {
  * \brief Cache les curseurs (tous). 
  */
 void FAT_popup_hideCursors() {
-    ham_SetObjVisible(FAT_popup_cursorSelectionObj, 0);
-    ham_SetObjVisible(FAT_popup_cursorActualScreenObj, 0);
+    hel_ObjSetVisible(FAT_popup_cursorSelectionObj, 0);
+    hel_ObjSetVisible(FAT_popup_cursorActualScreenObj, 0);
 }
 
 /**
  * \brief Affiche les curseurs (tous). 
  */
 void FAT_popup_showCursors() {
-    ham_SetObjVisible(FAT_popup_cursorSelectionObj, 1);
-    ham_SetObjVisible(FAT_popup_cursorActualScreenObj, 1);
+    hel_ObjSetVisible(FAT_popup_cursorSelectionObj, 1);
+    hel_ObjSetVisible(FAT_popup_cursorActualScreenObj, 1);
 }
 
 /**
@@ -185,8 +209,8 @@ void FAT_popup_show() {
  * \brief Cache l'écran popup. Cette méthode cache aussi les curseurs. 
  */
 void FAT_popup_hide() {
-    ham_SetBgVisible(POPUP_LAYER, 0);
     FAT_popup_hideCursors();
+    ham_SetBgVisible(POPUP_LAYER, 0);
 }
 
 /**
@@ -222,7 +246,7 @@ void FAT_popup_moveSelectionCursorLeft() {
  * pour affichage physique à l'écran. 
  */
 void FAT_popup_commitSelectionCursorMove() {
-    ham_SetObjXY(FAT_popup_cursorSelectionObj, FAT_popup_cursorSelectionX, FAT_popup_cursorSelectionY);
+    hel_ObjSetXY(FAT_popup_cursorSelectionObj, FAT_popup_cursorSelectionX, FAT_popup_cursorSelectionY);
 }
 
 

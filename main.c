@@ -56,6 +56,8 @@
 #include "src/soundApi/soundApi.h"
 #include "src/fat.h"
 
+void FAT_screens_init();
+
 /**
  * \brief Fonction main. Si vous lisez le code source, il est judicieux de commencer par comprendre cette fonction.
  */
@@ -67,12 +69,17 @@ int main() {
     snd_init_soundApi();
 
     FAT_showIntro();
+
+    FAT_screens_init();
     FAT_screenSong_init();
 
     // Boucle infinie branchée sur la gestion des boutons de tous les écrans.
     FAT_mainLoop();
 
     return 0;
+}
+
+void FAT_screens_init(){
 }
 
 
