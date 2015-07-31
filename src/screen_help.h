@@ -43,8 +43,6 @@ void FAT_screenHelp_init(u8 screenIdForHelp) {
             ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_PROJET_RAW), RES_SCREEN_HELP_PROJET_RAW_SIZE16, 1, 1);
             ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_PROJET_MAP), 1024, 0, 0);
             break;
-        case SCREEN_LIVE_ID:
-            break;
         case SCREEN_SONG_ID:
             ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_SONG_RAW), RES_SCREEN_HELP_SONG_RAW_SIZE16, 1, 1);
             ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_SONG_MAP), 1024, 0, 0);
@@ -70,6 +68,10 @@ void FAT_screenHelp_init(u8 screenIdForHelp) {
         case SCREEN_FILESYSTEM_ID:
             ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_FILESYSTEM_RAW), RES_SCREEN_HELP_FILESYSTEM_RAW_SIZE16, 1, 1);
             ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_FILESYSTEM_MAP), 1024, 0, 0);
+            break;
+        case SCREEN_LIVE_ID:
+            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_LIVE_RAW), RES_SCREEN_HELP_LIVE_RAW_SIZE16, 1, 1);
+            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_LIVE_MAP), 1024, 0, 0);
             break;
     }
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);

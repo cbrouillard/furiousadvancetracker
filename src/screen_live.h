@@ -229,6 +229,10 @@ void FAT_screenLive_checkButtons() {
             }
         }
 
+        if (hel_PadQuery()->Pressed.R && hel_PadQuery()->Pressed.L) {
+            FAT_showHelp(SCREEN_LIVE_ID);
+        }
+
         if (hel_PadQuery()->Pressed.Right) {
             FAT_screenLive_moveCursorRight();
         }
