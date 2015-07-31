@@ -589,10 +589,15 @@ void FAT_player_moveOrHideCursor(u8 channel, note* note) {
                     && actualSequencesForChannel[channel] >= FAT_screenSong_currentStartLine && !isHelpActivated) {
                 // la lecture a été lancée depuis l'écran SONG
                 // on dispose du numéro de ligne actuellement jouée dans actualSequencesForChannel[channel]
-                hel_ObjSetXY(FAT_cursor_playerSequences_obj[channel],
-                        23 + (channel * (8 + 16)),
-                        15 + ((actualSequencesForChannel[channel] - FAT_screenSong_currentStartLine)*8));
-                hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 1);
+                u8 yPosition = 15 + ((actualSequencesForChannel[channel] - FAT_screenSong_currentStartLine)*8);
+                if (yPosition < 140){
+                    hel_ObjSetXY(FAT_cursor_playerSequences_obj[channel],
+                            23 + (channel * (8 + 16)),
+                            yPosition);
+                    hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 1);
+                } else {
+                    hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 0);
+                }
 
                 if (note->freq != NULL_VALUE) {
                     FAT_screenSong_showActualPlayedNote(channel, (note->note & 0xf0) >> 4, note->note & 0x0f, note->freq);
@@ -612,10 +617,17 @@ void FAT_player_moveOrHideCursor(u8 channel, note* note) {
                     && actualSequencesForChannel[channel] >= FAT_screenLive_currentStartLine && !isHelpActivated) {
                 // la lecture a été lancée depuis l'écran SONG
                 // on dispose du numéro de ligne actuellement jouée dans actualSequencesForChannel[channel]
-                hel_ObjSetXY(FAT_cursor_playerSequences_obj[channel],
-                        23 + (channel * (8 + 16)),
-                        15 + ((actualSequencesForChannel[channel] - FAT_screenLive_currentStartLine)*8));
-                hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 1);
+                u8 yPosition = 15 + ((actualSequencesForChannel[channel] - FAT_screenSong_currentStartLine)*8);
+
+                if (yPosition < 90){
+                    hel_ObjSetXY(FAT_cursor_playerSequences_obj[channel],
+                            23 + (channel * (8 + 16)),
+                            15 + ((actualSequencesForChannel[channel] - FAT_screenLive_currentStartLine)*8));
+
+                    hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 1);
+                } else {
+                    hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 0);
+                }
 
                 if (note->freq != NULL_VALUE) {
                     // la meme chose que pour SONG. On peut laisser comme ça.
