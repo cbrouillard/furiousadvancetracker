@@ -1,4 +1,5 @@
 FuriousAdvanceTracker_v0.2.0.gba
+.idea
 *.elf
 *.s
 *.mk

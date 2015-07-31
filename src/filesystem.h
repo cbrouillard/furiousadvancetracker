@@ -17,8 +17,6 @@
 #ifndef _FILESYSTEM_H_
 #define	_FILESYSTEM_H_
 
-#include "compression/miniz.h"
-
 /**
  * \brief Addresse vers la mémoire SRAM (la mémoire pour la sauvegarde).
  */
@@ -27,17 +25,6 @@
  * \brief Pointeur vers la mémoire SRAM.
  */
 u8 *gamepak = GAMEPAK_RAM;
-
-/**
- *  \brief La clé RLE (Run-Length Encoding) est une valeur d'octet traité spécialement 
- * par la système de sauvegarde. Elle sert à délimiter les mot de l'algorithme d'encoding.
- * En cas de présence dans les valeurs, alors on force l'encoding:
- * ex (bien qu'on n'obtienne pas de compression avec celui-ci):
- * RLE_KEY 0x05 0xFF RLE_KEY 0x01 RLE_KEY 0x45 0x76 0xFF RLE_KEY 0x02 0x01
- * donne
- * 0xFF 0xFF 0xFF 0xFF 0xFF 0x8A 0x45 0x76 0xFF 0x01 0x01
- */
-#define RLE_KEY 0x8A
 
 /** \brief Nombre maximal de tracks enregistrable. */
 #define MAX_TRACKS 16
@@ -51,7 +38,7 @@ void FAT_filesystem_setTrackOffset(u8 trackNumber, u16 offset);
 u16 FAT_filesystem_getTrackOffset(u8 trackNumber);
 void FAT_filesystem_setTrackSize(u8 trackNumber, u16 size);
 u16 FAT_filesystem_getTrackSize(u8 trackNumber);
-void FAT_filesystem_saveRaw(u8 trackNumber);
+void old_FAT_filesystem_saveRaw(u8 trackNumber);
 void FAT_filesystem_loadRaw(u8 trackNumber);
 u16 FAT_filesystem_findFirstFreeOffset();
 
@@ -146,7 +133,56 @@ u16 FAT_filesystem_findRawTrackOffset(u8 trackNumber) {
  * @param trackNumber numéro du slot d'enregistrement
  */
 void FAT_filesystem_saveTrack(u8 trackNumber) {
+    FAT_tracker.nbWork++;
 
+    u8* tracker = (u8*) &FAT_tracker;
+    u8* buffer = (u8*) &FAT_compressed_tracker;
+
+    u32 totalSize = SIZEOF_8BIT(FAT_tracker);
+    u8 currentByte = 0;
+    u8 previousByte = tracker[0];
+    int cpt = 1; int rleCpt = 1; int bufferOffset = 0;
+    while (cpt < totalSize){
+        currentByte = tracker[cpt];
+        if (currentByte != previousByte || rleCpt >= 0xff){
+            buffer[bufferOffset] = rleCpt;
+            buffer[bufferOffset + 1] = previousByte;
+
+            bufferOffset += 2;
+            previousByte = currentByte;
+            rleCpt = 1;
+        } else {
+            rleCpt ++;
+        }
+
+        cpt++;
+    }
+    buffer[bufferOffset] = rleCpt;
+    buffer[bufferOffset + 1] = previousByte;
+    bufferOffset += 2;
+
+    // bufferOffset contient la taille finale de la track compressée !
+    u32 trackSize = bufferOffset;
+    tracker = buffer;
+    //FAT_filesystem_setTrackSize (trackNumber, size);
+
+    u16 offset = FAT_filesystem_getTrackOffset(trackNumber);
+
+    if (offset == (trackNumber * 4)) {
+        // la track n'a jamais été initialisé. on cherche le prochain offset libre.
+        //offset = FAT_filesystem_findFirstFreeOffset ();
+        offset = FAT_filesystem_findRawTrackOffset(trackNumber);
+        FAT_filesystem_setTrackOffset(trackNumber, offset);
+    }
+
+    int counter = 0;
+    while (counter < trackSize) {
+        gamepak[offset + counter] = tracker[counter];
+        counter++;
+    }
+
+    FAT_filesystem_setTrackSize(trackNumber, trackSize);
+    gamepak[offset + counter] = 0x5a;
 }
 
 /**
@@ -226,47 +262,17 @@ u16 FAT_filesystem_getTrackSizeChecked(u8 trackNumber) {
     return size;
 }
 
-tracker ATTR_EWRAM compressed;
-
 /**
  * \brief Fonction de sauvegarde d'un track. Mode RAW. Pas de compression.
- * 
+ * \deprecated
  */
-void FAT_filesystem_saveRaw(u8 trackNumber) {
+void old_FAT_filesystem_saveRaw(u8 trackNumber) {
     FAT_tracker.nbWork++;
-    u8* tracker = (u8*) &FAT_tracker;
-    u8* buffer = (u8*) &compressed;
 
-    u32 totalSize = SIZEOF_8BIT(FAT_tracker);
-    u8 currentByte = 0;
-    u8 previousByte = tracker[0];
-    int cpt = 1; int rleCpt = 1; int bufferOffset = 0;
-    while (cpt < totalSize){
-        currentByte = tracker[cpt];
-        if (currentByte != previousByte || rleCpt >= 0xff){
-            buffer[bufferOffset] = rleCpt;
-            buffer[bufferOffset + 1] = previousByte;
-
-            bufferOffset += 2;
-            previousByte = currentByte;
-            rleCpt = 1;
-        } else {
-            rleCpt ++;
-        }
-
-        cpt++;
-    }
-    buffer[bufferOffset] = rleCpt;
-    buffer[bufferOffset + 1] = previousByte;
-    bufferOffset += 2;
-
-    // bufferOffset contient la taille finale de la track compressée !
-
-    hel_BgTextPrintF(TEXT_LAYER, 1, 16, 0, "SIZE %d octets", compressedOffset);
+    u8* tracker = (u8*) & FAT_tracker;
 
     //u32 trackSize = FAT_filesystem_getTrackSize(trackNumber);
-    u32 trackSize = compressedOffset; //SIZEOF_8BIT(FAT_tracker);
-    tracker = compressedData;
+    u32 trackSize = SIZEOF_8BIT(FAT_tracker);
     //FAT_filesystem_setTrackSize (trackNumber, size);
 
     u16 offset = FAT_filesystem_getTrackOffset(trackNumber);

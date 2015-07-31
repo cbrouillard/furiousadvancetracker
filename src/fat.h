@@ -243,8 +243,8 @@ void FAT_showIntro() {
 
 #ifdef DEBUG_ON
     hel_BgTextPrint(TEXT_LAYER, 1, 14, 0, "DEBUG ON");
-#endif
     hel_BgTextPrintF(TEXT_LAYER, 1, 16, 0, "SIZE %d octets", (SIZEOF_8BIT (tracker)));
+#endif
     hel_BgTextPrintF(TEXT_LAYER, 22, 19, 0, "%.3d kits", snd_countAvailableKits());
 
     while (1) {

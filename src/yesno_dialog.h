@@ -42,7 +42,7 @@ void FAT_yesno_dialogSave_mainFunc() {
     if (hel_PadQuery()->Pressed.L) {
         FAT_yesno_close();
     } else if (hel_PadQuery()->Pressed.R) {
-        FAT_filesystem_saveRaw(param1);
+        FAT_filesystem_saveTrack(param1);//with RLE compression :)
         FAT_yesno_close();
         hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Saved ");
     }
