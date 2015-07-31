@@ -17,6 +17,8 @@
 #ifndef _FILESYSTEM_H_
 #define	_FILESYSTEM_H_
 
+#include "compression/miniz.h"
+
 /**
  * \brief Addresse vers la mémoire SRAM (la mémoire pour la sauvegarde).
  */
@@ -224,17 +226,47 @@ u16 FAT_filesystem_getTrackSizeChecked(u8 trackNumber) {
     return size;
 }
 
+tracker ATTR_EWRAM compressed;
+
 /**
  * \brief Fonction de sauvegarde d'un track. Mode RAW. Pas de compression.
  * 
  */
 void FAT_filesystem_saveRaw(u8 trackNumber) {
     FAT_tracker.nbWork++;
+    u8* tracker = (u8*) &FAT_tracker;
+    u8* buffer = (u8*) &compressed;
 
-    u8* tracker = (u8*) & FAT_tracker;
+    u32 totalSize = SIZEOF_8BIT(FAT_tracker);
+    u8 currentByte = 0;
+    u8 previousByte = tracker[0];
+    int cpt = 1; int rleCpt = 1; int bufferOffset = 0;
+    while (cpt < totalSize){
+        currentByte = tracker[cpt];
+        if (currentByte != previousByte || rleCpt >= 0xff){
+            buffer[bufferOffset] = rleCpt;
+            buffer[bufferOffset + 1] = previousByte;
+
+            bufferOffset += 2;
+            previousByte = currentByte;
+            rleCpt = 1;
+        } else {
+            rleCpt ++;
+        }
+
+        cpt++;
+    }
+    buffer[bufferOffset] = rleCpt;
+    buffer[bufferOffset + 1] = previousByte;
+    bufferOffset += 2;
+
+    // bufferOffset contient la taille finale de la track compressée !
+
+    hel_BgTextPrintF(TEXT_LAYER, 1, 16, 0, "SIZE %d octets", compressedOffset);
 
     //u32 trackSize = FAT_filesystem_getTrackSize(trackNumber);
-    u32 trackSize = SIZEOF_8BIT(FAT_tracker);
+    u32 trackSize = compressedOffset; //SIZEOF_8BIT(FAT_tracker);
+    tracker = compressedData;
     //FAT_filesystem_setTrackSize (trackNumber, size);
 
     u16 offset = FAT_filesystem_getTrackOffset(trackNumber);
