@@ -39,6 +39,9 @@ void FAT_screenLive_printAllScreenText();
 
 bool FAT_screenLive_isCursorInSequencer = 1;
 
+/** \brief Cette variable contient le numéro de la première ligne actuellement affichée. */
+u8 FAT_screenLive_currentStartLine = 0;
+
 #include "screen_live_cursor.h"
 #include "cursors.h"
 
@@ -46,7 +49,7 @@ bool FAT_screenLive_isCursorInSequencer = 1;
  * \brief Affiche uniquement la valeur du tempo au bon endroit. 
  */
 void FAT_screenLive_printTempo() {
-    hel_BgTextPrintF(TEXT_LAYER, 10, 16, 0, "%d", FAT_tracker.tempo);
+    hel_BgTextPrintF(TEXT_LAYER, 15, 16, 0, "%d", FAT_tracker.tempo);
 }
 
 /**
@@ -61,14 +64,14 @@ void FAT_screenLive_printTranspose() {
  */
 void FAT_screenLive_printLiveMode() {
     if (FAT_tracker.liveData.liveMode) {
-        hel_BgTextPrint(TEXT_LAYER, 3, 16, 0, "MAN");
+        hel_BgTextPrint(TEXT_LAYER, 6, 16, 0, "MAN");
     } else {
-        hel_BgTextPrintF(TEXT_LAYER, 3, 16, 0, "AUT");
+        hel_BgTextPrintF(TEXT_LAYER, 6, 16, 0, "AUT");
     }
 }
 
 void FAT_screenLive_printVolumes() {
-    hel_BgTextPrintF(TEXT_LAYER, 2, 13, 0, "%.3d%.3d%.3d%.3d%.3d%.3d",
+    hel_BgTextPrintF(TEXT_LAYER, 2, 13, 0, " %.2x %.2x %.2x %.2x %.2x %.2x",
             FAT_tracker.liveData.volume[0],
             FAT_tracker.liveData.volume[1],
             FAT_tracker.liveData.volume[2],
@@ -78,24 +81,24 @@ void FAT_screenLive_printVolumes() {
 }
 
 void FAT_screenLive_printTransposes() {
-    hel_BgTextPrintF(TEXT_LAYER, 2, 14, 0, "%.3d%.3d%.3d%.3d%.3d%.3d",
-            FAT_tracker.transpose,
-            FAT_tracker.transpose,
-            FAT_tracker.transpose,
-            FAT_tracker.transpose,
-            FAT_tracker.transpose,
-            FAT_tracker.transpose);
+    hel_BgTextPrintF(TEXT_LAYER, 2, 14, 0, " %.2x %.2x %.2x %.2x %.2x %.2x",
+            FAT_tracker.liveData.transpose[0],
+            FAT_tracker.liveData.transpose[1],
+            FAT_tracker.liveData.transpose[2],
+            FAT_tracker.liveData.transpose[3],
+            FAT_tracker.liveData.transpose[4],
+            FAT_tracker.liveData.transpose[5]);
 }
 
 /**
  * \brief Imprime les numéros de lignes. 
  * 
- * L'impression démarre depuis la valeur de FAT_screenSong_currentStartLine jusqu'à FAT_screenSong_currentStartLine + SCREENSONG_NB_LINES_ON_SCREEN
+ * L'impression démarre depuis la valeur de FAT_screenLive_currentStartLine jusqu'à FAT_screenLive_currentStartLine + SCREENSONG_NB_LINES_ON_SCREEN
  */
 void FAT_screenLive_printLineColumns() {
     u8 y = SCREENLIVE_LINE_START_Y;
     int c;
-    for (c = FAT_screenSong_currentStartLine; c < (SCREENLIVE_NB_LINES_ON_SCREEN + FAT_screenSong_currentStartLine); c++) {
+    for (c = FAT_screenLive_currentStartLine; c < (SCREENLIVE_NB_LINES_ON_SCREEN + FAT_screenLive_currentStartLine); c++) {
         hel_BgTextPrintF(TEXT_LAYER, SCREENLIVE_LINE_X, y, 0, FAT_FORMAT_LINE, c);
         y += SCREENLIVE_LINE_SIZE_Y;
     }
@@ -107,8 +110,9 @@ void FAT_screenLive_printLineColumns() {
  */
 void FAT_screenLive_printInfos() {
     hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "%s", FAT_tracker.songName);
-    hel_BgTextPrintF(TEXT_LAYER, 21, 4, 0, "Line  %.2x", FAT_screenSong_currentSelectedLine);
-    hel_BgTextPrintF(TEXT_LAYER, 21, 5, 0, "Chan %s", CHANNEL_NAME[FAT_screenSong_currentSelectedColumn]);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 4, 0, "Line  %.2x", FAT_screenLive_currentSelectedLine);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 5, 0, "Chan %s", CHANNEL_NAME[FAT_screenLive_currentSelectedColumn]);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 6, 0, "TSP   %2.x", FAT_tracker.transpose);
 
     FAT_screenLive_printLiveMode();
     FAT_screenLive_printTempo();
@@ -141,13 +145,13 @@ void FAT_screenLive_printSequences() {
     for (v = 0; v < SCREENLIVE_NB_LINES_ON_SCREEN; v++) {
 
         for (c = 0; c < 6; c++) {
-            if (FAT_tracker.channels[c].sequences[v + FAT_screenSong_currentStartLine] == NULL_VALUE) {
+            if (FAT_tracker.channels[c].sequences[v + FAT_screenLive_currentStartLine] == NULL_VALUE) {
                 hel_BgTextPrint(TEXT_LAYER, SCREENLIVE_SEQUENCE_LINE_X + (c * 3),
                         v + SCREENLIVE_LINE_START_Y, 0, "  ");
             } else {
                 hel_BgTextPrintF(TEXT_LAYER, SCREENLIVE_SEQUENCE_LINE_X + (c * 3),
                         v + SCREENLIVE_LINE_START_Y, 0, "%.2x ",
-                        FAT_tracker.channels[c].sequences[v + FAT_screenSong_currentStartLine]);
+                        FAT_tracker.channels[c].sequences[v + FAT_screenLive_currentStartLine]);
             }
         }
 
@@ -174,44 +178,27 @@ void FAT_screenLive_init() {
     ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_LIVE_MAP), 1024, 0, 0);
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
-    if (FAT_screenSong_cursorY > SCREENLIVE_LAST_BLOCK_Y && FAT_screenLive_isCursorInSequencer) {
-        FAT_screenSong_currentStartLine = FAT_screenSong_currentSelectedLine - 9;
-        FAT_screenSong_cursorY = SCREENLIVE_LAST_BLOCK_Y;
-    }
-
     FAT_screenLive_printAllScreenText();
     FAT_screenLive_printVolumes();
     FAT_screenLive_printTransposes();
 
-    // partie identique à l'écran SONG
+    // partie identique à l'écran SONG (imprime uniquement les notes actuellement jouées dans l'encart rouge. Rien de plus)
     FAT_screenSong_printChannelFollower();
 
     // affichage du curseur
     FAT_cursors_hideCursor2();
     FAT_screenLive_commitCursorMove();
     FAT_cursors_showCursor2();
-
-    // démarrage du cycle pour l'écran
-    //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenLive_mainFunc);
-
 }
 
 /**
- * 
+ * \brief Change la partie active de l'écran.
  * @param part la partie vers laquelle switcher: 0 = table, 1 = sequenceur
  */
 void FAT_screenLive_switchActivePart(bool part) {
     FAT_screenLive_isCursorInSequencer = part;
 
-    if (part) {
-        // sequenceur
-        FAT_cursors_hideCursor3();
-        FAT_cursors_showCursor2();
-    } else {
-        // table
-        FAT_cursors_hideCursor2();
-        FAT_cursors_showCursor3();
-    }
+    FAT_screenLive_switchCursorToPart(part);
     FAT_screenLive_commitCursorMove();
 }
 
@@ -273,6 +260,30 @@ void FAT_screenLive_checkButtons() {
                 FAT_screenLive_moveCursorAllUp();
             } else {
                 FAT_screenLive_moveCursorUp();
+            }
+        }
+
+        if (hel_PadQuery()->Pressed.Start) {
+            if(!FAT_tracker.liveData.liveMode || hel_PadQuery()->Held.R){
+                // tout se lance en maintenant à partir de la ligne sélectionnée.
+                if (!FAT_isCurrentlyPlaying) {
+                    FAT_player_startPlayerFromSequences(FAT_screenLive_currentSelectedLine);
+                } else {
+                    FAT_player_stopPlayer();
+                }
+            }else {
+                if (!FAT_isCurrentlyPlaying) {
+                    // seule la colonne sélectionnée se lance à partir de la ligne courante.
+                    FAT_player_startPlayerFromSequences_onlyOneColumn(FAT_screenLive_currentSelectedLine, FAT_screenLive_currentSelectedColumn);
+                } else {
+                    // si le channel joue actuellement, on l'arrete.
+                    if (FAT_isChannelCurrentlyPlaying (FAT_screenLive_currentSelectedColumn)){
+                        FAT_player_stopPlayer_onlyOneColumn(FAT_screenLive_currentSelectedColumn);
+                    } else {
+                        // sinon on le démmarre
+                        FAT_player_startPlayerFromSequences_onlyOneColumn(FAT_screenLive_currentSelectedLine, FAT_screenLive_currentSelectedColumn);
+                    }
+                }
             }
         }
 

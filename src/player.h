@@ -64,6 +64,7 @@ THandle FAT_cursor_playerSequences_obj[6];
 u32 tempoReach = ((60000 / 128) / 4) / 2;
 
 u8 FAT_player_isPlayingFrom;
+bool FAT_player_liveManualMode = 0;
 
 /**
  * \brief Function temporisée qui lit toutes les séquences. (callback)
@@ -250,6 +251,29 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
     R_TIM3CNT = 0x00C3;
     hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
 
+    FAT_player_liveManualMode = 0;
+}
+
+void FAT_player_startPlayerFromSequences_onlyOneColumn(u8 line, u8 channel){
+    // initialisation seulement si d'autres colonnes n'ont pas déjà été lancées !
+    if (!FAT_isCurrentlyPlaying){
+        memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
+        memset(actualBlocksForChannel, 0, sizeof (u8)*6);
+        memset(actualNotesForChannel, 0, sizeof (u8)*6);
+
+        tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
+        FAT_isCurrentlyPlaying = 1;
+        FAT_live_nbChannelPlaying = 0;
+        FAT_player_isPlayingFrom = SCREEN_LIVE_ID;
+
+        R_TIM3COUNT = 0xffc0;
+        R_TIM3CNT = 0x00C3;
+        hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
+
+        FAT_player_liveManualMode = 1;
+    }
+    actualSequencesForChannel[channel] = line;
+    FAT_live_nbChannelPlaying ++;
 }
 
 /**
@@ -276,6 +300,8 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
     R_TIM3COUNT = 0xffc0;
     R_TIM3CNT = 0x00C3;
     hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
+
+    FAT_player_liveManualMode = 0;
 }
 
 /**
@@ -301,6 +327,8 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
     R_TIM3COUNT = 0xffc0;
     R_TIM3CNT = 0x00C3;
     hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
+
+    FAT_player_liveManualMode = 0;
 }
 
 void FAT_player_timerFunc() {
@@ -360,14 +388,29 @@ void FAT_player_playFromSequences() {
                 }
 
             } else {
-                actualSequencesForChannel[i] = 0;
+                // en live on ignore pour ne pas forcer le lancement
+                if (!FAT_player_liveManualMode){
+                    actualSequencesForChannel[i] = 0;
+                }
             }
 
         }
 
         tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     }
+}
 
+void FAT_player_playFromLive(){
+    if (tempoReach <= 0) {
+
+        u8 i;
+        for (i = 0; i < 6; i++) {
+            FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
+
+        }
+
+       tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
+    }
 }
 
 // DEJA DOCUMENTEE
@@ -445,6 +488,9 @@ void FAT_player_continueToPlay() {
         case SCREEN_SONG_ID:
             FAT_player_playFromSequences();
             break;
+        case SCREEN_LIVE_ID:
+            FAT_player_playFromSequences();
+            break;
         case SCREEN_BLOCKS_ID:
             FAT_player_playFromBlocks();
             break;
@@ -452,6 +498,24 @@ void FAT_player_continueToPlay() {
             FAT_player_playFromNotes();
             break;
     }
+}
+
+/**
+ * \brief Arrète la lecture d'un channel. Si c'est le dernier, stop le player completement.
+ */
+void FAT_player_stopPlayer_onlyOneColumn(u8 channel){
+    actualSequencesForChannel[channel] = NULL_VALUE;
+    FAT_live_nbChannelPlaying --;
+
+    if (FAT_live_nbChannelPlaying == 0){
+        FAT_player_stopPlayer();
+    } else {
+        hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 0);
+    }
+}
+
+bool FAT_isChannelCurrentlyPlaying (u8 channel){
+    return actualSequencesForChannel[channel] != NULL_VALUE;
 }
 
 /**
@@ -539,6 +603,28 @@ void FAT_player_moveOrHideCursor(u8 channel, note* note) {
             }
 
 
+            break;
+        case SCREEN_LIVE_ID:
+            // TODO duplication moche.
+            FAT_player_hideBlockCursor();
+            FAT_player_hideNoteCursor();
+            if (actualSequencesForChannel[channel] != NULL_VALUE
+                    && actualSequencesForChannel[channel] >= FAT_screenLive_currentStartLine && !isHelpActivated) {
+                // la lecture a été lancée depuis l'écran SONG
+                // on dispose du numéro de ligne actuellement jouée dans actualSequencesForChannel[channel]
+                hel_ObjSetXY(FAT_cursor_playerSequences_obj[channel],
+                        23 + (channel * (8 + 16)),
+                        15 + ((actualSequencesForChannel[channel] - FAT_screenLive_currentStartLine)*8));
+                hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 1);
+
+                if (note->freq != NULL_VALUE) {
+                    // la meme chose que pour SONG. On peut laisser comme ça.
+                    FAT_screenSong_showActualPlayedNote(channel, (note->note & 0xf0) >> 4, note->note & 0x0f, note->freq);
+                }
+
+            } else {
+                FAT_player_hideSequencesCursors();
+            }
             break;
         case SCREEN_BLOCKS_ID: // on est dans l'écran BLOCKS
             FAT_player_hideSequencesCursors();

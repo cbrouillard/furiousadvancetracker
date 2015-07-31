@@ -18,8 +18,18 @@
 #ifndef _SCREENLIVECURSOR_H_
 #define _SCREENLIVECURSOR_H_
 
-#include "screen_live.h"
+/** \brief Position actuelle du curseur de sélection sur l'écran. */
+u8 FAT_screenLive_cursorX;
+/** \brief Position actuelle du curseur de sélection sur l'écran. */
+u8 FAT_screenLive_cursorY;
+/** \brief Numéro de ligne actuellement sélectionnée. */
+u8 FAT_screenLive_currentSelectedLine;
+/** \brief Numéro de colonne actuellement sélectionnée. */
+u8 FAT_screenLive_currentSelectedColumn;
+/** \brief Numéro de colonne dans la table des données (hors séquenceur!) actuellement sélectionnée. */
+u8 FAT_screenLive_currentTableSelectedLine;
 
+#include "screen_live.h"
 
 /** \brief Taille d'un bloc d'affichage séquence 16*8 en pixels. */
 #define SCREENLIVE_BLOCK_SIZE_X 16
@@ -38,6 +48,12 @@
 /** \brief Abscisse du premier bloc en haut à gauche (px). */
 #define SCREENLIVE_FIRST_BLOCK_Y 16
 
+/** \brief Abscisse du premier bloc de données inscrites dans la table (partie basse de l'écran). */
+#define SCREENLIVE_FIRST_TABLE_DATA_Y 104
+
+#define SCREEN_LIVE_MODE_BLOCK_X 48
+#define SCREEN_LIVE_TEMPO_BLOCK_X 120
+
 // prototypes
 void FAT_screenLive_initCursor();
 void FAT_screenLive_moveCursorRight();
@@ -51,11 +67,12 @@ void FAT_screenLive_commitCursorMove();
  * des valeurs de ligne et colonne sélectionnées. 
  */
 void FAT_screenLive_initCursor() {
-    FAT_screenSong_cursorX = SCREENLIVE_FIRST_BLOCK_X - 1;
-    FAT_screenSong_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1;
-    FAT_screenSong_currentSelectedLine = 0;
-    FAT_screenSong_currentStartLine = 0;
-    FAT_screenSong_currentSelectedColumn = 0;
+    FAT_screenLive_cursorX = SCREENLIVE_FIRST_BLOCK_X - 1;
+    FAT_screenLive_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1;
+    FAT_screenLive_currentSelectedLine = 0;
+    FAT_screenLive_currentStartLine = 0;
+    FAT_screenLive_currentSelectedColumn = 0;
+    FAT_screenLive_currentTableSelectedLine = 0;
 
 };
 
@@ -63,9 +80,18 @@ void FAT_screenLive_initCursor() {
  * \brief Déplace le curseur vers la droite. 
  */
 void FAT_screenLive_moveCursorRight() {
-    if (!(FAT_screenSong_cursorX >= SCREENLIVE_LAST_BLOCK_X - 1)) {
-        FAT_screenSong_cursorX += SCREENLIVE_BLOCK_SIZE_X + SCREENLIVE_WHITE_SPACE_X;
-        FAT_screenSong_currentSelectedColumn++;
+    if (!(FAT_screenLive_cursorX >= SCREENLIVE_LAST_BLOCK_X - 1)) {
+        FAT_screenLive_cursorX += SCREENLIVE_BLOCK_SIZE_X + SCREENLIVE_WHITE_SPACE_X;
+
+        if (!FAT_screenLive_isCursorInSequencer && FAT_screenLive_currentTableSelectedLine == 2){
+            if (FAT_screenLive_currentSelectedColumn == 1){
+                FAT_screenLive_cursorX = SCREEN_LIVE_TEMPO_BLOCK_X - 1;
+                FAT_screenLive_currentSelectedColumn = 4;
+            }
+        }else {
+            FAT_screenLive_currentSelectedColumn++;
+
+        }
         FAT_screenLive_printInfos();
     }
 }
@@ -74,9 +100,17 @@ void FAT_screenLive_moveCursorRight() {
  * \brief Déplace le curseur vers la gauche. 
  */
 void FAT_screenLive_moveCursorLeft() {
-    if (!(FAT_screenSong_cursorX <= SCREENLIVE_FIRST_BLOCK_X)) {
-        FAT_screenSong_cursorX -= SCREENLIVE_BLOCK_SIZE_X + SCREENLIVE_WHITE_SPACE_X;
-        FAT_screenSong_currentSelectedColumn--;
+    if (!(FAT_screenLive_cursorX <= SCREENLIVE_FIRST_BLOCK_X)) {
+        FAT_screenLive_cursorX -= SCREENLIVE_BLOCK_SIZE_X + SCREENLIVE_WHITE_SPACE_X;
+
+        if (!FAT_screenLive_isCursorInSequencer && FAT_screenLive_currentTableSelectedLine == 2){
+            if (FAT_screenLive_currentSelectedColumn == 4){
+                FAT_screenLive_cursorX = SCREEN_LIVE_MODE_BLOCK_X - 1;
+                FAT_screenLive_currentSelectedColumn = 1;
+            }
+        }else{
+            FAT_screenLive_currentSelectedColumn--;
+        }
         FAT_screenLive_printInfos();
     }
 }
@@ -85,9 +119,9 @@ void FAT_screenLive_moveCursorLeft() {
  * \brief Déplace le curseur d'une page vers le bas. 
  */
 void FAT_screenLive_movePageDown() {
-    if (FAT_screenSong_currentSelectedLine < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN) {
-        FAT_screenSong_currentStartLine += SCREENLIVE_NB_LINES_ON_SCREEN;
-        FAT_screenSong_currentSelectedLine += SCREENLIVE_NB_LINES_ON_SCREEN;
+    if (FAT_screenLive_currentSelectedLine < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN) {
+        FAT_screenLive_currentStartLine += SCREENLIVE_NB_LINES_ON_SCREEN;
+        FAT_screenLive_currentSelectedLine += SCREENLIVE_NB_LINES_ON_SCREEN;
         FAT_screenLive_printAllScreenText();
     }
 }
@@ -96,9 +130,9 @@ void FAT_screenLive_movePageDown() {
  * \brief Déplace le curseur tout en bas du tableau. 
  */
 void FAT_screenLive_moveCursorAllDown() {
-    FAT_screenSong_cursorY = SCREENLIVE_LAST_BLOCK_Y;
-    FAT_screenSong_currentStartLine = NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN;
-    FAT_screenSong_currentSelectedLine = NB_SEQUENCES_IN_ONE_CHANNEL - 1;
+    FAT_screenLive_cursorY = SCREENLIVE_LAST_BLOCK_Y;
+    FAT_screenLive_currentStartLine = NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN;
+    FAT_screenLive_currentSelectedLine = NB_SEQUENCES_IN_ONE_CHANNEL - 1;
     FAT_screenLive_printAllScreenText();
 }
 
@@ -106,18 +140,44 @@ void FAT_screenLive_moveCursorAllDown() {
  * \brief Déplace le curseur vers le bas. 
  */
 void FAT_screenLive_moveCursorDown() {
-    if (FAT_screenSong_currentSelectedLine < NB_SEQUENCES_IN_ONE_CHANNEL) {
-        if (FAT_screenSong_cursorY >= SCREENLIVE_LAST_BLOCK_Y - 1) {
-            if (FAT_screenSong_currentStartLine < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN) {
-                // on n'avance pas mais on change de ligne
-                FAT_screenSong_currentStartLine++;
-                FAT_screenSong_currentSelectedLine++;
-                FAT_screenLive_printAllScreenText();
+    if (FAT_screenLive_isCursorInSequencer){
+        if (FAT_screenLive_currentSelectedLine < NB_SEQUENCES_IN_ONE_CHANNEL) {
+            if (FAT_screenLive_cursorY >= SCREENLIVE_LAST_BLOCK_Y - 1) {
+                if (FAT_screenLive_currentStartLine < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN) {
+                    // on n'avance pas mais on change de ligne
+                    FAT_screenLive_currentStartLine++;
+                    FAT_screenLive_currentSelectedLine++;
+                    FAT_screenLive_printAllScreenText();
+                }
+            } else {
+                FAT_screenLive_cursorY += SCREENLIVE_BLOCK_SIZE_Y;
+                FAT_screenLive_currentSelectedLine++;
+                FAT_screenLive_printInfos();
             }
-        } else {
-            FAT_screenSong_cursorY += SCREENLIVE_BLOCK_SIZE_Y;
-            FAT_screenSong_currentSelectedLine++;
-            FAT_screenLive_printInfos();
+        }
+    } else {
+        if (FAT_screenLive_currentTableSelectedLine < 2){
+            FAT_screenLive_currentTableSelectedLine ++;
+            if (FAT_screenLive_currentTableSelectedLine == 2){
+                FAT_cursors_hideCursor2();
+                FAT_cursors_showCursor3();
+
+                FAT_screenLive_cursorY += SCREENLIVE_BLOCK_SIZE_Y * 2;
+
+                if (FAT_screenLive_currentSelectedColumn<3){
+                    FAT_screenLive_cursorX = SCREEN_LIVE_MODE_BLOCK_X - 1;
+                    FAT_screenLive_currentSelectedColumn = 1;
+                } else {
+                    FAT_screenLive_cursorX = SCREEN_LIVE_TEMPO_BLOCK_X - 1;
+                    FAT_screenLive_currentSelectedColumn = 4;
+                }
+
+                // pour éviter une désynchro sur le numéro de la colonne (visuellement on est sur la 2)
+                FAT_screenLive_printInfos();
+
+            }else{
+                FAT_screenLive_cursorY += SCREENLIVE_BLOCK_SIZE_Y;
+            }
         }
     }
 }
@@ -126,10 +186,10 @@ void FAT_screenLive_moveCursorDown() {
  * \brief Déplace le curseur d'une page vers le haut. 
  */
 void FAT_screenLive_movePageUp() {
-    if (FAT_screenSong_currentSelectedLine >= SCREENLIVE_NB_LINES_ON_SCREEN
-            && FAT_screenSong_currentStartLine >= SCREENLIVE_NB_LINES_ON_SCREEN) {
-        FAT_screenSong_currentStartLine -= SCREENLIVE_NB_LINES_ON_SCREEN;
-        FAT_screenSong_currentSelectedLine -= SCREENLIVE_NB_LINES_ON_SCREEN;
+    if (FAT_screenLive_currentSelectedLine >= SCREENLIVE_NB_LINES_ON_SCREEN
+            && FAT_screenLive_currentStartLine >= SCREENLIVE_NB_LINES_ON_SCREEN) {
+        FAT_screenLive_currentStartLine -= SCREENLIVE_NB_LINES_ON_SCREEN;
+        FAT_screenLive_currentSelectedLine -= SCREENLIVE_NB_LINES_ON_SCREEN;
         FAT_screenLive_printAllScreenText();
     }
 }
@@ -138,9 +198,9 @@ void FAT_screenLive_movePageUp() {
  * \brief Déplace le curseur tout en haut du tableau. 
  */
 void FAT_screenLive_moveCursorAllUp() {
-    FAT_screenSong_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1;
-    FAT_screenSong_currentStartLine = 0;
-    FAT_screenSong_currentSelectedLine = 0;
+    FAT_screenLive_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1;
+    FAT_screenLive_currentStartLine = 0;
+    FAT_screenLive_currentSelectedLine = 0;
     FAT_screenLive_printAllScreenText();
 }
 
@@ -148,32 +208,66 @@ void FAT_screenLive_moveCursorAllUp() {
  * \brief Déplace le curseur vers le haut. 
  */
 void FAT_screenLive_moveCursorUp() {
-
-    if (FAT_screenSong_currentSelectedLine > 0) {
-        if (FAT_screenSong_cursorY <= SCREENLIVE_FIRST_BLOCK_Y - 1) {
-            if (FAT_screenSong_currentStartLine > 0) {
-                // on ne recule pas mais on change de ligne
-                FAT_screenSong_currentStartLine--;
-                FAT_screenSong_currentSelectedLine--;
-                FAT_screenLive_printAllScreenText();
+    if (FAT_screenLive_isCursorInSequencer){
+        if (FAT_screenLive_currentSelectedLine > 0) {
+            if (FAT_screenLive_cursorY <= SCREENLIVE_FIRST_BLOCK_Y - 1) {
+                if (FAT_screenLive_currentStartLine > 0) {
+                    // on ne recule pas mais on change de ligne
+                    FAT_screenLive_currentStartLine--;
+                    FAT_screenLive_currentSelectedLine--;
+                    FAT_screenLive_printAllScreenText();
+                }
+            } else {
+                FAT_screenLive_cursorY -= SCREENLIVE_BLOCK_SIZE_Y;
+                FAT_screenLive_currentSelectedLine--;
+                FAT_screenLive_printInfos();
             }
-        } else {
-            FAT_screenSong_cursorY -= SCREENLIVE_BLOCK_SIZE_Y;
-            FAT_screenSong_currentSelectedLine--;
-            FAT_screenLive_printInfos();
+        }
+    } else {
+        if (FAT_screenLive_currentTableSelectedLine > 0){
+            if (FAT_screenLive_currentTableSelectedLine == 2){
+
+                FAT_cursors_hideCursor3();
+                FAT_cursors_showCursor2();
+
+                FAT_screenLive_cursorY -= SCREENLIVE_BLOCK_SIZE_Y * 2;
+
+            }else{
+                FAT_screenLive_cursorY -= SCREENLIVE_BLOCK_SIZE_Y;
+            }
+            FAT_screenLive_currentTableSelectedLine --;
         }
     }
 
 }
 
 /**
+ * \brief Change la position du curseur sur la partie active de l'écran.
+ * @param part la partie vers laquelle switcher: 0 = table, 1 = sequenceur
+ */
+void FAT_screenLive_switchCursorToPart (bool part){
+    if (part == 1){
+        // sequenceur.
+        FAT_screenLive_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1;
+    } else {
+        // table
+        FAT_screenLive_cursorY = SCREENLIVE_FIRST_TABLE_DATA_Y - 1;
+    }
+    return;
+}
+
+/**
  * \brief Valide le déplacement du curseur sur l'écran. 
  */
 void FAT_screenLive_commitCursorMove() {
-    if (FAT_screenLive_isCursorInSequencer) {
-        hel_ObjSetXY(FAT_cursor2_obj, FAT_screenSong_cursorX, FAT_screenSong_cursorY);
+    if (FAT_screenLive_isCursorInSequencer){
+        hel_ObjSetXY(FAT_cursor2_obj, FAT_screenLive_cursorX, FAT_screenLive_cursorY);
     } else {
-        hel_ObjSetXY(FAT_cursor3_obj, FAT_screenSong_cursorX - 8, FAT_screenSong_cursorY);
+        if (FAT_screenLive_currentTableSelectedLine == 2) {
+            hel_ObjSetXY(FAT_cursor3_obj, FAT_screenLive_cursorX, FAT_screenLive_cursorY);
+        }else {
+            hel_ObjSetXY(FAT_cursor2_obj, FAT_screenLive_cursorX, FAT_screenLive_cursorY);
+        }
     }
 }
 

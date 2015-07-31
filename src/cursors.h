@@ -285,6 +285,36 @@ void FAT_cursors_moveCursorChange(u8 x, u8 y) {
 }
 
 /**
+ * \brief Déplace le curseur de taille 1.
+ *
+ * \param x abscisse (en px)
+ * \param y ordonnée (en px)
+ */
+void FAT_cursors_moveCursor1(u8 x, u8 y) {
+    hel_ObjSetXY(FAT_cursor1_obj, x, y);
+}
+
+/**
+ * \brief Déplace le curseur de taille 2.
+ *
+ * \param x abscisse (en px)
+ * \param y ordonnée (en px)
+ */
+void FAT_cursors_moveCursor2(u8 x, u8 y) {
+    hel_ObjSetXY(FAT_cursor2_obj, x, y);
+}
+
+/**
+ * \brief Déplace le curseur de taille 3.
+ *
+ * \param x abscisse (en px)
+ * \param y ordonnée (en px)
+ */
+void FAT_cursors_moveCursor3(u8 x, u8 y) {
+    hel_ObjSetXY(FAT_cursor3_obj, x, y);
+}
+
+/**
  * \brief Cache tous les curseurs. 
  */
 void FAT_cursors_hideAllCursors(){

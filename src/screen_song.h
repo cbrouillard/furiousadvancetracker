@@ -38,7 +38,6 @@ bool FAT_screenSong_isPopuped = 0;
 
 // prototypes
 void FAT_screenSong_init();
-void FAT_screenSong_mainFunc();
 void FAT_screenSong_checkButtons();
 void FAT_screenSong_printLineColumns();
 void FAT_screenSong_printAllScreenText();
@@ -52,17 +51,6 @@ void FAT_screenSong_pressB();
 
 /** \brief Stocke tous les noms des channels (afin de pouvoir les afficher). */
 const char* CHANNEL_NAME[6] = {"PU1\0", "PU2\0", "WAV\0", "NOI\0", "SNA\0", "SNB\0"};
-
-/**
- * \brief Fonction principale de l'écran (callback).
- */
-void FAT_screenSong_mainFunc() {
-    hel_ObjTransmit();
-    hel_IntrAcknowledge(INT_TYPE_VBL);
-
-    FAT_screenSong_checkButtons();
-
-}
 
 /**
  * \brief Cette fonction permet d'initialiser l'écran.
@@ -121,8 +109,7 @@ void FAT_screenSong_showActualPlayedNote(u8 channel, u8 name, u8 noteOctave, u8 
  */
 void FAT_screenSong_printInfos() {
     hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "%s\nLine  %.2x\nChan %s", FAT_tracker.songName, FAT_screenSong_currentSelectedLine, CHANNEL_NAME[FAT_screenSong_currentSelectedColumn]);
-    //hel_BgTextPrintF(TEXT_LAYER, 21, 4, "LINE  %.2x", FAT_screenSong_currentSelectedLine);
-    //hel_BgTextPrintF(TEXT_LAYER, 21, 5, "CHAN %s", CHANNEL_NAME[FAT_screenSong_currentSelectedColumn]);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 6, 0, "TSP   %2.x\nTmpo %.3d", FAT_tracker.transpose, FAT_tracker.tempo);
 }
 
 /**

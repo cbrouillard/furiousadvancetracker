@@ -96,11 +96,17 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel);
 void FAT_player_stopPlayer();
 /** \brief Prototype. Fonction définie dans player.h. */
 void FAT_player_playComposerNote(u8 noteLine);
+/** \brief Prototype. Fonction définie dans player.h. */
+void FAT_player_startPlayerFromSequences_onlyOneColumn(u8 line, u8 channel);
+
+void FAT_player_stopPlayer_onlyOneColumn(u8 channel);
+bool FAT_isChannelCurrentlyPlaying (u8 channel);
 
 /**
  * \brief Permet de savoir si le player est en train de jouer la chanson.
  */
 bool FAT_isCurrentlyPlaying = 0;
+u8 FAT_live_nbChannelPlaying = 0;
 
 #include "popup.h"
 #include "yesno_dialog.h"
@@ -204,7 +210,7 @@ void FAT_init() {
     FAT_screenInstrument_initSpritesForInstrument();
 
     FAT_screenSong_initCursor();
-    //FAT_screenLive_initCursor();
+    FAT_screenLive_initCursor();
     FAT_screenNotes_initCursor();
     FAT_screenBlocks_initCursor();
     FAT_screenComposer_initCursor();

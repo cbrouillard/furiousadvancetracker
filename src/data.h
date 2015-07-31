@@ -397,7 +397,8 @@ typedef struct INSTRUMENT {
  */
 typedef struct LIVE {
     bool liveMode; /*!< Le live mode permet de définir le mode de défilement des séquences: 0 = automatique 1 = manuel*/
-    u8 volume[6]; /*!< Tableau des valeurs de volumes affectés à chaque canal.*/
+    u8 volume[6]; /*!< Tableau des valeurs de volumes affectées à chaque canal.*/
+    u8 transpose[6]; /*!< Tableau des valeurs de transpose affectées à chaque canal.*/
 } livedata;
 
 /**
@@ -485,7 +486,8 @@ void FAT_data_initData() {
     memset(&FAT_data_noteClipboard, NULL_VALUE, sizeof (note));
     memset(&FAT_data_lastEffectWritten, NULL_VALUE, sizeof (effect));
 
-    memset(&FAT_tracker.liveData.volume, 100, sizeof (u8)*6);
+    memset(&FAT_tracker.liveData.volume, 0xff, sizeof (u8)*6);
+    memset(&FAT_tracker.liveData.transpose, 0, sizeof (u8)*6);
 }
 
 /**
