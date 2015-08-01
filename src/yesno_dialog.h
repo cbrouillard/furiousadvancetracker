@@ -75,6 +75,13 @@ void FAT_yesno_dialogNewProject_mainFunc() {
         FAT_yesno_close();
     } else if (hel_PadQuery()->Pressed.R) {
         FAT_player_stopPlayer();
+
+        // déplacer le curseur de la popup. C'est un peu naze comme ça. Mais c'est comme mon envie de faire mieux ... naze.
+        FAT_popup_moveSelectionCursorRight();
+        FAT_popup_moveSelectionCursorRight();
+        FAT_popup_moveSelectionCursorRight();
+        FAT_popup_selectedIcon = SCREEN_SONG_ID;
+
         FAT_data_initData();
         FAT_currentScreen = SCREEN_SONG_ID;
         FAT_yesno_close();
