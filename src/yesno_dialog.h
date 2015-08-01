@@ -22,7 +22,7 @@
 
 #define DIALOG_SAVE 0
 #define DIALOG_LOAD 1
-#define DIALOG_SORRY_SAVE 2
+//#define DIALOG_SORRY_SAVE 2 Bye bye :D
 #define DIALOG_KEYBOARD 3
 #define DIALOG_NEW 4
 
@@ -59,7 +59,7 @@ void FAT_yesno_dialogLoad_mainFunc() {
         FAT_yesno_close();
     } else if (hel_PadQuery()->Pressed.R) {
         FAT_player_stopPlayer();
-        FAT_filesystem_loadRaw(param1);
+        FAT_filesystem_loadTrack(param1);
         FAT_currentScreen = SCREEN_PROJECT_ID;
         FAT_yesno_close();
         hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Loaded");
@@ -146,19 +146,6 @@ void FAT_yesno_dialogLoad() {
 }
 
 /**
- * \brief Boite de dialogue indiquant que seule 3 chansons sont dispos pour la version actuelle. 
- * 
- * \todo Supprimer cette boite de dialogue dès que FAT est capable de gérer la compression.
- */
-void FAT_yes_dialogSorrySave() {
-    ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_DIALOG_SORRYSAVE_RAW), RES_SCREEN_DIALOG_SORRYSAVE_RAW_SIZE16, 1, 1);
-    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_DIALOG_SORRYSAVE_MAP), 1024, 0, 0);
-    ham_InitBg(DIALOG_LAYER, 1, 0, 0);
-
-    hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_onlyyes_dialog_mainFunc);
-}
-
-/**
  * \brief Boite de dialogue indiquant pour la confirmation d'un nouveau projet. 
  * 
  */
@@ -205,9 +192,6 @@ void FAT_yesno_show(u8 idDialog, ...) {
         case DIALOG_LOAD:
             param1 = va_arg(params, int);
             FAT_yesno_dialogLoad();
-            break;
-        case DIALOG_SORRY_SAVE:
-            FAT_yes_dialogSorrySave();
             break;
         case DIALOG_KEYBOARD:
             FAT_yesno_dialogKeyboard();

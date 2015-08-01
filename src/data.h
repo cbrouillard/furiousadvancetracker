@@ -430,7 +430,7 @@ typedef struct FAT {
  * C'est cette variable qui est utilisée comme référence pour compression lors de la sauvegarde
  * et vice versa pour le chargement. 
  */
-tracker ATTR_EWRAM FAT_tracker;
+tracker ATTR_ALIGNED(8) ATTR_EWRAM FAT_tracker;
 
 /**
  * \brief Espace mémoire déjà alloué (d'une vingtaine de kilo) permettant de servir de buffer pour
@@ -439,7 +439,7 @@ tracker ATTR_EWRAM FAT_tracker;
  * C'est cette variable qui est utilisée (écrite sur la ram) lors de la sauvegarde
  * et vice versa pour le chargement.
  */
-tracker ATTR_EWRAM FAT_compressed_tracker;
+tracker ATTR_ALIGNED(8) ATTR_EWRAM FAT_compressed_tracker;
 
 /**
  * \brief Stocke le numéro de la prochaine séquence disponible.
