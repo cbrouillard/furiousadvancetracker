@@ -118,12 +118,10 @@ void FAT_screenFilesystem_init() {
     FAT_screenFilesystem_printInfos();
 
     // affichage des curseurs
+    FAT_cursors_hideAllCursors();
     FAT_cursors_showCursor8();
     FAT_cursors_showCursor2();
     FAT_screenFilesystem_commitCursorMove();
-
-    // démarrage du cycle pour l'écran
-    //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenFilesystem_mainFunc);
 }
 
 /**
@@ -193,7 +191,7 @@ void FAT_screenFilesystem_pressOrHeldA() {
             break;
 
         case FILESYSTEM_MODE_SAVE:
-            FAT_yesno_show(DIALOG_SAVE, FAT_screenFilesystem_currentSelectedLine);
+            FAT_dialog_keyboardShow (FAT_screenFilesystem_currentSelectedLine);
             break;
     }
 

@@ -22,8 +22,6 @@
 
 #define DIALOG_SAVE 0
 #define DIALOG_LOAD 1
-//#define DIALOG_SORRY_SAVE 2 Bye bye :D
-#define DIALOG_KEYBOARD 3
 #define DIALOG_NEW 4
 
 // Prototypes
@@ -63,20 +61,6 @@ void FAT_yesno_dialogLoad_mainFunc() {
         FAT_currentScreen = SCREEN_PROJECT_ID;
         FAT_yesno_close();
         hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Loaded");
-    }
-}
-
-/**
- * \brief Fonction principale de la boite de dialog KEYBOARD
- */
-void FAT_yesno_dialogKeyboard_mainFunc() {
-    hel_ObjTransmit();
-
-    hel_PadCapture();
-    if (hel_PadQuery()->Pressed.L) {
-        FAT_yesno_close();
-    } else if (hel_PadQuery()->Pressed.R) {
-        FAT_yesno_close();
     }
 }
 
@@ -158,18 +142,6 @@ void FAT_yesno_dialogNewProject() {
 }
 
 /**
- * \brief Boite de dialogue pour le clavier. 
- * 
- */
-void FAT_yesno_dialogKeyboard() {
-    ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_DIALOG_KEYBOARD_RAW), RES_SCREEN_DIALOG_KEYBOARD_RAW_SIZE16, 1, 1);
-    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_DIALOG_KEYBOARD_MAP), 1024, 0, 0);
-    ham_InitBg(DIALOG_LAYER, 1, 0, 0);
-
-    hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogKeyboard_mainFunc);
-}
-
-/**
  * \brief Fonction wrapper permettant l'ouverture de toutes les boites de dialogues définies.
  *
  * @param idDialog l'id de la boite de dialogue
@@ -192,9 +164,6 @@ void FAT_yesno_show(u8 idDialog, ...) {
         case DIALOG_LOAD:
             param1 = va_arg(params, int);
             FAT_yesno_dialogLoad();
-            break;
-        case DIALOG_KEYBOARD:
-            FAT_yesno_dialogKeyboard();
             break;
         case DIALOG_NEW:
             FAT_yesno_dialogNewProject();

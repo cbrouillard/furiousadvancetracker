@@ -110,6 +110,7 @@ u8 FAT_live_nbChannelPlaying = 0;
 
 #include "popup.h"
 #include "yesno_dialog.h"
+#include "dialog_keyboard.h"
 #include "screen_song.h"
 #include "screen_filesystem.h"
 #include "screen_project.h"
@@ -119,17 +120,17 @@ u8 FAT_live_nbChannelPlaying = 0;
 #include "screen_notes.h"
 #include "screen_instrument.h"
 #include "screen_effects.h"
-
 #include "screen_help.h"
 
 #include "player.h"
 
 u8 ATTR_EWRAM ATTR_ALIGNED(4) g_BgTextSystemMemory[HEL_SUBSYSTEM_BGTEXT_REQUIREDMEMORY];
 u16 ATTR_EWRAM g_CharLUT[256];
-const char CHARORDER[] =
+// attention, table ASCII uniquement sinon ça fout la grouille.
+const unsigned char CHARORDER[] =
         " BCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmn"\
-    "opqrstuvwxyz0123456789XXXXXXX,.-;:A#^+*@"\
-    "!\"§$\%&/()=?|\\<>[]{}¹²³°";
+    "opqrstuvwxyz0123456789,.-;:A#^+*@"\
+    "!\"~$%&/()=?|\\<>[]{}¹²³°";
 
 u8 ATTR_EWRAM ATTR_ALIGNED(4) g_ObjSystemBuffer[HEL_SUBSYSTEM_OBJ_REQUIREDMEMORY];
 
@@ -145,7 +146,6 @@ u8 ATTR_EWRAM ATTR_ALIGNED(4) g_ObjSystemBuffer[HEL_SUBSYSTEM_OBJ_REQUIREDMEMORY
  * - les données du projet
  */
 void FAT_init() {
-//hel_ObjInit((void*)g_ObjSystemBuffer);
     // HAM !
     ham_Init();
     hel_SysSetPrefetch(TRUE);
@@ -200,6 +200,7 @@ void FAT_init() {
     FAT_initCursor3();
     FAT_initCursor8();
     FAT_initCursorChange();
+    FAT_initCursorsKeyboard();
     FAT_popup_initCursors();
     FAT_screenInstrument_tabCursorInit();
 
