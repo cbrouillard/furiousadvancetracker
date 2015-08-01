@@ -36,6 +36,8 @@ void FAT_screenLive_init();
 void FAT_screenLive_checkButtons();
 void FAT_screenLive_printInfos();
 void FAT_screenLive_printAllScreenText();
+void FAT_screenLive_pressOrHeldA_inSequencer();
+void FAT_screenLive_pressOrHeldA_inDataTable();
 
 bool FAT_screenLive_isCursorInSequencer = 1;
 
@@ -49,7 +51,7 @@ u8 FAT_screenLive_currentStartLine = 0;
  * \brief Affiche uniquement la valeur du tempo au bon endroit. 
  */
 void FAT_screenLive_printTempo() {
-    hel_BgTextPrintF(TEXT_LAYER, 15, 16, 0, "%d", FAT_tracker.tempo);
+    hel_BgTextPrintF(TEXT_LAYER, 15, 16, 0, "%3d", FAT_tracker.tempo);
 }
 
 /**
@@ -233,37 +235,45 @@ void FAT_screenLive_checkButtons() {
             FAT_showHelp(SCREEN_LIVE_ID);
         }
 
-        if (hel_PadQuery()->Pressed.Right) {
-            FAT_screenLive_moveCursorRight();
-        }
-
-        if (hel_PadQuery()->Pressed.Left) {
-            FAT_screenLive_moveCursorLeft();
-        }
-
-        if (hel_PadQuery()->Pressed.Down) {
-            if (hel_PadQuery()->Held.R) {
-                //FAT_screenLive_movePageDown();
-                // changer de portion d'écran -> du séquenceur vers la table
-                FAT_screenLive_switchActivePart(0);
-
-            } else if (hel_PadQuery()->Held.L) {
-                FAT_screenLive_moveCursorAllDown();
+        if (hel_PadQuery()->Pressed.A || hel_PadQuery()->Held.A) {
+            if (FAT_screenLive_isCursorInSequencer){
+                FAT_screenLive_pressOrHeldA_inSequencer();
             } else {
-                FAT_screenLive_moveCursorDown();
+                FAT_screenLive_pressOrHeldA_inDataTable();
             }
-        }
+        } else {
+            if (hel_PadQuery()->Pressed.Right) {
+                FAT_screenLive_moveCursorRight();
+            }
 
-        if (hel_PadQuery()->Pressed.Up) {
-            if (hel_PadQuery()->Held.R) {
-                //FAT_screenLive_movePageUp();
-                // changer de portion d'écran -> de la table vers le sequenceur
-                FAT_screenLive_switchActivePart(1);
+            if (hel_PadQuery()->Pressed.Left) {
+                FAT_screenLive_moveCursorLeft();
+            }
 
-            } else if (hel_PadQuery()->Held.L) {
-                FAT_screenLive_moveCursorAllUp();
-            } else {
-                FAT_screenLive_moveCursorUp();
+            if (hel_PadQuery()->Pressed.Down) {
+                if (hel_PadQuery()->Held.R) {
+                    //FAT_screenLive_movePageDown();
+                    // changer de portion d'écran -> du séquenceur vers la table
+                    FAT_screenLive_switchActivePart(0);
+
+                } else if (hel_PadQuery()->Held.L) {
+                    FAT_screenLive_moveCursorAllDown();
+                } else {
+                    FAT_screenLive_moveCursorDown();
+                }
+            }
+
+            if (hel_PadQuery()->Pressed.Up) {
+                if (hel_PadQuery()->Held.R) {
+                    //FAT_screenLive_movePageUp();
+                    // changer de portion d'écran -> de la table vers le sequenceur
+                    FAT_screenLive_switchActivePart(1);
+
+                } else if (hel_PadQuery()->Held.L) {
+                    FAT_screenLive_moveCursorAllUp();
+                } else {
+                    FAT_screenLive_moveCursorUp();
+                }
             }
         }
 
@@ -291,13 +301,89 @@ void FAT_screenLive_checkButtons() {
             }
         }
 
-        if (hel_PadQuery()->Pressed.A || hel_PadQuery()->Held.A) {
-
-        }
-
         FAT_screenLive_commitCursorMove();
     }
 }
 
+void FAT_screenLive_pressOrHeldA_inSequencer(){
+
+}
+
+void FAT_screenLive_pressOrHeldA_inDataTable(){
+    switch (FAT_screenLive_currentTableSelectedLine){
+        case 0:
+            // volume colonne
+            if (hel_PadQuery()->Pressed.Right && FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] < 0xff) {
+                FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] ++;
+            }
+
+            if (hel_PadQuery()->Pressed.Left && FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] > 0x00) {
+                FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] --;
+            }
+
+            if (hel_PadQuery()->Pressed.Up && FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] < 0xf0) {
+                FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] += 0x10;
+            }
+
+            if (hel_PadQuery()->Pressed.Down && FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] > 0x0f) {
+                FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] -= 0x10;
+            }
+
+            FAT_screenLive_printVolumes();
+            break;
+        case 1:
+            // tsp column
+            if (hel_PadQuery()->Pressed.Right && FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] < 0xff) {
+                FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] ++;
+            }
+
+            if (hel_PadQuery()->Pressed.Left && FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] > 0x00) {
+                FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] --;
+            }
+
+            if (hel_PadQuery()->Pressed.Up && FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] < 0xf0) {
+                FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] += 0x10;
+            }
+
+            if (hel_PadQuery()->Pressed.Down && FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] > 0x0f) {
+                FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] -= 0x10;
+            }
+
+            FAT_screenLive_printTransposes();
+            break;
+        case 2:
+            // mode, tempo
+            if (FAT_screenLive_currentSelectedColumn == 1){
+                if (hel_PadQuery()->Pressed.Right) {
+                    FAT_tracker.liveData.liveMode = 0;
+                }
+
+                if (hel_PadQuery()->Pressed.Left) {
+                    FAT_tracker.liveData.liveMode = 1;
+                }
+
+                FAT_screenLive_printLiveMode();
+            } else if (FAT_screenLive_currentSelectedColumn == 4){
+                if (hel_PadQuery()->Pressed.Right && FAT_tracker.tempo < MAX_TEMPO) {
+                    FAT_tracker.tempo ++;
+                }
+
+                if (hel_PadQuery()->Pressed.Left && FAT_tracker.tempo > 0x00) {
+                    FAT_tracker.tempo --;
+                }
+
+                if (hel_PadQuery()->Pressed.Up && FAT_tracker.tempo < MAX_TEMPO-10) {
+                    FAT_tracker.tempo += 10;
+                }
+
+                if (hel_PadQuery()->Pressed.Down && FAT_tracker.tempo > 10) {
+                    FAT_tracker.tempo -= 10;
+                }
+
+                FAT_screenLive_printTempo();
+            }
+            break;
+    }
+}
 
 #endif

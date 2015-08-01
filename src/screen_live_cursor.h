@@ -81,7 +81,6 @@ void FAT_screenLive_initCursor() {
  */
 void FAT_screenLive_moveCursorRight() {
     if (!(FAT_screenLive_cursorX >= SCREENLIVE_LAST_BLOCK_X - 1)) {
-        FAT_screenLive_cursorX += SCREENLIVE_BLOCK_SIZE_X + SCREENLIVE_WHITE_SPACE_X;
 
         if (!FAT_screenLive_isCursorInSequencer && FAT_screenLive_currentTableSelectedLine == 2){
             if (FAT_screenLive_currentSelectedColumn == 1){
@@ -89,6 +88,7 @@ void FAT_screenLive_moveCursorRight() {
                 FAT_screenLive_currentSelectedColumn = 4;
             }
         }else {
+            FAT_screenLive_cursorX += SCREENLIVE_BLOCK_SIZE_X + SCREENLIVE_WHITE_SPACE_X;
             FAT_screenLive_currentSelectedColumn++;
 
         }
@@ -101,7 +101,6 @@ void FAT_screenLive_moveCursorRight() {
  */
 void FAT_screenLive_moveCursorLeft() {
     if (!(FAT_screenLive_cursorX <= SCREENLIVE_FIRST_BLOCK_X)) {
-        FAT_screenLive_cursorX -= SCREENLIVE_BLOCK_SIZE_X + SCREENLIVE_WHITE_SPACE_X;
 
         if (!FAT_screenLive_isCursorInSequencer && FAT_screenLive_currentTableSelectedLine == 2){
             if (FAT_screenLive_currentSelectedColumn == 4){
@@ -109,6 +108,7 @@ void FAT_screenLive_moveCursorLeft() {
                 FAT_screenLive_currentSelectedColumn = 1;
             }
         }else{
+            FAT_screenLive_cursorX -= SCREENLIVE_BLOCK_SIZE_X + SCREENLIVE_WHITE_SPACE_X;
             FAT_screenLive_currentSelectedColumn--;
         }
         FAT_screenLive_printInfos();
