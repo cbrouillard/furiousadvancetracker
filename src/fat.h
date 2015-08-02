@@ -97,7 +97,7 @@ void FAT_player_stopPlayer();
 /** \brief Prototype. Fonction définie dans player.h. */
 void FAT_player_playComposerNote(u8 noteLine);
 /** \brief Prototype. Fonction définie dans player.h. */
-void FAT_player_startPlayerFromSequences_onlyOneColumn(u8 line, u8 channel);
+void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel);
 
 void FAT_player_stopPlayer_onlyOneColumn(u8 channel);
 bool FAT_isChannelCurrentlyPlaying (u8 channel);

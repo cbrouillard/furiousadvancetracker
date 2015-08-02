@@ -288,14 +288,14 @@ void FAT_screenLive_checkButtons() {
             }else {
                 if (!FAT_isCurrentlyPlaying) {
                     // seule la colonne sélectionnée se lance à partir de la ligne courante.
-                    FAT_player_startPlayerFromSequences_onlyOneColumn(FAT_screenLive_currentSelectedLine, FAT_screenLive_currentSelectedColumn);
+                    FAT_player_startPlayerFromLive_oneChannel(FAT_screenLive_currentSelectedLine, FAT_screenLive_currentSelectedColumn);
                 } else {
                     // si le channel joue actuellement, on l'arrete.
                     if (FAT_isChannelCurrentlyPlaying (FAT_screenLive_currentSelectedColumn)){
                         FAT_player_stopPlayer_onlyOneColumn(FAT_screenLive_currentSelectedColumn);
                     } else {
                         // sinon on le démmarre
-                        FAT_player_startPlayerFromSequences_onlyOneColumn(FAT_screenLive_currentSelectedLine, FAT_screenLive_currentSelectedColumn);
+                        FAT_player_startPlayerFromLive_oneChannel(FAT_screenLive_currentSelectedLine, FAT_screenLive_currentSelectedColumn);
                     }
                 }
             }
