@@ -47,6 +47,9 @@ u8 FAT_currentPlayedChannel = NULL_VALUE;
 /** \brief Id du block en cours de lecture. */
 u8 FAT_currentPlayedBlock = NULL_VALUE;
 
+bufferPlayer FAT_player_buffer[6];
+u8 firstAvailableSequenceForChannel[6];
+
 /** \brief Objet HAM pour référencer le sprite "curseur player" de taille 2. */
 THandle FAT_cursor_player3_obj;
 /** \brief Objet HAM pour référencer le sprite "curseur player" de taille 3. */
@@ -233,6 +236,24 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
     }
 }
 
+u8 FAT_player_searchFirstAvailableSequenceForChannel_returnLine (u8 channel, u8 startingLine){
+    u8 i = startingLine;
+    while (i < NB_SEQUENCES_IN_ONE_CHANNEL){
+        if (FAT_tracker.channels[channel].sequences[i] != NULL_VALUE){
+            return i;
+        }
+        i++;
+    }
+    i = 0;
+    while (i < startingLine){
+        if (FAT_tracker.channels[channel].sequences[i] != NULL_VALUE){
+            return i;
+        }
+        i++;
+    }
+    return 0;
+}
+
 /**
  * \brief Lance la lecture de toute la track.
  */
@@ -242,6 +263,13 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
     memset(actualSequencesForChannel, startLine, sizeof (u8)*6);
     memset(actualBlocksForChannel, 0, sizeof (u8)*6);
     memset(actualNotesForChannel, 0, sizeof (u8)*6);
+    memset(firstAvailableSequenceForChannel, 0, sizeof (u8)*6);
+
+    // détermine pour chaque channel, quelle est la premiere sequence jouable.
+    u8 i;
+    for (i = 0; i<6; i++){
+        firstAvailableSequenceForChannel[i] = FAT_player_searchFirstAvailableSequenceForChannel_returnLine(i, startLine);
+    }
 
     tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     FAT_isCurrentlyPlaying = 1;
@@ -346,6 +374,7 @@ void FAT_player_playFromSequences() {
         u8 i;
         for (i = 0; i < 6; i++) {
             FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
+            FAT_player_buffer[i].haveToPlay = 0;
             if (FAT_currentPlayedSequence != NULL_VALUE) {
                 // lire la séquence actuelle
                 sequence* seq = &FAT_tracker.allSequences[FAT_currentPlayedSequence];
@@ -357,10 +386,10 @@ void FAT_player_playFromSequences() {
                     // Déplacement des curseurs de lecture
                     FAT_player_moveOrHideCursor(i, &(block->notes[actualNotesForChannel[i]]));
 
-                    // TODO BUFFERISER
                     // TODO un effet à appliquer sur la note ?
-                    FAT_player_playNoteWithTsp
-                            (&(block->notes[actualNotesForChannel[i]]), i, seq->transpose[actualBlocksForChannel[i]]);
+                    FAT_player_buffer[i].note = &(block->notes[actualNotesForChannel[i]]);
+                    FAT_player_buffer[i].transpose =  seq->transpose[actualBlocksForChannel[i]];
+                    FAT_player_buffer[i].haveToPlay = 1;
 
                     actualNotesForChannel[i]++;
                     if (actualNotesForChannel[i] >= NB_NOTES_IN_ONE_BLOCK) {
@@ -373,8 +402,8 @@ void FAT_player_playFromSequences() {
                             if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES
                                     || FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
                                     || FAT_data_isSequenceEmpty(FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]])) {
-                                actualSequencesForChannel[i] = 0;
-                                // TODO ne pas remonter à zéro -> remonter à la premiere séquence dispo
+
+                                actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                                 // si pas de séquences dispo -> NULL_VALUE
                             }
                         }
@@ -383,17 +412,21 @@ void FAT_player_playFromSequences() {
                     actualBlocksForChannel[i] = 0;
                     actualSequencesForChannel[i]++;
                     if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES) {
-                        actualSequencesForChannel[i] = 0;
+                        actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                     }
                 }
 
             } else {
-                // en live on ignore pour ne pas forcer le lancement
-                if (!FAT_player_liveManualMode){
-                    actualSequencesForChannel[i] = 0;
-                }
+                actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
             }
 
+        }
+
+        for (i = 0; i < 6; i++) {
+            if (FAT_player_buffer[i].haveToPlay){
+                FAT_player_playNoteWithTsp(
+                   FAT_player_buffer[i].note , i, FAT_player_buffer[i].transpose);
+            }
         }
 
         tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;

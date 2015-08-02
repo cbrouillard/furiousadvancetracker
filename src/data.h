@@ -425,6 +425,16 @@ typedef struct FAT {
 } tracker;
 
 /**
+ * \struct PLAYERBUFFER
+ * \brief Structure pour définir un buffer lors de la lecture du son.
+ */
+typedef struct PLAYERBUFFER {
+    note* note;
+    u8 transpose;
+    bool haveToPlay;
+} bufferPlayer;
+
+/**
  * \brief Contient toutes les données déjà instanciées.
  * 
  * C'est cette variable qui est utilisée comme référence pour compression lors de la sauvegarde
@@ -465,7 +475,9 @@ void FAT_player_playNote(note* note, u8 channel);
  * \brief Initialise les données du tracker. Utile lors de l'allumage de la console.
  */
 void FAT_data_initData() {
+
     memset(&FAT_tracker, NULL_VALUE, sizeof (tracker));
+
     FAT_tracker.tempo = 128;
     FAT_tracker.transpose = 0;
     FAT_tracker.keyRepeat = 10;
