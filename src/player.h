@@ -520,6 +520,8 @@ void FAT_player_playFromLive(){
                 FAT_player_playNoteWithTsp(
                    FAT_player_buffer[i].note , i,
                    FAT_player_buffer[i].transpose + FAT_tracker.liveData.transpose[i]);
+
+                //snd_effect_volume(i, FAT_tracker.liveData.volume[i]);
             }
         }
 
