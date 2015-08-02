@@ -103,6 +103,10 @@ void FAT_screenSong_showActualPlayedNote(u8 channel, u8 name, u8 noteOctave, u8 
     }
 }
 
+void FAT_screenSong_clearShowActualPlayedNote(u8 channel){
+    hel_BgTextPrint(TEXT_LAYER, 26, channel + 9, 0, "---");
+}
+
 /**
  * \brief Affiche quelques infos (nom du projet, ligne actuellement sélectionnée et nom du channel)
  * sur l'écran. 
@@ -214,6 +218,7 @@ void FAT_screenSong_checkButtons() {
                     FAT_player_startPlayerFromSequences(FAT_screenSong_currentSelectedLine);
                 } else {
                     FAT_player_stopPlayer();
+                    FAT_screenSong_printChannelFollower();
                 }
             }
 
