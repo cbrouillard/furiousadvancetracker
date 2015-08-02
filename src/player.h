@@ -518,7 +518,8 @@ void FAT_player_playFromLive(){
         for (i = 0; i < 6; i++) {
             if (FAT_player_buffer[i].haveToPlay){
                 FAT_player_playNoteWithTsp(
-                   FAT_player_buffer[i].note , i, FAT_player_buffer[i].transpose);
+                   FAT_player_buffer[i].note , i,
+                   FAT_player_buffer[i].transpose + FAT_tracker.liveData.transpose[i]);
             }
         }
 
