@@ -237,20 +237,42 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
 
 u8 FAT_player_searchFirstAvailableSequenceForChannel_returnLine (u8 channel, u8 startingLine){
     u8 i = startingLine;
+    u8 firstLine = NULL_VALUE;
+
+    // 1. je cherche en partant de la ligne courante.
     while (i < NB_SEQUENCES_IN_ONE_CHANNEL){
         if (FAT_tracker.channels[channel].sequences[i] != NULL_VALUE){
-            return i;
+            firstLine = i; // j'ai trouvé un bloc valide !
+            break;
         }
         i++;
     }
-    i = 0;
-    while (i < startingLine){
-        if (FAT_tracker.channels[channel].sequences[i] != NULL_VALUE){
-            return i;
+
+    // 2. si je n'ai pas trouvé, je cherche en partant de 0
+    if (firstLine == NULL_VALUE){
+        i = 0;
+        while (i < startingLine){
+            if (FAT_tracker.channels[channel].sequences[i] != NULL_VALUE){
+                firstLine = i;
+                break;
+            }
+            i++;
         }
-        i++;
     }
-    return NULL_VALUE;
+
+    // 3. si j'ai trouvé un bloc valide, on s'assure qu'il s'agit bien du premier
+    if (firstLine != NULL_VALUE){
+        i = firstLine;
+        while (i >= 0){
+            if (FAT_tracker.channels[channel].sequences[i] == NULL_VALUE){
+                break;
+            }
+            firstLine = i;
+            i--;
+        }
+    }
+
+    return firstLine;
 }
 
 /**
