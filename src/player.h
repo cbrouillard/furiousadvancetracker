@@ -236,7 +236,7 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
 }
 
 u8 FAT_player_searchFirstAvailableSequenceForChannel_returnLine (u8 channel, u8 startingLine){
-    u8 i = startingLine;
+    s8 i = startingLine;
     u8 firstLine = NULL_VALUE;
 
     // 1. je cherche en partant de la ligne courante.
