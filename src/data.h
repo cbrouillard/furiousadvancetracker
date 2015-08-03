@@ -228,7 +228,7 @@ typedef struct EFFECT {
 /**
  * \brief Espace mémoire contenant le dernier effet écrit. Par défaut, l'effet est initialisé avec NULL_VALUE.
  */
-effect FAT_data_lastEffectWritten;
+effect ATTR_EWRAM FAT_data_lastEffectWritten;
 
 /**
  * \struct TABLE
@@ -258,15 +258,15 @@ typedef struct NOTE {
  * \brief Espace mémoire contenant la dernière note écrite. Par défaut, cette note est initialisée
  * à "C 3".
  */
-note FAT_data_lastNoteWritten;
+note ATTR_EWRAM FAT_data_lastNoteWritten;
 /**
  * \brief Espace mémoire dédié à la fonctionnalité simulator de l'écran INSTRUMENT.
  */
-note FAT_data_simulator;
+note ATTR_EWRAM FAT_data_simulator;
 /**
  * \brief Presse-papier pour couper/coller une note.
  */
-note FAT_data_noteClipboard;
+note ATTR_EWRAM FAT_data_noteClipboard;
 
 /**
  * \struct COMPOSER
@@ -290,11 +290,11 @@ typedef struct BLOCK {
 /**
  * \brief Cette variable permet de stocker le dernier numéro de block écrit.
  */
-u8 FAT_data_lastBlockWritten;
+u8 ATTR_EWRAM FAT_data_lastBlockWritten;
 /**
  * \brief Presse-papier pour couper/coller des numéros de blocks.
  */
-u8 FAT_data_blockClipboard;
+u8 ATTR_EWRAM FAT_data_blockClipboard;
 
 /**
  * \struct SEQUENCE
@@ -313,11 +313,11 @@ typedef struct SEQUENCE {
 /**
  * \brief Stocke le dernier numéro de séquence écrit.
  */
-u8 FAT_data_lastSequenceWritten;
+u8 ATTR_EWRAM FAT_data_lastSequenceWritten;
 /**
  * \brief Presse-papier pour couper/coller des séquences.
  */
-u8 FAT_data_sequenceClipboard;
+u8 ATTR_EWRAM FAT_data_sequenceClipboard;
 
 /**
  * \struct CHANNEL
@@ -454,19 +454,19 @@ tracker ATTR_ALIGNED(8) ATTR_EWRAM FAT_compressed_tracker;
 /**
  * \brief Stocke le numéro de la prochaine séquence disponible.
  */
-u8 FAT_nextAvailableSequenceId = 0;
+u8 ATTR_EWRAM FAT_nextAvailableSequenceId = 0;
 /**
  * \brief Stocke le numéro du prochain block disponible.
  */
-u8 FAT_nextAvailableBlockId = 0;
+u8 ATTR_EWRAM FAT_nextAvailableBlockId = 0;
 /**
  * \brief Stocke le numéro du prochain instrument disponible.
  */
-u8 FAT_nextAvailableInstrumentId = 0;
+u8 ATTR_EWRAM FAT_nextAvailableInstrumentId = 0;
 /**
  * \brief Stocke le dernier numéro d'instrument utilisé.
  */
-u8 FAT_lastUsedInstrumentId = 0;
+u8 ATTR_EWRAM FAT_lastUsedInstrumentId = 0;
 
 /** \brief Prototype. Définit dans player.h. */
 void FAT_player_playNote(note* note, u8 channel);

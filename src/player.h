@@ -68,6 +68,8 @@ u32 tempoReach = ((60000 / 128) / 4) / 2;
 
 u8 FAT_player_isPlayingFrom;
 
+u8 FAT_live_waitForOtherChannel[6];
+
 /**
  * \brief Function temporisée qui lit toutes les séquences. (callback)
  */
@@ -310,6 +312,10 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
         memset(actualNotesForChannel, 0, sizeof (u8)*6);
         memset(firstAvailableSequenceForChannel, 0, sizeof (u8)*6);
 
+        // les autres channels vont devoir attendre celui la !
+        memset (FAT_live_waitForOtherChannel, 1, sizeof(u8)*6);
+        FAT_live_waitForOtherChannel[channel] = 0;
+
         tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
 
         FAT_isCurrentlyPlaying = 1;
@@ -319,12 +325,11 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
         R_TIM3COUNT = 0xffc0;
         R_TIM3CNT = 0x00C3;
         hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
-
     }
+
     // positionnement du player sur le channel
     firstAvailableSequenceForChannel[channel] = FAT_player_searchFirstAvailableSequenceForChannel_returnLine(channel, line);
     actualSequencesForChannel[channel] = firstAvailableSequenceForChannel[channel];
-
     FAT_live_nbChannelPlaying ++;
 }
 
@@ -457,13 +462,23 @@ void FAT_player_playFromSequences() {
     }
 }
 
+void FAT_player_liveSynchro(){
+    u8 j;
+    for (j=0;j<6;j++){
+        if(FAT_isChannelCurrentlyPlaying(j)){
+            FAT_live_waitForOtherChannel[j] = 0;
+        }
+    }
+}
+
 void FAT_player_playFromLive(){
     if (tempoReach <= 0) {
 
+        bool willHaveToSyncAfterNote = 0;
         u8 i;
         for (i = 0; i < 6; i++) {
             FAT_player_buffer[i].haveToPlay = 0;
-            if (FAT_isChannelCurrentlyPlaying(i)){
+            if (FAT_isChannelCurrentlyPlaying(i) && FAT_live_waitForOtherChannel[i] == 0){
 
                 FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
 
@@ -498,6 +513,7 @@ void FAT_player_playFromLive(){
                                     actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                                     // si pas de séquences dispo -> NULL_VALUE
                                 }
+                                willHaveToSyncAfterNote = 1;
                             }
                         }
                     } else {
@@ -506,12 +522,14 @@ void FAT_player_playFromLive(){
                         if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES) {
                             actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                         }
+                        willHaveToSyncAfterNote = 1;
                     }
 
                 } else {
                     actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+                    willHaveToSyncAfterNote = 1;
                 }
-            }
+            } 
 
         }
 
@@ -525,6 +543,9 @@ void FAT_player_playFromLive(){
             }
         }
 
+        if (willHaveToSyncAfterNote){
+            FAT_player_liveSynchro();
+        }
         tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     }
 }
@@ -622,6 +643,8 @@ void FAT_player_continueToPlay() {
 void FAT_player_stopPlayer_onlyOneColumn(u8 channel){
     actualSequencesForChannel[channel] = NULL_VALUE;
     firstAvailableSequenceForChannel[channel] = 0;
+    FAT_live_waitForOtherChannel[channel] = 1;
+
     FAT_live_nbChannelPlaying --;
 
     if (FAT_live_nbChannelPlaying == 0){
@@ -651,6 +674,7 @@ void FAT_player_stopPlayer() {
     // la lecture est terminée.
     FAT_isCurrentlyPlaying = 0;
     FAT_player_isPlayingFrom = 0;
+    memset (FAT_live_waitForOtherChannel, 0, sizeof(u8)*6);
 }
 
 /**
