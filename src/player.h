@@ -532,27 +532,34 @@ void FAT_player_playFromLive(){
                             if (actualBlocksForChannel[i] >= NB_BLOCKS_IN_SEQUENCE
                                     || seq->blocks[actualBlocksForChannel[i]] == NULL_VALUE) {
                                 actualBlocksForChannel[i] = 0;
-                                actualSequencesForChannel[i]++;
-                                if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES
-                                        || FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
-                                        || FAT_data_isSequenceEmpty(FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]])) {
 
-                                    actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
-                                    // si pas de séquences dispo -> NULL_VALUE
+                                if (!FAT_tracker.liveData.liveMode){ // mode auto?
+                                    actualSequencesForChannel[i]++;
+                                    if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES
+                                            || FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
+                                            || FAT_data_isSequenceEmpty(FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]])) {
+
+                                        actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+                                        // si pas de séquences dispo -> NULL_VALUE
+                                    }
                                 }
                                 willHaveToSyncAfterNote = 1;
                             }
                         }
                     } else {
                         actualBlocksForChannel[i] = 0;
-                        actualSequencesForChannel[i]++;
-                        if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES) {
-                            actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+
+                        if (!FAT_tracker.liveData.liveMode){ // mode auto?
+                            actualSequencesForChannel[i]++;
+                            if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES) {
+                                actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+                            }
                         }
+
                         willHaveToSyncAfterNote = 1;
                     }
 
-                } else {
+                } else if (!FAT_tracker.liveData.liveMode){ // mode auto?
                     actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                     willHaveToSyncAfterNote = 1;
                 }
