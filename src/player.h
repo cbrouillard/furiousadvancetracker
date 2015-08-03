@@ -56,6 +56,8 @@ THandle FAT_cursor_player3_obj;
 THandle FAT_cursor_player2_obj;
 /** \brief Objet HAM pour référencer les sprites "curseur player" utilisés dans l'écran SONG. */
 THandle FAT_cursor_playerSequences_obj[6];
+/** \brief Les curseurs d'attente indiquant que le channel a été activé mais en attente de synchro avant de se lancer */
+THandle FAT_cursor_playerLiveWait_obj[6];
 
 /**
  * \brief Compteur pour le tempo.
@@ -84,7 +86,9 @@ void FAT_player_playFromBlocks();
 void FAT_player_playFromNotes();
 
 void FAT_player_moveOrHideCursor(u8 channel, note* note);
+void FAT_player_live_showOrHideCursorWait(u8 channel);
 void FAT_player_hideAllCursors();
+void FAT_player_hideWaitCursors ();
 void FAT_player_hideSequencesCursors();
 void FAT_player_hideBlockCursor();
 void FAT_player_hideNoteCursor();
@@ -128,14 +132,35 @@ void FAT_player_initCursors() {
                                                0                      // Destination vertical screen coordinate in pixels
                                                );
 
+    FAT_cursor_playerLiveWait_obj[0] =  hel_ObjCreate( ResData(RES_CURSOR2_PLAYER_WAITING_RAW), // Pointer to source graphic
+                                                       OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                                       2,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                       OBJ_MODE_SEMITRANSPARENT,        // Obj Mode
+                                                       COLORS_16,              // Use 16 color mode
+                                                       0,                      // Palette number. Only neccessary in 16 color mode
+                                                       FALSE,                  // Don't use mosaic
+                                                       FALSE,                  // Don't flip the sprite horizontally
+                                                       FALSE,                  // Don't flip the object vertically
+                                                       3,                      // Priority against background. 0=higest
+                                                       FALSE,                  // Don't make the object double-sized
+                                                       0,                    // Destination horzintal screen coordinate in pixels
+                                                       0                      // Destination vertical screen coordinate in pixels
+                                                       );
+
     hel_ObjSetVisible(FAT_cursor_player3_obj, 0);
     hel_ObjSetVisible(FAT_cursor_player2_obj, 0);
+    hel_ObjSetVisible(FAT_cursor_playerLiveWait_obj[0], 0);
 
     // on clone les sprites pour la lecture des 6 séquences à la fois
     u8 i;
     for (i = 0; i < 6; i++) {
         FAT_cursor_playerSequences_obj[i] = hel_ObjClone(FAT_cursor_player2_obj, 0, 0);
         hel_ObjSetPrio(FAT_cursor_playerSequences_obj[i], 3);
+    }
+
+    for (i = 1; i < 6; i++) {
+        FAT_cursor_playerLiveWait_obj[i] = hel_ObjClone(FAT_cursor_playerLiveWait_obj[0], 0, 0);
+        hel_ObjSetPrio(FAT_cursor_playerLiveWait_obj[i], 3);
     }
 }
 
@@ -330,6 +355,8 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
     // positionnement du player sur le channel
     firstAvailableSequenceForChannel[channel] = FAT_player_searchFirstAvailableSequenceForChannel_returnLine(channel, line);
     actualSequencesForChannel[channel] = firstAvailableSequenceForChannel[channel];
+    actualBlocksForChannel[channel] = 0;
+    actualNotesForChannel[channel] = 0;
     FAT_live_nbChannelPlaying ++;
 }
 
@@ -531,6 +558,8 @@ void FAT_player_playFromLive(){
                 }
             }
 
+            FAT_player_live_showOrHideCursorWait (i);
+
         }
 
         for (i = 0; i < 6; i++) {
@@ -684,6 +713,7 @@ void FAT_player_stopPlayer() {
 void FAT_player_hideAllCursors() {
     FAT_player_hideNoteCursor();
     FAT_player_hideBlockCursor();
+    FAT_player_hideWaitCursors ();
     FAT_player_hideSequencesCursors();
 }
 
@@ -699,6 +729,15 @@ void FAT_player_hideSequencesCursors() {
     hel_ObjSetVisible(FAT_cursor_playerSequences_obj[5], 0);
 }
 
+void FAT_player_hideWaitCursors (){
+    hel_ObjSetVisible(FAT_cursor_playerLiveWait_obj[0], 0);
+    hel_ObjSetVisible(FAT_cursor_playerLiveWait_obj[1], 0);
+    hel_ObjSetVisible(FAT_cursor_playerLiveWait_obj[2], 0);
+    hel_ObjSetVisible(FAT_cursor_playerLiveWait_obj[3], 0);
+    hel_ObjSetVisible(FAT_cursor_playerLiveWait_obj[4], 0);
+    hel_ObjSetVisible(FAT_cursor_playerLiveWait_obj[5], 0);
+}
+
 /**
  * \brief Cache les curseurs utilisés lors de la lecture dans l'écran BLOCK. 
  */
@@ -711,6 +750,29 @@ void FAT_player_hideBlockCursor() {
  */
 void FAT_player_hideNoteCursor() {
     hel_ObjSetVisible(FAT_cursor_player3_obj, 0);
+}
+
+
+void FAT_player_live_showOrHideCursorWait(u8 channel){
+    if (FAT_currentScreen == SCREEN_LIVE_ID){
+        if (FAT_isChannelCurrentlyPlaying(channel)
+            && actualSequencesForChannel[channel] >= FAT_screenLive_currentStartLine && !isHelpActivated
+            && FAT_live_waitForOtherChannel[channel] == 1){
+            // affichage
+            u8 yPosition = 15 + ((actualSequencesForChannel[channel] - FAT_screenSong_currentStartLine)*8);
+            if (yPosition < 140){
+                hel_ObjSetXY(FAT_cursor_playerLiveWait_obj[channel],
+                        23 + (channel * (8 + 16)),
+                        yPosition);
+                hel_ObjSetVisible(FAT_cursor_playerLiveWait_obj[channel], 1);
+            } else {
+                hel_ObjSetVisible(FAT_cursor_playerLiveWait_obj[channel], 0);
+            }
+        } else {
+            hel_ObjSetVisible(FAT_cursor_playerLiveWait_obj[channel], 0);
+        }
+
+    }
 }
 
 /**
