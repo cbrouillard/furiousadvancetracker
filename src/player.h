@@ -529,7 +529,7 @@ void FAT_player_playFromLive(){
                     actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                     willHaveToSyncAfterNote = 1;
                 }
-            } 
+            }
 
         }
 
@@ -546,6 +546,7 @@ void FAT_player_playFromLive(){
         if (willHaveToSyncAfterNote){
             FAT_player_liveSynchro();
         }
+
         tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
     }
 }
