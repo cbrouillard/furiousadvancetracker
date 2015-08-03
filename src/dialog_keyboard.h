@@ -213,9 +213,9 @@ void FAT_dialog_keyboardShow (u8 fromTrackNum){
 
     FAT_forceClearTextLayer();
 
-    if (ham_bg[POPUP_LAYER].ti) {
-        ham_DeInitTileSet(ham_bg[POPUP_LAYER].ti);
-        ham_DeInitMapSet(ham_bg[POPUP_LAYER].mi);
+    if (ham_bg[DIALOG_LAYER].ti) {
+        ham_DeInitTileSet(ham_bg[DIALOG_LAYER].ti);
+        ham_DeInitMapSet(ham_bg[DIALOG_LAYER].mi);
     }
 
     FAT_cursors_hideAllCursors();

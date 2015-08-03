@@ -158,9 +158,9 @@ void FAT_yesno_show(u8 idDialog, ...) {
     va_list params;
     va_start(params, idDialog);
 
-    if (ham_bg[POPUP_LAYER].ti) {
-        ham_DeInitTileSet(ham_bg[POPUP_LAYER].ti);
-        ham_DeInitMapSet(ham_bg[POPUP_LAYER].mi);
+    if (ham_bg[DIALOG_LAYER].ti) {
+        ham_DeInitTileSet(ham_bg[DIALOG_LAYER].ti);
+        ham_DeInitMapSet(ham_bg[DIALOG_LAYER].mi);
     }
 
     switch (idDialog) {
