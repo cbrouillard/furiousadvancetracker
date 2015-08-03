@@ -131,6 +131,8 @@ void FAT_popup_init() {
     ham_bg[POPUP_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_POPUP_MAP), 1024, 0, 0);
     ham_InitBg(POPUP_LAYER, 1, 0, 0);
 
+    hel_BgSetPrio (POPUP_LAYER, 0);
+
     FAT_popup_hide();
 }
 
