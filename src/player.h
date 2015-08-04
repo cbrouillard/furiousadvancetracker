@@ -324,7 +324,7 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
     FAT_isCurrentlyPlaying = 1;
     FAT_player_isPlayingFrom = SCREEN_SONG_ID;
 
-    R_TIM3COUNT = 0xffc0;
+    R_TIM3COUNT = 0xffff;
     R_TIM3CNT = 0x00C3;
     hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
 
@@ -348,7 +348,7 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
         FAT_live_nbChannelPlaying = 0;
         FAT_player_isPlayingFrom = SCREEN_LIVE_ID;
 
-        R_TIM3COUNT = 0xffc0;
+        R_TIM3COUNT = 0xffff;
         R_TIM3CNT = 0x00C3;
         hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
     }
@@ -382,7 +382,7 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
     FAT_isCurrentlyPlaying = 1;
     FAT_player_isPlayingFrom = SCREEN_BLOCKS_ID;
 
-    R_TIM3COUNT = 0xffc0;
+    R_TIM3COUNT = 0xffff;
     R_TIM3CNT = 0x00C3;
     hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
 
@@ -408,7 +408,7 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
     FAT_isCurrentlyPlaying = 1;
     FAT_player_isPlayingFrom = SCREEN_NOTES_ID;
 
-    R_TIM3COUNT = 0xffc0;
+    R_TIM3COUNT = 0xffff;
     R_TIM3CNT = 0x00C3;
     hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
 
@@ -878,7 +878,7 @@ void FAT_player_moveOrHideCursor(u8 channel, note* note) {
 }
 
 void FAT_resetTempo (){
-    tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2;
+    tempoReach = (60000 / FAT_tracker.tempo) * 4; // timer trop rapide. Pour le moment je laisse comme ça, ça fonctionne.
 }
 
 #endif	/* PLAYER_H */
