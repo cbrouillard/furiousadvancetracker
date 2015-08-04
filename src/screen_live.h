@@ -204,7 +204,7 @@ void FAT_screenLive_init() {
  */
 void FAT_screenLive_switchActivePart(bool part) {
     FAT_screenLive_isCursorInSequencer = part;
-
+    FAT_screenLive_currentTableSelectedLine = 0;
     FAT_screenLive_switchCursorToPart(part);
     FAT_screenLive_commitCursorMove();
 }
@@ -275,6 +275,7 @@ void FAT_screenLive_checkButtons() {
                     FAT_screenLive_switchActivePart(1);
 
                 } else if (hel_PadQuery()->Held.L) {
+                    FAT_screenLive_switchActivePart(1);
                     FAT_screenLive_moveCursorAllUp();
                 } else {
                     FAT_screenLive_moveCursorUp();

@@ -248,7 +248,7 @@ void FAT_screenLive_moveCursorUp() {
 void FAT_screenLive_switchCursorToPart (bool part){
     if (part == 1){
         // sequenceur.
-        FAT_screenLive_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1;
+        FAT_screenLive_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1 + (8* (FAT_screenLive_currentSelectedLine-FAT_screenLive_currentStartLine));
     } else {
         // table
         FAT_screenLive_cursorY = SCREENLIVE_FIRST_TABLE_DATA_Y - 1;
