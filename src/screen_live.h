@@ -323,12 +323,20 @@ void FAT_screenLive_pressOrHeldA_inDataTable(){
                 FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] --;
             }
 
-            if (hel_PadQuery()->Pressed.Up && FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] < 0xf0) {
-                FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] += 0x10;
+            if (hel_PadQuery()->Pressed.Up) {
+                if (FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] < 0xf0){
+                    FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] += 0x10;
+                } else {
+                    FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] = 0xff;
+                }
             }
 
-            if (hel_PadQuery()->Pressed.Down && FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] > 0x0f) {
-                FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] -= 0x10;
+            if (hel_PadQuery()->Pressed.Down) {
+                if (FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] > 0x0f){
+                    FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] -= 0x10;
+                } else {
+                    FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] = 0x00;
+                }
             }
 
             FAT_screenLive_printVolumes();
@@ -343,12 +351,20 @@ void FAT_screenLive_pressOrHeldA_inDataTable(){
                 FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] --;
             }
 
-            if (hel_PadQuery()->Pressed.Up && FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] < 0xf0) {
-                FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] += 0x10;
+            if (hel_PadQuery()->Pressed.Up) {
+                if (FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] < 0xf0){
+                    FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] += 0x07;
+                } else {
+                    FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] = 0xff;
+                }
             }
 
-            if (hel_PadQuery()->Pressed.Down && FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] > 0x0f) {
-                FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] -= 0x10;
+            if (hel_PadQuery()->Pressed.Down) {
+                if (FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] > 0x0f){
+                    FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] -= 0x07;
+                } else {
+                    FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] = 0x00;
+                }
             }
 
             FAT_screenLive_printTransposes();
@@ -374,12 +390,21 @@ void FAT_screenLive_pressOrHeldA_inDataTable(){
                     FAT_tracker.tempo --;
                 }
 
-                if (hel_PadQuery()->Pressed.Up && FAT_tracker.tempo < MAX_TEMPO-10) {
-                    FAT_tracker.tempo += 10;
+                if (hel_PadQuery()->Pressed.Up ) {
+                    if (FAT_tracker.tempo < MAX_TEMPO-10){
+                        FAT_tracker.tempo += 10;
+                    } else {
+                        FAT_tracker.tempo = 255;
+                    }
+
                 }
 
-                if (hel_PadQuery()->Pressed.Down && FAT_tracker.tempo > 10) {
-                    FAT_tracker.tempo -= 10;
+                if (hel_PadQuery()->Pressed.Down) {
+                    if (FAT_tracker.tempo > 10){
+                        FAT_tracker.tempo -= 10;
+                    } else {
+                        FAT_tracker.tempo = 0;
+                    }
                 }
 
                 FAT_screenLive_printTempo();
