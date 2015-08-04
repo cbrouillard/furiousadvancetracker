@@ -85,7 +85,7 @@ void FAT_player_playFromBlocks();
  */
 void FAT_player_playFromNotes();
 
-void FAT_player_moveOrHideCursor(u8 channel, note* note);
+void FAT_player_moveOrHideCursor(u8 channel);
 void FAT_player_live_showOrHideCursorWait(u8 channel);
 void FAT_player_hideAllCursors();
 void FAT_player_hideWaitCursors ();
@@ -328,6 +328,10 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
     R_TIM3CNT = 0x00C3;
     hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
 
+    for (i = 0;i<6;i++){
+        FAT_player_moveOrHideCursor(i);
+    }
+
 }
 
 void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
@@ -342,7 +346,7 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
         memset (FAT_live_waitForOtherChannel, 1, sizeof(u8)*6);
         FAT_live_waitForOtherChannel[channel] = 0;
 
-        FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
+        FAT_resetTempo ();
 
         FAT_isCurrentlyPlaying = 1;
         FAT_live_nbChannelPlaying = 0;
@@ -359,6 +363,10 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
     actualBlocksForChannel[channel] = 0;
     actualNotesForChannel[channel] = 0;
     FAT_live_nbChannelPlaying ++;
+
+    if (FAT_live_waitForOtherChannel[channel] == 0){
+        FAT_player_moveOrHideCursor(channel);
+    }
 }
 
 /**
@@ -429,7 +437,7 @@ void FAT_player_playFromSequences() {
         u8 i;
         for (i = 0; i < 6; i++) {
             FAT_player_buffer[i].haveToPlay = 0;
-            if (actualSequencesForChannel[i] != NULL_VALUE){
+            if (FAT_isChannelCurrentlyPlaying(i)){
                 FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
                 if (FAT_currentPlayedSequence != NULL_VALUE) {
                     // lire la séquence actuelle
@@ -438,9 +446,6 @@ void FAT_player_playFromSequences() {
                     FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
                     if (FAT_currentPlayedBlock != NULL_VALUE) {
                         block* block = &FAT_tracker.allBlocks[FAT_currentPlayedBlock];
-
-                        // Déplacement des curseurs de lecture
-                        FAT_player_moveOrHideCursor(i, &(block->notes[actualNotesForChannel[i]]));
 
                         // TODO un effet à appliquer sur la note ?
                         FAT_player_buffer[i].note = &(block->notes[actualNotesForChannel[i]]);
@@ -460,9 +465,11 @@ void FAT_player_playFromSequences() {
                                         || FAT_data_isSequenceEmpty(FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]])) {
 
                                     actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
-                                    // si pas de séquences dispo -> NULL_VALUE
+
                                 }
                             }
+                            // Déplacement des curseurs de lecture
+                            FAT_player_moveOrHideCursor(i);//, &(block->notes[actualNotesForChannel[i]]));
                         }
                     } else {
                         actualBlocksForChannel[i] = 0;
@@ -470,10 +477,12 @@ void FAT_player_playFromSequences() {
                         if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES) {
                             actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                         }
+                        FAT_player_moveOrHideCursor(i);
                     }
 
                 } else {
                     actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+                    FAT_player_moveOrHideCursor(i);
                 }
             }
 
@@ -483,10 +492,14 @@ void FAT_player_playFromSequences() {
             if (FAT_player_buffer[i].haveToPlay){
                 FAT_player_playNoteWithTsp(
                    FAT_player_buffer[i].note , i, FAT_player_buffer[i].transpose);
+                /*FAT_screenSong_showActualPlayedNote(i,
+                                                    (FAT_player_buffer[i].note->note & 0xf0) >> 4,
+                                                    FAT_player_buffer[i].note->note & 0x0f,
+                                                    FAT_player_buffer[i].note->freq);*/
             }
         }
 
-        FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
+        FAT_resetTempo ();
     }
 }
 
@@ -495,6 +508,7 @@ void FAT_player_liveSynchro(){
     for (j=0;j<6;j++){
         if(FAT_isChannelCurrentlyPlaying(j)){
             FAT_live_waitForOtherChannel[j] = 0;
+            FAT_player_moveOrHideCursor(j);
         }
     }
 }
@@ -517,9 +531,6 @@ void FAT_player_playFromLive(){
                     FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
                     if (FAT_currentPlayedBlock != NULL_VALUE) {
                         block* block = &FAT_tracker.allBlocks[FAT_currentPlayedBlock];
-
-                        // Déplacement des curseurs de lecture
-                        FAT_player_moveOrHideCursor(i, &(block->notes[actualNotesForChannel[i]]));
 
                         // TODO un effet à appliquer sur la note ?
                         FAT_player_buffer[i].note = &(block->notes[actualNotesForChannel[i]]);
@@ -545,6 +556,8 @@ void FAT_player_playFromLive(){
                                     }
                                 }
                                 willHaveToSyncAfterNote = 1;
+                                // Déplacement des curseurs de lecture
+                                FAT_player_moveOrHideCursor(i);
                             }
                         }
                     } else {
@@ -555,6 +568,7 @@ void FAT_player_playFromLive(){
                             if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES) {
                                 actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                             }
+                            FAT_player_moveOrHideCursor(i);
                         }
 
                         willHaveToSyncAfterNote = 1;
@@ -563,6 +577,7 @@ void FAT_player_playFromLive(){
                 } else if (!FAT_tracker.liveData.liveMode){ // mode auto?
                     actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                     willHaveToSyncAfterNote = 1;
+                    FAT_player_moveOrHideCursor(i);
                 }
             }
 
@@ -576,6 +591,11 @@ void FAT_player_playFromLive(){
                    FAT_player_buffer[i].note , i,
                    FAT_player_buffer[i].transpose + FAT_tracker.liveData.transpose[i]);
 
+                /*FAT_screenSong_showActualPlayedNote(i,
+                                                    (FAT_player_buffer[i].note->note & 0xf0) >> 4,
+                                                    FAT_player_buffer[i].note->note & 0x0f,
+                                                    FAT_player_buffer[i].note->freq);*/
+
                 //snd_effect_volume(i, FAT_tracker.liveData.volume[i]);
             }
         }
@@ -584,7 +604,7 @@ void FAT_player_playFromLive(){
             FAT_player_liveSynchro();
         }
 
-        FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
+        FAT_resetTempo ();
     }
 }
 
@@ -602,7 +622,7 @@ void FAT_player_playFromBlocks() {
                 block* block = &FAT_tracker.allBlocks[FAT_currentPlayedBlock];
 
                 // Déplacement des curseurs de lecture
-                FAT_player_moveOrHideCursor(FAT_currentPlayedChannel, &(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]));
+                FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);//, &(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]));
 
                 // TODO BUFFERISER
                 // TODO un effet à appliquer sur la note ?
@@ -639,7 +659,7 @@ void FAT_player_playFromNotes() {
             block* block = &FAT_tracker.allBlocks[FAT_currentPlayedBlock];
 
             // Déplacement des curseurs de lecture
-            FAT_player_moveOrHideCursor(FAT_currentPlayedChannel, &(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]));
+            FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);//, &(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]));
 
             // TODO BUFFERISER
             // TODO un effet à appliquer sur la note ?
@@ -788,7 +808,7 @@ void FAT_player_live_showOrHideCursorWait(u8 channel){
  * 
  * @param channel le numéro de channel sur lequel on joue du son
  */
-void FAT_player_moveOrHideCursor(u8 channel, note* note) {
+void FAT_player_moveOrHideCursor(u8 channel) {
 
     switch (FAT_currentScreen) {
         case SCREEN_SONG_ID: // on est dans l'écran SONG !
@@ -808,12 +828,12 @@ void FAT_player_moveOrHideCursor(u8 channel, note* note) {
                     hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 0);
                 }
 
-                if (note->freq != NULL_VALUE) {
+                /*if (note->freq != NULL_VALUE) {
                     FAT_screenSong_showActualPlayedNote(channel, (note->note & 0xf0) >> 4, note->note & 0x0f, note->freq);
-                }
+                }*/
 
             } else {
-                FAT_player_hideSequencesCursors();
+                hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 0);
             }
 
 
@@ -838,13 +858,13 @@ void FAT_player_moveOrHideCursor(u8 channel, note* note) {
                     hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 0);
                 }
 
-                if (note->freq != NULL_VALUE) {
+                /*if (note->freq != NULL_VALUE) {
                     // la meme chose que pour SONG. On peut laisser comme ça.
                     FAT_screenSong_showActualPlayedNote(channel, (note->note & 0xf0) >> 4, note->note & 0x0f, note->freq);
-                }
+                }*/
 
             } else {
-                FAT_player_hideSequencesCursors();
+                hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 0);
             }
             break;
         case SCREEN_BLOCKS_ID: // on est dans l'écran BLOCKS
