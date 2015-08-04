@@ -91,6 +91,7 @@ void FAT_player_hideNoteCursor();
 void FAT_player_playNote(note* note, u8 channel);
 void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose);
 void FAT_player_timerFunc();
+void FAT_resetTempo ();
 
 /**
  * \brief Initialisation du curseur player pour les notes.
@@ -294,7 +295,7 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
     }
     memcpy(actualSequencesForChannel, firstAvailableSequenceForChannel, sizeof (u8)*6);
 
-    tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
+    FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
     FAT_isCurrentlyPlaying = 1;
     FAT_player_isPlayingFrom = SCREEN_SONG_ID;
 
@@ -316,7 +317,7 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
         memset (FAT_live_waitForOtherChannel, 1, sizeof(u8)*6);
         FAT_live_waitForOtherChannel[channel] = 0;
 
-        tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
+        FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
 
         FAT_isCurrentlyPlaying = 1;
         FAT_live_nbChannelPlaying = 0;
@@ -350,7 +351,7 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
     FAT_currentPlayedSequence = sequenceId;
     FAT_currentPlayedChannel = channel;
 
-    tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
+    FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
     FAT_isCurrentlyPlaying = 1;
     FAT_player_isPlayingFrom = SCREEN_BLOCKS_ID;
 
@@ -376,7 +377,7 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
     FAT_currentPlayedBlock = blockId;
     FAT_currentPlayedChannel = channel;
 
-    tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
+    FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
     FAT_isCurrentlyPlaying = 1;
     FAT_player_isPlayingFrom = SCREEN_NOTES_ID;
 
@@ -458,7 +459,7 @@ void FAT_player_playFromSequences() {
             }
         }
 
-        tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
+        FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
     }
 }
 
@@ -547,7 +548,7 @@ void FAT_player_playFromLive(){
             FAT_player_liveSynchro();
         }
 
-        tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
+        FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
     }
 }
 
@@ -587,7 +588,7 @@ void FAT_player_playFromBlocks() {
 
         }
 
-        tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
+        FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
     }
 
 }
@@ -615,7 +616,7 @@ void FAT_player_playFromNotes() {
             }
         }
 
-        tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2; //- TEMPO_TIMER_HARDWARE_VALUE;
+        FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
 
     }
 
@@ -805,6 +806,10 @@ void FAT_player_moveOrHideCursor(u8 channel, note* note) {
             break;
     }
 
+}
+
+void FAT_resetTempo (){
+    tempoReach = ((60000 / FAT_tracker.tempo) / 4) / 2;
 }
 
 #endif	/* PLAYER_H */
