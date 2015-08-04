@@ -39,6 +39,8 @@ void FAT_screenEffects_init() {
 
     // affichage d'un peu de texte
 
+
+    FAT_player_hideAllCursors ();
     // démarrage du cycle pour l'écran
     //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenEffects_mainFunc);
 }

@@ -66,7 +66,7 @@ THandle FAT_cursor_playerLiveWait_obj[6];
  * est réinitialisé ensuite.
  * Dans le cas contraire, on attend sans jouer de note.
  */
-u32 tempoReach = ((60000 / 128) / 4) / 2;
+u32 tempoReach = (60000 / 128) * 4;
 
 u8 FAT_player_isPlayingFrom;
 
@@ -85,9 +85,7 @@ void FAT_player_playFromBlocks();
  */
 void FAT_player_playFromNotes();
 
-void FAT_player_moveOrHideCursor(u8 channel);
 void FAT_player_live_showOrHideCursorWait(u8 channel);
-void FAT_player_hideAllCursors();
 void FAT_player_hideWaitCursors ();
 void FAT_player_hideSequencesCursors();
 void FAT_player_hideBlockCursor();
@@ -103,6 +101,12 @@ void FAT_resetTempo ();
  * S'occupe de créer les sprites et de les rendre invisibles. 
  */
 void FAT_player_initCursors() {
+    memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
+    memset(actualBlocksForChannel, 0, sizeof (u8)*6);
+    memset(actualNotesForChannel, 0, sizeof (u8)*6);
+    memset(firstAvailableSequenceForChannel, 0, sizeof (u8)*6);
+    memset(FAT_live_waitForOtherChannel, 0, sizeof (u8)*6);
+
     FAT_cursor_player3_obj = hel_ObjCreate(    ResData(RES_CURSOR3_PLAYER_RAW), // Pointer to source graphic
                                                OBJ_SHAPE_HORIZONTAL,       // Obj Shape
                                                2,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
@@ -708,6 +712,7 @@ void FAT_player_stopPlayer_onlyOneColumn(u8 channel){
     if (FAT_live_nbChannelPlaying == 0){
         FAT_player_stopPlayer();
     } else {
+        snd_effect_kill (channel, 0x00);
         hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 0);
     }
 }
@@ -732,6 +737,9 @@ void FAT_player_stopPlayer() {
     // la lecture est terminée.
     FAT_isCurrentlyPlaying = 0;
     FAT_player_isPlayingFrom = 0;
+
+    // réinit propre.
+    memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
     memset (FAT_live_waitForOtherChannel, 0, sizeof(u8)*6);
 }
 

@@ -302,6 +302,33 @@ void snd_stopAllSounds() {
     snd_init_soundApi();
 }
 
+void snd_stopChannel (u8 channel){
+    switch(channel) {
+        case 0:
+            REG_SOUND1CNT_X = 0x8000;
+            break;
+
+        case 1:
+            REG_SOUND2CNT_H = 0x8000;
+            break;
+
+        case 2:
+            REG_SOUND3CNT_X = 0x8000;
+            break;
+
+        case 3:
+            REG_SOUND4CNT_H = 0x8000;
+            break;
+        case 4:
+            playSnASample = 0;
+            break;
+
+        case 5:
+            playSnBSample = 0;
+            break;
+    }
+}
+
 #define EFFECT_KILL 0
 #define EFFECT_SWEEP 1
 #define EFFECT_OUTPUT 2

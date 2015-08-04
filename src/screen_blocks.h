@@ -190,6 +190,7 @@ void FAT_screenBlocks_init() {
     //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenBlocks_mainFunc);
 
     // affichage du curseur
+    FAT_player_hideAllCursors ();
     FAT_cursors_hideCursor2();
     FAT_screenBlocks_commitCursorMove();
     FAT_cursors_showCursor2();

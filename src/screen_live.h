@@ -191,6 +191,11 @@ void FAT_screenLive_init() {
     FAT_cursors_hideCursor2();
     FAT_screenLive_commitCursorMove();
     FAT_cursors_showCursor2();
+
+    u8 i;
+    for (i = 0;i<6;i++){
+        FAT_player_moveOrHideCursor(i);
+    }
 }
 
 /**

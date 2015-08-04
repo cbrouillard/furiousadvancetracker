@@ -77,6 +77,7 @@ void FAT_screenProject_init() {
     FAT_cursors_hideCursor8();
 
     // init du curseur
+    FAT_player_hideAllCursors ();
     FAT_screenProject_initCursor();
     FAT_screenProject_displayGoodCursor();
 

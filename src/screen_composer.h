@@ -183,6 +183,7 @@ void FAT_screenComposer_init() {
     //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenComposer_mainFunc);
 
     // curseur
+    FAT_player_hideAllCursors ();
     FAT_cursors_hideCursor2();
     FAT_cursors_hideCursor3();
     FAT_cursors_hideCursor1();

@@ -172,6 +172,7 @@ void FAT_screenNotes_init() {
     //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenNotes_mainFunc);
 
     // affichage du curseur
+    FAT_player_hideAllCursors ();
     FAT_cursors_hideCursor2();
     FAT_cursors_hideCursor3();
     FAT_screenNotes_commitCursorMove();

@@ -76,6 +76,7 @@ void FAT_screenHelp_init(u8 screenIdForHelp) {
     }
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
+    FAT_player_hideAllCursors ();
     FAT_cursors_hideAllCursors();
 
     isHelpActivated = 1;

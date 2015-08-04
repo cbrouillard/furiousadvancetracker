@@ -102,6 +102,9 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel);
 void FAT_player_stopPlayer_onlyOneColumn(u8 channel);
 bool FAT_isChannelCurrentlyPlaying (u8 channel);
 
+void FAT_player_moveOrHideCursor(u8 channel);
+void FAT_player_hideAllCursors();
+
 /**
  * \brief Permet de savoir si le player est en train de jouer la chanson.
  */

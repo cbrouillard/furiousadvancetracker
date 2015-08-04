@@ -152,6 +152,11 @@ void snd_simple_playSoundOnChannel4(u16 envelope, u8 mode, u8 length);
 void snd_stopAllSounds();
 
 /**
+ * \brief Eteint le channel en cours.
+ */
+void snd_stopChannel (u8 channel);
+
+/**
  * \brief Cette fonction essaie d'appliquer en effet en dehors du contexte "note": la commande sera appliquée
  * sans jouer de note.
  * 
@@ -249,5 +254,7 @@ char* snd_getSampleNameById(u8 kitId, u8 sampleId);
  * \param kitId le numéro du kit à inspecter
  */
 u8 snd_countSamplesInKitById(u8 kitId);
+
+void snd_effect_kill(u8 channelId, u8 value);
 
 #endif
