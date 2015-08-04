@@ -29,5 +29,5 @@ echo "### Copie dans les daily_builds"
 cp FAT_v$VERSION.gba daily_builds/FuriousAdvanceTracker_v$VERSION-`date '+%d-%B-%Y'`.gba
 
 echo "### Lancement de l'émulateur"
-vba -4 FAT_v$VERSION.gba
+vba  FAT_v$VERSION.gba
 
