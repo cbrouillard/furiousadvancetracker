@@ -185,9 +185,6 @@ void FAT_screenInstrument_init() {
     FAT_cursors_moveCursorChange(INPUT_R_CURSOR_CHANGE_X, INPUT_R_CURSOR_CHANGE_Y);
 
     FAT_player_hideAllCursors ();
-
-    // démarrage du cycle pour l'écran
-    //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenInstrument_mainFunc);
 }
 
 /**

@@ -509,6 +509,12 @@ void FAT_data_initData() {
 
     memset(&FAT_tracker.liveData.volume, 0xff, sizeof (u8)*6);
     memset(&FAT_tracker.liveData.transpose, 0, sizeof (u8)*6);
+
+    u8 i;
+    for (i = 0; i < NB_MAX_SEQUENCES; i++){
+        memset(&FAT_tracker.allSequences[i].transpose, 0, sizeof (u8)*NB_BLOCKS_IN_SEQUENCE);
+    }
+
 }
 
 /**
@@ -854,7 +860,7 @@ bool FAT_data_isBlockEmpty(u8 blockId) {
  * @return 1 si vide, 0 si initialisé
  */
 bool FAT_data_block_isTransposeEmpty(u8 sequence, u8 line) {
-    return FAT_tracker.allSequences[sequence].transpose[line] == NULL_VALUE;
+    return FAT_tracker.allSequences[sequence].transpose[line] == 0;
 }
 
 /**
@@ -1040,12 +1046,7 @@ void FAT_data_sequence_changeValue(u8 channelId, u8 line, s8 addedValue) {
  * @param addedValue la valeur à ajouter/retrancher (+1 ajouter, -1 retrancher)
  */
 void FAT_data_block_changeTransposeValue(u8 sequence, u8 line, s8 addedValue) {
-    //    if (
-    //            (addedValue < 0 && FAT_tracker.allBlocks[blockId].transpose > (-addedValue - 1)) ||
-    //            (addedValue > 0 && FAT_tracker.allBlocks[blockId].transpose < NB_MAX_TRANSPOSE - addedValue)
-    //            ) {
     FAT_tracker.allSequences[sequence].transpose[line] += addedValue;
-    //}
 }
 
 /**
@@ -1228,6 +1229,10 @@ void FAT_data_note_changeInstrument(u8 currentChannel, u8 block, u8 noteLine, s8
 
         FAT_data_initInstrumentIfNeeded(FAT_tracker.allBlocks[block].notes[noteLine].instrument,
                 currentChannel);
+    } else if (addedValue < 0){
+        FAT_data_note_changeInstrument (currentChannel, block, noteLine, -FAT_tracker.allBlocks[block].notes[noteLine].instrument);
+    } else if (addedValue > 0){
+        FAT_data_note_changeInstrument (currentChannel, block, noteLine, NB_MAX_INSTRUMENTS-FAT_tracker.allBlocks[block].notes[noteLine].instrument);
     }
 }
 
@@ -1660,6 +1665,10 @@ void FAT_data_instrumentPulse_changeSoundLength(u8 instrumentId, s8 value) {
 
             ) {
         FAT_tracker.allInstruments[instrumentId].soundlength += value;
+    } else if (value < 0){
+        FAT_data_instrumentPulse_changeSoundLength (instrumentId, -FAT_tracker.allInstruments[instrumentId].soundlength);
+    } else if (value > 0){
+        FAT_data_instrumentPulse_changeSoundLength (instrumentId, INSTRUMENT_PULSE_LENGTH_MAX - FAT_tracker.allInstruments[instrumentId].soundlength-1);
     }
 }
 
@@ -1686,6 +1695,10 @@ void FAT_data_instrumentWave_changeSoundLength(u8 instrumentId, s8 value) {
 
             ) {
         FAT_tracker.allInstruments[instrumentId].soundlength += value;
+    } else if (value < 0){
+        FAT_data_instrumentWave_changeSoundLength (instrumentId, -FAT_tracker.allInstruments[instrumentId].soundlength);
+    } else if (value > 0){
+        FAT_data_instrumentWave_changeSoundLength (instrumentId, INSTRUMENT_WAVE_LENGTH_MAX-FAT_tracker.allInstruments[instrumentId].soundlength-1);
     }
 }
 
@@ -1712,6 +1725,10 @@ void FAT_data_instrumentPulse_changeSweep(u8 instrumentId, s8 value) {
 
             ) {
         FAT_tracker.allInstruments[instrumentId].sweep += value;
+    } else if (value < 0){
+        FAT_data_instrumentPulse_changeSweep (instrumentId, -FAT_tracker.allInstruments[instrumentId].sweep);
+    } else if (value > 0){
+        FAT_data_instrumentPulse_changeSweep (instrumentId, INSTRUMENT_PULSE_SWEEP_MAX - FAT_tracker.allInstruments[instrumentId].sweep - 1);
     }
 }
 
@@ -1783,6 +1800,10 @@ void FAT_data_instrumentWave_changeVoice(u8 instrumentId, s8 value) {
             ) {
         voice += value;
         FAT_tracker.allInstruments[instrumentId].voiceAndBank = bankMode | bank | voice;
+    } else if (value < 0){
+        FAT_data_instrumentWave_changeVoice (instrumentId, -FAT_tracker.allInstruments[instrumentId].voiceAndBank);
+    } else if (value > 0){
+        FAT_data_instrumentWave_changeVoice (instrumentId, INSTRUMENT_WAVE_NB_VOICE-FAT_tracker.allInstruments[instrumentId].voiceAndBank-1);
     }
 }
 
@@ -1877,6 +1898,10 @@ void FAT_data_instrumentSample_changeOffset(u8 instrumentId, s8 value) {
 
             ) {
         FAT_tracker.allInstruments[instrumentId].offset += value;
+    } else if (value < 0){
+        FAT_data_instrumentSample_changeOffset (instrumentId, -FAT_tracker.allInstruments[instrumentId].offset);
+    } else if (value > 0){
+        FAT_data_instrumentSample_changeOffset (instrumentId, INSTRUMENT_SAMPLE_OFFSET_MAX-FAT_tracker.allInstruments[instrumentId].offset-1);
     }
 }
 

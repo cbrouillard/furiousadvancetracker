@@ -120,7 +120,7 @@ void FAT_screenBlocks_printTranspose(u8 line) {
                 "%.2x\0", FAT_data_block_getTranspose(FAT_screenBlocks_currentSequenceId, line));
     } else {
         hel_BgTextPrint(TEXT_LAYER, SCREENBLOCKS_TRANSPOSE_LINE_X, line + SCREENBLOCKS_LINE_START_Y, 0,
-                "  ");
+                "00");
     }
 }
 
