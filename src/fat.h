@@ -191,7 +191,6 @@ void FAT_init() {
     hel_IntrStartHandler(INT_TYPE_VBL, (void*) &VBLInterruptHandler);
 
     // initialisation des palettes.
-    FAT_initScreenPalette();
     FAT_initSpritePalette();
 
     // initialisation de l'écran "Popup" (la map de déplacement)
