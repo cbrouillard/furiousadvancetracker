@@ -1890,6 +1890,10 @@ void FAT_data_project_changeTempo(s8 addedValue) {
             (addedValue > 0 && FAT_tracker.tempo <= MAX_TEMPO - addedValue) ||
             (addedValue < 0 && FAT_tracker.tempo > (-addedValue - 1))) {
         FAT_tracker.tempo += addedValue;
+    } else if (addedValue < 0){
+        FAT_data_project_changeTempo (-FAT_tracker.tempo);
+    } else if (addedValue > 0){
+        FAT_data_project_changeTempo (MAX_TEMPO - FAT_tracker.tempo);
     }
 }
 
@@ -1903,6 +1907,10 @@ void FAT_data_project_changeTranspose(s8 addedValue) {
             (addedValue > 0 && FAT_tracker.transpose < MAX_TRANSPOSE - addedValue) ||
             (addedValue < 0 && FAT_tracker.transpose > (-addedValue - 1))) {
         FAT_tracker.transpose += addedValue;
+    }else if (addedValue < 0){
+        FAT_data_project_changeTranspose (-FAT_tracker.transpose);
+    } else if (addedValue > 0){
+        FAT_data_project_changeTranspose (MAX_TRANSPOSE - FAT_tracker.transpose - 1);
     }
 }
 
@@ -2138,6 +2146,10 @@ void FAT_data_composer_changeTranspose(u8 composer, s8 value) {
 
             ) {
         FAT_tracker.composer.transpose += value;
+    } else if (value < 0){
+        FAT_data_composer_changeTranspose (composer, -FAT_tracker.composer.transpose);
+    } else if (value > 0){
+        FAT_data_composer_changeTranspose (composer, MAX_TRANSPOSE - FAT_tracker.composer.transpose - 1);
     }
 }
 
@@ -2154,6 +2166,10 @@ void FAT_data_composer_changeKeyRepeat(u8 composer, s8 value) {
 
             ) {
         FAT_tracker.composer.keyRepeat += value;
+    }else if (value < 0){
+        FAT_data_composer_changeKeyRepeat (composer, -FAT_tracker.composer.keyRepeat);
+    } else if (value > 0){
+        FAT_data_composer_changeKeyRepeat (composer, MAX_KEYREPEAT - FAT_tracker.composer.keyRepeat - 1);
     }
 }
 
@@ -2199,6 +2215,10 @@ void FAT_data_project_changeKeyRepeat(s8 addedValue) {
         FAT_tracker.keyRepeat += addedValue;
         hel_PadSetRepeatRate(PAD_BUTTON_R | PAD_BUTTON_L | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT | PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_A | PAD_BUTTON_B | PAD_BUTTON_START, FAT_tracker.keyRepeat);
         hel_PadSetRepeatDelay(PAD_BUTTON_R | PAD_BUTTON_L | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT | PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_A | PAD_BUTTON_B | PAD_BUTTON_START, FAT_tracker.keyRepeat > 9 ? FAT_tracker.keyRepeat - 9 : 1);
+    } else if (addedValue < 0){
+        FAT_data_project_changeKeyRepeat (-FAT_tracker.keyRepeat);
+    } else if (addedValue > 0){
+        FAT_data_project_changeKeyRepeat (MAX_KEYREPEAT - FAT_tracker.keyRepeat - 1);
     }
 }
 

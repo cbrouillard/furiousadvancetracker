@@ -189,9 +189,6 @@ void FAT_screenProject_pressOrHeldA() {
             FAT_switchToScreen(SCREEN_FILESYSTEM_ID);
             break;
         case 6:
-            // TODO afficher la boite de dialogue
-            //FAT_yesno_show(DIALOG_LOAD);
-            //            FAT_data_project_load();
             FAT_cursors_hideCursor3();
             FAT_cursors_hideCursor2();
             FAT_screenFilesystem_setMode(FILESYSTEM_MODE_LOAD);
