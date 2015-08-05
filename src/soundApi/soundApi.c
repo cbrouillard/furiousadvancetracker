@@ -377,21 +377,23 @@ void snd_effect_output(u8 channelId, u8 value) {
     snd_changeChannelOutput(channelId, value);
 }
 
+// DONT WORK ! AND NEVER BE ABLE TO WORK. BAD DESIGN.
 void snd_effect_volume(u8 channelId, u16 value) {
     switch (channelId) {
         case 0:
-            REG_SOUND1CNT_H &= 0x0FFF;
-            REG_SOUND1CNT_H |= ((value > 0xF ? 0xF : value) << 12);
+            value = value > 0xf ? 0xf : value;
+            //REG_SOUND1CNT_H &= 0x0FFF;
+            //REG_SOUND1CNT_H |= (value << 12);
             break;
         case 1:
-            REG_SOUND2CNT_L &= 0x0FFF;
-            REG_SOUND2CNT_L |= ((value > 0xF ? 0xF : value) << 12);
+            //REG_SOUND2CNT_L &= 0x0FFF;
+            value = value > 0xf ? 0xf : value;
             break;
         case 2:
             snd_modifyWaveCanalVolume((value > 0x4 ? 0x4 : value));
             break;
         case 3:
-            REG_SOUND4CNT_L &= 0x0FFF;
+            //REG_SOUND4CNT_L &= 0x0FFF;
             REG_SOUND4CNT_L |= ((value > 0xF ? 0xF : value) << 12);
             break;
         case 4:

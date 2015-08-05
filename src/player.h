@@ -92,6 +92,7 @@ void FAT_player_hideBlockCursor();
 void FAT_player_hideNoteCursor();
 void FAT_player_playNote(note* note, u8 channel);
 void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose);
+void FAT_player_playNoteWithTspAndVolume(note* note, u8 channel, u8 transpose, u8 volume);
 void FAT_player_timerFunc();
 void FAT_resetTempo ();
 
@@ -196,6 +197,10 @@ void FAT_player_playNote(note* note, u8 channel) {
     FAT_player_playNoteWithTsp(note, channel, FAT_tracker.transpose);
 }
 
+void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose){
+    FAT_player_playNoteWithTspAndVolume(note, channel, transpose, 0xff);
+}
+
 /**
  * \brief Joue une note sur un channel en ajoutant un transpose.
  * 
@@ -203,7 +208,7 @@ void FAT_player_playNote(note* note, u8 channel) {
  * @param channel le numéro de channel sur lequel jouer la note
  * @param transpose la valeur de transpose, elle sera ajoutée à celle du projet
  */
-void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
+void FAT_player_playNoteWithTspAndVolume(note* note, u8 channel, u8 transpose, u8 volume) {
     if (note->freq != NULL_VALUE) {
 
         instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
@@ -217,17 +222,19 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                 sweepdir = 0;
             }
 
+            volume = (volume > 0xf) ? 0xff : volume;
             switch (channel) {
                 case 0: // PU1
                     snd_playSoundOnChannel1(
                             sweeptime, sweepdir, sweepshifts,
-                            inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->wavedutyOrPolynomialStep,
+                            volume != 0xff ? volume : inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->wavedutyOrPolynomialStep,
                             inst->soundlength, inst->loopmode,
                             inst->output,
                             note->freq, transpose + FAT_tracker.transpose);
                     break;
                 case 1: // PU2
-                    snd_playSoundOnChannel2(inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5,
+                    snd_playSoundOnChannel2(
+                            volume != 0xff ? volume : inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5,
                             inst->wavedutyOrPolynomialStep,
                             inst->soundlength, inst->loopmode,
                             inst->output,
@@ -235,12 +242,13 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose) {
                     break;
 
                 case 2: // WAV
-                    snd_playSoundOnChannel3(inst->volumeRatio & 0x0f, inst->soundlength, inst->loopmode, inst->voiceAndBank & 0x1f,
+                    volume = (volume > 0x4) ? 0xff : volume;
+                    snd_playSoundOnChannel3(volume != 0xff ? volume : inst->volumeRatio & 0x0f, inst->soundlength, inst->loopmode, inst->voiceAndBank & 0x1f,
                             (inst->voiceAndBank & 0x20) >> 5, (inst->voiceAndBank & 0x40) >> 6,
                             inst->output, note->freq, transpose + FAT_tracker.transpose);
                     break;
                 case 3: // NOISE
-                    snd_playSoundOnChannel4(inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->soundlength,
+                    snd_playSoundOnChannel4(volume != 0xff ? volume : inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->soundlength,
                             inst->loopmode, inst->output, note->note & 0x0f, inst->wavedutyOrPolynomialStep,
                             note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
                     break;
@@ -591,14 +599,10 @@ void FAT_player_playFromLive(){
 
         for (i = 0; i < 6; i++) {
             if (FAT_player_buffer[i].haveToPlay){
-                FAT_player_playNoteWithTsp(
+                FAT_player_playNoteWithTspAndVolume(
                    FAT_player_buffer[i].note , i,
-                   FAT_player_buffer[i].transpose + FAT_tracker.liveData.transpose[i]);
-
-                /*FAT_screenSong_showActualPlayedNote(i,
-                                                    (FAT_player_buffer[i].note->note & 0xf0) >> 4,
-                                                    FAT_player_buffer[i].note->note & 0x0f,
-                                                    FAT_player_buffer[i].note->freq);*/
+                   FAT_player_buffer[i].transpose + FAT_tracker.liveData.transpose[i],
+                   FAT_tracker.liveData.volume[i]);
 
                 //snd_effect_volume(i, FAT_tracker.liveData.volume[i]);
             }
@@ -648,7 +652,7 @@ void FAT_player_playFromBlocks() {
 
         }
 
-        FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
+        FAT_resetTempo ();
     }
 
 }
@@ -676,7 +680,7 @@ void FAT_player_playFromNotes() {
             }
         }
 
-        FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
+        FAT_resetTempo ();
 
     }
 
