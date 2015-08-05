@@ -156,7 +156,7 @@ void FAT_screenInstrument_printAllText(u8 type) {
             hel_BgTextPrintF(TEXT_LAYER, 1, 14, 0, "Offset    %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].offset);
             FAT_screenInstrument_showOutput(1, 15, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
 
-            hel_BgTextPrintF(TEXT_LAYER, 16, 12, 0, "Test it!  %s%1x\0", "SM", 1);
+            hel_BgTextPrintF(TEXT_LAYER, 16, 12, 0, "Test it!  S%.2x\0", FAT_data_simulator.freq);
 
             break;
     }
@@ -737,31 +737,36 @@ void FAT_screenInstrument_noise_pressA() {
 void FAT_screenInstrument_sample_pressA() {
     s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
 
-    switch (FAT_screenInstruments_currentSelectedLine) {
-        case 0: // KIT COLLECTION
-            FAT_data_instrumentSample_changeKitNumber(FAT_screenInstrument_currentInstrumentId, addedValue);
-            break;
-        case 1: // VOLUME
-            FAT_data_instrumentSample_changeVolume(FAT_screenInstrument_currentInstrumentId, addedValue);
-            break;
-        case 2: // SPEED
-            FAT_data_instrumentSample_changeSpeed(FAT_screenInstrument_currentInstrumentId, addedValue);
-            break;
-        case 3: // LOOP
-            FAT_data_instrumentSample_changeLooping(FAT_screenInstrument_currentInstrumentId, addedValue);
-            break;
-        case 4: //TIMED
-            FAT_data_instrumentSample_changeLoopmode(FAT_screenInstrument_currentInstrumentId, addedValue);
-            break;
-        case 5: // LENGTH
-            FAT_data_instrumentSample_changeSoundLength(FAT_screenInstrument_currentInstrumentId, addedValue);
-            break;
-        case 6: // OFFSET
-            FAT_data_instrumentSample_changeOffset(FAT_screenInstrument_currentInstrumentId, addedValue);
-            break;
-        case 7: // OUTPUT
-            FAT_data_instrumentSample_changeOutput(FAT_screenInstrument_currentInstrumentId, addedValue);
-            break;
+    if (FAT_screenInstruments_currentSelectedColumn == 0){
+        switch (FAT_screenInstruments_currentSelectedLine) {
+            case 0: // KIT COLLECTION
+                FAT_data_instrumentSample_changeKitNumber(FAT_screenInstrument_currentInstrumentId, addedValue);
+                break;
+            case 1: // VOLUME
+                FAT_data_instrumentSample_changeVolume(FAT_screenInstrument_currentInstrumentId, addedValue);
+                break;
+            case 2: // SPEED
+                FAT_data_instrumentSample_changeSpeed(FAT_screenInstrument_currentInstrumentId, addedValue);
+                break;
+            case 3: // LOOP
+                FAT_data_instrumentSample_changeLooping(FAT_screenInstrument_currentInstrumentId, addedValue);
+                break;
+            case 4: //TIMED
+                FAT_data_instrumentSample_changeLoopmode(FAT_screenInstrument_currentInstrumentId, addedValue);
+                break;
+            case 5: // LENGTH
+                FAT_data_instrumentSample_changeSoundLength(FAT_screenInstrument_currentInstrumentId, addedValue);
+                break;
+            case 6: // OFFSET
+                FAT_data_instrumentSample_changeOffset(FAT_screenInstrument_currentInstrumentId, addedValue);
+                break;
+            case 7: // OUTPUT
+                FAT_data_instrumentSample_changeOutput(FAT_screenInstrument_currentInstrumentId, addedValue);
+                break;
+        }
+    } else{
+        FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);
+        FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
     }
 
     FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
