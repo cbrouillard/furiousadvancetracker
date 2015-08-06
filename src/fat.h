@@ -111,6 +111,9 @@ void FAT_player_hideAllCursors();
 bool FAT_isCurrentlyPlaying = 0;
 u8 FAT_live_nbChannelPlaying = 0;
 
+/** \brief Repères pour le player: les valeurs dans les tableaux représentent des numéros de lignes (séquences). */
+u8 actualSequencesForChannel[6];
+
 #include "popup.h"
 #include "yesno_dialog.h"
 #include "dialog_keyboard.h"

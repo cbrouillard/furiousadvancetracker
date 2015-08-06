@@ -195,6 +195,7 @@ void FAT_screenLive_init() {
     u8 i;
     for (i = 0;i<6;i++){
         FAT_player_moveOrHideCursor(i);
+        FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
     }
 }
 
@@ -304,7 +305,7 @@ void FAT_screenLive_checkButtons() {
                         FAT_player_startPlayerFromLive_oneChannel(FAT_screenLive_currentSelectedLine, FAT_screenLive_currentSelectedColumn);
                     }
 
-                    FAT_screenSong_clearShowActualPlayedNote(FAT_screenLive_currentSelectedColumn);
+                    FAT_screenSongOrLive_markActualSeqIsWaiting(FAT_screenLive_currentSelectedColumn);
                 }
             }
         }

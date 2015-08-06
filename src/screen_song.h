@@ -45,6 +45,7 @@ void FAT_screenSong_printChannelFollower();
 void FAT_screenSong_printInfos();
 void FAT_screenSong_pressOrHeldA();
 void FAT_screenSong_pressB();
+void FAT_screenSongOrLive_showActualPlayedSeqLine(u8 channel, u8 line);
 ////////////////////////////////////////////////////
 
 #include "screen_song_cursor.h"
@@ -78,6 +79,7 @@ void FAT_screenSong_init() {
     u8 i;
     for (i = 0;i<6;i++){
         FAT_player_moveOrHideCursor(i);
+        FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
     }
 }
 
@@ -86,12 +88,12 @@ void FAT_screenSong_init() {
  * boite rouge sur l'écran SONG. Ne devrait pas être appelé plusieurs fois.
  */
 void FAT_screenSong_printChannelFollower() {
-    hel_BgTextPrintF(TEXT_LAYER, 22, 9, 0, "%s ---", CHANNEL_NAME[0]);
-    hel_BgTextPrintF(TEXT_LAYER, 22, 10, 0, "%s ---", CHANNEL_NAME[1]);
-    hel_BgTextPrintF(TEXT_LAYER, 22, 11, 0, "%s ---", CHANNEL_NAME[2]);
-    hel_BgTextPrintF(TEXT_LAYER, 22, 12, 0, "%s ---", CHANNEL_NAME[3]);
-    hel_BgTextPrintF(TEXT_LAYER, 22, 13, 0, "%s ---", CHANNEL_NAME[4]);
-    hel_BgTextPrintF(TEXT_LAYER, 22, 14, 0, "%s ---", CHANNEL_NAME[5]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 9, 0, "%s L--", CHANNEL_NAME[0]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 10, 0, "%s L--", CHANNEL_NAME[1]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 11, 0, "%s L--", CHANNEL_NAME[2]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 12, 0, "%s L--", CHANNEL_NAME[3]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 13, 0, "%s L--", CHANNEL_NAME[4]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 14, 0, "%s L--", CHANNEL_NAME[5]);
 }
 
 /**
@@ -107,13 +109,16 @@ void FAT_screenSong_showActualPlayedNote(u8 channel, u8 name, u8 noteOctave, u8 
         hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "S%.2x", freq);
     }
 }
-void FAT_screenSongOrLive_showActualPlayedNotes(bufferPlayer* buffer){
-    hel_BgTextPrintF(TEXT_LAYER, 26, 9, 0, "%s%.1x", noteName[(buffer[0].note->note & 0xf0) >> 4], buffer[0].note->note & 0x0f);
+void FAT_screenSongOrLive_showActualPlayedSeqLine(u8 channel, u8 line){
+    if (line != NULL_VALUE){
+        hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "L%.2x", line);
+    } else {
+        hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "L--", CHANNEL_NAME[0]);
+    }
 }
 
-
-void FAT_screenSong_clearShowActualPlayedNote(u8 channel){
-    hel_BgTextPrint(TEXT_LAYER, 26, channel + 9, 0, "---");
+void FAT_screenSongOrLive_markActualSeqIsWaiting(u8 channel){
+    hel_BgTextPrint(TEXT_LAYER, 26, channel + 9, 0, "WAI");
 }
 
 /**
