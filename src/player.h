@@ -334,6 +334,7 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
 
     FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
     FAT_isCurrentlyPlaying = 1;
+    FAT_live_nbChannelPlaying = 6; // pour passage dans l'écran LIVE.
     FAT_player_isPlayingFrom = SCREEN_SONG_ID;
 
     R_TIM3COUNT = 0xffff;
