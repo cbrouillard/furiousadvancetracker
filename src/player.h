@@ -332,19 +332,18 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
     }
     memcpy(actualSequencesForChannel, firstAvailableSequenceForChannel, sizeof (u8)*6);
 
-    FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
+    FAT_resetTempo ();
     FAT_isCurrentlyPlaying = 1;
     FAT_live_nbChannelPlaying = 6; // pour passage dans l'écran LIVE.
     FAT_player_isPlayingFrom = SCREEN_SONG_ID;
-
-    R_TIM3COUNT = 0xffff;
-    R_TIM3CNT = 0x00C3;
-    hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
 
     for (i = 0;i<6;i++){
         FAT_player_moveOrHideCursor(i);
     }
 
+    R_TIM3COUNT = 0xffff;
+    R_TIM3CNT = 0x00C3;
+    hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
 }
 
 void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
@@ -364,10 +363,6 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
         FAT_isCurrentlyPlaying = 1;
         FAT_live_nbChannelPlaying = 0;
         FAT_player_isPlayingFrom = SCREEN_LIVE_ID;
-
-        R_TIM3COUNT = 0xffff;
-        R_TIM3CNT = 0x00C3;
-        hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
     }
 
     // positionnement du player sur le channel
@@ -379,6 +374,10 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
 
     if (FAT_live_waitForOtherChannel[channel] == 0){
         FAT_player_moveOrHideCursor(channel);
+
+        R_TIM3COUNT = 0xffff;
+        R_TIM3CNT = 0x00C3;
+        hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
     }
 }
 
@@ -705,15 +704,18 @@ void FAT_player_continueToPlay() {
 }
 
 /**
- * \brief Arrète la lecture d'un channel. Si c'est le dernier, stop le player completement.
+ * \brief Arrete la lecture d'un channel. Si c'est le dernier, stop le player completement.
  */
 void FAT_player_stopPlayer_onlyOneColumn(u8 channel){
     actualSequencesForChannel[channel] = NULL_VALUE;
+    actualBlocksForChannel[channel] = 0;
+    actualNotesForChannel[channel] = 0;
     firstAvailableSequenceForChannel[channel] = 0;
     FAT_live_waitForOtherChannel[channel] = 1;
 
     FAT_live_nbChannelPlaying --;
 
+    // TODO et si un channel attend ?
     if (FAT_live_nbChannelPlaying == 0){
         FAT_player_stopPlayer();
     } else {
