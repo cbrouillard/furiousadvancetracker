@@ -193,7 +193,7 @@ const char* noteEffectName[NB_NOTE_EFFECT] = {"HO", "KL", "OU", "SW", "VO"};
  * \brief Mapping entre le nom de l'effet et son numéro dans la soundApi. Si le mapping 
  * a pour valeur NULL_VALUE, alors l'effet n'est pas géré par la soundAPI.
  */
-const u8 noteEffectNum[NB_NOTE_EFFECT] = {NULL_VALUE, 0, 2, 1, 3};
+const u8 noteEffectNum[NB_NOTE_EFFECT] = {NULL_VALUE, EFFECT_KILL, EFFECT_OUTPUT, EFFECT_SWEEP, EFFECT_VOLUME};
 /**
  * \brief Tableau constant contenant tous les noms d'effets disponibles pour les blocks.
  */
