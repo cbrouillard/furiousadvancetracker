@@ -90,11 +90,29 @@ void FAT_player_hideWaitCursors ();
 void FAT_player_hideSequencesCursors();
 void FAT_player_hideBlockCursor();
 void FAT_player_hideNoteCursor();
-void FAT_player_playNote(note* note, u8 channel);
+void FAT_player_playNote(note* note, u8 channel, u8 forceVolume);
 void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose);
 void FAT_player_playNoteWithTspAndVolume(note* note, u8 channel, u8 transpose, u8 volume);
 void FAT_player_timerFunc();
 void FAT_resetTempo ();
+void FAT_player_firstInit ();
+void FAT_player_initCursors();
+
+void FAT_player_firstInit (){
+    u8 i;
+
+    memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
+    memset(actualBlocksForChannel, 0, sizeof (u8)*6);
+    memset(actualNotesForChannel, 0, sizeof (u8)*6);
+    memset(firstAvailableSequenceForChannel, 0, sizeof (u8)*6);
+    memset(FAT_live_waitForOtherChannel, 0, sizeof (u8)*6);
+    memset(FAT_player_buffer, 0, sizeof(bufferPlayer)*6);
+    for (i=0;i<6;i++){
+        FAT_player_buffer[i].volume = NULL_VALUE;
+    }
+
+    FAT_player_initCursors();
+}
 
 /**
  * \brief Initialisation du curseur player pour les notes.
@@ -102,11 +120,6 @@ void FAT_resetTempo ();
  * S'occupe de créer les sprites et de les rendre invisibles. 
  */
 void FAT_player_initCursors() {
-    memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
-    memset(actualBlocksForChannel, 0, sizeof (u8)*6);
-    memset(actualNotesForChannel, 0, sizeof (u8)*6);
-    memset(firstAvailableSequenceForChannel, 0, sizeof (u8)*6);
-    memset(FAT_live_waitForOtherChannel, 0, sizeof (u8)*6);
 
     FAT_cursor_player3_obj = hel_ObjCreate(    ResData(RES_CURSOR3_PLAYER_RAW), // Pointer to source graphic
                                                OBJ_SHAPE_HORIZONTAL,       // Obj Shape
@@ -193,8 +206,8 @@ void FAT_player_playComposerNote(u8 noteLine) {
  * @param note l'objet NOTE à jouer
  * @param channel le channel sur lequel jouer la note
  */
-void FAT_player_playNote(note* note, u8 channel) {
-    FAT_player_playNoteWithTsp(note, channel, FAT_tracker.transpose);
+void FAT_player_playNote(note* note, u8 channel, u8 forceVolume) {
+    FAT_player_playNoteWithTspAndVolume(note, channel, FAT_tracker.transpose, forceVolume);
 }
 
 void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose){
@@ -504,13 +517,8 @@ void FAT_player_playFromSequences() {
             if (FAT_player_buffer[i].haveToPlay){
                 FAT_player_playNoteWithTsp(
                    FAT_player_buffer[i].note , i, FAT_player_buffer[i].transpose);
-                /*FAT_screenSong_showActualPlayedNote(i,
-                                                    (FAT_player_buffer[i].note->note & 0xf0) >> 4,
-                                                    FAT_player_buffer[i].note->note & 0x0f,
-                                                    FAT_player_buffer[i].note->freq);*/
             }
         }
-
         FAT_resetTempo ();
     }
 }
@@ -662,17 +670,23 @@ void FAT_player_playFromBlocks() {
 // DEJA DOCUMENTEE
 
 void FAT_player_playFromNotes() {
+    u8 volume=NULL_VALUE;
     if (tempoReach <= 0) {
         if (FAT_currentPlayedBlock != NULL_VALUE) {
             block* block = &FAT_tracker.allBlocks[FAT_currentPlayedBlock];
 
             // Déplacement des curseurs de lecture
-            FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);//, &(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]));
+            FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);
 
-            // TODO BUFFERISER
-            // TODO un effet à appliquer sur la note ?
+            effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[FAT_currentPlayedChannel]);
+            if (((effect->name & 0xfe) >> 1) == EFFECT_VOLUME){
+                volume = effect->value;
+            } else {
+                volume = NULL_VALUE;
+            }
+
             FAT_player_playNote(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]),
-                    FAT_currentPlayedChannel);
+                    FAT_currentPlayedChannel, volume);
 
             actualNotesForChannel[FAT_currentPlayedChannel]++;
             if (actualNotesForChannel[FAT_currentPlayedChannel] >= NB_NOTES_IN_ONE_BLOCK) {
@@ -719,6 +733,8 @@ void FAT_player_stopPlayer_onlyOneColumn(u8 channel){
     if (FAT_live_nbChannelPlaying == 0){
         FAT_player_stopPlayer();
     } else {
+        memset(&FAT_player_buffer[channel], 0, sizeof(bufferPlayer));
+        FAT_player_buffer[channel].volume = NULL_VALUE;
         snd_effect_kill (channel, 0x00);
         hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 0);
     }
@@ -748,6 +764,11 @@ void FAT_player_stopPlayer() {
     // réinit propre.
     memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
     memset (FAT_live_waitForOtherChannel, 0, sizeof(u8)*6);
+    memset(FAT_player_buffer, 0, sizeof(bufferPlayer)*6);
+    u8 i;
+    for (i=0;i<6;i++){
+        FAT_player_buffer[i].volume = NULL_VALUE;
+    }
 }
 
 /**

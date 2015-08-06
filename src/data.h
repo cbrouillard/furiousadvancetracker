@@ -432,6 +432,7 @@ typedef struct PLAYERBUFFER {
     note* note;
     u8 transpose;
     bool haveToPlay;
+    u8 volume; // en cas de commande "VOLUME", 0xff si on ne veut pas appliquer
 } bufferPlayer;
 
 /**
@@ -469,7 +470,7 @@ u8 ATTR_EWRAM FAT_nextAvailableInstrumentId = 0;
 u8 ATTR_EWRAM FAT_lastUsedInstrumentId = 0;
 
 /** \brief Prototype. Définit dans player.h. */
-void FAT_player_playNote(note* note, u8 channel);
+void FAT_player_playNote(note* note, u8 channel, u8 forceVolume);
 
 /**
  * \brief Initialise les données du tracker. Utile lors de l'allumage de la console.
@@ -1108,7 +1109,7 @@ void FAT_data_note_previewNote(u8 block, u8 line) {
     FAT_tracker.allInstruments[instId].loopmode = 1;
     FAT_tracker.allInstruments[instId].soundlength = 0x20;
 
-    FAT_player_playNote(&FAT_tracker.allBlocks[block].notes[line], FAT_tracker.allInstruments[instId].type);
+    FAT_player_playNote(&FAT_tracker.allBlocks[block].notes[line], FAT_tracker.allInstruments[instId].type, NULL_VALUE);
 
     FAT_tracker.allInstruments[instId].loopmode = mem_loopMode;
     FAT_tracker.allInstruments[instId].soundlength = mem_soundLength;
@@ -1415,7 +1416,7 @@ void FAT_data_instrument_changeSimulator(u8 inst, s8 addedValue) {
 void FAT_data_instrument_playSimulator(u8 inst) {
     u8 mem_loopMode = FAT_tracker.allInstruments[inst].loopmode;
     FAT_tracker.allInstruments[inst].loopmode = 1;
-    FAT_player_playNote(&FAT_data_simulator, FAT_tracker.allInstruments[inst].type);
+    FAT_player_playNote(&FAT_data_simulator, FAT_tracker.allInstruments[inst].type, FAT_tracker.allInstruments[inst].envelope & 0x0f);
     FAT_tracker.allInstruments[inst].loopmode = mem_loopMode;
 }
 
@@ -1965,7 +1966,7 @@ void FAT_data_composer_previewNote(u8 line) {
     FAT_tracker.allInstruments[instId].loopmode = 1;
     FAT_tracker.allInstruments[instId].soundlength = 0x20;
 
-    FAT_player_playNote(&FAT_tracker.composer.notes[line], FAT_tracker.composer.channels[line]);
+    FAT_player_playNote(&FAT_tracker.composer.notes[line], FAT_tracker.composer.channels[line], NULL_VALUE);
 
     FAT_tracker.allInstruments[instId].loopmode = mem_loopMode;
     FAT_tracker.allInstruments[instId].soundlength = mem_soundLength;

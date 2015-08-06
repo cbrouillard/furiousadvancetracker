@@ -107,6 +107,10 @@ void FAT_screenSong_showActualPlayedNote(u8 channel, u8 name, u8 noteOctave, u8 
         hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "S%.2x", freq);
     }
 }
+void FAT_screenSongOrLive_showActualPlayedNotes(bufferPlayer* buffer){
+    hel_BgTextPrintF(TEXT_LAYER, 26, 9, 0, "%s%.1x", noteName[(buffer[0].note->note & 0xf0) >> 4], buffer[0].note->note & 0x0f);
+}
+
 
 void FAT_screenSong_clearShowActualPlayedNote(u8 channel){
     hel_BgTextPrint(TEXT_LAYER, 26, channel + 9, 0, "---");

@@ -206,8 +206,7 @@ void FAT_init() {
     FAT_popup_initCursors();
     FAT_screenInstrument_tabCursorInit();
 
-    FAT_player_initCursors();
-    //FAT_cursors_initCursorsChannel ();
+    FAT_player_firstInit();
 
     // chargement des sprites pour l'écran instrument
     FAT_screenInstrument_initSpritesForInstrument();
