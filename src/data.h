@@ -513,7 +513,7 @@ void FAT_data_initData() {
 
     u8 i;
     for (i = 0; i < NB_MAX_SEQUENCES; i++){
-        memset(&FAT_tracker.allSequences[i].transpose, 0, sizeof (u8)*NB_BLOCKS_IN_SEQUENCE);
+        memset(&(FAT_tracker.allSequences[i].transpose), 0, sizeof (u8)*NB_BLOCKS_IN_SEQUENCE);
     }
 
 }

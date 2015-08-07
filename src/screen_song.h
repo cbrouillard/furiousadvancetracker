@@ -114,7 +114,7 @@ void FAT_screenSongOrLive_showActualPlayedSeqLine(u8 channel, u8 line){
         if (line != NULL_VALUE && line < NB_MAX_SEQUENCES){
             hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "L%.2x", line);
         } else {
-            hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "L--", CHANNEL_NAME[0]);
+            hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "L--");
         }
     }
 }

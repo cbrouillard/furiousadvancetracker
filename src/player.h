@@ -343,7 +343,7 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
 
     FAT_resetTempo ();
     FAT_isCurrentlyPlaying = 1;
-    FAT_live_nbChannelPlaying = 6; // pour passage dans l'écran LIVE.
+    FAT_live_nbChannelPlaying = 0;
     FAT_player_isPlayingFrom = SCREEN_SONG_ID;
 
     // détermine pour chaque channel, quelle est la premiere sequence jouable.
@@ -351,6 +351,9 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
     for (i = 0; i<6; i++){
         firstAvailableSequenceForChannel[i] = FAT_player_searchFirstAvailableSequenceForChannel_returnLine(i, startLine);
         actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+        if (actualSequencesForChannel[i]!=NULL_VALUE){
+            FAT_live_nbChannelPlaying++;
+        }
         FAT_player_moveOrHideCursor(i);
         FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
     }
@@ -376,8 +379,9 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
 
         FAT_isCurrentlyPlaying = 1;
         FAT_live_nbChannelPlaying = 0;
-        FAT_player_isPlayingFrom = SCREEN_LIVE_ID;
     }
+
+    FAT_player_isPlayingFrom = SCREEN_LIVE_ID;
 
     // positionnement du player sur le channel
     firstAvailableSequenceForChannel[channel] = FAT_player_searchFirstAvailableSequenceForChannel_returnLine(channel, line);
@@ -468,11 +472,11 @@ void FAT_player_playFromSequences() {
                 FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
                 if (FAT_currentPlayedSequence != NULL_VALUE) {
                     // lire la séquence actuelle
-                    sequence* seq = &FAT_tracker.allSequences[FAT_currentPlayedSequence];
+                    sequence* seq = &(FAT_tracker.allSequences[FAT_currentPlayedSequence]);
 
                     FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
                     if (FAT_currentPlayedBlock != NULL_VALUE) {
-                        block* block = &FAT_tracker.allBlocks[FAT_currentPlayedBlock];
+                        block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
 
                         // TODO un effet à appliquer sur la note ?
                         FAT_player_buffer[i].note = &(block->notes[actualNotesForChannel[i]]);
@@ -551,11 +555,11 @@ void FAT_player_playFromLive(){
 
                 if (FAT_currentPlayedSequence != NULL_VALUE) {
                     // lire la séquence actuelle
-                    sequence* seq = &FAT_tracker.allSequences[FAT_currentPlayedSequence];
+                    sequence* seq = &(FAT_tracker.allSequences[FAT_currentPlayedSequence]);
 
                     FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
                     if (FAT_currentPlayedBlock != NULL_VALUE) {
-                        block* block = &FAT_tracker.allBlocks[FAT_currentPlayedBlock];
+                        block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
 
                         // TODO un effet à appliquer sur la note ?
                         FAT_player_buffer[i].note = &(block->notes[actualNotesForChannel[i]]);
@@ -637,11 +641,11 @@ void FAT_player_playFromBlocks() {
     if (tempoReach <= 0) {
         if (FAT_currentPlayedSequence != NULL_VALUE) {
             // lire la séquence actuelle
-            sequence* seq = &FAT_tracker.allSequences[FAT_currentPlayedSequence];
+            sequence* seq = &(FAT_tracker.allSequences[FAT_currentPlayedSequence]);
 
             FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[FAT_currentPlayedChannel]];
             if (FAT_currentPlayedBlock != NULL_VALUE) {
-                block* block = &FAT_tracker.allBlocks[FAT_currentPlayedBlock];
+                block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
 
                 // Déplacement des curseurs de lecture
                 FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);//, &(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]));
@@ -678,7 +682,7 @@ void FAT_player_playFromNotes() {
     u8 volume=NULL_VALUE;
     if (tempoReach <= 0) {
         if (FAT_currentPlayedBlock != NULL_VALUE) {
-            block* block = &FAT_tracker.allBlocks[FAT_currentPlayedBlock];
+            block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
 
             // Déplacement des curseurs de lecture
             FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);
