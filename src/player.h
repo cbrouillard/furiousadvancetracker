@@ -417,7 +417,7 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
     FAT_currentPlayedSequence = sequenceId;
     FAT_currentPlayedChannel = channel;
 
-    FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
+    FAT_resetTempo ();
     FAT_isCurrentlyPlaying = 1;
     FAT_player_isPlayingFrom = SCREEN_BLOCKS_ID;
 
@@ -443,7 +443,7 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
     FAT_currentPlayedBlock = blockId;
     FAT_currentPlayedChannel = channel;
 
-    FAT_resetTempo (); //- TEMPO_TIMER_HARDWARE_VALUE;
+    FAT_resetTempo ();
     FAT_isCurrentlyPlaying = 1;
     FAT_player_isPlayingFrom = SCREEN_NOTES_ID;
 
@@ -453,7 +453,7 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
 
 }
 
-void FAT_player_timerFunc() {
+void ATTR_FASTFUNC FAT_player_timerFunc() {
     if (tempoReach > 0) {
         tempoReach--;
     }
@@ -463,8 +463,10 @@ void FAT_player_timerFunc() {
 // DEJA DOCUMENTEE
 
 void FAT_player_playFromSequences() {
+    hel_BgTextPrintF(TEXT_LAYER, 18, 15, 0, "%d", tempoReach);
     if (tempoReach <= 0) {
-
+        tempoReach = 0;
+        hel_BgTextPrintF(TEXT_LAYER, 25, 15, 0, "TIK");
         u8 i;
         for (i = 0; i < 6; i++) {
             FAT_player_buffer[i].haveToPlay = 0;
@@ -528,7 +530,7 @@ void FAT_player_playFromSequences() {
             }
         }
         FAT_resetTempo ();
-    }
+    }else {hel_BgTextPrintF(TEXT_LAYER, 25, 15, 0, "   ");}
 }
 
 void FAT_player_liveSynchro(){
@@ -543,8 +545,10 @@ void FAT_player_liveSynchro(){
 }
 
 void FAT_player_playFromLive(){
+    hel_BgTextPrintF(TEXT_LAYER, 18, 15, 0, "%d", tempoReach);
     if (tempoReach <= 0) {
-
+        tempoReach = 0;
+        hel_BgTextPrintF(TEXT_LAYER, 25, 15, 0, "TIK");
         bool willHaveToSyncAfterNote = 0;
         u8 i;
         for (i = 0; i < 6; i++) {
@@ -631,14 +635,16 @@ void FAT_player_playFromLive(){
         }
 
         FAT_resetTempo ();
-    }
+    }else {hel_BgTextPrintF(TEXT_LAYER, 25, 15, 0, "   ");}
 }
 
 // DEJA DOCUMENTEE
 
 void FAT_player_playFromBlocks() {
-
+    hel_BgTextPrintF(TEXT_LAYER, 18, 15, 0, "%d", tempoReach);
     if (tempoReach <= 0) {
+        tempoReach = 0;
+        hel_BgTextPrintF(TEXT_LAYER, 25, 15, 0, "TIK");
         if (FAT_currentPlayedSequence != NULL_VALUE) {
             // lire la séquence actuelle
             sequence* seq = &(FAT_tracker.allSequences[FAT_currentPlayedSequence]);
@@ -670,7 +676,7 @@ void FAT_player_playFromBlocks() {
         }
 
         FAT_resetTempo ();
-    }
+    }else {hel_BgTextPrintF(TEXT_LAYER, 25, 15, 0, "   ");}
 
 }
 
@@ -679,8 +685,11 @@ void FAT_player_playFromBlocks() {
 // DEJA DOCUMENTEE
 
 void FAT_player_playFromNotes() {
+    hel_BgTextPrintF(TEXT_LAYER, 18, 15, 0, "%d", tempoReach);
     u8 volume=NULL_VALUE;
     if (tempoReach <= 0) {
+        tempoReach = 0;
+        hel_BgTextPrintF(TEXT_LAYER, 25, 15, 0, "TIK");
         if (FAT_currentPlayedBlock != NULL_VALUE) {
             block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
 
@@ -705,7 +714,7 @@ void FAT_player_playFromNotes() {
 
         FAT_resetTempo ();
 
-    }
+    }else {hel_BgTextPrintF(TEXT_LAYER, 25, 15, 0, "   ");}
 
 }
 
