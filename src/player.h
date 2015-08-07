@@ -487,6 +487,13 @@ void FAT_player_playFromSequences() {
                         FAT_player_buffer[i].transpose =  seq->transpose[actualBlocksForChannel[i]];
                         FAT_player_buffer[i].haveToPlay = 1;
 
+                        effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[i]);
+                        if (((effect->name & 0xfe) >> 1) == EFFECT_VOLUME){
+                            FAT_player_buffer[i].volume = effect->value;
+                        } else {
+                            FAT_player_buffer[i].volume = NULL_VALUE;
+                        }
+
                         actualNotesForChannel[i]++;
                         if (actualNotesForChannel[i] >= NB_NOTES_IN_ONE_BLOCK) {
                             actualNotesForChannel[i] = 0;
@@ -527,8 +534,8 @@ void FAT_player_playFromSequences() {
 
         for (i = 0; i < 6; i++) {
             if (FAT_player_buffer[i].haveToPlay){
-                FAT_player_playNoteWithTsp(
-                   FAT_player_buffer[i].note , i, FAT_player_buffer[i].transpose);
+                FAT_player_playNoteWithTspAndVolume(
+                   FAT_player_buffer[i].note , i, FAT_player_buffer[i].transpose, FAT_player_buffer[i].volume);
             }
         }
         FAT_resetTempo ();
@@ -557,6 +564,7 @@ void FAT_player_playFromLive(){
         u8 i;
         for (i = 0; i < 6; i++) {
             FAT_player_buffer[i].haveToPlay = 0;
+            FAT_player_buffer[i].volume = NULL_VALUE;
             if (FAT_isChannelCurrentlyPlaying(i) && actualSequencesForChannel[i] < NB_MAX_SEQUENCES && FAT_live_waitForOtherChannel[i] == 0){
 
                 FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
@@ -568,6 +576,13 @@ void FAT_player_playFromLive(){
                     FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
                     if (FAT_currentPlayedBlock != NULL_VALUE) {
                         block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
+
+                        effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[i]);
+                        if (((effect->name & 0xfe) >> 1) == EFFECT_VOLUME){
+                            FAT_player_buffer[i].volume = effect->value;
+                        } else {
+                            FAT_player_buffer[i].volume = NULL_VALUE;
+                        }
 
                         // TODO un effet à appliquer sur la note ?
                         FAT_player_buffer[i].note = &(block->notes[actualNotesForChannel[i]]);
@@ -625,12 +640,23 @@ void FAT_player_playFromLive(){
 
         }
 
+        u8 volume = NULL_VALUE;
         for (i = 0; i < 6; i++) {
             if (FAT_player_buffer[i].haveToPlay){
+
+                // calcul du volume
+                if (FAT_tracker.liveData.volume[i] == NULL_VALUE){
+                    volume = FAT_player_buffer[i].volume;
+                } else if (FAT_player_buffer[i].volume == NULL_VALUE){
+                    volume = FAT_tracker.liveData.volume[i];
+                } else {
+                    volume = (FAT_player_buffer[i].volume + FAT_tracker.liveData.volume[i])/2;
+                }
+
                 FAT_player_playNoteWithTspAndVolume(
                    FAT_player_buffer[i].note , i,
                    FAT_player_buffer[i].transpose + FAT_tracker.liveData.transpose[i],
-                   FAT_tracker.liveData.volume[i]);
+                   volume);
             }
         }
 
@@ -648,6 +674,7 @@ void FAT_player_playFromBlocks() {
     #ifdef DEBUG_ON
     hel_BgTextPrintF(TEXT_LAYER, 22, 15, 0, "%.d", tempoReach);
     #endif
+    u8 volume=NULL_VALUE;
     if (tempoReach <= 0) {
         tempoReach = 0;
         hel_BgTextPrintF(TEXT_LAYER, 26, 0, 0, "TIK");
@@ -660,11 +687,18 @@ void FAT_player_playFromBlocks() {
                 block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
 
                 // Déplacement des curseurs de lecture
-                FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);//, &(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]));
+                FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);
+
+                effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[FAT_currentPlayedChannel]);
+                if (((effect->name & 0xfe) >> 1) == EFFECT_VOLUME){
+                    volume = effect->value;
+                } else {
+                    volume = NULL_VALUE;
+                }
 
                 // TODO un effet à appliquer sur la note ?
-                FAT_player_playNoteWithTsp(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]), FAT_currentPlayedChannel,
-                        seq->transpose[actualBlocksForChannel[FAT_currentPlayedChannel]]);
+                FAT_player_playNoteWithTspAndVolume(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]), FAT_currentPlayedChannel,
+                        seq->transpose[actualBlocksForChannel[FAT_currentPlayedChannel]], volume);
 
                 actualNotesForChannel[FAT_currentPlayedChannel]++;
                 if (actualNotesForChannel[FAT_currentPlayedChannel] >= NB_NOTES_IN_ONE_BLOCK) {
