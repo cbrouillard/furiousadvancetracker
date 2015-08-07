@@ -2,7 +2,6 @@
 # HAM Makefile
 #################################
 
-#HAMDIR = /home/cyril/Coding/GBA/devkit/ham-271-linux-full
 include $(HAMDIR)/system/master.mak
 
 ADD_LIBS += $(GCCARM)/lib/libhel2.a
