@@ -356,8 +356,8 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
     }
 
     R_TIM3COUNT = 0xffff;
-    R_TIM3CNT = 0x00C3;
     hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
+    R_TIM3CNT = 0x00C3;
 }
 
 void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
@@ -391,8 +391,8 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
         FAT_screenSongOrLive_showActualPlayedSeqLine (channel, actualSequencesForChannel[channel]);
 
         R_TIM3COUNT = 0xffff;
-        R_TIM3CNT = 0x00C3;
         hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
+        R_TIM3CNT = 0x00C3;
     }
 }
 
@@ -418,8 +418,8 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
     FAT_player_isPlayingFrom = SCREEN_BLOCKS_ID;
 
     R_TIM3COUNT = 0xffff;
-    R_TIM3CNT = 0x00C3;
     hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
+    R_TIM3CNT = 0x00C3;
 
 }
 
@@ -444,8 +444,8 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
     FAT_player_isPlayingFrom = SCREEN_NOTES_ID;
 
     R_TIM3COUNT = 0xffff;
-    R_TIM3CNT = 0x00C3;
     hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
+    R_TIM3CNT = 0x00C3;
 
 }
 
@@ -755,6 +755,7 @@ bool FAT_isChannelCurrentlyPlaying (u8 channel){
  */
 void FAT_player_stopPlayer() {
 
+    R_TIM3CNT = 0x0000;
     hel_IntrStopHandler(INT_TYPE_TIM3);
 
     // stop le son
