@@ -66,7 +66,7 @@ THandle FAT_cursor_playerLiveWait_obj[6];
  * est réinitialisé ensuite.
  * Dans le cas contraire, on attend sans jouer de note.
  */
-u32 tempoReach = (60000 / 128) * 4;
+int tempoReach = (60000 / 128) * 4;
 
 u8 FAT_player_isPlayingFrom;
 
@@ -100,6 +100,7 @@ void FAT_player_initCursors();
 
 void FAT_player_firstInit (){
     u8 i;
+    R_TIM3CNT = 0x0003;
 
     memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
     memset(actualBlocksForChannel, 0, sizeof (u8)*6);
@@ -112,6 +113,7 @@ void FAT_player_firstInit (){
     }
 
     FAT_player_initCursors();
+    FAT_resetTempo();
 }
 
 /**
@@ -334,23 +336,21 @@ u8 FAT_player_searchFirstAvailableSequenceForChannel_returnLine (u8 channel, u8 
 void FAT_player_startPlayerFromSequences(u8 startLine) {
 
     // initialisation des séquences au démarrage
+    memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
     memset(actualBlocksForChannel, 0, sizeof (u8)*6);
     memset(actualNotesForChannel, 0, sizeof (u8)*6);
     memset(firstAvailableSequenceForChannel, 0, sizeof (u8)*6);
-
-    // détermine pour chaque channel, quelle est la premiere sequence jouable.
-    u8 i;
-    for (i = 0; i<6; i++){
-        firstAvailableSequenceForChannel[i] = FAT_player_searchFirstAvailableSequenceForChannel_returnLine(i, startLine);
-    }
-    memcpy(actualSequencesForChannel, firstAvailableSequenceForChannel, sizeof (u8)*6);
 
     FAT_resetTempo ();
     FAT_isCurrentlyPlaying = 1;
     FAT_live_nbChannelPlaying = 6; // pour passage dans l'écran LIVE.
     FAT_player_isPlayingFrom = SCREEN_SONG_ID;
 
-    for (i = 0;i<6;i++){
+    // détermine pour chaque channel, quelle est la premiere sequence jouable.
+    u8 i;
+    for (i = 0; i<6; i++){
+        firstAvailableSequenceForChannel[i] = FAT_player_searchFirstAvailableSequenceForChannel_returnLine(i, startLine);
+        actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
         FAT_player_moveOrHideCursor(i);
         FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
     }
@@ -464,7 +464,7 @@ void FAT_player_playFromSequences() {
         u8 i;
         for (i = 0; i < 6; i++) {
             FAT_player_buffer[i].haveToPlay = 0;
-            if (FAT_isChannelCurrentlyPlaying(i)){
+            if (FAT_isChannelCurrentlyPlaying(i) && actualSequencesForChannel[i] < NB_MAX_SEQUENCES){
                 FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
                 if (FAT_currentPlayedSequence != NULL_VALUE) {
                     // lire la séquence actuelle
@@ -545,7 +545,7 @@ void FAT_player_playFromLive(){
         u8 i;
         for (i = 0; i < 6; i++) {
             FAT_player_buffer[i].haveToPlay = 0;
-            if (FAT_isChannelCurrentlyPlaying(i) && FAT_live_waitForOtherChannel[i] == 0){
+            if (FAT_isChannelCurrentlyPlaying(i) && actualSequencesForChannel[i] < NB_MAX_SEQUENCES && FAT_live_waitForOtherChannel[i] == 0){
 
                 FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
 
@@ -646,7 +646,6 @@ void FAT_player_playFromBlocks() {
                 // Déplacement des curseurs de lecture
                 FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);//, &(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]));
 
-                // TODO BUFFERISER
                 // TODO un effet à appliquer sur la note ?
                 FAT_player_playNoteWithTsp(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]), FAT_currentPlayedChannel,
                         seq->transpose[actualBlocksForChannel[FAT_currentPlayedChannel]]);
@@ -755,7 +754,7 @@ bool FAT_isChannelCurrentlyPlaying (u8 channel){
  */
 void FAT_player_stopPlayer() {
 
-    R_TIM3CNT = 0x0000;
+    R_TIM3CNT = 0x0003;
     hel_IntrStopHandler(INT_TYPE_TIM3);
 
     // stop le son
@@ -767,11 +766,13 @@ void FAT_player_stopPlayer() {
     // la lecture est terminée.
     FAT_isCurrentlyPlaying = 0;
     FAT_player_isPlayingFrom = 0;
+    FAT_live_nbChannelPlaying = 0;
 
     // réinit propre.
     memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
     memset (FAT_live_waitForOtherChannel, 0, sizeof(u8)*6);
     memset(FAT_player_buffer, 0, sizeof(bufferPlayer)*6);
+
     u8 i;
     for (i=0;i<6;i++){
         FAT_player_buffer[i].volume = NULL_VALUE;
@@ -826,7 +827,7 @@ void FAT_player_hideNoteCursor() {
 
 void FAT_player_live_showOrHideCursorWait(u8 channel){
     if (FAT_currentScreen == SCREEN_LIVE_ID){
-        if (FAT_isChannelCurrentlyPlaying(channel)
+        if (FAT_isChannelCurrentlyPlaying(channel) && actualSequencesForChannel[channel] < NB_MAX_SEQUENCES
             && actualSequencesForChannel[channel] >= FAT_screenLive_currentStartLine && !isHelpActivated
             && FAT_live_waitForOtherChannel[channel] == 1){
             // affichage
@@ -857,7 +858,7 @@ void FAT_player_moveOrHideCursor(u8 channel) {
         case SCREEN_SONG_ID: // on est dans l'écran SONG !
             FAT_player_hideBlockCursor();
             FAT_player_hideNoteCursor();
-            if (actualSequencesForChannel[channel] != NULL_VALUE
+            if (actualSequencesForChannel[channel] != NULL_VALUE && actualSequencesForChannel[channel] < NB_MAX_SEQUENCES
                     && actualSequencesForChannel[channel] >= FAT_screenSong_currentStartLine && !isHelpActivated) {
                 // la lecture a été lancée depuis l'écran SONG
                 // on dispose du numéro de ligne actuellement jouée dans actualSequencesForChannel[channel]
@@ -871,10 +872,6 @@ void FAT_player_moveOrHideCursor(u8 channel) {
                     hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 0);
                 }
 
-                /*if (note->freq != NULL_VALUE) {
-                    FAT_screenSong_showActualPlayedNote(channel, (note->note & 0xf0) >> 4, note->note & 0x0f, note->freq);
-                }*/
-
             } else {
                 hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 0);
             }
@@ -885,7 +882,7 @@ void FAT_player_moveOrHideCursor(u8 channel) {
             // TODO duplication moche.
             FAT_player_hideBlockCursor();
             FAT_player_hideNoteCursor();
-            if (actualSequencesForChannel[channel] != NULL_VALUE
+            if (actualSequencesForChannel[channel] != NULL_VALUE && actualSequencesForChannel[channel] < NB_MAX_SEQUENCES
                     && actualSequencesForChannel[channel] >= FAT_screenLive_currentStartLine && !isHelpActivated) {
                 // la lecture a été lancée depuis l'écran SONG
                 // on dispose du numéro de ligne actuellement jouée dans actualSequencesForChannel[channel]

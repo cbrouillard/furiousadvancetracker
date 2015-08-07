@@ -304,8 +304,7 @@ void FAT_screenLive_checkButtons() {
                         // sinon on le démmarre
                         FAT_player_startPlayerFromLive_oneChannel(FAT_screenLive_currentSelectedLine, FAT_screenLive_currentSelectedColumn);
                     }
-
-                    FAT_screenSongOrLive_markActualSeqIsWaiting(FAT_screenLive_currentSelectedColumn);
+                    //FAT_screenSongOrLive_markActualSeqIsWaiting(FAT_screenLive_currentSelectedColumn);
                 }
             }
         }

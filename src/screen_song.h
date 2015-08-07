@@ -111,7 +111,7 @@ void FAT_screenSong_showActualPlayedNote(u8 channel, u8 name, u8 noteOctave, u8 
 }
 void FAT_screenSongOrLive_showActualPlayedSeqLine(u8 channel, u8 line){
     if (FAT_currentScreen == SCREEN_SONG_ID || FAT_currentScreen == SCREEN_LIVE_ID){
-        if (line != NULL_VALUE){
+        if (line != NULL_VALUE && line < NB_MAX_SEQUENCES){
             hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "L%.2x", line);
         } else {
             hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "L--", CHANNEL_NAME[0]);
