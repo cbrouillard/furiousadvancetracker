@@ -160,7 +160,9 @@ void FAT_screenBlocks_printAllBlocks() {
 void FAT_screenBlocks_printAllScreenText() {
     FAT_screenBlocks_printLineColumns();
     FAT_screenBlocks_printAllBlocks();
+
     FAT_screenBlocks_printInfos();
+    hel_BgTextPrintF(TEXT_LAYER, 18, 6, 0, "Tsp-Proj %2.x\nTempo   %.3d", FAT_tracker.transpose, FAT_tracker.tempo);
 }
 
 /**

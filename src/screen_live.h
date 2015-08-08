@@ -112,8 +112,8 @@ void FAT_screenLive_printLineColumns() {
  */
 void FAT_screenLive_printInfos() {
     hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "%s", FAT_tracker.songName);
-    hel_BgTextPrintF(TEXT_LAYER, 21, 4, 0, "Line  %.2x", FAT_screenLive_currentSelectedLine);
-    hel_BgTextPrintF(TEXT_LAYER, 21, 5, 0, "Chan %s", CHANNEL_NAME[FAT_screenLive_currentSelectedColumn]);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 4, 0, "Chan %s", CHANNEL_NAME[FAT_screenLive_currentSelectedColumn]);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 5, 0, "Line  %.2x", FAT_screenLive_currentSelectedLine);
     hel_BgTextPrintF(TEXT_LAYER, 21, 6, 0, "TSP   %2.x", FAT_tracker.transpose);
 
     FAT_screenLive_printLiveMode();

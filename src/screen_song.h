@@ -128,7 +128,7 @@ void FAT_screenSongOrLive_markActualSeqIsWaiting(u8 channel){
  * sur l'écran. 
  */
 void FAT_screenSong_printInfos() {
-    hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "%s\nLine  %.2x\nChan %s", FAT_tracker.songName, FAT_screenSong_currentSelectedLine, CHANNEL_NAME[FAT_screenSong_currentSelectedColumn]);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "%s\nChan %s\nLine  %.2x", FAT_tracker.songName, CHANNEL_NAME[FAT_screenSong_currentSelectedColumn], FAT_screenSong_currentSelectedLine);
     hel_BgTextPrintF(TEXT_LAYER, 21, 6, 0, "TSP   %2.x\nTmpo %.3d", FAT_tracker.transpose, FAT_tracker.tempo);
 }
 

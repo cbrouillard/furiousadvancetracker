@@ -316,14 +316,17 @@ u8 FAT_player_searchFirstAvailableSequenceForChannel_returnLine (u8 channel, u8 
     }
 
     // 3. si j'ai trouvé un bloc valide, on s'assure qu'il s'agit bien du premier
-    if (firstLine != NULL_VALUE){
-        i = firstLine;
-        while (i >= 0){
-            if (FAT_tracker.channels[channel].sequences[i] == NULL_VALUE){
-                break;
+    // attention, seulement en mode greedPlay && non live.
+    if (FAT_tracker.greedPlay){
+        if (firstLine != NULL_VALUE){
+            i = firstLine;
+            while (i >= 0){
+                if (FAT_tracker.channels[channel].sequences[i] == NULL_VALUE){
+                    break;
+                }
+                firstLine = i;
+                i--;
             }
-            firstLine = i;
-            i--;
         }
     }
 
@@ -468,7 +471,7 @@ void FAT_player_playFromSequences() {
     #endif
     if (tempoReach <= 0) {
         tempoReach = 0;
-        hel_BgTextPrintF(TEXT_LAYER, 26, 0, 0, "TIK");
+        hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
         u8 i;
         for (i = 0; i < 6; i++) {
             FAT_player_buffer[i].haveToPlay = 0;
@@ -539,7 +542,7 @@ void FAT_player_playFromSequences() {
             }
         }
         FAT_resetTempo ();
-    }else {hel_BgTextPrintF(TEXT_LAYER, 26, 0, 0, "   ");}
+    }else {hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");}
 }
 
 void FAT_player_liveSynchro(){
@@ -559,7 +562,7 @@ void FAT_player_playFromLive(){
     #endif
     if (tempoReach <= 0) {
         tempoReach = 0;
-        hel_BgTextPrintF(TEXT_LAYER, 26, 0, 0, "TIK");
+        hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
         bool willHaveToSyncAfterNote = 0;
         u8 i;
         for (i = 0; i < 6; i++) {
@@ -665,7 +668,7 @@ void FAT_player_playFromLive(){
         }
 
         FAT_resetTempo ();
-    }else {hel_BgTextPrintF(TEXT_LAYER, 26, 0, 0, "   ");}
+    }else {hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");}
 }
 
 // DEJA DOCUMENTEE
@@ -677,7 +680,7 @@ void FAT_player_playFromBlocks() {
     u8 volume=NULL_VALUE;
     if (tempoReach <= 0) {
         tempoReach = 0;
-        hel_BgTextPrintF(TEXT_LAYER, 26, 0, 0, "TIK");
+        hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
         if (FAT_currentPlayedSequence != NULL_VALUE) {
             // lire la séquence actuelle
             sequence* seq = &(FAT_tracker.allSequences[FAT_currentPlayedSequence]);
@@ -716,7 +719,7 @@ void FAT_player_playFromBlocks() {
         }
 
         FAT_resetTempo ();
-    }else {hel_BgTextPrintF(TEXT_LAYER, 26, 0, 0, "   ");}
+    }else {hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");}
 
 }
 
@@ -731,7 +734,7 @@ void FAT_player_playFromNotes() {
     u8 volume=NULL_VALUE;
     if (tempoReach <= 0) {
         tempoReach = 0;
-        hel_BgTextPrintF(TEXT_LAYER, 26, 0, 0, "TIK");
+        hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
         if (FAT_currentPlayedBlock != NULL_VALUE) {
             block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
 
@@ -756,7 +759,7 @@ void FAT_player_playFromNotes() {
 
         FAT_resetTempo ();
 
-    }else {hel_BgTextPrintF(TEXT_LAYER, 26, 0, 0, "   ");}
+    }else {hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");}
 
 }
 
@@ -828,7 +831,7 @@ void FAT_player_stopPlayer() {
     memset (FAT_live_waitForOtherChannel, 0, sizeof(u8)*6);
     memset(FAT_player_buffer, 0, sizeof(bufferPlayer)*6);
 
-    hel_BgTextPrintF(TEXT_LAYER, 26, 0, 0, "   ");
+    hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");
 
     u8 i;
     for (i=0;i<6;i++){

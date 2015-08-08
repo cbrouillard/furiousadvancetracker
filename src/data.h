@@ -414,6 +414,7 @@ typedef struct FAT {
     u8 transpose; /*!< Valeur de transposition pour la track en cours de composition. */
     u8 keyRepeat; /*!< Valeur permettant de régler la vélocité de l'interface. FF = lent 00 = rapide */
     u8 previewEnable; /*!< Paramètre pour l'activation de la preview dans l'écran NOTE. */
+    u8 greedPlay; /*!< Paramètre utile pour la selection de paquet de séquences lors du démarrage de la lecture */
     channel channels[6]; /*!< Définition des channels: la GBA en dispose de 6. */
     sequence allSequences [NB_MAX_SEQUENCES]; /*!< Tableau (physique) contenant toutes les séquence. */
     block allBlocks [NB_MAX_BLOCKS]; /*!< Tableau (physique) contenant tous les blocks. */
@@ -482,6 +483,7 @@ void FAT_data_initData() {
     FAT_tracker.tempo = 128;
     FAT_tracker.transpose = 0;
     FAT_tracker.keyRepeat = 10;
+    FAT_tracker.greedPlay = 0;
     FAT_tracker.nbWork = 0;
     strcpy(FAT_tracker.songName, "FATSONG!\0");
 
@@ -2334,6 +2336,14 @@ void FAT_data_project_changePreview(s8 addedValue) {
         FAT_tracker.previewEnable = 0;
     } else if (addedValue > 0) {
         FAT_tracker.previewEnable = 1;
+    }
+}
+
+void FAT_data_project_changeGreedPlay (s8 addedValue){
+    if (addedValue < 0) {
+        FAT_tracker.greedPlay = 0;
+    } else if (addedValue > 0) {
+        FAT_tracker.greedPlay = 1;
     }
 }
 

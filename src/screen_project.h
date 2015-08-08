@@ -40,9 +40,10 @@ void FAT_screenProject_printInfos() {
     hel_BgTextPrintF(TEXT_LAYER, 1, 5, 0, "Transpose %.2x", FAT_tracker.transpose);
     hel_BgTextPrintF(TEXT_LAYER, 1, 8, 0, "KeyRepeat %.2x", FAT_tracker.keyRepeat);
     hel_BgTextPrintF(TEXT_LAYER, 1, 9, 0, "Preview   %.3s", yesOrNo[FAT_tracker.previewEnable != 0]);
-    hel_BgTextPrintF(TEXT_LAYER, 1, 12, 0, "New  Prj  OK");
-    hel_BgTextPrintF(TEXT_LAYER, 1, 13, 0, "Save Prj  OK");
-    hel_BgTextPrintF(TEXT_LAYER, 1, 14, 0, "Load Prj  OK");
+    hel_BgTextPrintF(TEXT_LAYER, 1, 10, 0, "GreedPlay %.3s", yesOrNo[FAT_tracker.greedPlay != 0]);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 13, 0, "New  Prj  OK");
+    hel_BgTextPrintF(TEXT_LAYER, 1, 14, 0, "Save Prj  OK");
+    hel_BgTextPrintF(TEXT_LAYER, 1, 15, 0, "Load Prj  OK");
 
     hel_BgTextPrintF(TEXT_LAYER, 1, 1, 0, "FAT project v%s", FAT_VERSION);
 }
@@ -53,7 +54,7 @@ void FAT_screenProject_printInfos() {
  */
 void FAT_screenProject_printProject() {
     hel_BgTextPrintF(TEXT_LAYER, 16, 3, 0, "Name %.8s", FAT_tracker.songName);
-    hel_BgTextPrintF(TEXT_LAYER, 16, 4, 0, "Size %.4x", sizeof (FAT_tracker));
+    hel_BgTextPrintF(TEXT_LAYER, 16, 4, 0, "Mem  %.d B", sizeof (FAT_tracker));
     hel_BgTextPrintF(TEXT_LAYER, 16, 5, 0, "Work %.2x", FAT_tracker.nbWork);
 
 }
@@ -179,21 +180,6 @@ void FAT_screenProject_pressOrHeldA() {
             FAT_data_project_changeTranspose(addedValue);
             FAT_screenProject_printInfos();
             break;
-        case 5:
-            // TODO afficher la boite de dialogue
-            //FAT_yesno_show(DIALOG_SAVE);
-            //FAT_data_project_save();
-            FAT_cursors_hideCursor3();
-            FAT_cursors_hideCursor2();
-            FAT_screenFilesystem_setMode(FILESYSTEM_MODE_SAVE);
-            FAT_switchToScreen(SCREEN_FILESYSTEM_ID);
-            break;
-        case 6:
-            FAT_cursors_hideCursor3();
-            FAT_cursors_hideCursor2();
-            FAT_screenFilesystem_setMode(FILESYSTEM_MODE_LOAD);
-            FAT_switchToScreen(SCREEN_FILESYSTEM_ID);
-            break;
         case 2:
             FAT_data_project_changeKeyRepeat(addedValue);
             FAT_screenProject_printInfos();
@@ -203,8 +189,27 @@ void FAT_screenProject_pressOrHeldA() {
             FAT_screenProject_printInfos();
             break;
         case 4:
+            FAT_data_project_changeGreedPlay(addedValue);
+            FAT_screenProject_printInfos();
+            break;
+        case 5:
             FAT_yesno_show(DIALOG_NEW);
             break;
+        case 6:
+            FAT_cursors_hideCursor3();
+            FAT_cursors_hideCursor2();
+            FAT_screenFilesystem_setMode(FILESYSTEM_MODE_SAVE);
+            FAT_switchToScreen(SCREEN_FILESYSTEM_ID);
+            break;
+        case 7:
+            FAT_cursors_hideCursor3();
+            FAT_cursors_hideCursor2();
+            FAT_screenFilesystem_setMode(FILESYSTEM_MODE_LOAD);
+            FAT_switchToScreen(SCREEN_FILESYSTEM_ID);
+            break;
+
+
+
     }
 
 }
