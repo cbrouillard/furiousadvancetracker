@@ -66,7 +66,7 @@ THandle FAT_cursor_playerLiveWait_obj[6];
  * est réinitialisé ensuite.
  * Dans le cas contraire, on attend sans jouer de note.
  */
-int tempoReach = (60000 / 128) * 4;
+volatile int tempoReach = (60000 / 128) * 4;
 
 u8 FAT_player_isPlayingFrom;
 
