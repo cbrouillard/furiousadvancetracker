@@ -782,9 +782,13 @@
 
         \paragraph{Transpose} Réglez la transposition de tout le projet.
         
-        \paragraph{"Keyrepeat" (temps de répétition)} Ce paramètre permet de régler le temps d'attente entre chaque appui d'une touche. Plus cette valeur est grande, plus l'interface est lente. 
+        \paragraph{"Keyrepeat" (temps de répétition)} Ce paramètre permet de régler le temps d'attente entre chaque appui d'une touche. Plus cette valeur est grande, plus l'interface est lente.
 
-        \paragraph{"New Prj"} Crée un nouveau projet. Attention, les données non enregistrées seront impitoyablement effacée. 
+        \paragraph{Preview} Réglez ce paramètre à YES pour demander à \FAT de jouer la note dès qu'elle est écrite.
+
+        \paragraph{GreedPlay} Si activé le GreedPlay force \FAT à toujours chercher à jouer la première séquence disponible dans un ensemble et ce peu importe la ligne sur laquelle vous vous trouvez. Ex : posez plusieurs séquences (avec des notes à lire) à la suite, de la ligne 0 à 5, puis positionnez vous sur la ligne 3. Pressez START. Si le greedPlay est activé, la lecture ne commencera pas depuis la ligne 3 mais depuis la 0.
+
+        \paragraph{"New Prj"} Crée un nouveau projet. Attention, les données non enregistrées seront impitoyablement effacées, écrasées, broyées, massacrées.
         
         \paragraph{"Save PRJ" (sauvegarder)}  Affiche l'écran de sauvegarde (cf \ref{filesystem}). Cette version de \FAT reste expérimentale en terme de gestion de la sauvegarde.
         
@@ -869,10 +873,68 @@
     \ColoredAnnotation{Cet écran n'est pas encore programmé. Pour ceux qui connaissent LSDJ, il s'agira de l'équivalent des TABLES}
     
     \subsection{L'écran LIVE}
-    
-    EPIC TODO
-    
-    \subsection{L'écran COMPOSER}  
+
+    Ici, vous allez pouvoir jouer votre chanson comme vous le voulez. C'est ce mode qui est à priviligier si vous voulez mouiller le maillot sur scène. Si vous préférez simplement appuyer sur START dans l'écran SONG et danser avec le public, libre à vous ! Le mode LIVE est là pour vous permettre de modifier la mécanique de vos morceaux.
+
+    \Image{images/screen_live}{1.0}{L'écran LIVE se présente comme l'écran SONG}
+
+    Le séquenceur est à nouveau affiché mais cette fois il n'est pas question d'éditer les séquences sur le tableau.
+    Par contre vous allez pouvoir démarrer chacun des channels dans l'ordre qui vous chante. Une fois un channel démarré, il est possible d'effectuer plusieurs actions :
+    \medskip
+    \begin{itemize}
+        \item{modifier le volume du channel}
+        \item{changer la transposition sur le channel}
+        \item{stopper sa lecture}
+    \end{itemize}
+    \medskip
+    Notez que l'écran LIVE propose deux modes : le mode MANUAL (MAN) et le mode AUTO (AUT).
+    En mode MANUAL, FAT n'avance PAS dans le séquenceur. La même séquence sur le channel est rejouée à l'infini: c'est à vous de faire progresser le morceau.
+    A l'inverse, en mode AUTO, FAT se comporte comme dans l'écran SONG : tous les channels en cours de lecture progressent normalement.
+    Attention, en mode AUTO, si aucun channel ne joue et que vous appuyez sur START, alors TOUS les channels se lancent et s'arrêtent en même temps.
+
+    % Configuration du tableau
+    \tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+    \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+    \tablelasttail{\hline}
+    \begin{supertabular}{|l|p{11cm}|}
+    \hline
+        {\bf SELECT} & Passer en mode popup \\
+        \hline
+        {\bf R+L} & Afficher l'écran d'aide \\
+        \hline
+        {\bf START} & MODE AUTO - SON STOPPÉ - Lance la lecture de tous les channels \\
+        \hline
+        {\bf START} & MODE AUTO - SON DEMARRÉ - Stoppe la lecture de tous les channels \\
+        \hline
+        {\bf START} & MODE MANUAL - Lance/arrête la lecture du channel sous le curseur \\
+        \hline
+        {\bf R+BAS} & Passer dans la partie configuration de l'écran (modification du volume, tsp, tempo et mode) \\
+        \hline
+        {\bf R+HAUT} & Passer dans la partie séquenceur de l'écran \\
+        \hline
+        {\bf A+DIRECTION} & DANS LA PARTIE CONFIGURATION - Modifie la valeur du paramètre sous le curseur \\
+    \hline
+    \end{supertabular}
+
+    \subsubsection{Application du volume}
+
+    Lorsque vous changez le volume sur le channel, \FAT calcul un nouveau volume à appliquer sur chaque note. \medskip
+
+    \begin{itemize}
+        \item{si la valeur est "df" dans l'écran LIVE, alors le volume de l'instrument ou celui d'une éventuelle commande est appliqué. "df" = "defined"}
+        \item{si la valeur est autre que "df", alors le volume est une moyenne calculée entre la valeur écrite dans l'instrument (ou dans une commande) et celle demandée dans le LIVE}
+    \end{itemize}
+    \medskip
+
+    Un volume de 00 n'éteint donc pas forcément le channel ! Il n'y a pour le moment pas de mode MUTE.
+
+    \subsubsection{Application du transpose}
+
+    Comme pour le volume, \FAT calcul la valeur de transpose à appliquer en fonction d'autres paramètres. La valeur de transpose à prendre en considération se calcule comme suit :
+
+    \ColoredAnnotation{transpose du projet + transpose sur le block + transpose sur le live = transpose}
+
+    \subsection{L'écran COMPOSER}
     
     Imaginez cet écran comme un mini-piano: le COMPOSER va transformer votre Gameboy Advance en machine a improviser des sons !
     
@@ -922,17 +984,21 @@
   
   \ColoredAnnotation{Désolé ! Pas beaucoup d'effets pour le moment: il va falloir s'en contenter pour l'heure. Plusieurs commandes sont aux programme et débarqueront dans les versions suivantes. Patience !}
   
-  \subsection{K (KILL)}
+  \subsection{KL (KilL)}
   
   Cette commande permet de stopper (kill = tuer) le son. 
-  \ColoredAnnotation{La valeur pour ce paramètre n'est pas encore prise en compte}
-  
+  \ColoredAnnotation{Pas de valeur possible pour le moment pour ce paramètre.}
+
+  \subsection{VO (VOlume)}
+
+  Cette commande permet de modifier le volume du son. \#captainobvious.
+
 %  \subsection{H (HOP!)}
   
  % Cette commande permet de sauter directement au block suivant. Elle peut permettre de créer des décalages de temps entre les blocks.
   %\ColoredAnnotation{La valeur pour ce paramètre n'est pas encore prise en compte}
   
-  \section{Backup de vos sauvegardes}\label{burger}
+  \section{(OBSOLETE) Backup de vos sauvegardes}\label{burger}
   
   \FAT est maintenant livré avec un outil permettant de gérer vos sauvegardes et de rapatrier vos morceaux sur votre ordinateur. \BURGER est un logiciel programmé en Java: il est multi-plateforme (GNU/Linux, Windows, Mac, autres...).
   \ColoredAnnotation{Utilisateur de LSDJ ? Alors \BURGER va vous rappeler quelque chose :) Il reprend exactement le principe de fonctionnement du LSDJManager permettant aussi de gérer les backups}

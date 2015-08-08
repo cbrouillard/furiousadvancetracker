@@ -312,7 +312,7 @@ void FAT_screenSong_pressB() {
  * \brief Cette fonction est dédiée à l'interaction avec la touche A. 
  */
 void FAT_screenSong_pressOrHeldA() {
-    if (hel_PadQuery()->Held.L) {
+    if (hel_PadQuery()->Pressed.L) {
         FAT_data_smartAllocateSequence(FAT_screenSong_currentSelectedColumn,
                 FAT_screenSong_currentSelectedLine);
     } else {

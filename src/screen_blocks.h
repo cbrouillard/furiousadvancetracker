@@ -363,7 +363,7 @@ void FAT_screenBlocks_pressOrHeldA() {
     switch (FAT_screenBlocks_currentSelectedColumn) {
         case SCREENBLOCKS_COLUMN_ID_BLK:
 
-            if (hel_PadQuery()->Held.L) {
+            if (hel_PadQuery()->Pressed.L) {
                 FAT_data_smartAllocateBlock(FAT_screenBlocks_currentSequenceId,
                         FAT_screenBlocks_currentSelectedLine);
             } else {
