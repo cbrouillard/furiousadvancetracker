@@ -113,9 +113,33 @@ void FAT_screenNotes_printEffect(u8 line) {
     if (!FAT_data_note_isEffectEmpty(FAT_screenNotes_currentBlockId, line)) {
 
         effect* effect = FAT_data_note_getEffect(FAT_screenNotes_currentBlockId, line);
+        u8 effectName = (effect->name & 0xfe) >> 1;
+        switch (effectName){
+            case EFFECT_KILL:
+                hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
+                                "%.2s%.2x\0", noteEffectName[effectName], effect->value);
+                break;
+            case EFFECT_OUTPUT:
+                // 4 valeurs seulement
+                hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
+                                                "%.2s%s\0", noteEffectName[effectName], outputText[effect->value]);
+                break;
+            case EFFECT_SWEEP:
+                hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
+                                "%.2s%.2x\0", noteEffectName[effectName], effect->value);
+                break;
+            case EFFECT_VOLUME:
+                // de 0 à F, FF = INST DEFINED.
+                hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
+                                "%.2s%.2x\0", noteEffectName[effectName], effect->value);
+                break;
+            case EFFECT_HOP:
+                // pas de value.
+                hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
+                                "%.2sP!\0", noteEffectName[effectName]);
+                break;
+        }
 
-        hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
-                "%.2s%.2x\0", noteEffectName[(effect->name & 0xfe) >> 1], effect->value);
     } else {
         hel_BgTextPrint(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
                 "    ");

@@ -828,6 +828,8 @@ void FAT_player_stopPlayer() {
     memset (FAT_live_waitForOtherChannel, 0, sizeof(u8)*6);
     memset(FAT_player_buffer, 0, sizeof(bufferPlayer)*6);
 
+    hel_BgTextPrintF(TEXT_LAYER, 26, 0, 0, "   ");
+
     u8 i;
     for (i=0;i<6;i++){
         FAT_player_buffer[i].volume = NULL_VALUE;

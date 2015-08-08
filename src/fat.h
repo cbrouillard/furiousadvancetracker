@@ -114,6 +114,11 @@ u8 FAT_live_nbChannelPlaying = 0;
 /** \brief Repères pour le player: les valeurs dans les tableaux représentent des numéros de lignes (séquences). */
 u8 actualSequencesForChannel[6];
 
+/**
+ * \brief Tableau constant de chaines utiles à l'affichage du paramètre output d'un instrument.
+ */
+const char* outputText [4] = {"  ", "L ", " R", "LR"};
+
 #include "popup.h"
 #include "yesno_dialog.h"
 #include "dialog_keyboard.h"

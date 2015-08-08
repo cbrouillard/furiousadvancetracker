@@ -22,10 +22,12 @@
 #ifndef _SOUND_API_
 #define _SOUND_API_
 
+#define EFFECT_HOP 0
 #define EFFECT_KILL 1
 #define EFFECT_OUTPUT 2
 #define EFFECT_SWEEP 3
 #define EFFECT_VOLUME 4
+
 
 #include "register.h"
 #include "gbfs.h"

@@ -41,11 +41,6 @@ THandle FAT_instrument_waveduty2_obj;
 /** \brief Sprite pour le paramètre waveduty: valeur 3. */
 THandle FAT_instrument_waveduty3_obj;
 
-/**
- * \brief Tableau constant de chaines utiles à l'affichage du paramètre output d'un instrument.
- */
-const char* outputText [4] = {"  ", "L ", " R", "LR"};
-
 #include "screen_instrument_cursor.h"
 #include "data.h"
 

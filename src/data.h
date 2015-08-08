@@ -193,7 +193,7 @@ const char* noteEffectName[NB_NOTE_EFFECT] = {"HO", "KL", "OU", "SW", "VO"};
  * \brief Mapping entre le nom de l'effet et son numéro dans la soundApi. Si le mapping 
  * a pour valeur NULL_VALUE, alors l'effet n'est pas géré par la soundAPI.
  */
-const u8 noteEffectNum[NB_NOTE_EFFECT] = {NULL_VALUE, EFFECT_KILL, EFFECT_OUTPUT, EFFECT_SWEEP, EFFECT_VOLUME};
+const u8 noteEffectNum[NB_NOTE_EFFECT] = {EFFECT_HOP, EFFECT_KILL, EFFECT_OUTPUT, EFFECT_SWEEP, EFFECT_VOLUME};
 /**
  * \brief Tableau constant contenant tous les noms d'effets disponibles pour les blocks.
  */
@@ -1237,6 +1237,35 @@ void FAT_data_note_changeInstrument(u8 currentChannel, u8 block, u8 noteLine, s8
     }
 }
 
+void FAT_data_note_filterEffectValue (effect* effect) {
+    u8 effectName = (effect->name & 0xfe) >> 1;
+    switch (effectName){
+        case EFFECT_KILL:
+            // 0xff max. On ne touche pas.
+            break;
+        case EFFECT_OUTPUT:
+            // 4 valeurs seulement. 3 est le max.
+            if (effect->value > 3) {
+                effect->value = 3;
+                FAT_data_lastEffectWritten.value = effect->value;
+            }
+            break;
+        case EFFECT_SWEEP:
+            // 0xff max. On ne touche pas.
+            break;
+        case EFFECT_VOLUME:
+            // de 0 à F
+            if (effect->value > 0xF) {
+                effect->value = 0xF;
+                FAT_data_lastEffectWritten.value = effect->value;
+            }
+            break;
+        case EFFECT_HOP:
+            // pas de value.
+            break;
+    }
+}
+
 /**
  * \brief Modifie le nom d'un effet assigné à une note.
  *  
@@ -1254,7 +1283,42 @@ void FAT_data_note_changeEffectName(u8 block, u8 line, s8 addedValue) {
         effectName += addedValue;
         FAT_tracker.allBlocks[block].notes[line].effect.name = (effectName << 1) | 1;
         FAT_data_lastEffectWritten.name = FAT_tracker.allBlocks[block].notes[line].effect.name;
+
+        // recalibrage de la valeur
+        FAT_data_note_filterEffectValue (&(FAT_tracker.allBlocks[block].notes[line].effect));
     }
+}
+
+/**
+ * \brief Modifie la valeur d'un effet assigné à une note.
+ *
+ * @param effect pointeur vers la données de l'effet
+ * @param addedValue la valeur à ajouter/retrancher
+ * @param limitation pour la valeur.
+ */
+void FAT_data_note_changeEffectValue_limited (effect* effect, s8 addedValue, u8 limit){
+    if (
+            (addedValue < 0 && effect->value > (-addedValue - 1)) ||
+            (addedValue > 0 && effect->value <= limit - addedValue)
+
+            ) {
+        effect->value += addedValue;
+        FAT_data_lastEffectWritten.value = effect->value;
+    }else if (addedValue < 0){
+        FAT_data_note_changeEffectValue_limited (effect, -(effect->value), limit);
+    } else if (addedValue > 0){
+        FAT_data_note_changeEffectValue_limited (effect, limit - (effect->value), limit);
+    }
+}
+
+/**
+ * \brief Modifie la valeur d'un effet assigné à une note avec une limitation de 0xFF.
+ *
+ * @param effect pointeur vers la données de l'effet
+ * @param addedValue la valeur à ajouter/retrancher
+ */
+void FAT_data_note_changeEffectValue_generic (effect* effect, s8 addedValue){
+    FAT_data_note_changeEffectValue_limited  (effect, addedValue, 0xff);
 }
 
 /**
@@ -1265,13 +1329,25 @@ void FAT_data_note_changeEffectName(u8 block, u8 line, s8 addedValue) {
  * @param addedValue la valeur à ajouter/retrancher
  */
 void FAT_data_note_changeEffectValue(u8 block, u8 line, s8 addedValue) {
-    if (
-            (addedValue < 0 && FAT_tracker.allBlocks[block].notes[line].effect.value > (-addedValue - 1)) ||
-            (addedValue > 0 && FAT_tracker.allBlocks[block].notes[line].effect.value <= 0xff - addedValue)
-
-            ) {
-        FAT_tracker.allBlocks[block].notes[line].effect.value += addedValue;
-        FAT_data_lastEffectWritten.value = FAT_tracker.allBlocks[block].notes[line].effect.value;
+    u8 effectName = (FAT_tracker.allBlocks[block].notes[line].effect.name & 0xfe) >> 1;
+    switch (effectName){
+        case EFFECT_KILL:
+            FAT_data_note_changeEffectValue_generic (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue);
+            break;
+        case EFFECT_OUTPUT:
+            // 4 valeurs seulement
+            FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, 3);
+            break;
+        case EFFECT_SWEEP:
+            FAT_data_note_changeEffectValue_generic (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue);
+            break;
+        case EFFECT_VOLUME:
+            // de 0 à F, FF = INST DEFINED.
+            FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, 0xf);
+            break;
+        case EFFECT_HOP:
+            // pas de value.
+            break;
     }
 }
 
