@@ -766,9 +766,29 @@
         
         \subsubsection{Instrument de type SAMPLE}
         
-        \Image{images/screen_instrument_sample}{1.0}{Type SAMPLE}
+        \Image{images/screen_instrument_sample}{1.0}{Type SAMPLE/KIT}
         
-        EPIC TODO !
+        \paragraph{Name} Le nom de la collection de sample dont l'instrument se sert
+
+        \paragraph{Volume} NON IMPLÉMENTÉ - Volume affecté au sample : muet ou sonore.
+
+        \paragraph{Speed} NON IMPLÉMENTÉ - Vitesse de lecture du sample
+
+        \paragraph{Loop} NON IMPLÉMENTÉ - Le sample est t-il joué en boucle ?
+
+        \paragraph{Timed} NON IMPLÉMENTÉ - Définit si le sample sera coupé ou non.
+
+        \paragraph{Length} NON IMPLÉMENTÉ = Si "Timed" est à 1, cette valeur définit la coupure.
+
+        \paragraph{Offset} Offset de départ pour la lecture du sample.
+
+        \paragraph{Output} NON IMPLÉMENTÉ - Choisissez le mode de sortie du son.
+        \begin{itemize}
+            \item{L: le son sort à gauche (LEFT)}
+            \item{R: le son sort à droite (RIGHT)}
+            \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
+            \item{VIDE: le son ne sort plus (muet)}
+        \end{itemize}
     
     \subsection{L'écran PROJECT}
     
@@ -880,7 +900,6 @@
 
     Le séquenceur est à nouveau affiché mais cette fois il n'est pas question d'éditer les séquences sur le tableau.
     Par contre vous allez pouvoir démarrer chacun des channels dans l'ordre qui vous chante. Une fois un channel démarré, il est possible d'effectuer plusieurs actions :
-    \medskip
     \begin{itemize}
         \item{modifier le volume du channel}
         \item{changer la transposition sur le channel}
@@ -891,13 +910,10 @@
     En mode MANUAL, FAT n'avance PAS dans le séquenceur. La même séquence sur le channel est rejouée à l'infini: c'est à vous de faire progresser le morceau.
     A l'inverse, en mode AUTO, FAT se comporte comme dans l'écran SONG : tous les channels en cours de lecture progressent normalement.
     Attention, en mode AUTO, si aucun channel ne joue et que vous appuyez sur START, alors TOUS les channels se lancent et s'arrêtent en même temps.
-
-    % Configuration du tableau
-    \tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
-    \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
-    \tablelasttail{\hline}
-    \begin{supertabular}{|l|p{11cm}|}
-    \hline
+    \newpage
+    \subsubsection{Commandes}
+    \begin{supertabular}{|l|p{10cm}|}
+        \hline
         {\bf SELECT} & Passer en mode popup \\
         \hline
         {\bf R+L} & Afficher l'écran d'aide \\
@@ -913,7 +929,7 @@
         {\bf R+HAUT} & Passer dans la partie séquenceur de l'écran \\
         \hline
         {\bf A+DIRECTION} & DANS LA PARTIE CONFIGURATION - Modifie la valeur du paramètre sous le curseur \\
-    \hline
+        \hline
     \end{supertabular}
 
     \subsubsection{Application du volume}
@@ -997,8 +1013,43 @@
   
  % Cette commande permet de sauter directement au block suivant. Elle peut permettre de créer des décalages de temps entre les blocks.
   %\ColoredAnnotation{La valeur pour ce paramètre n'est pas encore prise en compte}
-  
+
+  \section{Manipulation de la ROM pour l'ajout de vos collections de samples}
+
+  A partir de cette version, il est possible d'ajouter vos propres samples à \FAT. Ceci sera possible sur le site web mais possibité vous est offerte de le faire vous même sur votre poste si le coeur vous en dit.
+  Voyons la marche à suivre.\medskip
+
+    \begin{itemize}
+      \item{réunissez vos samples dans un dossier quelconque}
+      \item{créez un fichier 0infos et saisissez le nom de votre collection : "my-first" par exemple (8 caractères !) }
+      \item{transformez vos fichiers samples dans le bon format}
+      \item{créez le fichier GBFS qui sera intégré à la ROM}
+      \item{intégrez le fichier GBFS}
+    \end{itemize}
+
+  Pas d'inquiétudes ! Je vais tout expliquer !
+
+  \paragraph{Format} La première chose à savoir est le format audio cible : {\bf pcm\_s8, 16000Hz, mono}. Ce format est très important ! Si vous ne le respectez pas, vos samples ne sonneront pas correctement. Au mieux vous aurez du bruit, au pire vous planterez sytématiquement votre GBA.
+
+  \paragraph{Fichier de description} Une collection de samples est décrite par un fichier toujours nommé {\bf 0infos}. Le contenu de ce fichier texte est très simple : les 8 premières lettres sur la première ligne sont le nom de votre collection. Le reste est ignoré. Assurez vous de respecter ces 8 lettres (quitte à mettre des '-').
+
+  \paragraph{Convertir les fichiers audio} Libre à vous d'utiliser l'outil que vous souhaitez. Pour ma part, j'utilise "ffmpeg" qui a le mérite de se lancer en ligne de commande et est donc scriptable. Voici le script que j'utilise pour transformer une collection complète de MP3 dans le bon format :
+  \Annotation{find . -name "*.mp3" -exec ffmpeg -i {} -ac 1 -ar 16000 -f s8 -acodec pcm\_s8 \{\}.snd \textbackslash;}
+  Audacity ou tout autre logiciel de traitement audio est également approprié. L'important est que le format soit respecté. Par convenance, nommez vos samples formatés avec l'extension ".snd".
+
+  \paragraph{Le fichier GBFS} Ce fichier est le conteneur qui va embarquer le fichier description suivi de tous vos fichier ".snd". Pour le créer, il faut utiliser l'utilitaire "gbfs.exe". Vous pouvez télécharger ce fichier sur le Github de \FAT (\href{https://github.com/cbrouillard/furiousadvancetracker/blob/master/gbfs.exe?raw=true}{Github - gbfs.exe})
+  \Annotation{gbfs.exe monfichier\_sample.gbfs samples/0infos samples/*.snd}
+  Le fichier "monfichier\_sample.gbfs" sera créé. L'ordre de cette commande est important : le fichier 0infos DOIT être le premier.
+
+  \paragraph{Intégration dans la ROM} Maintenant que le fichier GBFS est créé, il suffit de l'ajouter à la ROM. Et c'est aussi simple que cette commande :
+  \Annotation{cat FAT\_v1.0.0.gba monfichier\_sample.gbfs \textgreater FAT\_v1.0.0\_withsample.gba}
+  Oui. Un simple "cat".\medskip
+
+  Après toutes ces manipulations, votre ROM est prête : vos samples sont accessible sur les channels SNA et SNB avec des instruments de type SAMPLE. Enjoy !
+
   \section{(OBSOLETE) Backup de vos sauvegardes}\label{burger}
+
+  \ColoredAnnotation{L'application de gestion de backup de sauvegardes va être mergée et integrée au sein du futur site web dédié à \FAT. Il sera possible de gérer vos sauvegardes et kits en ligne ! Cette partie de la documentation est donc obsolète et sera supprimée très bientôt.}
   
   \FAT est maintenant livré avec un outil permettant de gérer vos sauvegardes et de rapatrier vos morceaux sur votre ordinateur. \BURGER est un logiciel programmé en Java: il est multi-plateforme (GNU/Linux, Windows, Mac, autres...).
   \ColoredAnnotation{Utilisateur de LSDJ ? Alors \BURGER va vous rappeler quelque chose :) Il reprend exactement le principe de fonctionnement du LSDJManager permettant aussi de gérer les backups}
