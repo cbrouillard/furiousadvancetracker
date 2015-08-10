@@ -225,13 +225,13 @@ void FAT_screenInstrument_sample_commitCursorMove() {
                 break;
 
             case 2:
-            case 5:
             case 6:
             case 7:
                 hel_ObjSetXY(FAT_cursor2_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
                 break;
 
             case 3:
+            case 5:
                 hel_ObjSetXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
                 break;
         }
@@ -379,7 +379,6 @@ void FAT_screenInstrument_sample_displayGoodCursor() {
                 FAT_cursors_hideCursor3();
                 break;
             case 2:
-            case 5:
             case 6:
             case 7:
                 FAT_cursors_showCursor2();
@@ -388,6 +387,7 @@ void FAT_screenInstrument_sample_displayGoodCursor() {
                 FAT_cursors_hideCursor3();
                 break;
             case 3:
+            case 5:
                 FAT_cursors_showCursor3();
                 FAT_cursors_hideCursor1();
                 FAT_cursors_hideCursor2();

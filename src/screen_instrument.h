@@ -144,11 +144,11 @@ void FAT_screenInstrument_printAllText(u8 type) {
             }
             hel_BgTextPrintF(TEXT_LAYER, 1, 12, 0, "Timed     %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
             if (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
-                hel_BgTextPrintF(TEXT_LAYER, 1, 13, 0, "Length    %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
+                hel_BgTextPrintF(TEXT_LAYER, 1, 13, 0, "Length(%) %.3d", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
             } else {
-                hel_BgTextPrint(TEXT_LAYER, 1, 13, 0, "Length    NA");
+                hel_BgTextPrint(TEXT_LAYER, 1, 13, 0, "Length    N/A");
             }
-            hel_BgTextPrintF(TEXT_LAYER, 1, 14, 0, "Offset    %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].offset);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 14, 0, "Offset(%) %.2d", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].offset);
             FAT_screenInstrument_showOutput(1, 15, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
 
             hel_BgTextPrintF(TEXT_LAYER, 16, 12, 0, "Test it!  S%.2x\0", FAT_data_simulator.freq);

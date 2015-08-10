@@ -274,12 +274,12 @@ void FAT_player_playNoteWithTspAndVolume(note* note, u8 channel, u8 transpose, u
                 //snd_playSampleOnChannelAById(inst->kitNumber, note->freq);
                 snd_playChannelASample(inst->kitNumber, note->freq, inst->volumeRatio >> 4,
                         inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
-                        (inst->envelope & 0xe0) >> 5, inst->soundlength, inst->offset);
+                        inst->loopmode, inst->soundlength, inst->offset, inst->output); // loopmode est mal nommé : c'est le timedMode
             } else if (channel == 5) {
                 //snd_playSampleOnChannelBById(inst->kitNumber, note->freq);
                 snd_playChannelBSample(inst->kitNumber, note->freq, inst->volumeRatio >> 4,
                         inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
-                        (inst->envelope & 0xe0) >> 5, inst->soundlength, inst->offset);
+                        inst->loopmode, inst->soundlength, inst->offset, inst->output);
             }
 
         }

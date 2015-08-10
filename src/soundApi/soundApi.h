@@ -213,10 +213,11 @@ void snd_playSampleOnChannelAById(u8 kitId, u8 sampleNumber);
  * @param speed la vitesse d'execution du sample de 0 à F  1 = normal, 0 = 50%, F = très rapide (16x) 
  * @param looping si looping est à 1, la lecture du sample sera répétée à l'infini
  * @param timedMode permet d'activer le mode timing 1 = actif 0 = inactif
- * @param length si timedMode = 1 alors ce paramètre permet de spécifier la longeur du sample 0 = 0% FF = 100%
- * @param offset permet de spécifier a partir de quel moment le sample démarre de 0 = début à 255 = fin
+ * @param length si timedMode = 1 alors ce paramètre permet de spécifier la longeur du sample 0 = 0% 64 = 100%
+ * @param offset permet de spécifier a partir de quel moment le sample démarre de 0 = début à 99 = fin
+ * @param output droite, gauche ou les deux. Voire rien.
  */
-void snd_playChannelASample(u8 kitId, u8 sampleNumber, u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset);
+void snd_playChannelASample(u8 kitId, u8 sampleNumber, u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset, u8 output);
 
 
 /**
@@ -237,10 +238,11 @@ void snd_playSampleOnChannelBById(u8 kitId, u8 sampleNumber);
  * @param speed la vitesse d'execution du sample de 0 à F  1 = normal, 0 = 50%, F = très rapide (16x) 
  * @param looping si looping est à 1, la lecture du sample sera répétée à l'infini
  * @param timedMode permet d'activer le mode timing 1 = actif 0 = inactif
- * @param length si timedMode = 1 alors ce paramètre permet de spécifier la longeur du sample 0 = 0% FF = 100%
- * @param offset permet de spécifier a partir de quel moment le sample démarre de 0 = début à 255 = fin
+ * @param length si timedMode = 1 alors ce paramètre permet de spécifier la longeur du sample 0 = 0% 64 = 100%
+ * @param offset permet de spécifier a partir de quel moment le sample démarre de 0 = début à 99 = fin
+ * @param output droite, gauche ou les deux. Voire rien.
  */
-void snd_playChannelBSample(u8 kitId, u8 sampleNumber, u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset);
+void snd_playChannelBSample(u8 kitId, u8 sampleNumber, u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset, u8 output);
 
 /**
  * \brief Renvoie le nom du kit en donnant l'id de celui-ci (de 0 à 255).

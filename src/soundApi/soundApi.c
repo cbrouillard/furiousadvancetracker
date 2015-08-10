@@ -107,6 +107,14 @@ kit* kits[MAX_KITS];
 vu32 snASampleOffset = 1;
 vu32 snBSampleOffset = 1;
 
+/** Variables pour gérer la vitesse de lecture des samples */
+vu8 snASpeed = 1;
+vu8 snBSpeed = 1;
+
+/** Variables pour gérer le loop sur les samples */
+volatile bool snALoop = 0;
+volatile bool snBLoop = 0;
+
 u32 snASmpSize;
 u32 snBSmpSize;
 
@@ -533,12 +541,11 @@ void snd_processSampleA() {
         if (!(snASampleOffset & 3)) {
             SND_REG_SGFIFOA = snASample[snASampleOffset >> 2]; // u32
         }
-        snASampleOffset++;
-        HEL_DEBUG_MSG ("o: %d s: %d", snASampleOffset, snASmpSize);
+        snASampleOffset+=snASpeed;
+        //HEL_DEBUG_MSG ("o: %d s: %d", snASampleOffset, snASmpSize);
         if (snASampleOffset > snASmpSize) {
             //sample finished!
-            //R_TIM0CNT = 0;
-            playSnASample = 0;
+            playSnASample = snALoop; // si loop = 0 on arrete, sinon c'est reparti.
             snASampleOffset = 0;
             snd_resetFIFOA();
         }
@@ -555,13 +562,12 @@ void snd_processSampleB() {
             SND_REG_SGFIFOB = snBSample[snBSampleOffset >> 2]; // u32
         }
         
-        snBSampleOffset++;
+        snBSampleOffset += snBSpeed;
         
-        HEL_DEBUG_MSG ("o: %d s: %d", snBSampleOffset, snBSmpSize);
+        //HEL_DEBUG_MSG ("o: %d s: %d", snBSampleOffset, snBSmpSize);
         if (snBSampleOffset > snBSmpSize) {
             //sample finished!
-            //R_TIM0CNT = 0;
-            playSnBSample = 0;
+            playSnBSample = snBLoop;
             snBSampleOffset = 0;
             snd_resetFIFOB();
         }
@@ -574,28 +580,8 @@ void snd_timerFunc_sample() {
     hel_IntrAcknowledge(INT_TYPE_TIM0);
 }
 
-void snd_playSampleOnChannelA(kit* dat, u8 sampleNumber) {
-    playSnASample = 0;
-    snASample = gbfs_get_nth_obj(dat, sampleNumber + 1, NULL, &snASmpSize);
-
-    if (snASample) {
-        if (snASampleOffset != 0) {
-            //R_TIM0CNT = 0;
-            snASampleOffset = 0;
-        }
-        playSnASample = 1;
-    }
-}
-
-void snd_playSampleOnChannelAById(u8 kitId, u8 sampleNumber) {
-    kit* kit = kits[kitId];
-    if (kit) {
-        snd_playSampleOnChannelA(kit, sampleNumber);
-    }
-}
-
 void snd_playChannelASample(u8 kitId, u8 sampleNumber,
-        u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset) {
+        u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset, u8 output) {
 
     kit* kit = kits[kitId];
     if (kit) {
@@ -604,7 +590,32 @@ void snd_playChannelASample(u8 kitId, u8 sampleNumber,
         snASample = gbfs_get_nth_obj(kit, sampleNumber + 1, NULL, &snASmpSize);
 
         if (snASample) {
+            if (!volume){
+                REG_SOUNDCNT_H &= ~(1 << 0x2);
+            } else {
+                REG_SOUNDCNT_H |= 1 << 0x2;
+            }
+
+            // output
+            u8 mem = output >> 1;
+            if (mem){
+                REG_SOUNDCNT_H |= 1 << 0x9;
+            }else{
+                REG_SOUNDCNT_H &= ~(1 << 0x9);
+            }
+            mem = output & 0x1;
+            if (mem){
+                REG_SOUNDCNT_H |= 1 << 0x8;
+            } else {
+                REG_SOUNDCNT_H &= ~(1 << 0x8);
+            }
+
+            snASpeed = speed;
+            snALoop = looping;
             snASampleOffset = snASmpSize * offset / 100;
+            if (timedMode){
+                snASmpSize = snASmpSize * length / 100;
+            }
             playSnASample = 1;
         }
 
@@ -612,33 +623,46 @@ void snd_playChannelASample(u8 kitId, u8 sampleNumber,
 
 }
 
-void snd_playSampleOnChannelB(kit* dat, u8 sampleNumber) {
-    playSnBSample = 0;
-    snBSample = gbfs_get_nth_obj(dat, sampleNumber + 1, NULL, &snBSmpSize);
-
-    if (snBSample) {
-        if (snBSampleOffset != 0) {
-            //R_TIM0CNT = 0;
-            playSnBSample = 0;
-            snBSampleOffset = 0;
-        }
-        playSnBSample = 1;
-        if (R_TIM0CNT == 0) {
-            R_TIM0CNT = 0x00C3; //enable timer at CPU freq/1024 +irq =16386Khz sample rate
-        }
-    }
-}
-
-void snd_playSampleOnChannelBById(u8 kitId, u8 sampleNumber) {
+void snd_playChannelBSample(u8 kitId, u8 sampleNumber,
+        u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset, u8 output) {
     kit* kit = kits[kitId];
     if (kit) {
-        snd_playSampleOnChannelB(kit, sampleNumber);
-    }
-}
 
-void snd_playChannelBSample(u8 kitId, u8 sampleNumber,
-        u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset) {
-    snd_playSampleOnChannelBById(kitId, sampleNumber);
+        playSnBSample = 0;
+        snBSample = gbfs_get_nth_obj(kit, sampleNumber + 1, NULL, &snBSmpSize);
+
+        if (snBSample) {
+            if (!volume){
+                REG_SOUNDCNT_H &= ~(1 << 0x3);
+            } else {
+                REG_SOUNDCNT_H |= 1 << 0x3;
+            }
+
+            // output
+            u8 mem = output >> 1;
+            if (mem){
+                REG_SOUNDCNT_H |= 1 << 0xD;
+            }else{
+                REG_SOUNDCNT_H &= ~(1 << 0xD);
+            }
+            mem = output & 0x1;
+            if (mem){
+                REG_SOUNDCNT_H |= 1 << 0xC;
+            } else {
+                REG_SOUNDCNT_H &= ~(1 << 0xC);
+            }
+
+            snBSpeed = speed;
+            snBLoop = looping;
+            snBSampleOffset = snBSmpSize * offset / 100;
+            if (timedMode){
+                snBSmpSize = snBSmpSize * length / 100;
+            }
+            playSnBSample = 1;
+        }
+
+    }
+
 }
 
 

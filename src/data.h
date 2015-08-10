@@ -157,9 +157,9 @@
  */
 #define INSTRUMENT_SAMPLE_SPEED_MAX 16
 /**
- * \brief Valeur maximale pour le paramètre offset d'un instrument de type SAMPLE
+ * \brief Valeur maximale pour le paramètre offset d'un instrument de type SAMPLE (%)
  */
-#define INSTRUMENT_SAMPLE_OFFSET_MAX 256
+#define INSTRUMENT_SAMPLE_OFFSET_MAX 100
 /**
  * \brief Tempo maximal.
  */
@@ -1788,7 +1788,17 @@ void FAT_data_instrumentWave_changeSoundLength(u8 instrumentId, s8 value) {
  * @param value la valeur à ajouter ou retrancher
  */
 void FAT_data_instrumentSample_changeSoundLength(u8 instrumentId, s8 value) {
-    FAT_data_instrumentWave_changeSoundLength(instrumentId, value);
+    if (
+            (value < 0 && FAT_tracker.allInstruments[instrumentId].soundlength > (-value - 1)) ||
+            (value > 0 && FAT_tracker.allInstruments[instrumentId].soundlength < 100 - value)
+
+            ) {
+        FAT_tracker.allInstruments[instrumentId].soundlength += value;
+    } else if (value < 0){
+        FAT_data_instrumentWave_changeSoundLength (instrumentId, -FAT_tracker.allInstruments[instrumentId].soundlength);
+    } else if (value > 0){
+        FAT_data_instrumentWave_changeSoundLength (instrumentId, 100-FAT_tracker.allInstruments[instrumentId].soundlength);
+    }
 }
 
 /**
@@ -1935,7 +1945,7 @@ void FAT_data_instrumentSample_changeSpeed(u8 instrumentId, s8 value) {
     u8 speed = FAT_tracker.allInstruments[instrumentId].speedOrLooping & 0x0f;
     u8 looping = FAT_tracker.allInstruments[instrumentId].speedOrLooping & 0xf0;
     if (
-            (value < 0 && speed > (-value - 1)) ||
+            (value < 0 && speed > 1) ||
             (value > 0 && speed < INSTRUMENT_SAMPLE_SPEED_MAX - value)
 
             ) {
@@ -1973,14 +1983,14 @@ void FAT_data_instrumentSample_changeLooping(u8 instrumentId, s8 value) {
 void FAT_data_instrumentSample_changeOffset(u8 instrumentId, s8 value) {
     if (
             (value < 0 && FAT_tracker.allInstruments[instrumentId].offset > (-value - 1)) ||
-            (value > 0 && FAT_tracker.allInstruments[instrumentId].offset < INSTRUMENT_SAMPLE_OFFSET_MAX - value)
+            (value > 0 && FAT_tracker.allInstruments[instrumentId].offset < 100 - value)
 
             ) {
         FAT_tracker.allInstruments[instrumentId].offset += value;
     } else if (value < 0){
         FAT_data_instrumentSample_changeOffset (instrumentId, -FAT_tracker.allInstruments[instrumentId].offset);
     } else if (value > 0){
-        FAT_data_instrumentSample_changeOffset (instrumentId, INSTRUMENT_SAMPLE_OFFSET_MAX-FAT_tracker.allInstruments[instrumentId].offset-1);
+        FAT_data_instrumentSample_changeOffset (instrumentId, 100 - FAT_tracker.allInstruments[instrumentId].offset-1);
     }
 }
 
