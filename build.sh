@@ -16,6 +16,8 @@ make
 echo "### Padbin pour execution du GBFS"
 wine padbin.exe 256 FAT_v$VERSION.gba
 
+cp FAT_v$VERSION.gba FAT_default.gba
+
 echo "### Generation du SAMPLE filesystem"
 rm *.gbfs
 #objcopy -v -I binary -O elf32-little --rename-section .data=.rodata in_file out_file
