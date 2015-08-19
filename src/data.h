@@ -434,6 +434,8 @@ typedef struct PLAYERBUFFER {
     u8 transpose;
     bool haveToPlay;
     u8 volume; // en cas de commande "VOLUME", 0xff si on ne veut pas appliquer
+    u8 sweep; // pour la commande "SWEEP". 0xff = non apply
+    u8 output; // pour la commande "OUTPUT". 0xff = non apply
 } bufferPlayer;
 
 /**
