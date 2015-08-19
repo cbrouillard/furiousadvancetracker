@@ -515,6 +515,9 @@ void FAT_player_playFromSequences() {
         u8 i;
         for (i = 0; i < 6; i++) {
             FAT_player_buffer[i].haveToPlay = 0;
+            FAT_player_buffer[i].volume = NULL_VALUE;
+            FAT_player_buffer[i].sweep = NULL_VALUE;
+            FAT_player_buffer[i].output = NULL_VALUE;
             if (FAT_isChannelCurrentlyPlaying(i) && actualSequencesForChannel[i] < NB_MAX_SEQUENCES){
                 FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
                 if (FAT_currentPlayedSequence != NULL_VALUE) {
@@ -530,9 +533,6 @@ void FAT_player_playFromSequences() {
                         FAT_player_buffer[i].haveToPlay = 1;
 
                         effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[i]);
-                        FAT_player_buffer[i].volume = NULL_VALUE;
-                        FAT_player_buffer[i].sweep = NULL_VALUE;
-                        FAT_player_buffer[i].output = NULL_VALUE;
                         if (effect){
                             switch (((effect->name & 0xfe) >> 1)){
                                 case EFFECT_VOLUME:
@@ -637,9 +637,6 @@ void FAT_player_playFromLive(){
                         block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
 
                         effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[i]);
-                        FAT_player_buffer[i].volume = NULL_VALUE;
-                        FAT_player_buffer[i].sweep = NULL_VALUE;
-                        FAT_player_buffer[i].output = NULL_VALUE;
                         if (effect){
                             switch (((effect->name & 0xfe) >> 1)){
                                 case EFFECT_VOLUME:
