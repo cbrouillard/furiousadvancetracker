@@ -408,17 +408,8 @@ void snd_effect_volume(u8 channelId, u16 value) {
 
 void snd_tryToApplyEffect(u8 channelId, u8 effectNumber, u8 effectValue) {
     switch (effectNumber) {
-
         case EFFECT_KILL:
             snd_effect_kill(channelId, effectValue);
-            break;
-
-        case EFFECT_SWEEP:
-            snd_effect_sweep(channelId, effectValue);
-            break;
-
-        case EFFECT_OUTPUT:
-            snd_effect_output(channelId, effectValue);
             break;
     }
 }

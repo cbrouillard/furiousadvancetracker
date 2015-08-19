@@ -93,6 +93,18 @@ void FAT_player_hideNoteCursor();
 void FAT_player_playNote(note* note, u8 channel, u8 forceVolume);
 void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose);
 void FAT_player_playNoteWithCustomParams(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
+
+/** POINTEURISE **/
+void FAT_player_playNoteWithCustomParams_chan1(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
+void FAT_player_playNoteWithCustomParams_chan2(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
+void FAT_player_playNoteWithCustomParams_chan3(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
+void FAT_player_playNoteWithCustomParams_chan4(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
+void FAT_player_playNoteWithCustomParams_chan5(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
+void FAT_player_playNoteWithCustomParams_chan6(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
+
+void (*FAT_player_playNoteWithCustomParams_chanX[6]) (note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
+/**/
+
 void FAT_player_timerFunc();
 void FAT_resetTempo ();
 void FAT_player_firstInit ();
@@ -111,6 +123,13 @@ void FAT_player_firstInit (){
     for (i=0;i<6;i++){
         FAT_player_buffer[i].volume = NULL_VALUE;
     }
+
+    FAT_player_playNoteWithCustomParams_chanX[0] = FAT_player_playNoteWithCustomParams_chan1;
+    FAT_player_playNoteWithCustomParams_chanX[1] = FAT_player_playNoteWithCustomParams_chan2;
+    FAT_player_playNoteWithCustomParams_chanX[2] = FAT_player_playNoteWithCustomParams_chan3;
+    FAT_player_playNoteWithCustomParams_chanX[3] = FAT_player_playNoteWithCustomParams_chan4;
+    FAT_player_playNoteWithCustomParams_chanX[4] = FAT_player_playNoteWithCustomParams_chan5;
+    FAT_player_playNoteWithCustomParams_chanX[5] = FAT_player_playNoteWithCustomParams_chan6;
 
     FAT_player_initCursors();
     FAT_resetTempo();
@@ -216,6 +235,80 @@ void FAT_player_playNoteWithTsp(note* note, u8 channel, u8 transpose){
     FAT_player_playNoteWithCustomParams(note, channel, transpose, 0xff, NULL_VALUE, NULL_VALUE);
 }
 
+
+void FAT_player_playNoteWithCustomParams_chan1(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output){
+
+    instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
+
+    u8 sweepValue = sweep != NULL_VALUE ? sweep : inst->sweep;
+    u16 sweepshifts = (sweepValue & 0x70) >> 4;
+    u16 sweeptime = (sweepValue & 0x0F);
+    u16 sweepdir = 1;
+    if (sweeptime > 7) {
+        sweeptime -= 8;
+        sweepdir = 0;
+    }
+
+    snd_playSoundOnChannel1(
+        sweeptime, sweepdir, sweepshifts,
+        volume != 0xff ? volume : inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->wavedutyOrPolynomialStep,
+        inst->soundlength, inst->loopmode,
+        output,
+        note->freq, transpose + FAT_tracker.transpose);
+
+}
+void FAT_player_playNoteWithCustomParams_chan2(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output){
+
+    instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
+
+    snd_playSoundOnChannel2(
+        volume != 0xff ? volume : inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5,
+        inst->wavedutyOrPolynomialStep,
+        inst->soundlength, inst->loopmode,
+        output,
+        note->freq, transpose + FAT_tracker.transpose);
+
+}
+void FAT_player_playNoteWithCustomParams_chan3(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output){
+
+    instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
+    volume = (volume > 0x4) ? 0xff : volume;
+
+    snd_playSoundOnChannel3(
+        volume != 0xff ? volume : inst->volumeRatio & 0x0f, inst->soundlength, inst->loopmode, inst->voiceAndBank & 0x1f,
+        (inst->voiceAndBank & 0x20) >> 5, (inst->voiceAndBank & 0x40) >> 6,
+        output, note->freq, transpose + FAT_tracker.transpose);
+
+}
+void FAT_player_playNoteWithCustomParams_chan4(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output){
+
+    instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
+
+    snd_playSoundOnChannel4(
+        volume != 0xff ? volume : inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->soundlength,
+        inst->loopmode, output, note->note & 0x0f, inst->wavedutyOrPolynomialStep,
+        note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
+
+}
+void FAT_player_playNoteWithCustomParams_chan5(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output){
+    instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
+
+    snd_playChannelASample(
+        inst->kitNumber, note->freq, inst->volumeRatio >> 4,
+        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
+        inst->loopmode, inst->soundlength, inst->offset, output); // loopmode est mal nommé : c'est le timedMode
+
+}
+void FAT_player_playNoteWithCustomParams_chan6(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output){
+    instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
+
+    snd_playChannelBSample(
+        inst->kitNumber, note->freq, inst->volumeRatio >> 4,
+        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
+        inst->loopmode, inst->soundlength, inst->offset, output);
+
+}
+
 /**
  * \brief Joue une note sur un channel en ajoutant un transpose.
  * 
@@ -228,65 +321,8 @@ void FAT_player_playNoteWithCustomParams(note* note, u8 channel, u8 transpose, u
         instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
         u8 outputValue = output != NULL_VALUE ? output : inst->output;
 
-        if (channel != 4 && channel != 5) {
-
-            u8 sweepValue = sweep != NULL_VALUE ? sweep : inst->sweep;
-            u16 sweepshifts = (sweepValue & 0x70) >> 4;
-            u16 sweeptime = (sweepValue & 0x0F);
-            u16 sweepdir = 1;
-            if (sweeptime > 7) {
-                sweeptime -= 8;
-                sweepdir = 0;
-            }
-
-
-
-            volume = (volume > 0xf) ? 0xff : volume;
-            switch (channel) {
-                case 0: // PU1
-                    snd_playSoundOnChannel1(
-                            sweeptime, sweepdir, sweepshifts,
-                            volume != 0xff ? volume : inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->wavedutyOrPolynomialStep,
-                            inst->soundlength, inst->loopmode,
-                            outputValue,
-                            note->freq, transpose + FAT_tracker.transpose);
-                    break;
-                case 1: // PU2
-                    snd_playSoundOnChannel2(
-                            volume != 0xff ? volume : inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5,
-                            inst->wavedutyOrPolynomialStep,
-                            inst->soundlength, inst->loopmode,
-                            outputValue,
-                            note->freq, transpose + FAT_tracker.transpose);
-                    break;
-
-                case 2: // WAV
-                    volume = (volume > 0x4) ? 0xff : volume;
-                    snd_playSoundOnChannel3(volume != 0xff ? volume : inst->volumeRatio & 0x0f, inst->soundlength, inst->loopmode, inst->voiceAndBank & 0x1f,
-                            (inst->voiceAndBank & 0x20) >> 5, (inst->voiceAndBank & 0x40) >> 6,
-                            outputValue, note->freq, transpose + FAT_tracker.transpose);
-                    break;
-                case 3: // NOISE
-                    snd_playSoundOnChannel4(volume != 0xff ? volume : inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->soundlength,
-                            inst->loopmode, outputValue, note->note & 0x0f, inst->wavedutyOrPolynomialStep,
-                            note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
-                    break;
-            }
-
-        } else {
-            if (channel == 4) {
-                //snd_playSampleOnChannelAById(inst->kitNumber, note->freq);
-                snd_playChannelASample(inst->kitNumber, note->freq, inst->volumeRatio >> 4,
-                        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
-                        inst->loopmode, inst->soundlength, inst->offset, outputValue); // loopmode est mal nommé : c'est le timedMode
-            } else if (channel == 5) {
-                //snd_playSampleOnChannelBById(inst->kitNumber, note->freq);
-                snd_playChannelBSample(inst->kitNumber, note->freq, inst->volumeRatio >> 4,
-                        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
-                        inst->loopmode, inst->soundlength, inst->offset, outputValue);
-            }
-
-        }
+        // play it on the right channel. Happy pointer :D
+        (*FAT_player_playNoteWithCustomParams_chanX[channel]) (note,channel,transpose,volume,sweep,outputValue);
     }
 
     if (note->effect.name != NULL_VALUE) {
@@ -497,16 +533,18 @@ void FAT_player_playFromSequences() {
                         FAT_player_buffer[i].volume = NULL_VALUE;
                         FAT_player_buffer[i].sweep = NULL_VALUE;
                         FAT_player_buffer[i].output = NULL_VALUE;
-                        switch (((effect->name & 0xfe) >> 1)){
-                            case EFFECT_VOLUME:
-                                FAT_player_buffer[i].volume = effect->value;
-                                break;
-                            case EFFECT_SWEEP:
-                                FAT_player_buffer[i].sweep = effect->value;
-                                break;
-                            case EFFECT_OUTPUT:
-                                FAT_player_buffer[i].output = effect->value;
-                                break;
+                        if (effect){
+                            switch (((effect->name & 0xfe) >> 1)){
+                                case EFFECT_VOLUME:
+                                    FAT_player_buffer[i].volume = effect->value;
+                                    break;
+                                case EFFECT_SWEEP:
+                                    FAT_player_buffer[i].sweep = effect->value;
+                                    break;
+                                case EFFECT_OUTPUT:
+                                    FAT_player_buffer[i].output = effect->value;
+                                    break;
+                            }
                         }
 
                         actualNotesForChannel[i]++;
@@ -602,16 +640,18 @@ void FAT_player_playFromLive(){
                         FAT_player_buffer[i].volume = NULL_VALUE;
                         FAT_player_buffer[i].sweep = NULL_VALUE;
                         FAT_player_buffer[i].output = NULL_VALUE;
-                        switch (((effect->name & 0xfe) >> 1)){
-                            case EFFECT_VOLUME:
-                                FAT_player_buffer[i].volume = effect->value;
-                                break;
-                            case EFFECT_SWEEP:
-                                FAT_player_buffer[i].sweep = effect->value;
-                                break;
-                            case EFFECT_OUTPUT:
-                                FAT_player_buffer[i].output = effect->value;
-                                break;
+                        if (effect){
+                            switch (((effect->name & 0xfe) >> 1)){
+                                case EFFECT_VOLUME:
+                                    FAT_player_buffer[i].volume = effect->value;
+                                    break;
+                                case EFFECT_SWEEP:
+                                    FAT_player_buffer[i].sweep = effect->value;
+                                    break;
+                                case EFFECT_OUTPUT:
+                                    FAT_player_buffer[i].output = effect->value;
+                                    break;
+                            }
                         }
 
                         FAT_player_buffer[i].note = &(block->notes[actualNotesForChannel[i]]);
@@ -698,7 +738,6 @@ void FAT_player_playFromLive(){
 }
 
 // DEJA DOCUMENTEE
-
 void FAT_player_playFromBlocks() {
     #ifdef DEBUG_ON
     hel_BgTextPrintF(TEXT_LAYER, 22, 15, 0, "%.d", tempoReach);
@@ -722,21 +761,22 @@ void FAT_player_playFromBlocks() {
 
                 effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[FAT_currentPlayedChannel]);
                 volume = NULL_VALUE; sweep = NULL_VALUE; output = NULL_VALUE;
-                switch (((effect->name & 0xfe) >> 1)){
-                    case EFFECT_VOLUME:
-                        volume = effect->value;
-                        break;
-                    case EFFECT_SWEEP:
-                        sweep = effect->value;
-                        break;
-                    case EFFECT_OUTPUT:
-                        output = effect->value;
-                        break;
+                if (effect){
+                    switch (((effect->name & 0xfe) >> 1)){
+                        case EFFECT_VOLUME:
+                            volume = effect->value;
+                            break;
+                        case EFFECT_SWEEP:
+                            sweep = effect->value;
+                            break;
+                        case EFFECT_OUTPUT:
+                            output = effect->value;
+                            break;
+                    }
                 }
 
-                // TODO un effet à appliquer sur la note ?
                 FAT_player_playNoteWithCustomParams(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]), FAT_currentPlayedChannel,
-                        seq->transpose[actualBlocksForChannel[FAT_currentPlayedChannel]], volume, NULL_VALUE, NULL_VALUE);
+                        seq->transpose[actualBlocksForChannel[FAT_currentPlayedChannel]], volume, sweep, output);
 
                 actualNotesForChannel[FAT_currentPlayedChannel]++;
                 if (actualNotesForChannel[FAT_currentPlayedChannel] >= NB_NOTES_IN_ONE_BLOCK) {
@@ -780,16 +820,18 @@ void FAT_player_playFromNotes() {
 
             effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[FAT_currentPlayedChannel]);
             volume = NULL_VALUE; sweep = NULL_VALUE; output = NULL_VALUE;
-            switch (((effect->name & 0xfe) >> 1)){
-                case EFFECT_VOLUME:
-                    volume = effect->value;
-                    break;
-                case EFFECT_SWEEP:
-                    sweep = effect->value;
-                    break;
-                case EFFECT_OUTPUT:
-                    output = effect->value;
-                    break;
+            if (effect){
+                switch (((effect->name & 0xfe) >> 1)){
+                    case EFFECT_VOLUME:
+                        volume = effect->value;
+                        break;
+                    case EFFECT_SWEEP:
+                        sweep = effect->value;
+                        break;
+                    case EFFECT_OUTPUT:
+                        output = effect->value;
+                        break;
+                }
             }
 
             FAT_player_playNoteWithCustomParams(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]),
