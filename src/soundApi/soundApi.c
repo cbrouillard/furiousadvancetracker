@@ -22,7 +22,8 @@ typedef unsigned int u32;
 #define NULL_VALUE 0xff
 
 #define NB_FREQUENCES 72
-const u16 freqs[NB_FREQUENCES] = {44, 156, 262, 363, 457, 547, 631, 710, 786, 854, 923, 986,
+const u16 freqs[NB_FREQUENCES] = {
+      44, 156,   262,  363,  457,  547,  631,  710,  786,  854,  923,  986,
     1046, 1102, 1155, 1205, 1253, 1297, 1339, 1379, 1417, 1452, 1486, 1517,
     1546, 1575, 1602, 1627, 1650, 1673, 1694, 1714, 1732, 1750, 1767, 1783,
     1798, 1812, 1825, 1837, 1849, 1860, 1871, 1881, 1890, 1899, 1907, 1915,
@@ -134,12 +135,10 @@ void snd_loadWav(u8 inst) {
     REG_SOUND3CNT_L ^= 0x0040;
 }
 
-u16 snd_calculateTransposedFrequency(u16 freq, u8 transpose) {
+u8 snd_calculateTransposedFrequency(u8 freq, u8 transpose) {
     freq += transpose;
     if (freq >= NB_FREQUENCES) {
-        // 32 + 244 = 276 
-        freq /= NB_FREQUENCES;
-        // 276 / 72 = 8 reste 0,6
+        freq = 0; // ok pour l'instant ca ira
     }
     return freq;
 }
@@ -184,7 +183,7 @@ void snd_changeChannelOutput(u8 channelNumber, u8 outputValue) {
 void snd_playSoundOnChannel1(
         u16 sweeptime, u16 sweepdir, u16 sweepshifts, u16 volume,
         u16 envdirection, u16 envsteptime, u16 waveduty, u16 soundlength,
-        u16 loopmode, u8 output, u16 sfreq, u8 transpose) {
+        u16 loopmode, u8 output, u8 sfreq, u8 transpose) {
 
     snd_changeChannelOutput(0, output);
 
@@ -192,7 +191,7 @@ void snd_playSoundOnChannel1(
         soundlength = 0;
     }
 
-    if (transpose != NULL_VALUE) {
+    if (transpose) {
         sfreq = snd_calculateTransposedFrequency(sfreq, transpose);
     }
 
@@ -205,7 +204,7 @@ void snd_playSoundOnChannel1(
 
 void snd_playSoundOnChannel2(u16 volume,
         u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
-        u16 loopmode, u8 output, u16 sfreq, u8 transpose) {
+        u16 loopmode, u8 output, u8 sfreq, u8 transpose) {
 
     snd_changeChannelOutput(1, output);
 
@@ -213,7 +212,7 @@ void snd_playSoundOnChannel2(u16 volume,
         soundlength = 0;
     }
 
-    if (transpose != NULL_VALUE) {
+    if (transpose) {
         sfreq = snd_calculateTransposedFrequency(sfreq, transpose);
     }
 
@@ -244,7 +243,7 @@ void snd_modifyWaveCanalVolume(u16 volume) {
 }
 
 void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voice,
-        u16 bank, u16 bankMode, u8 output, u16 freq, u8 transpose) {
+        u16 bank, u16 bankMode, u8 output, u8 freq, u8 transpose) {
 
     snd_changeChannelOutput(2, output);
 
@@ -252,7 +251,7 @@ void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voic
     REG_SOUND3CNT_X = SOUND3INIT;
     REG_SOUND3CNT_H = SOUND3OUTPUT1;
 
-    if (transpose != NULL_VALUE) {
+    if (transpose) {
         freq = snd_calculateTransposedFrequency(freq, transpose);
     }
 
@@ -287,7 +286,7 @@ void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voic
 }
 
 void snd_playSoundOnChannel4(u16 volume, u16 envdir, u16 envsteptime, u16 soundlength,
-        u16 loopmode, u8 output, u16 shiftFreq, u16 stepping, u16 freqRatio, u8 transpose) {
+        u16 loopmode, u8 output, u16 shiftFreq, u16 stepping, u8 freqRatio, u8 transpose) {
 
     snd_changeChannelOutput(3, output);
 

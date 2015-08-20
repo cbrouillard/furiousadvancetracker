@@ -832,7 +832,7 @@ void FAT_player_playFromNotes() {
             }
 
             FAT_player_playNoteWithCustomParams(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]),
-                    FAT_currentPlayedChannel, NULL_VALUE, volume, sweep, output);
+                    FAT_currentPlayedChannel, 0, volume, sweep, output);
 
             actualNotesForChannel[FAT_currentPlayedChannel]++;
             if (actualNotesForChannel[FAT_currentPlayedChannel] >= NB_NOTES_IN_ONE_BLOCK) {

@@ -1023,11 +1023,12 @@
       \item{réunissez vos samples dans un dossier quelconque}
       \item{créez un fichier 0infos et saisissez le nom de votre collection : "my-first" par exemple (8 caractères !) }
       \item{transformez vos fichiers samples dans le bon format}
-      \item{créez le fichier GBFS qui sera intégré à la ROM}
-      \item{intégrez le fichier GBFS}
-    \end{itemize}
+      \item{créez le fichier GBFS qui sera intégré à la ROM. Répétez l'opération pour chaque kit.}
+      \item{créez le fichier 00nbkit qui compte le nombre de kits dans la ROM finale (le nombre de gbfs donc)}
+      \item{intégrez les fichiers GBFS dans la ROM "défault"}
+    \end{itemize}\medskip
 
-  Pas d'inquiétudes ! Je vais tout expliquer !
+  Pas d'inquiétudes ! Je vais tout expliquer ! Commencez par télécharger la ROM "défault" sur le site dédié.
 
   \paragraph{Format} La première chose à savoir est le format audio cible : {\bf pcm\_s8, 16000Hz, mono}. Ce format est très important ! Si vous ne le respectez pas, vos samples ne sonneront pas correctement. Au mieux vous aurez du bruit, au pire vous planterez sytématiquement votre GBA.
 
@@ -1041,11 +1042,18 @@
   \Annotation{gbfs.exe monfichier\_sample.gbfs samples/0infos samples/*.snd}
   Le fichier "monfichier\_sample.gbfs" sera créé. L'ordre de cette commande est important : le fichier 0infos DOIT être le premier.
 
-  \paragraph{Intégration dans la ROM} Maintenant que le fichier GBFS est créé, il suffit de l'ajouter à la ROM. Et c'est aussi simple que cette commande :
-  \Annotation{cat FAT\_v1.0.0.gba monfichier\_sample.gbfs \textgreater FAT\_v1.0.0\_withsample.gba}
-  Oui. Un simple "cat".\medskip
+  \paragraph{Le fichier 00nbkit} Lorsque vous avez terminé de créer vos fichiers GBFS pour chaque kit de sample, un fichier 00nbkit doit être créé. Une seule donnée à l'intérieur de ce fichier : le nombre de kits que vous allez intégrer dans la ROM. Si vous n'avez qu'un seul kit à intégrer :
+  \Annotation{echo 1 \textgreater  00nbkit}
+  Une fois ce fichier créé, il faut aussi le tranformer en GBFS.
+  \Annotation{gbfs.exe 00nbkit.gbfs 00nbkit}
 
-  Après toutes ces manipulations, votre ROM est prête : vos samples sont accessible sur les channels SNA et SNB avec des instruments de type SAMPLE. Enjoy !
+  \paragraph{Intégration dans la ROM} Maintenant que vos fichier GBFS et 00nbkit.gbfs sont créés, il suffit de les ajouter à la ROM. Et c'est aussi simple que cette commande :
+  \Annotation{cat FAT\_default.gba 00nbkit.gbfs monfichier\_sample.gbfs \textgreater FAT\_v1.0.0\_withsample.gba}
+  Oui. Un simple "cat". Attention cependant, le fichier 00nbkit.gbfs {\bf DOIT} être le premier. (\FAT se sert de la donnée écrite dans le fichier 00nbkit pour connaitre à l'avance le nombre de kit)\medskip
+
+  Après toutes ces manipulations, votre ROM est prête : vos samples sont accessible sur les channels SNA et SNB avec des instruments de type SAMPLE. Enjoy !\medskip
+
+  Notez, pour les utilisateurs de Linux, que gbfs.exe tourne très bien avec Wine.
 
   \section{(OBSOLETE) Backup de vos sauvegardes}\label{burger}
 
