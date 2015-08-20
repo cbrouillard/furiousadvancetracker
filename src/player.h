@@ -356,7 +356,7 @@ u8 FAT_player_searchFirstAvailableSequenceForChannel_returnLine (u8 channel, u8 
     }
 
     // 3. si j'ai trouvé un bloc valide, on s'assure qu'il s'agit bien du premier
-    // attention, seulement en mode greedPlay && non live.
+    // attention, seulement en mode greedPlay
     if (FAT_tracker.greedPlay){
         if (firstLine != NULL_VALUE){
             i = firstLine;
@@ -769,6 +769,16 @@ void FAT_player_playFromBlocks() {
                         case EFFECT_OUTPUT:
                             output = effect->value;
                             break;
+                        /*case EFFECT_HOP:
+                            // determine new block
+                            actualBlocksForChannel[FAT_currentPlayedChannel]++;
+                            if (actualBlocksForChannel[FAT_currentPlayedChannel] >= NB_BLOCKS_IN_SEQUENCE
+                                    || seq->blocks[actualBlocksForChannel[FAT_currentPlayedChannel]] == NULL_VALUE) {
+                                actualBlocksForChannel[FAT_currentPlayedChannel] = 0;
+                            }
+                            FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[FAT_currentPlayedChannel]];
+                            block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
+                            break;*/
                     }
                 }
 
