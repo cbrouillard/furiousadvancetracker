@@ -24,10 +24,6 @@
 #include "data.h"
 #include "soundApi/soundApi.h"
 
-
-/** \brief Définition d'une valeur pour ralentir le décompte du tempo. */
-#define TEMPO_TIMER_HARDWARE_VALUE 70
-
 /*
  * Toutes ces variables sont des repères pour le player. Afin de savoir quelle séquence/block/note jouer.
  * Attention. Les valeurs dans les tableaux représentent des NUMEROS DE LIGNES. 
@@ -503,8 +499,47 @@ void ATTR_FASTFUNC FAT_player_timerFunc() {
     hel_IntrAcknowledge(INT_TYPE_TIM3);
 }
 
-// DEJA DOCUMENTEE
+void FAT_player_progressInSong(u8 channel, sequence* seq){
+    actualNotesForChannel[channel]++;
+    if (actualNotesForChannel[channel] >= NB_NOTES_IN_ONE_BLOCK) {
+        actualNotesForChannel[channel] = 0;
+        actualBlocksForChannel[channel]++;
+        if (actualBlocksForChannel[channel] >= NB_BLOCKS_IN_SEQUENCE
+                || seq->blocks[actualBlocksForChannel[channel]] == NULL_VALUE) {
+            actualBlocksForChannel[channel] = 0;
 
+            actualSequencesForChannel[channel]++;
+            if (actualSequencesForChannel[channel] > NB_MAX_SEQUENCES
+                    || FAT_tracker.channels[channel].sequences[actualSequencesForChannel[channel]] == NULL_VALUE
+                    || FAT_data_isSequenceEmpty(FAT_tracker.channels[channel].sequences[actualSequencesForChannel[channel]])) {
+
+                actualSequencesForChannel[channel] = firstAvailableSequenceForChannel[channel];
+            }
+        }
+    }
+}
+
+void FAT_player_progressInSequence (sequence* seq){
+    actualNotesForChannel[FAT_currentPlayedChannel]++;
+    if (actualNotesForChannel[FAT_currentPlayedChannel] >= NB_NOTES_IN_ONE_BLOCK) {
+        actualNotesForChannel[FAT_currentPlayedChannel] = 0;
+
+        actualBlocksForChannel[FAT_currentPlayedChannel]++;
+        if (actualBlocksForChannel[FAT_currentPlayedChannel] >= NB_BLOCKS_IN_SEQUENCE
+                || seq->blocks[actualBlocksForChannel[FAT_currentPlayedChannel]] == NULL_VALUE) {
+            actualBlocksForChannel[FAT_currentPlayedChannel] = 0;
+        }
+    }
+}
+
+void FAT_player_progressInBlock (){
+    actualNotesForChannel[FAT_currentPlayedChannel]++;
+    if (actualNotesForChannel[FAT_currentPlayedChannel] >= NB_NOTES_IN_ONE_BLOCK) {
+        actualNotesForChannel[FAT_currentPlayedChannel] = 0;
+    }
+}
+
+// DEJA DOCUMENTEE
 void FAT_player_playFromSequences() {
     #ifdef DEBUG_ON
     hel_BgTextPrintF(TEXT_LAYER, 22, 15, 0, "%.d", tempoReach);
@@ -544,28 +579,19 @@ void FAT_player_playFromSequences() {
                                 case EFFECT_OUTPUT:
                                     FAT_player_buffer[i].output = effect->value;
                                     break;
+                                case EFFECT_HOP:
+                                    // determine new block
+
+                                    break;
                             }
                         }
 
-                        actualNotesForChannel[i]++;
-                        if (actualNotesForChannel[i] >= NB_NOTES_IN_ONE_BLOCK) {
-                            actualNotesForChannel[i] = 0;
-                            actualBlocksForChannel[i]++;
-                            if (actualBlocksForChannel[i] >= NB_BLOCKS_IN_SEQUENCE
-                                    || seq->blocks[actualBlocksForChannel[i]] == NULL_VALUE) {
-                                actualBlocksForChannel[i] = 0;
-                                actualSequencesForChannel[i]++;
-                                if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES
-                                        || FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
-                                        || FAT_data_isSequenceEmpty(FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]])) {
+                        FAT_player_progressInSong (i, seq);
 
-                                    actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
-                                }
-                            }
-                            // Déplacement des curseurs de lecture
-                            FAT_player_moveOrHideCursor(i);
-                            FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
-                        }
+                        // Déplacement des curseurs de lecture
+                        FAT_player_moveOrHideCursor(i);
+                        FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
+
                     } else {
                         actualBlocksForChannel[i] = 0;
                         actualSequencesForChannel[i]++;
@@ -647,6 +673,10 @@ void FAT_player_playFromLive(){
                                     break;
                                 case EFFECT_OUTPUT:
                                     FAT_player_buffer[i].output = effect->value;
+                                    break;
+                                case EFFECT_HOP:
+                                    // determine new block
+                                    
                                     break;
                             }
                         }
@@ -769,8 +799,9 @@ void FAT_player_playFromBlocks() {
                         case EFFECT_OUTPUT:
                             output = effect->value;
                             break;
-                        /*case EFFECT_HOP:
+                        case EFFECT_HOP:
                             // determine new block
+                            actualNotesForChannel[FAT_currentPlayedChannel] = 0;
                             actualBlocksForChannel[FAT_currentPlayedChannel]++;
                             if (actualBlocksForChannel[FAT_currentPlayedChannel] >= NB_BLOCKS_IN_SEQUENCE
                                     || seq->blocks[actualBlocksForChannel[FAT_currentPlayedChannel]] == NULL_VALUE) {
@@ -778,22 +809,14 @@ void FAT_player_playFromBlocks() {
                             }
                             FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[FAT_currentPlayedChannel]];
                             block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
-                            break;*/
+                            break;
                     }
                 }
 
                 FAT_player_playNoteWithCustomParams(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]), FAT_currentPlayedChannel,
                         seq->transpose[actualBlocksForChannel[FAT_currentPlayedChannel]], volume, sweep, output);
 
-                actualNotesForChannel[FAT_currentPlayedChannel]++;
-                if (actualNotesForChannel[FAT_currentPlayedChannel] >= NB_NOTES_IN_ONE_BLOCK) {
-                    actualNotesForChannel[FAT_currentPlayedChannel] = 0;
-                    actualBlocksForChannel[FAT_currentPlayedChannel]++;
-                    if (actualBlocksForChannel[FAT_currentPlayedChannel] >= NB_BLOCKS_IN_SEQUENCE
-                            || seq->blocks[actualBlocksForChannel[FAT_currentPlayedChannel]] == NULL_VALUE) {
-                        actualBlocksForChannel[FAT_currentPlayedChannel] = 0;
-                    }
-                }
+                FAT_player_progressInSequence (seq);
             } else {
                 actualBlocksForChannel[FAT_currentPlayedChannel] = 0;
             }
@@ -838,16 +861,17 @@ void FAT_player_playFromNotes() {
                     case EFFECT_OUTPUT:
                         output = effect->value;
                         break;
+                    case EFFECT_HOP:
+                        // get back to 0
+                        actualNotesForChannel[FAT_currentPlayedChannel] = 0;
+                        break;
                 }
             }
 
             FAT_player_playNoteWithCustomParams(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]),
                     FAT_currentPlayedChannel, 0, volume, sweep, output);
 
-            actualNotesForChannel[FAT_currentPlayedChannel]++;
-            if (actualNotesForChannel[FAT_currentPlayedChannel] >= NB_NOTES_IN_ONE_BLOCK) {
-                actualNotesForChannel[FAT_currentPlayedChannel] = 0;
-            }
+            FAT_player_progressInBlock ();
         }
 
         FAT_resetTempo ();
