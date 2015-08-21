@@ -1350,7 +1350,8 @@ void FAT_data_note_changeEffectValue(u8 block, u8 line, s8 addedValue) {
             FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, 0xf);
             break;
         case EFFECT_HOP:
-            // pas de value.
+            // de 0 à F.
+            FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, 0xf);
             break;
     }
 }

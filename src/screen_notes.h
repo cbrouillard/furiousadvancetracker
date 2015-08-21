@@ -138,7 +138,7 @@ void FAT_screenNotes_printEffect(u8 line) {
             case EFFECT_HOP:
                 // pas de value.
                 hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
-                                "%.2s--\0", noteEffectName[effectName]);
+                                                "%.2s%.2x\0", noteEffectName[effectName], effect->value);
                 break;
         }
 

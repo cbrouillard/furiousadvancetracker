@@ -563,10 +563,6 @@ void FAT_player_playFromSequences() {
                     if (FAT_currentPlayedBlock != NULL_VALUE) {
                         block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
 
-                        FAT_player_buffer[i].note = &(block->notes[actualNotesForChannel[i]]);
-                        FAT_player_buffer[i].transpose =  seq->transpose[actualBlocksForChannel[i]];
-                        FAT_player_buffer[i].haveToPlay = 1;
-
                         effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[i]);
                         if (effect){
                             switch (((effect->name & 0xfe) >> 1)){
@@ -581,10 +577,30 @@ void FAT_player_playFromSequences() {
                                     break;
                                 case EFFECT_HOP:
                                     // determine new block
+                                    actualNotesForChannel[i] = effect->value;
+                                    actualBlocksForChannel[i]++;
+                                    if (actualBlocksForChannel[i] >= NB_BLOCKS_IN_SEQUENCE
+                                            || seq->blocks[actualBlocksForChannel[i]] == NULL_VALUE) {
+                                        actualBlocksForChannel[i] = 0;
 
+                                        actualSequencesForChannel[i]++;
+                                        if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES
+                                                || FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
+                                                || FAT_data_isSequenceEmpty(FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]])) {
+
+                                            actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+                                        }
+                                    }
+
+                                    FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
+                                    block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
                                     break;
                             }
                         }
+
+                        FAT_player_buffer[i].note = &(block->notes[actualNotesForChannel[i]]);
+                        FAT_player_buffer[i].transpose =  seq->transpose[actualBlocksForChannel[i]];
+                        FAT_player_buffer[i].haveToPlay = 1;
 
                         FAT_player_progressInSong (i, seq);
 
@@ -676,7 +692,30 @@ void FAT_player_playFromLive(){
                                     break;
                                 case EFFECT_HOP:
                                     // determine new block
-                                    
+                                    actualNotesForChannel[i] = effect->value;
+                                    actualBlocksForChannel[i]++;
+                                    if (actualBlocksForChannel[i] >= NB_BLOCKS_IN_SEQUENCE
+                                            || seq->blocks[actualBlocksForChannel[i]] == NULL_VALUE) {
+                                        actualBlocksForChannel[i] = 0;
+
+                                        if (!FAT_tracker.liveData.liveMode){ // mode auto?
+                                            actualSequencesForChannel[i]++;
+                                            if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES
+                                                    || FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
+                                                    || FAT_data_isSequenceEmpty(FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]])) {
+
+                                                actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+                                                // si pas de séquences dispo -> NULL_VALUE
+                                            }
+                                        }
+                                        willHaveToSyncAfterNote = 1;
+                                        // Déplacement des curseurs de lecture
+                                        FAT_player_moveOrHideCursor(i);
+                                        FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
+                                    }
+
+                                    FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
+                                    block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
                                     break;
                             }
                         }
@@ -801,7 +840,7 @@ void FAT_player_playFromBlocks() {
                             break;
                         case EFFECT_HOP:
                             // determine new block
-                            actualNotesForChannel[FAT_currentPlayedChannel] = 0;
+                            actualNotesForChannel[FAT_currentPlayedChannel] = effect->value;
                             actualBlocksForChannel[FAT_currentPlayedChannel]++;
                             if (actualBlocksForChannel[FAT_currentPlayedChannel] >= NB_BLOCKS_IN_SEQUENCE
                                     || seq->blocks[actualBlocksForChannel[FAT_currentPlayedChannel]] == NULL_VALUE) {
@@ -863,7 +902,7 @@ void FAT_player_playFromNotes() {
                         break;
                     case EFFECT_HOP:
                         // get back to 0
-                        actualNotesForChannel[FAT_currentPlayedChannel] = 0;
+                        actualNotesForChannel[FAT_currentPlayedChannel] = effect->value;
                         break;
                 }
             }
