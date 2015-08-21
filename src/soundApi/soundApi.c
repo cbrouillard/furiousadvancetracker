@@ -309,33 +309,6 @@ void snd_stopAllSounds() {
     snd_init_soundApi();
 }
 
-void snd_stopChannel (u8 channel){
-    switch(channel) {
-        case 0:
-            REG_SOUND1CNT_X = 0x8000;
-            break;
-
-        case 1:
-            REG_SOUND2CNT_H = 0x8000;
-            break;
-
-        case 2:
-            REG_SOUND3CNT_X = 0x8000;
-            break;
-
-        case 3:
-            REG_SOUND4CNT_H = 0x8000;
-            break;
-        case 4:
-            playSnASample = 0;
-            break;
-
-        case 5:
-            playSnBSample = 0;
-            break;
-    }
-}
-
 void snd_effect_kill(u8 channelId, u8 value) {
     switch (channelId) {
         case 0:
@@ -358,49 +331,6 @@ void snd_effect_kill(u8 channelId, u8 value) {
             break;
         case 5:
             playSnBSample = 0;
-            break;
-    }
-}
-
-void snd_effect_sweep(u8 channelId, u8 value) {
-    if (channelId == 0) {
-        u16 sweepshifts = (value & 0x70) >> 4;
-        u16 sweeptime = (value & 0x0F);
-        u16 sweepdir = 1;
-        if (sweeptime > 7) {
-            sweeptime -= 8;
-            sweepdir = 0;
-        }
-        REG_SOUND1CNT_L = (sweeptime << 4) | (sweepdir << 3) | sweepshifts;
-    }
-}
-
-void snd_effect_output(u8 channelId, u8 value) {
-    snd_changeChannelOutput(channelId, value);
-}
-
-// DONT WORK ! AND NEVER BE ABLE TO WORK. BAD DESIGN.
-void snd_effect_volume(u8 channelId, u16 value) {
-    switch (channelId) {
-        case 0:
-            value = value > 0xf ? 0xf : value;
-            //REG_SOUND1CNT_H &= 0x0FFF;
-            //REG_SOUND1CNT_H |= (value << 12);
-            break;
-        case 1:
-            //REG_SOUND2CNT_L &= 0x0FFF;
-            value = value > 0xf ? 0xf : value;
-            break;
-        case 2:
-            snd_modifyWaveCanalVolume((value > 0x4 ? 0x4 : value));
-            break;
-        case 3:
-            //REG_SOUND4CNT_L &= 0x0FFF;
-            REG_SOUND4CNT_L |= ((value > 0xF ? 0xF : value) << 12);
-            break;
-        case 4:
-            break;
-        case 5:
             break;
     }
 }
@@ -432,9 +362,9 @@ const u8 snd_countAvailableKits() {
 }
 
 void snd_init_kits() {
-    R_TIM0COUNT = 0xffff;
+    /*R_TIM0COUNT = 0xffff;
     R_TIM0CNT = 0x00C3;
-    hel_IntrStartHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sample);
+    hel_IntrStartHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sample);*/
 
     snd_countAvailableKits();
     u8 cpt = 0;

@@ -159,11 +159,6 @@ void snd_simple_playSoundOnChannel4(u16 envelope, u8 mode, u8 length);
 void snd_stopAllSounds();
 
 /**
- * \brief Eteint le channel en cours.
- */
-void snd_stopChannel (u8 channel);
-
-/**
  * \brief Cette fonction essaie d'appliquer en effet en dehors du contexte "note": la commande sera appliquée
  * sans jouer de note.
  * 

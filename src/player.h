@@ -870,7 +870,6 @@ void FAT_player_playFromBlocks() {
 
 
 // DEJA DOCUMENTEE
-
 void FAT_player_playFromNotes() {
     #ifdef DEBUG_ON
     hel_BgTextPrintF(TEXT_LAYER, 22, 15, 0, "%.d", tempoReach);
