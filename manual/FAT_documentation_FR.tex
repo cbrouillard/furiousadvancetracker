@@ -148,7 +148,7 @@
     \subsection{Présentation et avertissement}
     \FAT est un logiciel musical conçu pour la Gameboy Advance. Avec \FAT, vous pouvez composer de la musique directement sur votre console de jeu en utilisant ses capacités techniques. \FAT se veut le plus simple possible mais un apprentissage de son mode de fonctionnement reste néanmoins nécessaire avant de pouvoir en exploiter toutes les possibilités.\medskip
     
-    Attention ! La \fatversion (celle qui est actuellement disponible) est une version bêta. Même si je me suis attaché à éliminer un nombre maximal de problèmes en tout genre, le logiciel est encore très probablement buggé et/ou non finalisé. Paris ne s'est pas construit en un jour: \FAT va continuer d'évoluer tant que le coeur m'en dit. Dans le cas où vous détecteriez un bug ou un comportement "bizarre", n'hésitez pas ! Faites un rapport de bug sur \url{http://wwww.furiousadvancetracker.com/bugtracker/}. Le rapport ne vous prendra pas plus de 5 minutes et cela m'aidera pour faire avancer le logiciel ! D'avance merci ! (et un bisou aussi !)\medskip
+    Attention ! La \fatversion (celle qui est actuellement disponible) est une version bêta. Même si je me suis attaché à éliminer un nombre maximal de problèmes en tout genre, le logiciel est encore très probablement buggé et/ou non finalisé. Paris ne s'est pas construit en un jour: \FAT va continuer d'évoluer tant que le coeur m'en dit. Dans le cas où vous détecteriez un bug ou un comportement "bizarre", n'hésitez pas ! Faites un rapport de bug sur \url{http://wwww.furiousadvancetracker.com}. Le rapport ne vous prendra pas plus de 5 minutes et cela m'aidera pour faire avancer le logiciel ! D'avance merci ! (et un bisou aussi !)\medskip
     
     Ceux qui ont déjà un pied dans la composition de musique chiptune ne tarderont pas à se rendre compte que l'interface de \FAT ressemble énormément à celle d'LSDJ (LittleSoundDJ). J'ai en effet considéré LSDJ comme LE modèle mais en y ajoutant ma touche personnelle. Quelques fonctionnalités sont aussi complétement originales, d'autres ont été revues et d'autres encore ont disparu.\medskip
     
@@ -175,7 +175,7 @@
     
     Et puis, finalement, programmer son propre tracker c'est quand même super fun ! \medskip
 
-    Notez que nous sommes en 2015 et la situation n'a pas bougé. Peut-être que tout le monde s'en fout de la GBA ? :P \medskip
+    Notez que nous sommes en 2015 et la situation n'a pas bougée. Peut-être que tout le monde s'en tamponne de la GBA ? :P \medskip
     
     
     \subsection{Comment utiliser \FAT ?}
@@ -281,23 +281,25 @@
             \SimpleImage{images/ezflash4}{0.2} 
             \end{minipage} & 
             \begin{minipage}{3cm}
-            \FAT démarre et est utilisable. Attention ! Il est {\bf nécessaire} d'utiliser le logiciel fourni.
+            \FAT démarre et est utilisable. Attention ! Il est {\bf nécessaire} d'utiliser le logiciel fourni !
             \end{minipage} & 
             \begin{minipage}{2cm}
             \textcolor{vert}{OK}
             \end{minipage} &
             \begin{minipage}{7cm}
-            La sauvegarde ne s'écrit physiquement sur la cartouche qu'après un reboot de celle-ci. Etrange je sais ...
+            La sauvegarde ne fonctionne pas ! Utilisez celle livrée avec la cartouche (la save cheat)
             \end{minipage} \\    
     \hline
     \end{supertabular}
-    
+
+    \medskip Le meilleur choix reste l'ezflash1.
+
     \subsection{Changements pour la \fatversion}
     
     Liste des changements pour cette version de \FAT: \medskip
     \begin{itemize}
         \item{la gestion des samples a été implémentée : il est possible de les lancer depuis les channels SNA et SNB}
-        \item{la gestion des kits fait ses premier pas: branchez à chaud vos samples dans la ROM !}
+        \item{la gestion des kits fait ses premier pas: branchez à chaud vos samples dans la ROM ! Faites le manuellement ou utilisez le site web dédié.}
         \item{apparition et implémentation de l'écran LIVE : jouez vos tracks sur scène !}
 	\item{la sauvegarde des tracks se fait maintenant de manière compressée (enfin. RLE. Ce qui n'est pas un foudre de compression)}
 	\item{la gestion du tempo a été revue}
@@ -310,9 +312,10 @@
     La version suivante sera la \fatnextversion. \medskip    
     \begin{itemize}
         \item{ajout de commandes}
-        \item{gestion des paramètres avancés sur les samples}
-        \item{stabilisation générale} 
-        \item{recherche de documentation pour implémenter la synthèse FM (si vous en avez je suis preneur)}
+        \item{stabilisation générale}
+        \item{gestion de courbes détaillées dans le channel WAV}
+        \item{recherche de documentation pour implémenter la synthèse FM (si vous en avez je suis preneur) afin de moduler les samples et les faire sonner différemment.
+                    L'objectif serait de se rapprocher du son de Nanoloop.}
     \end{itemize}
     
     \subsection{Premier son}
@@ -601,12 +604,10 @@
         \item{le type PULSE}
         \item{le type WAVE}
         \item{le type NOISE}
-        \item{le type SAMPLE}
+        \item{le type KIT}
     \end{itemize}\medskip
     
-     \ColoredAnnotation{Notez que cette version de \FAT n'implémente pas encore totalement les instruments de type SAMPLE. Dans le futur, cette catégorie sera probablement renommée ou subdivisée en 2 parties: les samples embarqués dans la ROM et une partie synthétiseur FM.}
-     
-     Chaque instrument est spécialisé dans la lecture de notes {\bf sur un certain canal}. Rappelez-vous, l'écran SONG est composé de 6 colonnes. Ces 6 colonnes représentent en fait chacun des 6 canaux de la GBA. Ainsi, 
+     Chaque instrument est spécialisé dans la lecture de notes {\bf sur un certain canal}. Rappelez-vous, l'écran SONG est composé de 6 colonnes. Ces 6 colonnes représentent en fait chacun des 6 canaux de la GBA. Ainsi,
      
      \begin{itemize}
         \item{les instruments PULSE sont spécialistes du canal 1 et 2: le PU1 et PU2}
@@ -770,19 +771,19 @@
         
         \paragraph{Name} Le nom de la collection de sample dont l'instrument se sert
 
-        \paragraph{Volume} NON IMPLÉMENTÉ - Volume affecté au sample : muet ou sonore.
+        \paragraph{Volume} Volume affecté au sample : moitié ou 100\%.
 
-        \paragraph{Speed} NON IMPLÉMENTÉ - Vitesse de lecture du sample
+        \paragraph{Speed} Vitesse de lecture du sample
 
-        \paragraph{Loop} NON IMPLÉMENTÉ - Le sample est t-il joué en boucle ?
+        \paragraph{Loop} Le sample est t-il joué en boucle ? Si "YES", alors la lecture du sample est répétée.
 
-        \paragraph{Timed} NON IMPLÉMENTÉ - Définit si le sample sera coupé ou non.
+        \paragraph{Timed} Définit si le sample sera coupé ou non.
 
-        \paragraph{Length} NON IMPLÉMENTÉ = Si "Timed" est à 1, cette valeur définit la coupure.
+        \paragraph{Length} Si "Timed" est à 1, cette valeur définit la coupure en pourcentage.
 
-        \paragraph{Offset} Offset de départ pour la lecture du sample.
+        \paragraph{Offset} Offset de départ pour la lecture du sample. En pourcentage.
 
-        \paragraph{Output} NON IMPLÉMENTÉ - Choisissez le mode de sortie du son.
+        \paragraph{Output} Choisissez le mode de sortie du son.
         \begin{itemize}
             \item{L: le son sort à gauche (LEFT)}
             \item{R: le son sort à droite (RIGHT)}
@@ -806,7 +807,7 @@
 
         \paragraph{Preview} Réglez ce paramètre à YES pour demander à \FAT de jouer la note dès qu'elle est écrite.
 
-        \paragraph{GreedPlay} Si activé le GreedPlay force \FAT à toujours chercher à jouer la première séquence disponible dans un ensemble et ce peu importe la ligne sur laquelle vous vous trouvez. Ex : posez plusieurs séquences (avec des notes à lire) à la suite, de la ligne 0 à 5, puis positionnez vous sur la ligne 3. Pressez START. Si le greedPlay est activé, la lecture ne commencera pas depuis la ligne 3 mais depuis la 0.
+        \paragraph{GreedPlay} Si activé, le GreedPlay force \FAT à toujours chercher à jouer la première séquence disponible dans un ensemble et ce peu importe la ligne sur laquelle vous vous trouvez. Ex : posez plusieurs séquences (avec des notes à lire) à la suite, de la ligne 0 à 5, puis positionnez vous sur la ligne 3. Pressez START. Si le greedPlay est activé, la lecture ne commencera pas depuis la ligne 3 mais depuis la 0.
 
         \paragraph{"New Prj"} Crée un nouveau projet. Attention, les données non enregistrées seront impitoyablement effacées, écrasées, broyées, massacrées.
         
@@ -885,7 +886,7 @@
         \hline
         \end{supertabular}
 
-    \ColoredAnnotation{Vos morceaux peuvent être enregistrés individuellement sur votre ordinateur ! Pour cela, utilisez le logiciel fourni: \BURGER. (cf \ref{burger})}
+    \ColoredAnnotation{Vos morceaux peuvent être enregistrés individuellement sur votre ordinateur ! Pour cela, utilisez le site web dédié : \url{www.furiousadvancetracker.com}}
         
     
     \subsection{L'écran EFFECTS}
@@ -952,7 +953,7 @@
 
     \subsection{L'écran COMPOSER}
     
-    Imaginez cet écran comme un mini-piano: le COMPOSER va transformer votre Gameboy Advance en machine a improviser des sons !
+    Imaginez cet écran comme un mini-piano ou un sampler: le COMPOSER va transformer votre Gameboy Advance en machine a improviser des sons !
     
     \Image{images/screen_composer}{1.0}{L'écran COMPOSER}
     
@@ -999,24 +1000,31 @@
   \section{Effets et commandes}
   
   \ColoredAnnotation{Désolé ! Pas beaucoup d'effets pour le moment: il va falloir s'en contenter pour l'heure. Plusieurs commandes sont aux programme et débarqueront dans les versions suivantes. Patience !}
-  
+
+  \subsection{H (HOP!)}
+
+    Cette commande permet de sauter directement au block suivant. Elle peut permettre de créer des décalages de temps entre les blocks. La valeur que vous paramétrez correspond au numéro de ligne vers lequel sauter.
+
   \subsection{KL (KilL)}
   
   Cette commande permet de stopper (kill = tuer) le son. 
   \ColoredAnnotation{Pas de valeur possible pour le moment pour ce paramètre.}
 
+  \subsection{OU (OUtput)}
+
+  Dirige le son vers la droite (R), gauche (L), les deux (LR) ou aucun des deux ('  ')
+
+  \subsection{SW (SWeep)}
+
+  Cette commande n'est effective que sur le channel 1 (PU1) : elle permet de modifier la valeur du sweep. Ce sweep écrase celui configuré dans l'instrument.
+
   \subsection{VO (VOlume)}
 
-  Cette commande permet de modifier le volume du son. \#captainobvious.
-
-%  \subsection{H (HOP!)}
-  
- % Cette commande permet de sauter directement au block suivant. Elle peut permettre de créer des décalages de temps entre les blocks.
-  %\ColoredAnnotation{La valeur pour ce paramètre n'est pas encore prise en compte}
+  Cette commande permet de modifier le volume du son. \#captainobvious. Notez que selon le channel, la valeur que vous passez est prise en compte différemment.
 
   \section{Manipulation de la ROM pour l'ajout de vos collections de samples}
 
-  A partir de cette version, il est possible d'ajouter vos propres samples à \FAT. Ceci sera possible sur le site web mais possibité vous est offerte de le faire vous même sur votre poste si le coeur vous en dit.
+  A partir de cette version, il est possible d'ajouter vos propres samples à \FAT. Cette manipulation est possible sur le site web (et beaucoup plus simple, le programme sur le site se charge de tout) mais possibité vous est offerte de le faire vous même sur votre poste si le coeur vous en dit. Et que vous n'avez rien de mieux à faire.
   Voyons la marche à suivre.\medskip
 
     \begin{itemize}
@@ -1024,7 +1032,7 @@
       \item{créez un fichier 0infos et saisissez le nom de votre collection : "my-first" par exemple (8 caractères !) }
       \item{transformez vos fichiers samples dans le bon format}
       \item{créez le fichier GBFS qui sera intégré à la ROM. Répétez l'opération pour chaque kit.}
-      \item{créez le fichier 00nbkit qui compte le nombre de kits dans la ROM finale (le nombre de gbfs donc)}
+      \item{dans un autre dossier, créez le fichier 00nbkit qui compte le nombre de kits dans la ROM finale (le nombre de gbfs donc)}
       \item{intégrez les fichiers GBFS dans la ROM "défault"}
     \end{itemize}\medskip
 
@@ -1040,7 +1048,7 @@
 
   \paragraph{Le fichier GBFS} Ce fichier est le conteneur qui va embarquer le fichier description suivi de tous vos fichier ".snd". Pour le créer, il faut utiliser l'utilitaire "gbfs.exe". Vous pouvez télécharger ce fichier sur le Github de \FAT (\href{https://github.com/cbrouillard/furiousadvancetracker/blob/master/gbfs.exe?raw=true}{Github - gbfs.exe})
   \Annotation{gbfs.exe monfichier\_sample.gbfs samples/0infos samples/*.snd}
-  Le fichier "monfichier\_sample.gbfs" sera créé. L'ordre de cette commande est important : le fichier 0infos DOIT être le premier.
+  Le fichier "monfichier\_sample.gbfs" sera créé. L'ordre de cette commande est important : le fichier 0infos DOIT être le premier. Cet utilitaire fonctionne sous Linux avec Wine.
 
   \paragraph{Le fichier 00nbkit} Lorsque vous avez terminé de créer vos fichiers GBFS pour chaque kit de sample, un fichier 00nbkit doit être créé. Une seule donnée à l'intérieur de ce fichier : le nombre de kits que vous allez intégrer dans la ROM. Si vous n'avez qu'un seul kit à intégrer :
   \Annotation{echo 1 \textgreater  00nbkit}
@@ -1051,39 +1059,19 @@
   \Annotation{cat FAT\_default.gba 00nbkit.gbfs monfichier\_sample.gbfs \textgreater FAT\_v1.0.0\_withsample.gba}
   Oui. Un simple "cat". Attention cependant, le fichier 00nbkit.gbfs {\bf DOIT} être le premier. (\FAT se sert de la donnée écrite dans le fichier 00nbkit pour connaitre à l'avance le nombre de kit)\medskip
 
-  Après toutes ces manipulations, votre ROM est prête : vos samples sont accessible sur les channels SNA et SNB avec des instruments de type SAMPLE. Enjoy !\medskip
+  Après toutes ces manipulations, votre ROM est prête : vos samples sont accessible sur les channels SNA et SNB avec des instruments de type SAMPLE. Enjoy !
 
-  Notez, pour les utilisateurs de Linux, que gbfs.exe tourne très bien avec Wine.
+  \section{Le site web dédié à \FAT}
 
-  \section{(OBSOLETE) Backup de vos sauvegardes}\label{burger}
+  Il existe un site web dédié à \FAT : c'est peut-être sur ce site que vous avez pu télécharger cette documentation ! \href{http://www.furiousadvancetracker.com}{www.furiousadvancetracker.com}\medskip
 
-  \ColoredAnnotation{L'application de gestion de backup de sauvegardes va être mergée et integrée au sein du futur site web dédié à \FAT. Il sera possible de gérer vos sauvegardes et kits en ligne ! Cette partie de la documentation est donc obsolète et sera supprimée très bientôt.}
-  
-  \FAT est maintenant livré avec un outil permettant de gérer vos sauvegardes et de rapatrier vos morceaux sur votre ordinateur. \BURGER est un logiciel programmé en Java: il est multi-plateforme (GNU/Linux, Windows, Mac, autres...).
-  \ColoredAnnotation{Utilisateur de LSDJ ? Alors \BURGER va vous rappeler quelque chose :) Il reprend exactement le principe de fonctionnement du LSDJManager permettant aussi de gérer les backups}
-  
-    \subsection{Gérer une sauvegarde pour la version 0.2.x}
-    
-    La sauvegarde gérée par \FAT version 0.2.x est sans compression : il n'est possible de sauvegarder que 3 chansons sur le fichier géré par la Gameboy. Pour gérer ces 3 morceaux, lancez \BURGER.
-    
-    \Image{images/burger_welcome}{0.8}{\BURGER au lancement}
-    
-    Vous pouvez décider de créer un nouveau de fichier sauvegarde (File, Create new ... ou CTRL+N)  ou d'ouvrir un fichier provenant de votre GBA. Une fois le fichier ouvert, \BURGER affiche la liste des chansons enregistrées.
-    
-    \Image{images/burger_list}{0.8}{La liste des chansons}
-    
-    Séléctionnez une ou plusieurs tracks dans la liste puis cliquez sur "Export selected". Si vous n'en avez séléctionné qu'une seul, \BURGER vous propose de l'enregistrer sous la forme d'un fichier ".fat". Si vous préférez exporter par lot, \BURGER vous créera un fichier ".zip" contenant toutes les chansons souhaitées.\medskip
-    
-    Pour effectuer l'opération inverse, cliquez sur "Add a song". Séléctionnez votre track puis validez: celle-ci sera positionnée sur l'emplacement actuellement sélectionné dans la liste. \BURGER n'offre pas encore la possibilité de modifier l'ordre des enregistrements.\medskip
-    
-    Une fois votre liste établie vous pouvez enregistrer un nouveau fichier sauvegarde: File, Save v0.2.x. Ce fichier sauvegarde est exploitable par \FAT, copiez le simplement sur votre cartouche GBA.
-    \ColoredAnnotation{\BURGER est encore en développement ! Lui accorder une confiance aveugle serait une grave erreur ! Enregistrez vos fichiers sauvegardes dans un endroit sur puis travaillez sur des copies.}
-  
+  Ce site permet de gérer vos backups/tracks mais également l'édition de vos samples et leur intégration dans la ROM. Voici un petit tutorial vidéo en français : \href{https://www.youtube.com/watch?v=a9rPzz-6Mgg}{Youtube - FAT Howto - Ajouter des samples}
+
   \section{Tutoriaux / paramètrages d'instruments}
   
   Cette section va tenter de vous donner quelques premières valeurs de paramètres afin de créer des instruments "intéressants" et de vous lancer plus rapidement dans la composition de morceaux. Pour chaque exemple, je vous donnerai la marche à suivre la plus complète possible.
   
-    \subsubsection{Kick "Boom"}
+    \subsection{Kick "Boom"}
     
     Le kick "boom" se programme sur le canal 1 exclusivement.    
     \ColoredAnnotation{Il s'agit pour le moment de la seule façon de faire un kick. Les versions suivantes de \FAT proposeront des effets permettant d'en programmer d'autres sur des canaux différents.}
@@ -1112,5 +1100,15 @@
     
     Screenshot instrument:
     \Image{images/kickboom}{1.0}{Instrument - Kickboom}
+
+    \subsection{Le sample stéréo}
+
+    Par défaut un sample est mono. Mais il est cependant possible de diriger la lecture d'un son vers la droite ou la gauche avec \FAT.
+    Supposons que vous souhaitiez créer un sample stéréo.
+    Il suffit pour cela d'ajouter 2 samples dans la ROM (un pour la partie droite et l'autre pour la gauche) puis de configurer 2 instruments avec le paramètre OUTPUT réglé de façon judicieuse
+     (ou d'utiliser la commande OU, ce qui vous économise un instrument).
+    Le channel SNA s'occupe de lire celui à gauche avec un OUtput 'Left'.
+    Le SNB s'occupe de lire celui de droite avec un OUtput 'Right'. L'inverse est également possible. Peu importe.
+    Le tour est joué ! Vous avez un sample stéréo.
 	
 \end{document}
