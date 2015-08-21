@@ -362,9 +362,9 @@ const u8 snd_countAvailableKits() {
 }
 
 void snd_init_kits() {
-    /*R_TIM0COUNT = 0xffff;
+    R_TIM0COUNT = 0xffff;
     R_TIM0CNT = 0x00C3;
-    hel_IntrStartHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sample);*/
+    hel_IntrStartHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sample);
 
     snd_countAvailableKits();
     u8 cpt = 0;
