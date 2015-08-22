@@ -496,7 +496,7 @@ void ATTR_FASTFUNC FAT_player_timerFunc() {
     if (tempoReach > 0) {
         tempoReach--;
     }
-    hel_IntrAcknowledge(INT_TYPE_TIM3);
+    //hel_IntrAcknowledge(INT_TYPE_TIM3);
 }
 
 void FAT_player_progressInSong(u8 channel, sequence* seq){
@@ -967,7 +967,7 @@ bool FAT_isChannelCurrentlyPlaying (u8 channel){
  */
 void FAT_player_stopPlayer() {
 
-    R_TIM3CNT = 0x0003;
+    //R_TIM3CNT = 0x0003;
     hel_IntrStopHandler(INT_TYPE_TIM3);
 
     // stop le son
