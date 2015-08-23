@@ -606,7 +606,7 @@ void FAT_player_playFromSequences() {
 
                         // Déplacement des curseurs de lecture
                         FAT_player_moveOrHideCursor(i);
-                        FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
+                        //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
 
                     } else {
                         actualBlocksForChannel[i] = 0;
@@ -615,13 +615,13 @@ void FAT_player_playFromSequences() {
                             actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                         }
                         FAT_player_moveOrHideCursor(i);
-                        FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
+                        //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
                     }
 
                 } else {
                     actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                     FAT_player_moveOrHideCursor(i);
-                    FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
+                    //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
                 }
             }
 
@@ -711,7 +711,7 @@ void FAT_player_playFromLive(){
                                         willHaveToSyncAfterNote = 1;
                                         // Déplacement des curseurs de lecture
                                         FAT_player_moveOrHideCursor(i);
-                                        FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
+                                        //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
                                     }
 
                                     FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
@@ -745,7 +745,7 @@ void FAT_player_playFromLive(){
                                 willHaveToSyncAfterNote = 1;
                                 // Déplacement des curseurs de lecture
                                 FAT_player_moveOrHideCursor(i);
-                                FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
+                                //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
                             }
                         }
                     } else {
@@ -757,7 +757,7 @@ void FAT_player_playFromLive(){
                                 actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                             }
                             FAT_player_moveOrHideCursor(i);
-                            FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
+                            //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
                         }
 
                         willHaveToSyncAfterNote = 1;
@@ -767,7 +767,7 @@ void FAT_player_playFromLive(){
                     actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                     willHaveToSyncAfterNote = 1;
                     FAT_player_moveOrHideCursor(i);
-                    FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
+                    //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
                 }
             }
 
