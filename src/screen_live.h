@@ -254,7 +254,6 @@ void FAT_screenLive_checkButtons() {
 
             if (hel_PadQuery()->Pressed.Down) {
                 if (hel_PadQuery()->Held.R) {
-                    //FAT_screenLive_movePageDown();
                     // changer de portion d'écran -> du séquenceur vers la table
                     FAT_screenLive_switchActivePart(0);
 
@@ -267,7 +266,6 @@ void FAT_screenLive_checkButtons() {
 
             if (hel_PadQuery()->Pressed.Up) {
                 if (hel_PadQuery()->Held.R) {
-                    //FAT_screenLive_movePageUp();
                     // changer de portion d'écran -> de la table vers le sequenceur
                     FAT_screenLive_switchActivePart(1);
 
@@ -281,7 +279,7 @@ void FAT_screenLive_checkButtons() {
         }
 
         if (hel_PadQuery()->Pressed.Start) {
-            if(!FAT_tracker.liveData.liveMode || hel_PadQuery()->Held.R){
+            if(hel_PadQuery()->Held.R){
                 // tout se lance en maintenant à partir de la ligne sélectionnée.
                 if (!FAT_isCurrentlyPlaying) {
                     FAT_player_startPlayerFromSequences(FAT_screenLive_currentSelectedLine);
@@ -297,10 +295,9 @@ void FAT_screenLive_checkButtons() {
                     if (FAT_isChannelCurrentlyPlaying (FAT_screenLive_currentSelectedColumn)){
                         FAT_player_stopPlayer_onlyOneColumn(FAT_screenLive_currentSelectedColumn);
                     } else {
-                        // sinon on le démmarre
+                        // sinon on le démarre
                         FAT_player_startPlayerFromLive_oneChannel(FAT_screenLive_currentSelectedLine, FAT_screenLive_currentSelectedColumn);
                     }
-                    //FAT_screenSongOrLive_markActualSeqIsWaiting(FAT_screenLive_currentSelectedColumn);
                 }
             }
         }

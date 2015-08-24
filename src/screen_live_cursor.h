@@ -246,6 +246,8 @@ void FAT_screenLive_moveCursorUp() {
  * @param part la partie vers laquelle switcher: 0 = table, 1 = sequenceur
  */
 void FAT_screenLive_switchCursorToPart (bool part){
+    FAT_cursors_hideCursor3();
+    FAT_cursors_showCursor2();
     if (part == 1){
         // sequenceur.
         FAT_screenLive_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1 + (8* (FAT_screenLive_currentSelectedLine-FAT_screenLive_currentStartLine));
