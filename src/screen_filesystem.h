@@ -151,7 +151,7 @@ void FAT_screenFilesystem_checkButtons() {
                 // TODO hide project cursor
                 FAT_cursors_hideCursor8();
                 FAT_cursors_hideCursor2();
-                FAT_switchToScreen(FAT_popup_getSelectedIcon());
+                FAT_switchToScreen(FAT_popup_getSelectedIcon(), SCREEN_FILESYSTEM_ID);
             }
         }
 

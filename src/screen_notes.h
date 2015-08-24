@@ -41,7 +41,7 @@
 #define SCREENNOTES_COLUMN_ID_CMD_PARAM 3
 
 // prototypes
-void FAT_screenNotes_init();
+void FAT_screenNotes_init(u8 fromScreenId);
 void FAT_screenNotes_checkButtons();
 void FAT_screenNotes_printLineColumns();
 void FAT_screenNotes_pressOrHeldA();
@@ -51,7 +51,7 @@ void FAT_screenNotes_printInfos();
 /** \brief Cette variable permet de savoir si la popup est affichée au dessus de l'écran. */
 bool FAT_screenNotes_isPopuped = 0;
 /** \brief Id de block en cours d'édition. */
-u8 FAT_screenNotes_currentBlockId;
+u8 FAT_screenNotes_currentBlockId = NULL_VALUE;
 
 #include "screen_notes_cursor.h"
 
@@ -116,8 +116,6 @@ void FAT_screenNotes_printEffect(u8 line) {
         u8 effectName = (effect->name & 0xfe) >> 1;
         switch (effectName){
             case EFFECT_KILL:
-                /*hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
-                                "%.2s%.2x\0", noteEffectName[effectName], effect->value);*/
                 hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
                                                 "%.2s--\0", noteEffectName[effectName]);
                 break;
@@ -179,7 +177,7 @@ void FAT_screenNotes_printAllScreenText() {
 /**
  * \brief Initialisation de l'écran. 
  */
-void FAT_screenNotes_init() {
+void FAT_screenNotes_init(u8 fromScreenId) {
     FAT_reinitScreen();
 
     // initialisation du fond (interface)
@@ -187,16 +185,17 @@ void FAT_screenNotes_init() {
     ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_NOTES_MAP), 1024, 0, 0);
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
-    // affichage d'un peu de texte
-    FAT_screenNotes_currentBlockId = FAT_data_getBlock(FAT_screenBlocks_currentSequenceId, FAT_screenBlocks_currentSelectedLine);
+    // dans quelle block nous situons nous ?
+    switch (fromScreenId){
+        case SCREEN_BLOCKS_ID:
+            FAT_screenNotes_currentBlockId = FAT_data_getBlock(FAT_screenBlocks_currentSequenceId, FAT_screenBlocks_currentSelectedLine);
+            break;
+    }
     if (FAT_screenNotes_currentBlockId == NULL_VALUE) {
         FAT_screenNotes_currentBlockId = 0;
     }
     FAT_screenNotes_printBlockNumber();
     FAT_screenNotes_printAllScreenText();
-
-    // démarrage du cycle pour l'écran
-    //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenNotes_mainFunc);
 
     // affichage du curseur
     FAT_player_hideAllCursors ();
@@ -240,7 +239,7 @@ void FAT_screenNotes_checkButtons() {
             if (FAT_popup_getSelectedIcon() != SCREEN_NOTES_ID) {
                 FAT_cursors_hideCursor3();
                 FAT_cursors_hideCursor2();
-                FAT_switchToScreen(FAT_popup_getSelectedIcon());
+                FAT_switchToScreen(FAT_popup_getSelectedIcon(), SCREEN_NOTES_ID);
             }
         }
 

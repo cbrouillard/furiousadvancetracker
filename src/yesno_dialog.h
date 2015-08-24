@@ -106,7 +106,7 @@ void FAT_onlyyes_dialog_mainFunc() {
 void FAT_yesno_close() {
     FAT_popup_init();
     hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &VBLInterruptHandler);
-    FAT_switchToScreen(FAT_currentScreen);
+    FAT_switchToScreen(FAT_currentScreen, SCREEN_DIALOG_ANY);
 }
 
 /**

@@ -108,13 +108,13 @@ void FAT_screenHelp_checkButtons() {
             if (FAT_popup_getSelectedIcon() != SCREEN_HELP_ID) {
                 // TODO hide project cursor
                 isHelpActivated = 0;
-                FAT_switchToScreen(FAT_popup_getSelectedIcon());
+                FAT_switchToScreen(FAT_popup_getSelectedIcon(), SCREEN_HELP_ID);
             }
         }
 
         if (hel_PadQuery()->Pressed.B) {
             isHelpActivated = 0;
-            FAT_switchToScreen(FAT_help_fromScreenId);
+            FAT_switchToScreen(FAT_help_fromScreenId, SCREEN_HELP_ID);
         }
 
     }

@@ -42,7 +42,7 @@ u8 willSaveTrackNumber = 0;
 void FAT_dialog_close() {
     FAT_popup_init();
     hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &VBLInterruptHandler);
-    FAT_switchToScreen(FAT_currentScreen);
+    FAT_switchToScreen(FAT_currentScreen, SCREEN_DIALOG_ANY);
 }
 
 void FAT_dialog_keyboardSelectorCursor (){

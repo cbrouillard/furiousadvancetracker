@@ -68,7 +68,7 @@ void FAT_screenEffects_checkButtons() {
 
             if (FAT_popup_getSelectedIcon() != SCREEN_EFFECTS_ID) {
                 // TODO hide project cursor
-                FAT_switchToScreen(FAT_popup_getSelectedIcon());
+                FAT_switchToScreen(FAT_popup_getSelectedIcon(), SCREEN_EFFECTS_ID);
             }
         }
 

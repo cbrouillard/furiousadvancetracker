@@ -232,7 +232,7 @@ void FAT_screenComposer_checkButtons() {
                 FAT_cursors_hideCursor3();
                 FAT_cursors_hideCursor2();
                 FAT_cursors_hideCursor1();
-                FAT_switchToScreen(FAT_popup_getSelectedIcon());
+                FAT_switchToScreen(FAT_popup_getSelectedIcon(), SCREEN_COMPOSER_ID);
             }
         }
 

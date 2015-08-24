@@ -108,7 +108,7 @@ void FAT_screenProject_checkButtons() {
             if (FAT_popup_getSelectedIcon() != SCREEN_PROJECT_ID) {
                 FAT_cursors_hideCursor2();
                 FAT_cursors_hideCursor3();
-                FAT_switchToScreen(FAT_popup_getSelectedIcon());
+                FAT_switchToScreen(FAT_popup_getSelectedIcon(), SCREEN_PROJECT_ID);
             }
         }
 
@@ -196,13 +196,13 @@ void FAT_screenProject_pressOrHeldA() {
             FAT_cursors_hideCursor3();
             FAT_cursors_hideCursor2();
             FAT_screenFilesystem_setMode(FILESYSTEM_MODE_SAVE);
-            FAT_switchToScreen(SCREEN_FILESYSTEM_ID);
+            FAT_switchToScreen(SCREEN_FILESYSTEM_ID, SCREEN_PROJECT_ID);
             break;
         case 7:
             FAT_cursors_hideCursor3();
             FAT_cursors_hideCursor2();
             FAT_screenFilesystem_setMode(FILESYSTEM_MODE_LOAD);
-            FAT_switchToScreen(SCREEN_FILESYSTEM_ID);
+            FAT_switchToScreen(SCREEN_FILESYSTEM_ID, SCREEN_PROJECT_ID);
             break;
 
 

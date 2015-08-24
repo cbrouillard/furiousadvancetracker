@@ -42,18 +42,13 @@
 #define SCREEN_FILESYSTEM_ID 8
 /** \brief Id écran help. */
 #define SCREEN_HELP_ID 9
-/** \brief Nombre total d'écran disponible pour FAT */
-#define NB_SCREEN 8;
-/** \brief Numéro de la couleur du texte. Ce numéro correspond à une couleur dans la palette. <b>NE PAS TOUCHER</b>*/
-#define TEXT_COLOR 245 // 159, 247
+
+#define SCREEN_DIALOG_ANY 100
+
 /** \brief Position par défaut du curseur de changement d'onglet (partie instrument).*/
 #define INPUT_R_CURSOR_CHANGE_X 216
 /** \brief Position par défaut du curseur de changement d'onglet (partie instrument).*/
 #define INPUT_R_CURSOR_CHANGE_Y 24
-
-/** \brief Définition du temps d'attente MINIMUM entre 2 appui sur la touche START. Ce chiffre peut 
- être pondéré avec une valeur paramétrable. */
-#define WAIT_FOR_START 40
 
 /** \brief Définition globale du format d'affichage des numéros de lignes. */
 #define FAT_FORMAT_LINE "%.2x"
@@ -66,7 +61,7 @@ u8 isHelpActivated = 0;
 
 void FAT_initSpritePalette();
 void FAT_initScreenPalette();
-void FAT_switchToScreen(u8 screenId);
+void FAT_switchToScreen(u8 screenId, u8 fromId);
 void FAT_showHelp(u8 screenId);
 void FAT_reinitScreen();
 void FAT_forceClearTextLayer();
@@ -383,7 +378,7 @@ void FAT_mainLoop() {
  * 
  * @param screenId l'id de l'écran que l'on souhaite afficher.
  */
-void FAT_switchToScreen(u8 screenId) {
+void FAT_switchToScreen(u8 screenId, u8 fromId) {
     FAT_currentScreen = screenId;
     switch (screenId) {
         case SCREEN_PROJECT_ID:
@@ -396,10 +391,10 @@ void FAT_switchToScreen(u8 screenId) {
             FAT_screenSong_init();
             break;
         case SCREEN_BLOCKS_ID:
-            FAT_screenBlocks_init();
+            FAT_screenBlocks_init(fromId);
             break;
         case SCREEN_NOTES_ID:
-            FAT_screenNotes_init();
+            FAT_screenNotes_init(fromId);
             break;
         case SCREEN_EFFECTS_ID:
             FAT_screenEffects_init();
@@ -412,7 +407,6 @@ void FAT_switchToScreen(u8 screenId) {
             break;
         case SCREEN_FILESYSTEM_ID:
             FAT_screenFilesystem_init();
-
             break;
     }
 
@@ -430,6 +424,7 @@ void FAT_showHelp(u8 screenId) {
 /**
  * \brief Attendre la synchronisation du balayage vertical. 
  */
+// deprecated and dangerous. Don't use it.
 void FAT_waitVSync() {
     while (F_VCNT_CURRENT_SCANLINE < 160) {
     }
@@ -439,6 +434,7 @@ void FAT_waitVSync() {
  * \brief Permet de patienter un certain nombre de cycle de balayage vertical.
  * @param nbFrames le nombre de balayage à attendre.
  */
+// deprecated and dangerous. Don't use it.
 void FAT_wait(u32 nbFrames) {
     u32 i = 0;
 
@@ -454,6 +450,7 @@ void FAT_wait(u32 nbFrames) {
  * 
  * @param time variable pour définir le temps d'attente
  */
+// deprecated and dangerous. Don't use it.
 void FAT_blockCPU(u16 time) {
     u16 i = 0;
     while (i++ < time) {

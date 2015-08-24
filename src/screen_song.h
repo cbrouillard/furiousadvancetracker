@@ -175,7 +175,7 @@ void FAT_screenSong_checkButtons() {
 
             if (FAT_popup_getSelectedIcon() != SCREEN_SONG_ID) {
                 FAT_cursors_hideCursor2();
-                FAT_switchToScreen(FAT_popup_getSelectedIcon());
+                FAT_switchToScreen(FAT_popup_getSelectedIcon(), SCREEN_SONG_ID);
             }
         }
 

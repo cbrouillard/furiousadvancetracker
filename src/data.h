@@ -308,7 +308,6 @@ typedef struct SEQUENCE {
                                           * une séquence et telle autre valeur dans une autre séquence. De même, au sein de la
                                           * même séquence, on peut ainsi transposer différemment chacun des blocks présent.
                                           */
-    //effect effect[4]; 
 } sequence;
 /**
  * \brief Stocke le dernier numéro de séquence écrit.

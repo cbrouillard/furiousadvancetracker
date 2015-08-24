@@ -50,10 +50,10 @@ bool FAT_screenBlocks_isPopuped = 0;
  * \brief Les blocks sont toujours inclus dans une séquence: cette variable sert
  * à stocker son id.
  */
-u8 FAT_screenBlocks_currentSequenceId;
+u8 FAT_screenBlocks_currentSequenceId = NULL_VALUE;
 
 // prototypes
-void FAT_screenBlocks_init();
+void FAT_screenBlocks_init(u8 fromScreenId);
 void FAT_screenBlocks_checkButtons();
 void FAT_screenBlocks_printInfos();
 void FAT_screenBlocks_pressOrHeldA();
@@ -171,7 +171,7 @@ void FAT_screenBlocks_printAllScreenText() {
  * Affiche du texte, déplace le curseur à la dernière position connue, change 
  * l'interface... 
  */
-void FAT_screenBlocks_init() {
+void FAT_screenBlocks_init(u8 fromScreenId) {
     FAT_reinitScreen();
 
     // initialisation du fond (interface)
@@ -180,16 +180,20 @@ void FAT_screenBlocks_init() {
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
     // affichage d'un peu de texte
-    // numéro de la séquence en cours d'édition, tout est dans SCREEN_SONG :)
-    FAT_screenBlocks_currentSequenceId = FAT_data_getSequence(FAT_screenSong_currentSelectedColumn, FAT_screenSong_currentSelectedLine);
+    // numéro de la séquence en cours d'édition, tout est dans SCREEN_SONG ou le SCREEN_LIVE !
+    switch (fromScreenId){
+        case SCREEN_SONG_ID:
+            FAT_screenBlocks_currentSequenceId = FAT_data_getSequence(FAT_screenSong_currentSelectedColumn, FAT_screenSong_currentSelectedLine);
+            break;
+        case SCREEN_LIVE_ID:
+            FAT_screenBlocks_currentSequenceId = FAT_data_getSequence(FAT_screenLive_currentSelectedColumn, FAT_screenLive_currentSelectedLine);
+            break;
+    }
     if (FAT_screenBlocks_currentSequenceId == NULL_VALUE) {
         FAT_screenBlocks_currentSequenceId = 0;
     }
     FAT_screenBlocks_printSequenceNumber();
     FAT_screenBlocks_printAllScreenText();
-
-    // démarrage du cycle pour l'écran
-    //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenBlocks_mainFunc);
 
     // affichage du curseur
     FAT_player_hideAllCursors ();
@@ -225,7 +229,7 @@ void FAT_screenBlocks_checkButtons() {
 
             if (FAT_popup_getSelectedIcon() != SCREEN_BLOCKS_ID) {
                 FAT_cursors_hideCursor2();
-                FAT_switchToScreen(FAT_popup_getSelectedIcon());
+                FAT_switchToScreen(FAT_popup_getSelectedIcon(), SCREEN_BLOCKS_ID);
             }
         }
 

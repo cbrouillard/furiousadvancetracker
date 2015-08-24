@@ -229,7 +229,7 @@ void FAT_screenLive_checkButtons() {
 
             if (FAT_popup_getSelectedIcon() != SCREEN_LIVE_ID) {
                 // TODO hide project cursor
-                FAT_switchToScreen(FAT_popup_getSelectedIcon());
+                FAT_switchToScreen(FAT_popup_getSelectedIcon(), SCREEN_LIVE_ID);
             }
         }
 

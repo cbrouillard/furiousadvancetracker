@@ -306,7 +306,7 @@ void FAT_screenInstrument_checkButtons() {
                 FAT_screenInstrument_hideAllEnvdirSprites();
                 FAT_screenInstrument_hideAllWavedutySprite();
                 FAT_cursors_hideAllCursors();
-                FAT_switchToScreen(FAT_popup_getSelectedIcon());
+                FAT_switchToScreen(FAT_popup_getSelectedIcon(), SCREEN_INSTRUMENTS_ID);
             }
         }
 
