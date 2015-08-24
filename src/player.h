@@ -394,7 +394,6 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
             FAT_live_nbChannelPlaying++;
         }
         FAT_player_moveOrHideCursor(i);
-        //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
     }
 
     R_TIM3COUNT = 0xffff;
@@ -431,7 +430,6 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
 
     if (FAT_live_waitForOtherChannel[channel] == 0){
         FAT_player_moveOrHideCursor(channel);
-        //FAT_screenSongOrLive_showActualPlayedSeqLine (channel, actualSequencesForChannel[channel]);
 
         R_TIM3COUNT = 0xffff;
         hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
@@ -606,7 +604,6 @@ void FAT_player_playFromSequences() {
 
                         // Déplacement des curseurs de lecture
                         FAT_player_moveOrHideCursor(i);
-                        //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
 
                     } else {
                         actualBlocksForChannel[i] = 0;
@@ -615,19 +612,15 @@ void FAT_player_playFromSequences() {
                             actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                         }
                         FAT_player_moveOrHideCursor(i);
-                        //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
                     }
 
                 } else {
                     actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                     FAT_player_moveOrHideCursor(i);
-                    //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
                 }
             }
 
         }
-
-        FAT_screenSongOrLive_showActualPlayedInRedInfosCase ();
 
         for (i = 0; i < 6; i++) {
             if (FAT_player_buffer[i].haveToPlay){
@@ -649,7 +642,6 @@ void FAT_player_liveSynchro(){
         if(FAT_isChannelCurrentlyPlaying(j)){
             FAT_live_waitForOtherChannel[j] = 0;
             FAT_player_moveOrHideCursor(j);
-            //FAT_screenSongOrLive_showActualPlayedSeqLine (j, actualSequencesForChannel[j]);
         }
     }
 }
@@ -713,7 +705,6 @@ void FAT_player_playFromLive(){
                                         willHaveToSyncAfterNote = 1;
                                         // Déplacement des curseurs de lecture
                                         FAT_player_moveOrHideCursor(i);
-                                        //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
                                     }
 
                                     FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
@@ -747,7 +738,6 @@ void FAT_player_playFromLive(){
                                 willHaveToSyncAfterNote = 1;
                                 // Déplacement des curseurs de lecture
                                 FAT_player_moveOrHideCursor(i);
-                                //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
                             }
                         }
                     } else {
@@ -759,7 +749,6 @@ void FAT_player_playFromLive(){
                                 actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                             }
                             FAT_player_moveOrHideCursor(i);
-                            //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
                         }
 
                         willHaveToSyncAfterNote = 1;
@@ -769,15 +758,12 @@ void FAT_player_playFromLive(){
                     actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                     willHaveToSyncAfterNote = 1;
                     FAT_player_moveOrHideCursor(i);
-                    //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
                 }
             }
 
             FAT_player_live_showOrHideCursorWait (i);
 
         }
-
-        FAT_screenSongOrLive_showActualPlayedInRedInfosCase ();
 
         u8 volume = NULL_VALUE;
         for (i = 0; i < 6; i++) {
@@ -1116,11 +1102,6 @@ void FAT_player_moveOrHideCursor(u8 channel) {
                 } else {
                     hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 0);
                 }
-
-                /*if (note->freq != NULL_VALUE) {
-                    // la meme chose que pour SONG. On peut laisser comme ça.
-                    FAT_screenSong_showActualPlayedNote(channel, (note->note & 0xf0) >> 4, note->note & 0x0f, note->freq);
-                }*/
 
             } else {
                 hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 0);

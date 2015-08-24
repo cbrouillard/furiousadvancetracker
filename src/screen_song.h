@@ -41,12 +41,9 @@ void FAT_screenSong_init();
 void FAT_screenSong_checkButtons();
 void FAT_screenSong_printLineColumns();
 void FAT_screenSong_printAllScreenText();
-void FAT_screenSong_printChannelFollower();
 void FAT_screenSong_printInfos();
 void FAT_screenSong_pressOrHeldA();
 void FAT_screenSong_pressB();
-void FAT_screenSongOrLive_showActualPlayedSeqLine(u8 channel, u8 line);
-void FAT_screenSongOrLive_showActualPlayedInRedInfosCase ();
 ////////////////////////////////////////////////////
 
 #include "screen_song_cursor.h"
@@ -67,7 +64,6 @@ void FAT_screenSong_init() {
 
     // affichage du numéro des lignes, des séquences, ...
     FAT_screenSong_printAllScreenText();
-    FAT_screenSong_printChannelFollower();
 
     // démarrage du cycle pour l'écran
     //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenSong_mainFunc);
@@ -80,60 +76,7 @@ void FAT_screenSong_init() {
     u8 i;
     for (i = 0;i<6;i++){
         FAT_player_moveOrHideCursor(i);
-        //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
     }
-    FAT_screenSongOrLive_showActualPlayedInRedInfosCase ();
-}
-
-/**
- * \brief Cette fonction se contente d'ecrire le nom des channels dans la 
- * boite rouge sur l'écran SONG. Ne devrait pas être appelé plusieurs fois.
- */
-void FAT_screenSong_printChannelFollower() {
-    hel_BgTextPrintF(TEXT_LAYER, 22, 9, 0, "%s", CHANNEL_NAME[0]);
-    hel_BgTextPrintF(TEXT_LAYER, 22, 10, 0, "%s", CHANNEL_NAME[1]);
-    hel_BgTextPrintF(TEXT_LAYER, 22, 11, 0, "%s", CHANNEL_NAME[2]);
-    hel_BgTextPrintF(TEXT_LAYER, 22, 12, 0, "%s", CHANNEL_NAME[3]);
-    hel_BgTextPrintF(TEXT_LAYER, 22, 13, 0, "%s", CHANNEL_NAME[4]);
-    hel_BgTextPrintF(TEXT_LAYER, 22, 14, 0, "%s", CHANNEL_NAME[5]);
-}
-
-/**
- * \brief Affiche la note actuellement jouée dans la boite rouge de l'écran SONG.
- * @param channel le numéro de canal
- * @param noteName le nom de la note
- * @param noteOctave l'octave de la note
- */
- // deprecated
-void FAT_screenSong_showActualPlayedNote(u8 channel, u8 name, u8 noteOctave, u8 freq) {
-    if (channel < INSTRUMENT_TYPE_SAMPLEA) {
-        hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "%s%.1x", noteName[name], noteOctave);
-    } else {
-        hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "S%.2x", freq);
-    }
-}
-
-// deprecated
-void FAT_screenSongOrLive_showActualPlayedSeqLine(u8 channel, u8 line){
-    /*if (FAT_currentScreen == SCREEN_SONG_ID || FAT_currentScreen == SCREEN_LIVE_ID){
-        if (line != NULL_VALUE && line < NB_MAX_SEQUENCES){
-            hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "L%.2x", line);
-        } else {
-            hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "L--");
-        }
-    }*/
-}
-
-char sequencesInfosWhenRunning[] = "L--\nL--\nL--\nL--\nL--\nL--\0";
-bool hasSequencesInfosChanged = false;
-void FAT_screenSongOrLive_showActualPlayedInRedInfosCase (){
-    if ((FAT_currentScreen == SCREEN_SONG_ID || FAT_currentScreen == SCREEN_LIVE_ID) && hasSequencesInfosChanged){
-        hel_BgTextPrintF(TEXT_LAYER, 26, 9, 0, sequencesInfosWhenRunning);
-    }
-}
-
-void FAT_screenSongOrLive_markActualSeqIsWaiting(u8 channel){
-    hel_BgTextPrint(TEXT_LAYER, 26, channel + 9, 0, "WAI");
 }
 
 /**
@@ -247,7 +190,6 @@ void FAT_screenSong_checkButtons() {
                     FAT_player_startPlayerFromSequences(FAT_screenSong_currentSelectedLine);
                 } else {
                     FAT_player_stopPlayer();
-                    FAT_screenSong_printChannelFollower();
                 }
             }
 

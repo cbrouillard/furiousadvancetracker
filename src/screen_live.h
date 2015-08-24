@@ -184,9 +184,6 @@ void FAT_screenLive_init() {
     FAT_screenLive_printVolumes();
     FAT_screenLive_printTransposes();
 
-    // partie identique à l'écran SONG (imprime uniquement les notes actuellement jouées dans l'encart rouge. Rien de plus)
-    FAT_screenSong_printChannelFollower();
-
     // affichage du curseur
     FAT_cursors_hideCursor2();
     FAT_screenLive_commitCursorMove();
@@ -195,9 +192,7 @@ void FAT_screenLive_init() {
     u8 i;
     for (i = 0;i<6;i++){
         FAT_player_moveOrHideCursor(i);
-        //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
     }
-    FAT_screenSongOrLive_showActualPlayedInRedInfosCase ();
 }
 
 /**
