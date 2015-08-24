@@ -46,6 +46,7 @@ void FAT_screenSong_printInfos();
 void FAT_screenSong_pressOrHeldA();
 void FAT_screenSong_pressB();
 void FAT_screenSongOrLive_showActualPlayedSeqLine(u8 channel, u8 line);
+void FAT_screenSongOrLive_showActualPlayedInRedInfosCase ();
 ////////////////////////////////////////////////////
 
 #include "screen_song_cursor.h"
@@ -79,8 +80,9 @@ void FAT_screenSong_init() {
     u8 i;
     for (i = 0;i<6;i++){
         FAT_player_moveOrHideCursor(i);
-        FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
+        //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
     }
+    FAT_screenSongOrLive_showActualPlayedInRedInfosCase ();
 }
 
 /**
@@ -88,12 +90,12 @@ void FAT_screenSong_init() {
  * boite rouge sur l'écran SONG. Ne devrait pas être appelé plusieurs fois.
  */
 void FAT_screenSong_printChannelFollower() {
-    hel_BgTextPrintF(TEXT_LAYER, 22, 9, 0, "%s L--", CHANNEL_NAME[0]);
-    hel_BgTextPrintF(TEXT_LAYER, 22, 10, 0, "%s L--", CHANNEL_NAME[1]);
-    hel_BgTextPrintF(TEXT_LAYER, 22, 11, 0, "%s L--", CHANNEL_NAME[2]);
-    hel_BgTextPrintF(TEXT_LAYER, 22, 12, 0, "%s L--", CHANNEL_NAME[3]);
-    hel_BgTextPrintF(TEXT_LAYER, 22, 13, 0, "%s L--", CHANNEL_NAME[4]);
-    hel_BgTextPrintF(TEXT_LAYER, 22, 14, 0, "%s L--", CHANNEL_NAME[5]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 9, 0, "%s", CHANNEL_NAME[0]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 10, 0, "%s", CHANNEL_NAME[1]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 11, 0, "%s", CHANNEL_NAME[2]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 12, 0, "%s", CHANNEL_NAME[3]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 13, 0, "%s", CHANNEL_NAME[4]);
+    hel_BgTextPrintF(TEXT_LAYER, 22, 14, 0, "%s", CHANNEL_NAME[5]);
 }
 
 /**
@@ -102,6 +104,7 @@ void FAT_screenSong_printChannelFollower() {
  * @param noteName le nom de la note
  * @param noteOctave l'octave de la note
  */
+ // deprecated
 void FAT_screenSong_showActualPlayedNote(u8 channel, u8 name, u8 noteOctave, u8 freq) {
     if (channel < INSTRUMENT_TYPE_SAMPLEA) {
         hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "%s%.1x", noteName[name], noteOctave);
@@ -109,13 +112,23 @@ void FAT_screenSong_showActualPlayedNote(u8 channel, u8 name, u8 noteOctave, u8 
         hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "S%.2x", freq);
     }
 }
+
+// deprecated
 void FAT_screenSongOrLive_showActualPlayedSeqLine(u8 channel, u8 line){
-    if (FAT_currentScreen == SCREEN_SONG_ID || FAT_currentScreen == SCREEN_LIVE_ID){
+    /*if (FAT_currentScreen == SCREEN_SONG_ID || FAT_currentScreen == SCREEN_LIVE_ID){
         if (line != NULL_VALUE && line < NB_MAX_SEQUENCES){
             hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "L%.2x", line);
         } else {
             hel_BgTextPrintF(TEXT_LAYER, 26, channel + 9, 0, "L--");
         }
+    }*/
+}
+
+char sequencesInfosWhenRunning[] = "L--\nL--\nL--\nL--\nL--\nL--\0";
+bool hasSequencesInfosChanged = false;
+void FAT_screenSongOrLive_showActualPlayedInRedInfosCase (){
+    if ((FAT_currentScreen == SCREEN_SONG_ID || FAT_currentScreen == SCREEN_LIVE_ID) && hasSequencesInfosChanged){
+        hel_BgTextPrintF(TEXT_LAYER, 26, 9, 0, sequencesInfosWhenRunning);
     }
 }
 

@@ -394,7 +394,7 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
             FAT_live_nbChannelPlaying++;
         }
         FAT_player_moveOrHideCursor(i);
-        FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
+        //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
     }
 
     R_TIM3COUNT = 0xffff;
@@ -431,7 +431,7 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
 
     if (FAT_live_waitForOtherChannel[channel] == 0){
         FAT_player_moveOrHideCursor(channel);
-        FAT_screenSongOrLive_showActualPlayedSeqLine (channel, actualSequencesForChannel[channel]);
+        //FAT_screenSongOrLive_showActualPlayedSeqLine (channel, actualSequencesForChannel[channel]);
 
         R_TIM3COUNT = 0xffff;
         hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
@@ -627,6 +627,8 @@ void FAT_player_playFromSequences() {
 
         }
 
+        FAT_screenSongOrLive_showActualPlayedInRedInfosCase ();
+
         for (i = 0; i < 6; i++) {
             if (FAT_player_buffer[i].haveToPlay){
                 FAT_player_playNoteWithCustomParams(
@@ -647,7 +649,7 @@ void FAT_player_liveSynchro(){
         if(FAT_isChannelCurrentlyPlaying(j)){
             FAT_live_waitForOtherChannel[j] = 0;
             FAT_player_moveOrHideCursor(j);
-            FAT_screenSongOrLive_showActualPlayedSeqLine (j, actualSequencesForChannel[j]);
+            //FAT_screenSongOrLive_showActualPlayedSeqLine (j, actualSequencesForChannel[j]);
         }
     }
 }
@@ -774,6 +776,8 @@ void FAT_player_playFromLive(){
             FAT_player_live_showOrHideCursorWait (i);
 
         }
+
+        FAT_screenSongOrLive_showActualPlayedInRedInfosCase ();
 
         u8 volume = NULL_VALUE;
         for (i = 0; i < 6; i++) {

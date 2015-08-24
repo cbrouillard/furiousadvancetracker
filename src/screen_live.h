@@ -195,8 +195,9 @@ void FAT_screenLive_init() {
     u8 i;
     for (i = 0;i<6;i++){
         FAT_player_moveOrHideCursor(i);
-        FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
+        //FAT_screenSongOrLive_showActualPlayedSeqLine (i, actualSequencesForChannel[i]);
     }
+    FAT_screenSongOrLive_showActualPlayedInRedInfosCase ();
 }
 
 /**
