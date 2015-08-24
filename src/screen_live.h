@@ -59,6 +59,7 @@ void FAT_screenLive_applyBufferIfNeeded();
  */
 void FAT_screenLive_printTempo() {
     hel_BgTextPrintF(TEXT_LAYER, 15, 16, 0, "%3d", FAT_screenLive_bufferTempo);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 7, 0, "Tmpo %.3d", FAT_tracker.tempo);
 }
 
 /**
@@ -222,6 +223,7 @@ void FAT_screenLive_applyBufferIfNeeded(){
         }
 
         FAT_screenLive_haveToApplyBuffer = false;
+        hel_BgTextPrintF(TEXT_LAYER, 21, 7, 0, "Tmpo %.3d", FAT_tracker.tempo);
     }
 }
 

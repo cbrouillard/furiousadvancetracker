@@ -909,7 +909,7 @@ void FAT_player_stopPlayer() {
 }
 
 void FAT_resetTempo (){
-    tempoReach = (60000 / FAT_tracker.tempo) * 4; // timer trop rapide. Pour le moment je laisse comme ça, ça fonctionne.
+    tempoReach = (60000 / FAT_tracker.tempo) * 4;
 }
 
 #endif	/* PLAYER_H */
