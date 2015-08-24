@@ -44,6 +44,13 @@ bool FAT_screenLive_isCursorInSequencer = 1;
 /** \brief Cette variable contient le numéro de la première ligne actuellement affichée. */
 u8 FAT_screenLive_currentStartLine = 0;
 
+/** Ces buffers permettent d'éviter les effets escaliers sur les changements de valeurs dans l'écran LIVE */
+u8 FAT_screenLive_bufferTempo;
+u8 FAT_screenLive_bufferVolume[6];
+u8 FAT_screenLive_bufferTranspose[6];
+bool FAT_screenLive_haveToApplyBuffer = false;
+void FAT_screenLive_applyBufferIfNeeded();
+
 #include "screen_live_cursor.h"
 #include "cursors.h"
 
@@ -51,7 +58,7 @@ u8 FAT_screenLive_currentStartLine = 0;
  * \brief Affiche uniquement la valeur du tempo au bon endroit. 
  */
 void FAT_screenLive_printTempo() {
-    hel_BgTextPrintF(TEXT_LAYER, 15, 16, 0, "%3d", FAT_tracker.tempo);
+    hel_BgTextPrintF(TEXT_LAYER, 15, 16, 0, "%3d", FAT_screenLive_bufferTempo);
 }
 
 /**
@@ -180,18 +187,33 @@ void FAT_screenLive_init() {
     ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_LIVE_MAP), 1024, 0, 0);
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
-    FAT_screenLive_printAllScreenText();
-    FAT_screenLive_printVolumes();
-    FAT_screenLive_printTransposes();
-
     // affichage du curseur
     FAT_cursors_hideCursor2();
     FAT_screenLive_commitCursorMove();
     FAT_cursors_showCursor2();
 
+    FAT_screenLive_bufferTempo = FAT_tracker.tempo;
+
     u8 i;
     for (i = 0;i<6;i++){
         FAT_player_moveOrHideCursor(i);
+    }
+
+    FAT_screenLive_printAllScreenText();
+    FAT_screenLive_printVolumes();
+    FAT_screenLive_printTransposes();
+}
+
+/**
+* \brief Applique les valeurs stockées dans les buffers sur les données réelles du tracker.
+*
+*/
+
+void FAT_screenLive_applyBufferIfNeeded(){
+    if (FAT_screenLive_haveToApplyBuffer){
+        FAT_tracker.tempo = FAT_screenLive_bufferTempo;
+
+        FAT_screenLive_haveToApplyBuffer = false;
     }
 }
 
@@ -244,6 +266,9 @@ void FAT_screenLive_checkButtons() {
                 FAT_screenLive_pressOrHeldA_inDataTable();
             }
         } else {
+            // si des valeurs ont bougées, on les applique maintenant puisque le bouton A n'est pas enfoncé.
+            FAT_screenLive_applyBufferIfNeeded ();
+
             if (hel_PadQuery()->Pressed.Right) {
                 FAT_screenLive_moveCursorRight();
             }
@@ -382,29 +407,34 @@ void FAT_screenLive_pressOrHeldA_inDataTable(){
 
                 FAT_screenLive_printLiveMode();
             } else if (FAT_screenLive_currentSelectedColumn == 4){
-                if (hel_PadQuery()->Pressed.Right && FAT_tracker.tempo < MAX_TEMPO) {
-                    FAT_tracker.tempo ++;
+                if (hel_PadQuery()->Pressed.Right && FAT_screenLive_bufferTempo < MAX_TEMPO) {
+                    FAT_screenLive_bufferTempo ++;
+                    FAT_screenLive_haveToApplyBuffer = true;
                 }
 
-                if (hel_PadQuery()->Pressed.Left && FAT_tracker.tempo > 0x00) {
-                    FAT_tracker.tempo --;
+                if (hel_PadQuery()->Pressed.Left && FAT_screenLive_bufferTempo > 0x00) {
+                    FAT_screenLive_bufferTempo --;
+                    FAT_screenLive_haveToApplyBuffer = true;
                 }
 
                 if (hel_PadQuery()->Pressed.Up ) {
-                    if (FAT_tracker.tempo < MAX_TEMPO-10){
-                        FAT_tracker.tempo += 10;
+                    if (FAT_screenLive_bufferTempo < MAX_TEMPO-10){
+                        FAT_screenLive_bufferTempo += 10;
                     } else {
-                        FAT_tracker.tempo = 255;
+                        FAT_screenLive_bufferTempo = 255;
                     }
 
+                    FAT_screenLive_haveToApplyBuffer = true;
                 }
 
                 if (hel_PadQuery()->Pressed.Down) {
-                    if (FAT_tracker.tempo > 10){
-                        FAT_tracker.tempo -= 10;
+                    if (FAT_screenLive_bufferTempo > 10){
+                        FAT_screenLive_bufferTempo -= 10;
                     } else {
-                        FAT_tracker.tempo = 0;
+                        FAT_screenLive_bufferTempo = 0;
                     }
+
+                    FAT_screenLive_haveToApplyBuffer = true;
                 }
 
                 FAT_screenLive_printTempo();
