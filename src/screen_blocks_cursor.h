@@ -81,12 +81,16 @@ void FAT_screenBlocks_commitCursorMove() {
  * Attention, la validation du déplacement doit être effectuée avec FAT_screenBlocks_commitCursorMove() .
  */
 void FAT_screenBlocks_moveCursorDown() {
-    if (FAT_screenBlocks_currentSelectedLine < SCREENBLOCKS_NB_LINES_ON_SCREEN) {
+    if (FAT_screenBlocks_currentSelectedLine < SCREENBLOCKS_NB_LINES_ON_SCREEN - 1) {
         if (!(FAT_screenBlocks_cursorY >= SCREENBLOCKS_LAST_BLOCK_Y - 1)) {
             FAT_screenBlocks_cursorY += SCREENBLOCKS_BLOCK_SIZE_Y;
             FAT_screenBlocks_currentSelectedLine++;
             FAT_screenBlocks_printInfos();
         }
+    } else {
+        FAT_screenBlocks_cursorY = SCREENBLOCKS_FIRST_BLOCK_Y - 1;
+        FAT_screenBlocks_currentSelectedLine = 0;
+        FAT_screenBlocks_printInfos();
     }
 }
 
@@ -103,6 +107,10 @@ void FAT_screenBlocks_moveCursorUp() {
             FAT_screenBlocks_currentSelectedLine--;
             FAT_screenBlocks_printInfos();
         }
+    } else {
+        FAT_screenBlocks_currentSelectedLine = SCREENBLOCKS_NB_LINES_ON_SCREEN - 1;
+        FAT_screenBlocks_cursorY = (SCREENBLOCKS_FIRST_BLOCK_Y - 1) + (SCREENBLOCKS_BLOCK_SIZE_Y * 15);
+        FAT_screenBlocks_printInfos();
     }
 
 }

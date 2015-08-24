@@ -96,7 +96,7 @@ void FAT_screenFilesystem_printAllTracksName() {
 void FAT_screenFilesystem_printInfos() {
     hel_BgTextPrintF(TEXT_LAYER, 16, 5, 0, "Line %.2x", FAT_screenFilesystem_currentSelectedLine);
     hel_BgTextPrintF(TEXT_LAYER, 16, 6, 0, "Name %.8s", FAT_filesystem_getTrackName(FAT_screenFilesystem_currentSelectedLine));
-    hel_BgTextPrintF(TEXT_LAYER, 16, 7, 0, "Size %.d B", FAT_filesystem_getTrackSize(FAT_screenFilesystem_currentSelectedLine));
+    hel_BgTextPrintF(TEXT_LAYER, 16, 7, 0, "Size %.5d B", FAT_filesystem_getTrackSize(FAT_screenFilesystem_currentSelectedLine));
     hel_BgTextPrintF(TEXT_LAYER, 16, 8, 0, "Work %.2x", FAT_filesystem_getTrackNbWork(FAT_screenFilesystem_currentSelectedLine));
 }
 

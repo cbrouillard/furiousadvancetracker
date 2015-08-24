@@ -457,6 +457,9 @@ void FAT_screenInstrument_moveCursorDown(u8 type) {
                     FAT_screenInstruments_currentSelectedLine++;
                     FAT_screenInstrument_cursorY = INST_PULSE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
                 }
+            } else {
+                FAT_screenInstruments_currentSelectedLine = 0;
+                FAT_screenInstrument_cursorY = INST_PULSE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
             }
 
             FAT_screenInstrument_displayGoodCursor(type);
@@ -469,6 +472,9 @@ void FAT_screenInstrument_moveCursorDown(u8 type) {
                     FAT_screenInstruments_currentSelectedLine++;
                     FAT_screenInstrument_cursorY = INST_WAVE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
                 }
+            } else {
+                FAT_screenInstruments_currentSelectedLine = 0;
+                FAT_screenInstrument_cursorY = INST_WAVE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
             }
 
             FAT_screenInstrument_displayGoodCursor(type);
@@ -481,6 +487,9 @@ void FAT_screenInstrument_moveCursorDown(u8 type) {
                     FAT_screenInstruments_currentSelectedLine++;
                     FAT_screenInstrument_cursorY = INST_NOISE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
                 }
+            } else {
+                FAT_screenInstruments_currentSelectedLine = 0;
+                FAT_screenInstrument_cursorY = INST_NOISE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
             }
 
             FAT_screenInstrument_displayGoodCursor(type);
@@ -490,11 +499,14 @@ void FAT_screenInstrument_moveCursorDown(u8 type) {
         case INSTRUMENT_TYPE_SAMPLEB:
 
             if (FAT_screenInstruments_currentSelectedColumn == 0){
-                if (FAT_screenInstruments_currentSelectedLine < SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN - 1) {
+                if (FAT_screenInstruments_currentSelectedLine < SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN - 2) {
                     if (!(FAT_screenInstrument_cursorY >= SCREENINSTRUMENTS_LAST_BLOCK_Y - 1)) {
                         FAT_screenInstruments_currentSelectedLine++;
                         FAT_screenInstrument_cursorY = INST_SAMPLE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
                     }
+                } else {
+                    FAT_screenInstruments_currentSelectedLine = 0;
+                    FAT_screenInstrument_cursorY = INST_SAMPLE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
                 }
             }
 
@@ -517,6 +529,9 @@ void FAT_screenInstrument_moveCursorUp(u8 type) {
                     FAT_screenInstruments_currentSelectedLine--;
                     FAT_screenInstrument_cursorY = INST_PULSE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
                 }
+            } else {
+                FAT_screenInstruments_currentSelectedLine = SCREENINSTRUMENT_PULSE_NB_LINES_ON_SCREEN -1;
+                FAT_screenInstrument_cursorY = INST_PULSE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
             }
 
             FAT_screenInstrument_displayGoodCursor(type);
@@ -529,6 +544,9 @@ void FAT_screenInstrument_moveCursorUp(u8 type) {
                     FAT_screenInstruments_currentSelectedLine--;
                     FAT_screenInstrument_cursorY = INST_WAVE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
                 }
+            } else {
+                FAT_screenInstruments_currentSelectedLine = SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN -1;
+                FAT_screenInstrument_cursorY = INST_WAVE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
             }
 
             FAT_screenInstrument_displayGoodCursor(type);
@@ -541,6 +559,9 @@ void FAT_screenInstrument_moveCursorUp(u8 type) {
                     FAT_screenInstruments_currentSelectedLine--;
                     FAT_screenInstrument_cursorY = INST_NOISE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
                 }
+            } else {
+                FAT_screenInstruments_currentSelectedLine = SCREENINSTRUMENT_NOISE_NB_LINES_ON_SCREEN -1;
+                FAT_screenInstrument_cursorY = INST_NOISE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
             }
 
             FAT_screenInstrument_displayGoodCursor(type);
@@ -555,6 +576,9 @@ void FAT_screenInstrument_moveCursorUp(u8 type) {
                         FAT_screenInstruments_currentSelectedLine--;
                         FAT_screenInstrument_cursorY = INST_SAMPLE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
                     }
+                } else {
+                    FAT_screenInstruments_currentSelectedLine = SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN -2; // ignoring right col
+                    FAT_screenInstrument_cursorY = INST_SAMPLE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
                 }
             }
 

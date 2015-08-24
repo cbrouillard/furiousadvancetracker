@@ -109,6 +109,9 @@ void FAT_screenProject_moveCursorDown() {
             FAT_screenProject_currentSelectedLine++;
             FAT_screenProject_cursorY = PROJECT_PULSE_BLOCK_Y[FAT_screenProject_currentSelectedLine];
         }
+    } else {
+        FAT_screenProject_currentSelectedLine = 0;
+        FAT_screenProject_cursorY = PROJECT_PULSE_BLOCK_Y[FAT_screenProject_currentSelectedLine];
     }
     FAT_screenProject_displayGoodCursor();
 
@@ -123,6 +126,9 @@ void FAT_screenProject_moveCursorUp() {
             FAT_screenProject_currentSelectedLine--;
             FAT_screenProject_cursorY = PROJECT_PULSE_BLOCK_Y[FAT_screenProject_currentSelectedLine];
         }
+    }else {
+        FAT_screenProject_currentSelectedLine = SCREENPROJECT_NB_LINES_ON_SCREEN - 1;
+        FAT_screenProject_cursorY = PROJECT_PULSE_BLOCK_Y[FAT_screenProject_currentSelectedLine];
     }
     FAT_screenProject_displayGoodCursor();
 }

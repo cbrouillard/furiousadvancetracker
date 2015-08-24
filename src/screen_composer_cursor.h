@@ -106,11 +106,13 @@ void FAT_screenComposer_moveCursorDown() {
 
             if (!(FAT_screenComposer_cursorY >= SCREENCOMPOSER_LAST_BLOCK_Y - 1)) {
                 FAT_screenComposer_currentSelectedLine++;
-                FAT_screenComposer_cursorY =
-                        (SCREENCOMPOSER_FIRST_BLOCK_Y - 1) +
-                        ((FAT_screenComposer_currentSelectedLine - 2) * SCREENCOMPOSER_BLOCK_SIZE_Y);
-                FAT_screenComposer_printInfos();
+            } else {
+                FAT_screenComposer_currentSelectedLine = 2;
             }
+            FAT_screenComposer_cursorY =
+                    (SCREENCOMPOSER_FIRST_BLOCK_Y - 1) +
+                    ((FAT_screenComposer_currentSelectedLine - 2) * SCREENCOMPOSER_BLOCK_SIZE_Y);
+            FAT_screenComposer_printInfos();
         } else {
 
             if (FAT_screenComposer_currentSelectedLine < 2) {
@@ -154,8 +156,14 @@ void FAT_screenComposer_moveCursorUp() {
                     screenComposer_parametersCursorsPositions[FAT_screenComposer_currentSelectedLine];
             FAT_cursors_hideCursor3();
             FAT_cursors_showCursor2();
+        } else {
+            FAT_screenComposer_currentSelectedLine = SCREENCOMPOSER_NB_LINES_ON_SCREEN + SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN - 1;
+            FAT_screenComposer_cursorY = (SCREENCOMPOSER_FIRST_BLOCK_Y - 1) +
+                                ((FAT_screenComposer_currentSelectedLine - 2) * SCREENCOMPOSER_BLOCK_SIZE_Y);
+            FAT_screenComposer_printInfos();
+            FAT_cursors_hideCursor2();
+            FAT_cursors_showCursor3();
         }
-
     }
 
 }

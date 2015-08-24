@@ -75,8 +75,8 @@ void FAT_screenComposer_playAffectedNotes();
  * \brief Affiche les informations "dynamiques" dans l'écran COMPOSER (numéro de ligne, ...). 
  */
 void FAT_screenComposer_printInfos() {
-    hel_BgTextPrintF(TEXT_LAYER, 19, 3, 0, "Composer %.1x", 0);
-    hel_BgTextPrintF(TEXT_LAYER, 19, 4, 0, "Line    %.2x",
+    hel_BgTextPrintF(TEXT_LAYER, 18, 3, 0, "Composer  %.1x", 0);
+    hel_BgTextPrintF(TEXT_LAYER, 18, 4, 0, "Line     %.2x",
             FAT_screenComposer_currentSelectedLine);
 
     hel_BgTextPrintF(TEXT_LAYER, 1, 3, 0, "Transpose  %.2x", FAT_tracker.composer.transpose);
@@ -107,7 +107,6 @@ void FAT_screenComposer_printNote(u8 line) {
                     line + SCREENCOMPOSER_LINE_START_Y, 0,
                     "%s%1x %.2x      %.1x\0",
                     noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument,
-                    //                FAT_data_getInstrumentType(actualNote->instrument) + 1
                     FAT_tracker.composer.channels[line] + 1
                     );
         }

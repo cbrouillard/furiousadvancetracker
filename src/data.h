@@ -1241,6 +1241,11 @@ void FAT_data_note_changeInstrument(u8 currentChannel, u8 block, u8 noteLine, s8
     }
 }
 
+/**
+* \brief Méthode permettant de limiter les valeurs possibles pour chaque commande.
+*
+* @param effect l'effet à vérifier.
+*/
 void FAT_data_note_filterEffectValue (effect* effect) {
     u8 effectName = (effect->name & 0xfe) >> 1;
     switch (effectName){

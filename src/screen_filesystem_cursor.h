@@ -64,12 +64,16 @@ void FAT_screenFilesystem_commitCursorMove() {
  * \brief Déplace le curseur vers le bas. 
  */
 void FAT_screenFilesystem_moveCursorDown() {
-    if (FAT_screenFilesystem_currentSelectedLine < SCREENFILESYSTEM_NB_LINES_ON_SCREEN) {
+    if (FAT_screenFilesystem_currentSelectedLine < SCREENFILESYSTEM_NB_LINES_ON_SCREEN - 1) {
         if (!(FAT_screenFilesystem_cursorY >= SCREENFILESYSTEM_LAST_BLOCK_Y - 1)) {
             FAT_screenFilesystem_cursorY += SCREENFILESYSTEM_BLOCK_SIZE_Y;
             FAT_screenFilesystem_currentSelectedLine++;
             FAT_screenFilesystem_printInfos();
         }
+    } else {
+        FAT_screenFilesystem_cursorY = SCREENFILESYSTEM_FIRST_BLOCK_Y - 1;
+        FAT_screenFilesystem_currentSelectedLine = 0;
+        FAT_screenFilesystem_printInfos();
     }
 }
 
@@ -84,6 +88,10 @@ void FAT_screenFilesystem_moveCursorUp() {
             FAT_screenFilesystem_currentSelectedLine--;
             FAT_screenFilesystem_printInfos();
         }
+    } else {
+        FAT_screenFilesystem_cursorY = (SCREENFILESYSTEM_FIRST_BLOCK_Y - 1) + (SCREENFILESYSTEM_BLOCK_SIZE_Y *15);
+        FAT_screenFilesystem_currentSelectedLine = 0xf;
+        FAT_screenFilesystem_printInfos();
     }
 
 }

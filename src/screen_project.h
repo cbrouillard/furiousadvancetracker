@@ -81,9 +81,6 @@ void FAT_screenProject_init() {
     FAT_player_hideAllCursors ();
     FAT_screenProject_initCursor();
     FAT_screenProject_displayGoodCursor();
-
-    // démarrage du cycle pour l'écran
-    //hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_screenProject_mainFunc);
 }
 
 /**
