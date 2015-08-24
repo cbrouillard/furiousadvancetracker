@@ -81,22 +81,22 @@ void FAT_screenLive_printLiveMode() {
 
 void FAT_screenLive_printVolumes() {
     hel_BgTextPrintF(TEXT_LAYER, 2, 13, 0, " %.2x %.2x %.2x %.2x %.2x %.2x",
-            FAT_tracker.liveData.volume[0] != NULL_VALUE ? FAT_tracker.liveData.volume[0] : 0xdf,
-            FAT_tracker.liveData.volume[1] != NULL_VALUE ? FAT_tracker.liveData.volume[1] : 0xdf,
-            FAT_tracker.liveData.volume[2] != NULL_VALUE ? FAT_tracker.liveData.volume[2] : 0xdf,
-            FAT_tracker.liveData.volume[3] != NULL_VALUE ? FAT_tracker.liveData.volume[3] : 0xdf,
-            FAT_tracker.liveData.volume[4] != NULL_VALUE ? FAT_tracker.liveData.volume[4] : 0xdf,
-            FAT_tracker.liveData.volume[5] != NULL_VALUE ? FAT_tracker.liveData.volume[5] : 0xdf);
+            FAT_screenLive_bufferVolume[0] != NULL_VALUE ? FAT_screenLive_bufferVolume[0] : 0xdf,
+            FAT_screenLive_bufferVolume[1] != NULL_VALUE ? FAT_screenLive_bufferVolume[1] : 0xdf,
+            FAT_screenLive_bufferVolume[2] != NULL_VALUE ? FAT_screenLive_bufferVolume[2] : 0xdf,
+            FAT_screenLive_bufferVolume[3] != NULL_VALUE ? FAT_screenLive_bufferVolume[3] : 0xdf,
+            FAT_screenLive_bufferVolume[4] != NULL_VALUE ? FAT_screenLive_bufferVolume[4] : 0xdf,
+            FAT_screenLive_bufferVolume[5] != NULL_VALUE ? FAT_screenLive_bufferVolume[5] : 0xdf);
 }
 
 void FAT_screenLive_printTransposes() {
     hel_BgTextPrintF(TEXT_LAYER, 2, 14, 0, " %.2x %.2x %.2x %.2x %.2x %.2x",
-            FAT_tracker.liveData.transpose[0],
-            FAT_tracker.liveData.transpose[1],
-            FAT_tracker.liveData.transpose[2],
-            FAT_tracker.liveData.transpose[3],
-            FAT_tracker.liveData.transpose[4],
-            FAT_tracker.liveData.transpose[5]);
+            FAT_screenLive_bufferTranspose[0],
+            FAT_screenLive_bufferTranspose[1],
+            FAT_screenLive_bufferTranspose[2],
+            FAT_screenLive_bufferTranspose[3],
+            FAT_screenLive_bufferTranspose[4],
+            FAT_screenLive_bufferTranspose[5]);
 }
 
 /**
@@ -197,6 +197,8 @@ void FAT_screenLive_init() {
     u8 i;
     for (i = 0;i<6;i++){
         FAT_player_moveOrHideCursor(i);
+        FAT_screenLive_bufferVolume[i] = FAT_tracker.liveData.volume[i];
+        FAT_screenLive_bufferTranspose[i] = FAT_tracker.liveData.transpose[i];
     }
 
     FAT_screenLive_printAllScreenText();
@@ -212,6 +214,12 @@ void FAT_screenLive_init() {
 void FAT_screenLive_applyBufferIfNeeded(){
     if (FAT_screenLive_haveToApplyBuffer){
         FAT_tracker.tempo = FAT_screenLive_bufferTempo;
+
+        u8 i;
+        for (i = 0;i<6;i++){
+            FAT_tracker.liveData.volume[i] = FAT_screenLive_bufferVolume[i];
+            FAT_tracker.liveData.transpose[i] = FAT_screenLive_bufferTranspose[i];
+        }
 
         FAT_screenLive_haveToApplyBuffer = false;
     }
@@ -339,57 +347,66 @@ void FAT_screenLive_pressOrHeldA_inDataTable(){
     switch (FAT_screenLive_currentTableSelectedLine){
         case 0:
             // volume colonne
-            if (hel_PadQuery()->Pressed.Right && FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] < NULL_VALUE) {
-                FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] ++;
-                if ( (FAT_screenLive_currentSelectedColumn != 2 && FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] > 0xf)
-                    || (FAT_screenLive_currentSelectedColumn == 2 && FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] > 0x4) ){
-                    FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] = NULL_VALUE;
+            if (hel_PadQuery()->Pressed.Right && FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] < NULL_VALUE) {
+                FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] ++;
+                if ( (FAT_screenLive_currentSelectedColumn != 2 && FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] > 0xf)
+                    || (FAT_screenLive_currentSelectedColumn == 2 && FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] > 0x4) ){
+                    FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] = NULL_VALUE;
                 }
+
+                FAT_screenLive_haveToApplyBuffer = true;
             }
 
-            if (hel_PadQuery()->Pressed.Left && FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] > 0) {
-                FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] --;
-                if ( (FAT_screenLive_currentSelectedColumn != 2 && FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] > 0xf) ){
-                    FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] = 0x0f;
-                } else if ((FAT_screenLive_currentSelectedColumn == 2 && FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] > 0x4)){
-                    FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] = 0x04;
+            if (hel_PadQuery()->Pressed.Left && FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] > 0) {
+                FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] --;
+                if ( (FAT_screenLive_currentSelectedColumn != 2 && FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] > 0xf) ){
+                    FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] = 0x0f;
+                } else if ((FAT_screenLive_currentSelectedColumn == 2 && FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] > 0x4)){
+                    FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] = 0x04;
                 }
+                FAT_screenLive_haveToApplyBuffer = true;
             }
 
             if (hel_PadQuery()->Pressed.Up){
-                FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] = NULL_VALUE;
+                FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] = NULL_VALUE;
+                FAT_screenLive_haveToApplyBuffer = true;
             }
 
             if (hel_PadQuery()->Pressed.Down){
-                FAT_tracker.liveData.volume[FAT_screenLive_currentSelectedColumn] = 0;
+                FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] = 0;
+                FAT_screenLive_haveToApplyBuffer = true;
             }
 
             FAT_screenLive_printVolumes();
             break;
         case 1:
             // tsp column
-            if (hel_PadQuery()->Pressed.Right && FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] < 0xff) {
-                FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] ++;
+            if (hel_PadQuery()->Pressed.Right && FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] < 0xff) {
+                FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] ++;
+                FAT_screenLive_haveToApplyBuffer = true;
             }
 
-            if (hel_PadQuery()->Pressed.Left && FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] > 0x00) {
-                FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] --;
+            if (hel_PadQuery()->Pressed.Left && FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] > 0x00) {
+                FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] --;
+                FAT_screenLive_haveToApplyBuffer = true;
             }
 
             if (hel_PadQuery()->Pressed.Up) {
-                if (FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] < 0xf0){
-                    FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] += 0x07;
+                if (FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] < 0xf0){
+                    FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] += 0x07;
                 } else {
-                    FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] = 0xff;
+                    FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] = 0xff;
                 }
+                FAT_screenLive_haveToApplyBuffer = true;
             }
 
             if (hel_PadQuery()->Pressed.Down) {
-                if (FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] > 0x0f){
-                    FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] -= 0x07;
+                if (FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] > 0x0f){
+                    FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] -= 0x07;
                 } else {
-                    FAT_tracker.liveData.transpose[FAT_screenLive_currentSelectedColumn] = 0x00;
+                    FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] = 0x00;
                 }
+                FAT_screenLive_haveToApplyBuffer = true;
             }
 
             FAT_screenLive_printTransposes();
