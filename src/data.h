@@ -414,6 +414,7 @@ typedef struct FAT {
     u8 keyRepeat; /*!< Valeur permettant de régler la vélocité de l'interface. FF = lent 00 = rapide */
     u8 previewEnable; /*!< Paramètre pour l'activation de la preview dans l'écran NOTE. */
     u8 greedPlay; /*!< Paramètre utile pour la selection de paquet de séquences lors du démarrage de la lecture */
+    u8 bufferChangeInLive; /*!< Activation du buffer dans l'écran LIVE pour les changements de valeurs TEMPO, VOL et TSP. */
     channel channels[6]; /*!< Définition des channels: la GBA en dispose de 6. */
     sequence allSequences [NB_MAX_SEQUENCES]; /*!< Tableau (physique) contenant toutes les séquence. */
     block allBlocks [NB_MAX_BLOCKS]; /*!< Tableau (physique) contenant tous les blocks. */
@@ -486,6 +487,7 @@ void FAT_data_initData() {
     FAT_tracker.keyRepeat = 10;
     FAT_tracker.greedPlay = 0;
     FAT_tracker.nbWork = 0;
+    FAT_tracker.bufferChangeInLive = 1;
     strcpy(FAT_tracker.songName, "FATSONG!\0");
 
     // init des variables du composer
@@ -2361,6 +2363,14 @@ void FAT_data_project_changeGreedPlay (s8 addedValue){
         FAT_tracker.greedPlay = 0;
     } else if (addedValue > 0) {
         FAT_tracker.greedPlay = 1;
+    }
+}
+
+void FAT_data_project_changeBufferingInLive (s8 addedValue){
+    if (addedValue < 0) {
+        FAT_tracker.bufferChangeInLive = 0;
+    } else if (addedValue > 0) {
+        FAT_tracker.bufferChangeInLive = 1;
     }
 }
 

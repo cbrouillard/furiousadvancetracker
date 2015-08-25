@@ -38,7 +38,7 @@ void FAT_screenProject_pressOrHeldA();
 void FAT_screenProject_printInfos() {
     hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Tempo     %3d", FAT_tracker.tempo);
     hel_BgTextPrintF(TEXT_LAYER, 1, 5, 0, "Transpose %.2x", FAT_tracker.transpose);
-    hel_BgTextPrintF(TEXT_LAYER, 1, 8, 0, "KeyRepeat %.2x", FAT_tracker.keyRepeat);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 8, 0, "KeyRepeat %.2x   Buffering %.3s", FAT_tracker.keyRepeat, yesOrNo[FAT_tracker.bufferChangeInLive != 0]);
     hel_BgTextPrintF(TEXT_LAYER, 1, 9, 0, "Preview   %.3s", yesOrNo[FAT_tracker.previewEnable != 0]);
     hel_BgTextPrintF(TEXT_LAYER, 1, 10, 0, "GreedPlay %.3s", yesOrNo[FAT_tracker.greedPlay != 0]);
     hel_BgTextPrintF(TEXT_LAYER, 1, 13, 0, "New  Prj  OK");
@@ -129,9 +129,11 @@ void FAT_screenProject_checkButtons() {
             }
 
             if (hel_PadQuery()->Pressed.Right) {
+                FAT_screenProject_moveCursorRight();
             }
 
             if (hel_PadQuery()->Pressed.Left) {
+                FAT_screenProject_moveCursorLeft();
             }
 
             if (hel_PadQuery()->Pressed.Down) {
@@ -204,7 +206,10 @@ void FAT_screenProject_pressOrHeldA() {
             FAT_screenFilesystem_setMode(FILESYSTEM_MODE_LOAD);
             FAT_switchToScreen(SCREEN_FILESYSTEM_ID, SCREEN_PROJECT_ID);
             break;
-
+        case 8:
+            FAT_data_project_changeBufferingInLive(addedValue);
+            FAT_screenProject_printInfos();
+            break;
 
 
     }

@@ -25,7 +25,7 @@
 #define SCREENPROJECT_LAST_BLOCK_Y 136
 
 /** \brief Nombre de lignes affichées à l'écran. */
-#define SCREENPROJECT_NB_LINES_ON_SCREEN 8
+#define SCREENPROJECT_NB_LINES_ON_SCREEN 9
 
 /** \brief Position actuelle du curseur de sélection. */
 u8 FAT_screenProject_cursorX; 
@@ -39,7 +39,7 @@ u8  FAT_screenProject_currentSelectedColumn;
 /**
  * \brief Tableau constant des positions des blocs de données sur l'écran. 
  */
-const u8 PROJECT_PULSE_BLOCK_Y[SCREENPROJECT_NB_LINES_ON_SCREEN] = {31, 39, 63, 71, 79, 103, 111, 119};
+const u8 PROJECT_PULSE_BLOCK_Y[SCREENPROJECT_NB_LINES_ON_SCREEN] = {31, 39, 63, 71, 79, 103, 111, 119, 63};
 
 /**
  * \brief Cette fonction permet de valider le déplacement du curseur de sélection sur l'écran. 
@@ -50,6 +50,10 @@ void FAT_screenProject_commitCursorMove() {
         case 3:
         case 4:
             hel_ObjSetXY(FAT_cursor3_obj, FAT_screenProject_cursorX, FAT_screenProject_cursorY);
+            break;
+        case 8:
+            hel_ObjSetXY(FAT_cursor3_obj, (SCREENPROJECT_FIRST_BLOCK_X-1) + 120, FAT_screenProject_cursorY);
+            break;
         case 1:
         case 2:
         case 5:
@@ -57,7 +61,6 @@ void FAT_screenProject_commitCursorMove() {
         case 7:
             hel_ObjSetXY(FAT_cursor2_obj, FAT_screenProject_cursorX, FAT_screenProject_cursorY);
             break;
-
     }
 }
 
@@ -69,6 +72,7 @@ void FAT_screenProject_displayGoodCursor() {
         case 0:
         case 3:
         case 4:
+        case 8:
             FAT_cursors_hideCursor2();
             FAT_cursors_showCursor3();
             break;
@@ -100,11 +104,29 @@ void FAT_screenProject_initCursor() {
 }
 
 /**
+ * \brief Déplace le curseur vers la droite.
+ */
+void FAT_screenProject_moveCursorRight() {
+    FAT_screenProject_currentSelectedLine = 8;
+    FAT_screenProject_cursorY = PROJECT_PULSE_BLOCK_Y[FAT_screenProject_currentSelectedLine];
+    FAT_screenProject_displayGoodCursor();
+}
+
+/**
+ * \brief Déplace le curseur vers la gauche.
+ */
+void FAT_screenProject_moveCursorLeft() {
+    FAT_screenProject_currentSelectedLine = 2;
+    FAT_screenProject_cursorY = PROJECT_PULSE_BLOCK_Y[FAT_screenProject_currentSelectedLine];
+    FAT_screenProject_displayGoodCursor();
+}
+
+/**
  * \brief Déplace le curseur vers le bas.
  */
 void FAT_screenProject_moveCursorDown() {
 
-    if (FAT_screenProject_currentSelectedLine < SCREENPROJECT_NB_LINES_ON_SCREEN - 1) {
+    if (FAT_screenProject_currentSelectedLine < SCREENPROJECT_NB_LINES_ON_SCREEN - 2) {
         if (!(FAT_screenProject_cursorY >= SCREENPROJECT_LAST_BLOCK_Y - 1)) {
             FAT_screenProject_currentSelectedLine++;
             FAT_screenProject_cursorY = PROJECT_PULSE_BLOCK_Y[FAT_screenProject_currentSelectedLine];
@@ -127,7 +149,7 @@ void FAT_screenProject_moveCursorUp() {
             FAT_screenProject_cursorY = PROJECT_PULSE_BLOCK_Y[FAT_screenProject_currentSelectedLine];
         }
     }else {
-        FAT_screenProject_currentSelectedLine = SCREENPROJECT_NB_LINES_ON_SCREEN - 1;
+        FAT_screenProject_currentSelectedLine = SCREENPROJECT_NB_LINES_ON_SCREEN - 2;
         FAT_screenProject_cursorY = PROJECT_PULSE_BLOCK_Y[FAT_screenProject_currentSelectedLine];
     }
     FAT_screenProject_displayGoodCursor();

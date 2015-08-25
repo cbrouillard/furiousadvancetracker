@@ -51,6 +51,12 @@ u8 FAT_screenLive_bufferTranspose[6];
 bool FAT_screenLive_haveToApplyBuffer = false;
 void FAT_screenLive_applyBufferIfNeeded();
 
+void FAT_screenLive_changeVolume (u8 channel, s8 addedValue);
+void FAT_screenLive_changeTranspose (u8 channel, s8 addedValue);
+void FAT_screenLive_changeAllVolumes (s8 addedValue);
+void FAT_screenLive_changeAllTransposes (s8 addedValue);
+void FAT_screenLive_setAllVolumes (u8 value);
+
 #include "screen_live_cursor.h"
 #include "cursors.h"
 
@@ -337,6 +343,10 @@ void FAT_screenLive_checkButtons() {
             }
         }
 
+        if (!FAT_tracker.bufferChangeInLive){
+            FAT_screenLive_applyBufferIfNeeded();
+        }
+
         FAT_screenLive_commitCursorMove();
     }
 }
@@ -346,69 +356,78 @@ void FAT_screenLive_pressOrHeldA_inSequencer(){
 }
 
 void FAT_screenLive_pressOrHeldA_inDataTable(){
+
     switch (FAT_screenLive_currentTableSelectedLine){
         case 0:
             // volume colonne
-            if (hel_PadQuery()->Pressed.Right && FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] < NULL_VALUE) {
-                FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] ++;
-                if ( (FAT_screenLive_currentSelectedColumn != 2 && FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] > 0xf)
-                    || (FAT_screenLive_currentSelectedColumn == 2 && FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] > 0x4) ){
-                    FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] = NULL_VALUE;
+            if (hel_PadQuery()->Pressed.Right) {
+                if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Held.L){
+                    FAT_screenLive_changeAllVolumes (1);
+                } else{
+                    FAT_screenLive_changeVolume (FAT_screenLive_currentSelectedColumn, 1);
                 }
-
-                FAT_screenLive_haveToApplyBuffer = true;
             }
 
-            if (hel_PadQuery()->Pressed.Left && FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] > 0) {
-                FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] --;
-                if ( (FAT_screenLive_currentSelectedColumn != 2 && FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] > 0xf) ){
-                    FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] = 0x0f;
-                } else if ((FAT_screenLive_currentSelectedColumn == 2 && FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] > 0x4)){
-                    FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] = 0x04;
+            if (hel_PadQuery()->Pressed.Left) {
+                if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Held.L){
+                    FAT_screenLive_changeAllVolumes (-1);
+                } else{
+                    FAT_screenLive_changeVolume (FAT_screenLive_currentSelectedColumn, -1);
                 }
-                FAT_screenLive_haveToApplyBuffer = true;
+
             }
 
             if (hel_PadQuery()->Pressed.Up){
-                FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] = NULL_VALUE;
-                FAT_screenLive_haveToApplyBuffer = true;
+                if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Held.L){
+                    FAT_screenLive_setAllVolumes (0xf);
+                } else {
+                    FAT_screenLive_changeVolume (FAT_screenLive_currentSelectedColumn, NULL_VALUE - FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn]);
+                }
             }
 
             if (hel_PadQuery()->Pressed.Down){
-                FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn] = 0;
-                FAT_screenLive_haveToApplyBuffer = true;
+                if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Held.L){
+                    FAT_screenLive_setAllVolumes (0);
+                }else{
+                    FAT_screenLive_changeVolume (FAT_screenLive_currentSelectedColumn, -FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn]);
+                }
+
             }
 
             FAT_screenLive_printVolumes();
             break;
         case 1:
             // tsp column
-            if (hel_PadQuery()->Pressed.Right && FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] < 0xff) {
-                FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] ++;
-                FAT_screenLive_haveToApplyBuffer = true;
+            if (hel_PadQuery()->Pressed.Right ) {
+                if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Held.L){
+                    FAT_screenLive_changeAllTransposes (1);
+                } else {
+                    FAT_screenLive_changeTranspose (FAT_screenLive_currentSelectedColumn, 1);
+                }
             }
 
-            if (hel_PadQuery()->Pressed.Left && FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] > 0x00) {
-                FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] --;
-                FAT_screenLive_haveToApplyBuffer = true;
+            if (hel_PadQuery()->Pressed.Left ) {
+                if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Held.L){
+                    FAT_screenLive_changeAllTransposes (-1);
+                } else {
+                    FAT_screenLive_changeTranspose (FAT_screenLive_currentSelectedColumn, -1);
+                }
             }
 
             if (hel_PadQuery()->Pressed.Up) {
-                if (FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] < 0xf0){
-                    FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] += 0x07;
+                if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Held.L){
+                    FAT_screenLive_changeAllTransposes (12);
                 } else {
-                    FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] = 0xff;
+                    FAT_screenLive_changeTranspose (FAT_screenLive_currentSelectedColumn, 12);
                 }
-                FAT_screenLive_haveToApplyBuffer = true;
             }
 
             if (hel_PadQuery()->Pressed.Down) {
-                if (FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] > 0x0f){
-                    FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] -= 0x07;
+                if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Held.L){
+                    FAT_screenLive_changeAllTransposes (-12);
                 } else {
-                    FAT_screenLive_bufferTranspose[FAT_screenLive_currentSelectedColumn] = 0x00;
+                    FAT_screenLive_changeTranspose (FAT_screenLive_currentSelectedColumn, -12);
                 }
-                FAT_screenLive_haveToApplyBuffer = true;
             }
 
             FAT_screenLive_printTransposes();
@@ -460,6 +479,64 @@ void FAT_screenLive_pressOrHeldA_inDataTable(){
             }
             break;
     }
+}
+
+void FAT_screenLive_changeVolume (u8 channel, s8 addedValue){
+    if (addedValue > 0 && FAT_screenLive_bufferVolume[channel] < NULL_VALUE){
+
+        FAT_screenLive_bufferVolume[channel] += addedValue;
+
+        if ( (channel != 2 && FAT_screenLive_bufferVolume[channel] > 0xf)
+                            || (channel == 2 && FAT_screenLive_bufferVolume[channel] > 0x4) ){
+            FAT_screenLive_bufferVolume[channel] = NULL_VALUE;
+        }
+
+        FAT_screenLive_haveToApplyBuffer = true;
+
+    } else if (addedValue < 0 && FAT_screenLive_bufferVolume[channel] > 0){
+
+        FAT_screenLive_bufferVolume[channel] += addedValue;
+
+        if ( (channel != 2 && FAT_screenLive_bufferVolume[channel] > 0xf) ){
+            FAT_screenLive_bufferVolume[channel] = 0x0f;
+        } else if ((channel == 2 && FAT_screenLive_bufferVolume[channel] > 0x4)){
+            FAT_screenLive_bufferVolume[channel] = 0x04;
+        }
+
+        FAT_screenLive_haveToApplyBuffer = true;
+    }
+}
+
+void FAT_screenLive_changeTranspose (u8 channel, s8 addedValue){
+    FAT_screenLive_bufferTranspose[channel] += addedValue; // no controls ! let's tourn around FF and 00
+    FAT_screenLive_haveToApplyBuffer = true;
+}
+
+void FAT_screenLive_changeAllVolumes (s8 addedValue){
+    u8 i;
+    for (i = 0; i < 6; i++){
+        FAT_screenLive_changeVolume (i, addedValue);
+    }
+}
+
+void FAT_screenLive_changeAllTransposes (s8 addedValue){
+    u8 i;
+    for (i = 0; i < 6; i++){
+        FAT_screenLive_changeTranspose (i, addedValue);
+    }
+}
+
+void FAT_screenLive_setAllVolumes (u8 value){
+    u8 i;
+    for (i = 0; i < 6; i++){
+        FAT_screenLive_bufferVolume[i] = value;
+        if (i == 2){
+            if (FAT_screenLive_bufferVolume[i] > 0x4){
+                FAT_screenLive_bufferVolume[i] = 0x04;
+            }
+        }
+    }
+    FAT_screenLive_haveToApplyBuffer = true;
 }
 
 #endif
