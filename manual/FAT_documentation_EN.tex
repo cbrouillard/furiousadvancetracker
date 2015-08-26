@@ -77,9 +77,9 @@
 % Definition entete et pied de page
 \lfoot{\bf \FAT}
 \rfoot{\bf \thepage}
-\cfoot{Documentation}
+\cfoot{User manual}
 \lhead{\rightmark}
-\rhead{\bf \FAT}
+\rhead{\bf \FAT \fatversion}
 \renewcommand{\footrulewidth}{0.2pt}
 \renewcommand{\headrulewidth}{0.2pt}
 \pagestyle{fancy}
@@ -110,10 +110,10 @@
   \newpage
 
   \begin{center}
-  
+
   % Page Copyright et remerciements
   {\bf \FAT FuriousAdvanceTracker} \medskip
-  
+
   {\bf code and design: Cyril Brouillard} \medskip
 
   {\bf for 0.3.0} \medskip
@@ -124,8 +124,11 @@
 
   {\bf \fatversion} \medskip
 
-  After for yours, \FAT is again on the way ! \\
-  A second thank to {\bf \textcolor{vert}{Guillaume Dualé}}. You are really enthousiast and it helps me à lot ! Thanks bro.
+  After four years, \FAT is again on the way ! \\
+  A second thank to {\bf \textcolor{vert}{Guillaume Dualé}}. You are really enthousiast and it helps me a lot ! Thanks bro.
+
+  \ColoredAnnotation{This document is a translation from a french document. I'm not english !
+                        By the way, this document is really perfectible. If you want to help or correct my poor english, feel free to contact me ! Cheers.}
 
   \end{center}
   
@@ -153,61 +156,68 @@
     It's really important to make the software continue to grow. You can report any issue on \url{http://wwww.furiousadvancetracker.com}.
     Many thanks to you ! (and a kiss. But not a french one :D)
     \medskip
+
+    The \FAT's IHM really looks like LSDJ. Actually, I considered LSDJ as my model when designing \FAT while adding my personals touch and ideas.
+    Some features are completely originals when others has disapeared.
+    \medskip
     
-    Ceux qui ont déjà un pied dans la composition de musique chiptune ne tarderont pas à se rendre compte que l'interface de \FAT ressemble énormément à celle d'LSDJ (LittleSoundDJ).
-    J'ai en effet considéré LSDJ comme LE modèle mais en y ajoutant ma touche personnelle.
-    Quelques fonctionnalités sont aussi complétement originales, d'autres ont été revues et d'autres encore ont disparu.\medskip
-    
-    Je n'ai évidemment pas la prétention d'affirmer que \FAT joue dans la même cour qu'LSDJ. Néanmoins, j'espère qu'un jour, \FAT deviendra une référence pour la composition de musique chiptune sur GBA.\medskip
-    
-    Et donc ... un grand merci à toi qui lit ce manuel probablement pour essayer \FAT. J'espère qu'il te plaira !
-  
-    \subsection{Pourquoi \FAT ?}
-    A l'époque de la création du projet, début 2011, il existe déjà quelques solutions pour composer de la musique sur une Gameboy Advance:\medskip
-    
+    Of course I'm not pretending \FAT is as performant as LSDJ. I'm working hard to make this possible one day and I hope \FAT will be an important software for the GBA chiptune's community.
+    \medskip
+
+    So ... a great thanks to you, who are reading this manual. Thanks for trying \FAT, hope you'll love it !
+
+    \subsection{Why \FAT ?}
+    When I started this project, in 2011, severals solutions already exist allowing you to compose music stuff on your GBA.
+    \medskip
+
     \begin{itemize}
         \item{Nanoloop 2.3/2.5}
         \item{M4G tracker}
-        \item{et probablement d'autres que je n'ai su trouver...}
+        \item{and problably many others...}
     \end{itemize}\medskip
-    
-    Toutes ces solutions ne me satisfont pas (quoiqu'elles soient toutes parfaitement fonctionnelles!).\medskip
-    
-    \begin{itemize}
-        \item{Nanoloop 2.3/2.5 est un excellent logiciel ! mais sa disponibilité quasi nulle (et donc par effet de "marché", son prix rédhibitoire) en fait une solution finalement pas si simple d'accès.}
-        \item{M4G tracker est aussi un excellent logiciel: mais son développement parait être abondonné alors même que toutes les fonctionnalités ne sont pas programmées. Son auteur (Smiker) semble cependant motivé pour en reprendre le développement.}
-        \item{quand aux possibles autres solutions, je ne les ai pas trouvées...}
-    \end{itemize}\medskip
-    
-    Et puis, finalement, programmer son propre tracker c'est quand même super fun ! \medskip
 
-    Notez que nous sommes en 2015 et la situation n'a pas bougée. Peut-être que tout le monde s'en tamponne de la GBA ? :P \medskip
-    
-    
-    \subsection{Comment utiliser \FAT ?}
+    In my opinion, all of these seems to be incomplete although all of them are reasonnably usable.
+    \medskip
 
-    \FAT est livré sous la forme d'un fichier gba. Ce fichier est directement utilisable sur votre ordinateur avec l'aide d'un émulateur (VisualBoyAdvance par exemple).\medskip
-    
-    Mais l'avantage d'une Gameboy, c'est la portabilité ! D'autant plus qu'un son émulé n'égalera jamais l'original. Pour exécuter \FAT sur une vraie Gameboy Advance, il vous faudra:
     \begin{itemize}
-        \item{une vraie Gameboy Advance(scoop!) ou une Gameboy Micro. Personnellement je préfère l'écran de cette dernière mais certains le trouvent trop petit. Au pire la SP est pas mal.}
-        \item{une cartouche EZ-Flash, SuperCardToSD, ou autre ... par exemple ici: \href{http://www.flashlinker-shop.com/ez-flash-iv-minisd-slot-2-p-443.html}{www.flashlinker-shop.com}}
-        \item{une carte SD qui va bien avec la cartouche (si vous optez pour une cartouche basée sur SD)} 
+        \item{Nanoloop 2.3/2.5 is an excellent software ! but it's quite difficult to get your hands on. It's also quite expensive (due to rarity probably).}
+        \item{M4G tracker is also a good software: but it's development seems to be stopped. Well, like \FAT a little while ago.}
+        \item{I didn't find any other solutions...}
     \end{itemize}\medskip
-    
-    Après avoir investi dans tout ce petit matériel, il suffira de copier le fichier fat.gba {\bf (à l'aide du logiciel fourni avec votre cartouche)} sur la carte SD: direction la GBA ! Attention ! Veillez à bien suivre les instructions fournis par le constructeur de la cartouche : sans cela, FAT risque de ne pas fonctionner correctement.
-    
-    \ColoredAnnotation{Attention ! Cette version de \FAT est relativement expérimentale. Il est, je pense, inutile d'investir trop d'argent dans le but de tester sur GBA. C'est toi qui vois !}
-    
-    Si vous tenez à acheter votre propre cartouche, alors référez vous au tableau ci-dessous, il devrait vous aider à faire votre choix.
-    
-    \subsection{Tableau de comparatif des cartouches pour GameboyAdvance}
-    
-    Il existe un certain nombres de cartouches permettant d'exécuter des programmes dits "homebrew" (amateur) ... comme \FAT ! Voici les quelques cartouches déjà testées avec \FAT :
+
+    Finally you know what ? Coding my own tracker was really fun !
+    \medskip
+
+    \subsection{How to use \FAT ?}
+
+    \FAT is a gba file. This file is directly usable on your computer with a GameboyAdvance emulator (such as VisualBoyAdvance).
+    \medskip
+
+    But the true advantage of a real Gameboy is : mobility !
+    Anyway, an emulated sound can never be equal than the true one.
+    To execute \FAT on a real GBA, you'll need :
+    \medskip
+
+    \begin{itemize}
+        \item{a true GBA ou or a Gameboy Micro. I personaly prefer the second one but some says the screen is too small.}
+        \item{an EZ-Flash, SuperCardToSD, or other cartridge ... You'll have to search the web in order to find one}
+        \item{a SD card in the case your cartridge use one.}
+    \end{itemize}\medskip
+
+    When you have bought all this cool stuff, all you have to do is to paste the \FAT gba file {\bf (with the provided cartridge's software)}.
+    It's really important to follow all the cartridge's constructor's instructions : \FAT could not work correctly if you don't.
+
+    \ColoredAnnotation{Warning ! This \FAT's version is really experimental. I thinks you don't have to waste money in order to try \FAT but it's your choice !}
+
+    If you really want to buy you own cartridge, the following sheet can help you.
+
+    \subsection{GameboyAdvance cartridge comparison sheet}
+
+    There's a lot of GBA cartridges. These cartridges allow you to execute "homebrew" program. And this is so cool because \FAT is a homebrew.
+    Here are some cartridges tested with \FAT.
 
     % Configuration du tableau
-    %\tablefirsthead{\hline \rowcolor{blue} {\bf Cartouche} & {\bf "Gravure"} & {\bf Démarrage} & {\bf Sauvegarde} \\ \hline}
-    \tablehead{\hline \rowcolor{headertab} {\bf Cartouche} & {\bf "Gravure"} & {\bf Démarrage} & {\bf Sauvegarde} \\ \hline}
+    \tablehead{\hline \rowcolor{headertab} {\bf Cartridge} & {\bf Burning} & {\bf Starting} & {\bf Saving} \\ \hline}
     \tabletail{\hline \multicolumn{4}{|l|} {\small ...} \\ \hline}
     \tablelasttail{\hline}
     \begin{supertabular}{|p{3.5cm}|l|l|l|}
@@ -217,13 +227,13 @@
             \SimpleImage{images/supercardsd_djangofeet_sd}{0.2} 
             \end{minipage} & 
             \begin{minipage}{3cm}
-            Utilisez le logiciel officiel
+            Use the official software
             \end{minipage} &
             \begin{minipage}{2cm}
             \textcolor{vert}{OK}
             \end{minipage} &
             \begin{minipage}{7cm}
-            La sauvegarde fonctionne mais il faut faire une manipulation supplémentaire: après avoir sauvegardé {\bf pressez R+L+A+START et validez}
+            The save features is working but you'll have to press R+L+A+START after each save.
             \end{minipage} \\
         \hline
             \begin{minipage}[c]{3cm}
@@ -231,13 +241,13 @@
             \SimpleImage{images/supercardminisd_djangofeet_sd}{0.2} 
             \end{minipage} & 
             \begin{minipage}{3cm}
-            Utilisez le logiciel officiel 
+            Use the official software
             \end{minipage} &
             \begin{minipage}{2cm}
-            \textcolor{bleu}{NON TESTE}
+            \textcolor{bleu}{NOT TESTED}
             \end{minipage} &
             \begin{minipage}{7cm}
-            Non testé
+            Not tested but should be similar with the SuperCardSD above.
             \end{minipage} \\    
         \hline
             \begin{minipage}[c]{3cm}
@@ -245,13 +255,13 @@
             \SimpleImage{images/ezflash1}{0.2} 
             \end{minipage} & 
             \begin{minipage}{3cm}
-            Utilisez le logiciel officiel (et son linker USB)
+            Use the official software and his USB linker
             \end{minipage} &
             \begin{minipage}{2cm}
             \textcolor{vert}{OK}
             \end{minipage} &
             \begin{minipage}{7cm}
-            Rien à signaler. Tout fonctionne ! C'est le meilleur choix.
+            Nothing to report, all is working ! This is far the better choice.
             \end{minipage} \\
         \hline
             \begin{minipage}[c]{3cm}
@@ -259,13 +269,13 @@
             \SimpleImage{images/ultraflash2advance}{0.2} 
             \end{minipage} & 
             \begin{minipage}{3cm}
-            Utilisez les drivers officiels (la GBA fait office de linker)
+            Use the official software, GBA will be your linker
             \end{minipage} & 
             \begin{minipage}{2cm}
             \textcolor{vert}{OK}
             \end{minipage} &
             \begin{minipage}{7cm}
-            La sauvegarde fonctionne.
+            Save feature is working.
             \end{minipage} \\
         \hline
             \begin{minipage}[c]{3cm}
