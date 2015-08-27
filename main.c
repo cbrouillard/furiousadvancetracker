@@ -48,7 +48,7 @@
 /**
  * \brief Version actuelle de FAT.
  */
-#define FAT_VERSION "1.0.0"
+#define FAT_VERSION "1.1.0"
 
 #include <hel2.h>
 #include <stdarg.h>

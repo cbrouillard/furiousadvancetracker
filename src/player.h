@@ -64,8 +64,19 @@ THandle FAT_cursor_playerLiveWait_obj[6];
  */
 volatile int tempoReach = (60000 / 128) * 4;
 
+/**
+ * /brief Compteur de tick. Utile pour gérer les effets qui se joue dans le temps.
+*/
+volatile int tickCounter = (60000 / 100) * 4;
+
+/**
+ * /brief Pour savoir de quelle endroit l'utilisateur a lancé le son.
+*/
 u8 FAT_player_isPlayingFrom;
 
+/**
+ * /brief Stocke des booleens qui permettent de savoir si tel ou tel channel attend avant de jouer (=1) ou non (=0).
+*/
 u8 FAT_live_waitForOtherChannel[6];
 
 /**
@@ -419,6 +430,7 @@ void ATTR_FASTFUNC FAT_player_timerFunc() {
     if (tempoReach > 0) {
         tempoReach--;
     }
+    tickCounter--;
 }
 
 void FAT_player_progressInSong(u8 channel, sequence* seq){
