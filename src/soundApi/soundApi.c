@@ -17,6 +17,8 @@ typedef unsigned int u32;
 #include <hel2.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#include "sine.h"
 #include "soundApi.h"
 
 #define NULL_VALUE 0xff
@@ -79,27 +81,6 @@ const unsigned long voices[] = {
     0x02468ace, 0xffffffff, 0xeca86420, 0x00448844,
     0x2064a8ec, 0xffffffff, 0xce8a4602, 0x00448844
 
-};
-
-const u32 sinTableSize = 256; // Look Up Table size: has to be power of 2 so that the modulo LUTsize
-// can be done by picking bits from the phase avoiding arithmetic
-const u8 sintable[256] = {// already biased with +127
-    127, 130, 133, 136, 139, 143, 146, 149, 152, 155, 158, 161, 164, 167, 170, 173,
-    176, 179, 182, 184, 187, 190, 193, 195, 198, 200, 203, 205, 208, 210, 213, 215,
-    217, 219, 221, 224, 226, 228, 229, 231, 233, 235, 236, 238, 239, 241, 242, 244,
-    245, 246, 247, 248, 249, 250, 251, 251, 252, 253, 253, 254, 254, 254, 254, 254,
-    255, 254, 254, 254, 254, 254, 253, 253, 252, 251, 251, 250, 249, 248, 247, 246,
-    245, 244, 242, 241, 239, 238, 236, 235, 233, 231, 229, 228, 226, 224, 221, 219,
-    217, 215, 213, 210, 208, 205, 203, 200, 198, 195, 193, 190, 187, 184, 182, 179,
-    176, 173, 170, 167, 164, 161, 158, 155, 152, 149, 146, 143, 139, 136, 133, 130,
-    127, 124, 121, 118, 115, 111, 108, 105, 102, 99, 96, 93, 90, 87, 84, 81,
-    78, 75, 72, 70, 67, 64, 61, 59, 56, 54, 51, 49, 46, 44, 41, 39,
-    37, 35, 33, 30, 28, 26, 25, 23, 21, 19, 18, 16, 15, 13, 12, 10,
-    9, 8, 7, 6, 5, 4, 3, 3, 2, 1, 1, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1, 1, 2, 3, 3, 4, 5, 6, 7, 8,
-    9, 10, 12, 13, 15, 16, 18, 19, 21, 23, 25, 26, 28, 30, 33, 35,
-    37, 39, 41, 44, 46, 49, 51, 54, 56, 59, 61, 64, 67, 70, 72, 75,
-    78, 81, 84, 87, 90, 93, 96, 99, 102, 105, 108, 111, 115, 118, 121, 124
 };
 
 #define MAX_KITS 32
@@ -298,10 +279,6 @@ void snd_playSoundOnChannel4(u16 volume, u16 envdir, u16 envsteptime, u16 soundl
 
 void snd_stopAllSounds() {
     REG_SOUNDCNT_X = 0x0;
-    //REG_SOUND1CNT_X = 0x8000;
-    //REG_SOUND2CNT_H = 0x8000;
-    //REG_SOUND3CNT_X = 0x8000;
-    //REG_SOUND4CNT_H = 0x8000;
 
     playSnASample = 0;
     playSnBSample = 0;
@@ -455,7 +432,7 @@ void snd_resetFIFOB() {
     REG_SOUNDCNT_H |= 1 << 0xF;
 }
 
-void snd_processSampleA() {
+void snd_processSampleA_ok() {
     if (playSnASample) {
         REG_SOUNDCNT_H &= ~(1 << 0xB);
         if (!(snASampleOffset & 3)) {
@@ -474,6 +451,62 @@ void snd_processSampleA() {
     }
 
 }
+
+
+vu8 oscCounter = 0;
+vu32 bufferOscA = 0;
+
+#define SAMPLERATE 16384
+
+vu32 bufferOsc = 0;
+vu32 phase = 0;
+vu8 val = 0;
+vu32 snd_processOscillator (u8 amplitude, u16 freq) {
+
+    phase = phase + ((SIN_LUT_SIZE * freq) / SAMPLERATE);
+    if (phase > SIN_PHASE_MAX){
+        phase = phase - SIN_PHASE_MAX;
+    }
+    val = amplitude * sinLUT[phase] + 128;
+    bufferOsc = val;
+
+    phase = phase + ((SIN_LUT_SIZE * freq) / SAMPLERATE);
+    if (phase > SIN_PHASE_MAX){
+        phase = phase - SIN_PHASE_MAX;
+    }
+    val = amplitude * sinLUT[phase] + 128;
+    bufferOsc |= (val << 8);
+
+    phase = phase + ((SIN_LUT_SIZE * freq) / SAMPLERATE);
+    if (phase > SIN_PHASE_MAX){
+        phase = phase - SIN_PHASE_MAX;
+    }
+    val = amplitude * sinLUT[phase] + 128;
+    bufferOsc |= (val << 16);
+
+    phase = phase + ((SIN_LUT_SIZE * freq) / SAMPLERATE);
+    if (phase > SIN_PHASE_MAX){
+        phase = phase - SIN_PHASE_MAX;
+    }
+    val = amplitude * sinLUT[phase] + 128;
+    bufferOsc |= (val << 24);
+
+    return bufferOsc;
+}
+
+void snd_processSampleA() {
+    if (playSnASample) {
+
+        if (!(oscCounter & 3)){
+            REG_SOUNDCNT_H &= ~(1 << 0xB);
+            SND_REG_SGFIFOA = snd_processOscillator (1, 40);
+        }
+
+        oscCounter += 1;
+    }
+
+}
+
 
 void snd_processSampleB() {
     if (playSnBSample) {
