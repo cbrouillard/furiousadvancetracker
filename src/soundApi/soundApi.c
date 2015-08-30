@@ -18,8 +18,8 @@ typedef unsigned int u32;
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "sine.h"
 #include "soundApi.h"
+#include "sine.h"
 
 #define NULL_VALUE 0xff
 
@@ -106,6 +106,8 @@ const vu32* snBSample;
 volatile bool playSnASample = 0;
 volatile bool playSnBSample = 0;
 
+#include "oscillator.h"
+
 void snd_timerFunc_sample();
 
 void snd_loadWav(u8 inst) {
@@ -137,6 +139,8 @@ void snd_init_soundApi() {
     REG_SOUND3CNT_L = SOUND3BANK32 | SOUND3SETBANK1;
 
     snd_loadWav(0);
+
+    snd_initOscillator();
 }
 
 void snd_changeChannelOutput(u8 channelNumber, u8 outputValue) {
@@ -432,7 +436,7 @@ void snd_resetFIFOB() {
     REG_SOUNDCNT_H |= 1 << 0xF;
 }
 
-void snd_processSampleA_ok() {
+void snd_processSampleA() {
     if (playSnASample) {
         REG_SOUNDCNT_H &= ~(1 << 0xB);
         if (!(snASampleOffset & 3)) {
@@ -451,62 +455,6 @@ void snd_processSampleA_ok() {
     }
 
 }
-
-
-vu8 oscCounter = 0;
-vu32 bufferOscA = 0;
-
-#define SAMPLERATE 16384
-
-vu32 bufferOsc = 0;
-vu32 phase = 0;
-vu8 val = 0;
-vu32 snd_processOscillator (u8 amplitude, u16 freq) {
-
-    phase = phase + ((SIN_LUT_SIZE * freq) / SAMPLERATE);
-    if (phase > SIN_PHASE_MAX){
-        phase = phase - SIN_PHASE_MAX;
-    }
-    val = amplitude * sinLUT[phase] + 128;
-    bufferOsc = val;
-
-    phase = phase + ((SIN_LUT_SIZE * freq) / SAMPLERATE);
-    if (phase > SIN_PHASE_MAX){
-        phase = phase - SIN_PHASE_MAX;
-    }
-    val = amplitude * sinLUT[phase] + 128;
-    bufferOsc |= (val << 8);
-
-    phase = phase + ((SIN_LUT_SIZE * freq) / SAMPLERATE);
-    if (phase > SIN_PHASE_MAX){
-        phase = phase - SIN_PHASE_MAX;
-    }
-    val = amplitude * sinLUT[phase] + 128;
-    bufferOsc |= (val << 16);
-
-    phase = phase + ((SIN_LUT_SIZE * freq) / SAMPLERATE);
-    if (phase > SIN_PHASE_MAX){
-        phase = phase - SIN_PHASE_MAX;
-    }
-    val = amplitude * sinLUT[phase] + 128;
-    bufferOsc |= (val << 24);
-
-    return bufferOsc;
-}
-
-void snd_processSampleA() {
-    if (playSnASample) {
-
-        if (!(oscCounter & 3)){
-            REG_SOUNDCNT_H &= ~(1 << 0xB);
-            SND_REG_SGFIFOA = snd_processOscillator (1, 40);
-        }
-
-        oscCounter += 1;
-    }
-
-}
-
 
 void snd_processSampleB() {
     if (playSnBSample) {
@@ -528,13 +476,17 @@ void snd_processSampleB() {
 }
 
 void snd_timerFunc_sample() {
-    snd_processSampleA();
+    //snd_processSampleA();
+    snd_processOscillatorA ();
     snd_processSampleB();
     hel_IntrAcknowledge(INT_TYPE_TIM0);
 }
 
 void snd_playChannelASample(u8 kitId, u8 sampleNumber,
         u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset, u8 output) {
+// todo remove
+snd_initOscillator();
+// end todo
 
     kit* kit = kits[kitId];
     if (kit) {
