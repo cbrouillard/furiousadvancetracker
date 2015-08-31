@@ -15,7 +15,7 @@ make
 
 cd src/soundApi/luts
 gcc -o generator gen.c -lm
-./generator
+./generator > /dev/null
 cd -
 
 echo "### Padbin pour execution du GBFS"

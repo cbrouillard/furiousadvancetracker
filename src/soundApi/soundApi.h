@@ -214,6 +214,7 @@ void snd_playSampleOnChannelAById(u8 kitId, u8 sampleNumber);
  */
 void snd_playChannelASample(u8 kitId, u8 sampleNumber, u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset, u8 output);
 
+void snd_playOscillatorA (u8 shape, u8 freqN);
 
 /**
  * \brief Joue un sample sur le canal directsound B. Attention, il est nécessaire d'avoir

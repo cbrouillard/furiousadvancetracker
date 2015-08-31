@@ -95,7 +95,7 @@ void FAT_screenNotes_printNote(u8 line) {
         } else {
             hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_NOTE_LINE_X,
                     line + SCREENNOTES_LINE_START_Y, 0,
-                    "S%.2x %.2x\0", actualNote->freq, actualNote->instrument);
+                    "#%.2x %.2x\0", actualNote->freq, actualNote->instrument);
         }
     } else {
         hel_BgTextPrint(TEXT_LAYER, SCREENNOTES_NOTE_LINE_X,

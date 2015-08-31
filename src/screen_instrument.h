@@ -41,6 +41,11 @@ THandle FAT_instrument_waveduty2_obj;
 /** \brief Sprite pour le paramètre waveduty: valeur 3. */
 THandle FAT_instrument_waveduty3_obj;
 
+THandle FAT_instrument_oscForm_sin_obj;
+THandle FAT_instrument_oscForm_square_obj;
+THandle FAT_instrument_oscForm_triangle_obj;
+THandle FAT_instrument_oscForm_saw_obj;
+
 #include "screen_instrument_cursor.h"
 #include "data.h"
 
@@ -51,9 +56,11 @@ void FAT_screenInstrument_switchScreen(u8 type);
 void FAT_screenInstrument_pressOrHeldA();
 void FAT_screenInstrument_showOutput(u8 x, u8 y, u8 output);
 void FAT_screenInstrument_showWaveduty(u8 wavedutyValue, u8 spriteX, u8 spriteY);
+void FAT_screenInstrument_showOscForm (u8 oscForm, u8 spriteX, u8 spriteY);
 void FAT_screenInstrument_showEnvdir(u8 envdirValue, u8 spriteX, u8 spriteY);
 void FAT_screenInstrument_hideAllEnvdirSprites();
 void FAT_screenInstrument_hideAllWavedutySprite();
+void FAT_screenInstrument_hideAllOscSprite();
 
 /**
  * \brief Affiche le numéro de l'écran en cours d'édition dans le cadre en haut à droite. 
@@ -154,6 +161,15 @@ void FAT_screenInstrument_printAllText(u8 type) {
             hel_BgTextPrintF(TEXT_LAYER, 16, 12, 0, "Test it!  S%.2x\0", FAT_data_simulator.freq);
 
             break;
+
+        case INSTRUMENT_TYPE_OSCILLATORA:
+        case INSTRUMENT_TYPE_OSCILLATORB:
+            hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "OSC Shape");
+            FAT_screenInstrument_showOscForm (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].wavedutyOrPolynomialStep,
+                                                                  88, 32);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 5, 0, "Amplitude NA");
+            hel_BgTextPrintF(TEXT_LAYER, 1, 8, 0, "Test it!  S%.2x\0", FAT_data_simulator.freq);
+            break;
     }
 }
 
@@ -194,6 +210,7 @@ void FAT_screenInstrument_switchScreen(u8 type) {
     FAT_cursors_hideAllCursors();
     FAT_screenInstrument_hideAllEnvdirSprites();
     FAT_screenInstrument_hideAllWavedutySprite();
+    FAT_screenInstrument_hideAllOscSprite ();
 
     switch (type) {
         case INSTRUMENT_TYPE_PULSE:
@@ -231,6 +248,15 @@ void FAT_screenInstrument_switchScreen(u8 type) {
             FAT_screenInstrument_displayGoodCursor(type);
 
             break;
+        case INSTRUMENT_TYPE_OSCILLATORA:
+        case INSTRUMENT_TYPE_OSCILLATORB:
+            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_INSTRUMENT_OSC_RAW), RES_SCREEN_INSTRUMENT_OSC_RAW_SIZE16, 1, 1);
+            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_INSTRUMENT_OSC_MAP), 1024, 0, 0);
+            FAT_screenInstrument_printInstrumentNumber();
+            FAT_screenInstrument_printAllText(type);
+            FAT_screenInstrument_initCursor(type);
+            FAT_screenInstrument_displayGoodCursor(type);
+            break;
     }
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 }
@@ -267,9 +293,16 @@ void FAT_screenInstrument_changeInstrumentType(s8 move) {
             break;
         case INSTRUMENT_TYPE_SAMPLEA:
         case INSTRUMENT_TYPE_SAMPLEB:
-            if (move < 0) {
-
+            if (move > 0){
+                FAT_data_instrument_changeType(FAT_screenInstrument_currentInstrumentId, INSTRUMENT_TYPE_OSCILLATORA);
+            }else {
                 FAT_data_instrument_changeType(FAT_screenInstrument_currentInstrumentId, INSTRUMENT_TYPE_NOISE);
+            }
+            break;
+        case INSTRUMENT_TYPE_OSCILLATORA:
+        case INSTRUMENT_TYPE_OSCILLATORB:
+            if (move < 0){
+                FAT_data_instrument_changeType(FAT_screenInstrument_currentInstrumentId, INSTRUMENT_TYPE_SAMPLEA);
             }
             break;
     }
@@ -288,6 +321,7 @@ void FAT_screenInstrument_checkButtons() {
     if (hel_PadQuery()->Held.Select) {
         if (!FAT_screenInstrument_isPopuped) {
             FAT_screenInstrument_hideAllWavedutySprite();
+            FAT_screenInstrument_hideAllOscSprite();
             FAT_cursors_hideAllCursors();
             FAT_popup_show();
             FAT_screenInstrument_isPopuped = 1;
@@ -305,6 +339,7 @@ void FAT_screenInstrument_checkButtons() {
             if (FAT_popup_getSelectedIcon() != SCREEN_INSTRUMENTS_ID) {
                 FAT_screenInstrument_hideAllEnvdirSprites();
                 FAT_screenInstrument_hideAllWavedutySprite();
+                FAT_screenInstrument_hideAllOscSprite ();
                 FAT_cursors_hideAllCursors();
                 FAT_switchToScreen(FAT_popup_getSelectedIcon(), SCREEN_INSTRUMENTS_ID);
             }
@@ -500,9 +535,69 @@ void FAT_screenInstrument_initSpritesForInstrument() {
                                                  0,                    // Destination horzintal screen coordinate in pixels
                                                  0                      // Destination vertical screen coordinate in pixels
                                                  );
+    FAT_instrument_oscForm_sin_obj = hel_ObjCreate(ResData(RES_OSC_SIN_RAW), // Pointer to source graphic
+                                                  OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                                  0,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                  OBJ_MODE_NORMAL,        // Obj Mode
+                                                  COLORS_16,              // Use 16 color mode
+                                                  0,                      // Palette number. Only neccessary in 16 color mode
+                                                  FALSE,                  // Don't use mosaic
+                                                  FALSE,                  // Don't flip the sprite horizontally
+                                                  FALSE,                  // Don't flip the object vertically
+                                                  0,                      // Priority against background. 0=higest
+                                                  FALSE,                  // Don't make the object double-sized
+                                                  0,                    // Destination horzintal screen coordinate in pixels
+                                                  0                      // Destination vertical screen coordinate in pixels
+                                                  );
+
+    FAT_instrument_oscForm_square_obj = hel_ObjCreate(ResData(RES_OSC_SQUARE_RAW), // Pointer to source graphic
+                                                  OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                                  0,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                  OBJ_MODE_NORMAL,        // Obj Mode
+                                                  COLORS_16,              // Use 16 color mode
+                                                  0,                      // Palette number. Only neccessary in 16 color mode
+                                                  FALSE,                  // Don't use mosaic
+                                                  FALSE,                  // Don't flip the sprite horizontally
+                                                  FALSE,                  // Don't flip the object vertically
+                                                  0,                      // Priority against background. 0=higest
+                                                  FALSE,                  // Don't make the object double-sized
+                                                  0,                    // Destination horzintal screen coordinate in pixels
+                                                  0                      // Destination vertical screen coordinate in pixels
+                                                  );
+
+    FAT_instrument_oscForm_triangle_obj = hel_ObjCreate(ResData(RES_OSC_TRIANGLE_RAW), // Pointer to source graphic
+                                                  OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                                  0,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                  OBJ_MODE_NORMAL,        // Obj Mode
+                                                  COLORS_16,              // Use 16 color mode
+                                                  0,                      // Palette number. Only neccessary in 16 color mode
+                                                  FALSE,                  // Don't use mosaic
+                                                  FALSE,                  // Don't flip the sprite horizontally
+                                                  FALSE,                  // Don't flip the object vertically
+                                                  0,                      // Priority against background. 0=higest
+                                                  FALSE,                  // Don't make the object double-sized
+                                                  0,                    // Destination horzintal screen coordinate in pixels
+                                                  0                      // Destination vertical screen coordinate in pixels
+                                                  );
+
+    FAT_instrument_oscForm_saw_obj = hel_ObjCreate(ResData(RES_OSC_SAW_RAW), // Pointer to source graphic
+                                                      OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                                      0,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                      OBJ_MODE_NORMAL,        // Obj Mode
+                                                      COLORS_16,              // Use 16 color mode
+                                                      0,                      // Palette number. Only neccessary in 16 color mode
+                                                      FALSE,                  // Don't use mosaic
+                                                      FALSE,                  // Don't flip the sprite horizontally
+                                                      FALSE,                  // Don't flip the object vertically
+                                                      0,                      // Priority against background. 0=higest
+                                                      FALSE,                  // Don't make the object double-sized
+                                                      0,                    // Destination horzintal screen coordinate in pixels
+                                                      0                      // Destination vertical screen coordinate in pixels
+                                                      );
 
     FAT_screenInstrument_hideAllEnvdirSprites();
     FAT_screenInstrument_hideAllWavedutySprite();
+    FAT_screenInstrument_hideAllOscSprite();
 }
 
 /**
@@ -523,6 +618,13 @@ void FAT_screenInstrument_hideAllWavedutySprite() {
     hel_ObjSetVisible(FAT_instrument_waveduty1_obj, 0);
     hel_ObjSetVisible(FAT_instrument_waveduty2_obj, 0);
     hel_ObjSetVisible(FAT_instrument_waveduty3_obj, 0);
+}
+
+void FAT_screenInstrument_hideAllOscSprite(){
+    hel_ObjSetVisible(FAT_instrument_oscForm_sin_obj, 0);
+    hel_ObjSetVisible(FAT_instrument_oscForm_square_obj, 0);
+    hel_ObjSetVisible(FAT_instrument_oscForm_triangle_obj, 0);
+    hel_ObjSetVisible(FAT_instrument_oscForm_saw_obj, 0);
 }
 
 /**
@@ -579,6 +681,31 @@ void FAT_screenInstrument_showWaveduty(u8 wavedutyValue, u8 spriteX, u8 spriteY)
     } else if (wavedutyValue == 3) {
         hel_ObjSetXY(FAT_instrument_waveduty3_obj, spriteX, spriteY);
         hel_ObjSetVisible(FAT_instrument_waveduty3_obj, 1);
+    }
+}
+
+/**
+ * \brief Affiche le bon sprite pour la valeur du waveduty.
+ *
+ * @param wavedutyValue la valeur du paramètre
+ * @param spriteX position en X pour l'affichage
+ * @param spriteY position en Y pour l'affichage
+ */
+void FAT_screenInstrument_showOscForm(u8 oscFormValue, u8 spriteX, u8 spriteY) {
+    FAT_screenInstrument_hideAllOscSprite();
+
+    if (oscFormValue == 0) {
+        hel_ObjSetXY(FAT_instrument_oscForm_sin_obj, spriteX, spriteY);
+        hel_ObjSetVisible(FAT_instrument_oscForm_sin_obj, 1);
+    } else if (oscFormValue == 1) {
+        hel_ObjSetXY(FAT_instrument_oscForm_square_obj, spriteX, spriteY);
+        hel_ObjSetVisible(FAT_instrument_oscForm_square_obj, 1);
+    } else if (oscFormValue == 2) {
+        hel_ObjSetXY(FAT_instrument_oscForm_triangle_obj, spriteX, spriteY);
+        hel_ObjSetVisible(FAT_instrument_oscForm_triangle_obj, 1);
+    } else if (oscFormValue == 3) {
+        hel_ObjSetXY(FAT_instrument_oscForm_saw_obj, spriteX, spriteY);
+        hel_ObjSetVisible(FAT_instrument_oscForm_saw_obj, 1);
     }
 }
 
@@ -767,6 +894,24 @@ void FAT_screenInstrument_sample_pressA() {
     FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
 }
 
+void FAT_screenInstrument_osc_pressA() {
+    s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
+    switch (FAT_screenInstruments_currentSelectedLine) {
+        case 0: // SHAPE
+            FAT_data_instrumentOsc_changeShape(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 1: // AMPLITUDE
+
+            break;
+        case 2: // SIMULATOR
+            FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);
+            FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
+            break;
+    }
+
+    FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+}
+
 /**
  * \brief Fonction wrapper pour gérer l'appui sur la touche A.
  */
@@ -787,6 +932,10 @@ void FAT_screenInstrument_pressOrHeldA() {
         case INSTRUMENT_TYPE_SAMPLEA:
         case INSTRUMENT_TYPE_SAMPLEB:
             FAT_screenInstrument_sample_pressA();
+            break;
+        case INSTRUMENT_TYPE_OSCILLATORA:
+        case INSTRUMENT_TYPE_OSCILLATORB:
+            FAT_screenInstrument_osc_pressA();
             break;
     }
 

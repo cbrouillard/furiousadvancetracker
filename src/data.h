@@ -117,6 +117,14 @@
  */
 #define INSTRUMENT_TYPE_SAMPLEB 5
 /**
+ * \brief Type d'instrument OSCILLATOR
+ */
+#define INSTRUMENT_TYPE_OSCILLATORA 6
+/**
+ * \brief Type d'instrument OSCILLATORB
+ */
+#define INSTRUMENT_TYPE_OSCILLATORB 7
+/**
  * \brief Valeur de volume maximum pour un instrument de type PULSE.
  */
 #define INSTRUMENT_PULSE_VOLUME_MAX 16
@@ -343,7 +351,7 @@ typedef struct VOICE {
  * attachée à un instrument.
  */
 typedef struct INSTRUMENT {
-    u8 type; /*!< Le type de l'instrument: PULSE1, PULSE2, WAVE, NOISE, SAMPLEA, SAMPLEB */
+    u8 type; /*!< Le type de l'instrument: PULSE1, PULSE2, WAVE, NOISE, SAMPLEA, SAMPLEB, OSCA, OSCB */
     u8 sweep; /*!< Valeur de "sweep". Le "sweep" n'est applicable que sur le channel 1. */
     //u8 volume; // max = F = 4bits
     //u8 envdirection; // max = 1
@@ -355,7 +363,7 @@ typedef struct INSTRUMENT {
     // dir -> (envelope & 0x10) >> 4
     // volume -> (envelope & 0x0f)
     u8 wavedutyOrPolynomialStep; /*!< Contient la valeur du paramètre "wave" pour les instruments de type PULSE <b>OU</b> 
-                                  la valeur du paramètre "polystep" pour les instruments de type NOISE */
+                                  la valeur du paramètre "polystep" pour les instruments de type NOISE et la valeur de l'oscForm pour l'OSCILLATOR */
     u8 soundlength; /*!< Stocke la durée du son: attention, ce paramètre ne sera appliqué que si loopmode = 1. */
     u8 loopmode; /*!< Mode de durée du son : 1=timed, 0=continuous .*/
 
@@ -1669,6 +1677,13 @@ void FAT_data_instrumentPulse_changeWaveduty(u8 instrumentId, s8 value) {
             ) {
         FAT_tracker.allInstruments[instrumentId].wavedutyOrPolynomialStep += value;
     }
+}
+
+/**
+    \brief Modifie la shape d'un oscillator (stockée au meme endroit que le waveduty et avec les meme contraintes).
+*/
+void FAT_data_instrumentOsc_changeShape (u8 instrumentId, s8 value){
+    FAT_data_instrumentPulse_changeWaveduty (instrumentId, value); // gros raccourci ! A surveiller.
 }
 
 /**

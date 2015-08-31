@@ -139,8 +139,6 @@ void snd_init_soundApi() {
     REG_SOUND3CNT_L = SOUND3BANK32 | SOUND3SETBANK1;
 
     snd_loadWav(0);
-
-    snd_initOscillator();
 }
 
 void snd_changeChannelOutput(u8 channelNumber, u8 outputValue) {
@@ -286,6 +284,8 @@ void snd_stopAllSounds() {
 
     playSnASample = 0;
     playSnBSample = 0;
+    playSnAOsc = 0;
+    playSnBOsc = 0;
 
     snd_init_soundApi();
 }
@@ -309,9 +309,11 @@ void snd_effect_kill(u8 channelId, u8 value) {
             break;
         case 4:
             playSnASample = 0;
+            playSnAOsc = 0;
             break;
         case 5:
             playSnBSample = 0;
+            playSnBOsc = 0;
             break;
     }
 }
@@ -476,17 +478,25 @@ void snd_processSampleB() {
 }
 
 void snd_timerFunc_sample() {
-    //snd_processSampleA();
-    snd_processOscillatorA ();
+    snd_processSampleA();
     snd_processSampleB();
+    snd_processOscillatorA ();
+    //snd_processOscillatorB ();
     hel_IntrAcknowledge(INT_TYPE_TIM0);
+}
+
+void snd_playOscillatorA (u8 shape, u8 freqN){
+    playSnAOsc = 0;
+
+    snd_oscA = (u32*) snd_oscShapes[shape][freqN];
+    oscCounterA = 0;
+
+    // go
+    playSnAOsc = 1;
 }
 
 void snd_playChannelASample(u8 kitId, u8 sampleNumber,
         u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset, u8 output) {
-// todo remove
-snd_initOscillator();
-// end todo
 
     kit* kit = kits[kitId];
     if (kit) {

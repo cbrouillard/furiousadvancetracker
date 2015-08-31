@@ -224,12 +224,16 @@ void FAT_player_playNoteWithCustomParams_chan4(note* note, u8 channel, u8 transp
 }
 void FAT_player_playNoteWithCustomParams_chan5(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output){
     instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
-
-    snd_playChannelASample(
-        inst->kitNumber, note->freq, inst->volumeRatio >> 4,
-        inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
-        inst->loopmode, inst->soundlength, inst->offset, output); // loopmode est mal nommé : c'est le timedMode
-
+    // todo pointeur de func pour plus de perf ?
+    if (inst->type > INSTRUMENT_TYPE_SAMPLEB){
+        // waveduty = shape
+        snd_playOscillatorA (inst->wavedutyOrPolynomialStep, note->freq);
+    } else {
+        snd_playChannelASample(
+            inst->kitNumber, note->freq, inst->volumeRatio >> 4,
+            inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
+            inst->loopmode, inst->soundlength, inst->offset, output); // loopmode est mal nommé : c'est le timedMode
+    }
 }
 void FAT_player_playNoteWithCustomParams_chan6(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output){
     instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
@@ -238,7 +242,6 @@ void FAT_player_playNoteWithCustomParams_chan6(note* note, u8 channel, u8 transp
         inst->kitNumber, note->freq, inst->volumeRatio >> 4,
         inst->speedOrLooping & 0x0f, inst->speedOrLooping >> 4,
         inst->loopmode, inst->soundlength, inst->offset, output);
-
 }
 
 /**
