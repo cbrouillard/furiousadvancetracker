@@ -13,6 +13,11 @@ echo "### Compilation"
 make gfx
 make
 
+cd src/soundApi/luts
+gcc -o generator gen.c -lm
+./generator
+cd -
+
 echo "### Padbin pour execution du GBFS"
 wine padbin.exe 256 FAT_v$VERSION.gba
 

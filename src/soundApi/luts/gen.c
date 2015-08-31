@@ -39,7 +39,7 @@ const char sinLUT[SIN_LUT_SIZE] = {
 	26,27,28,28,29,30,31,32
 };
 
-#define PRECISION 256
+#define PRECISION 128
 
 const char* notes[12] = {"C0", "CS0", "D0", "DS0", "E0", "F0", "FS0", "G0", "GS0", "A0", "AS0", "B0"};
 const double freqs[12] = {261.7, 277.2, 293.7, 311.2, 329.7, 349.3, 370, 392, 415.3, 440, 466.2, 493.9};
