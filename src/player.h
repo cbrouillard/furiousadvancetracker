@@ -165,6 +165,10 @@ void FAT_player_playComposerNote(u8 noteLine) {
  * @param channel le channel sur lequel jouer la note
  */
 void FAT_player_playNote(note* note, u8 channel, u8 forceVolume) {
+	// hack pour lire les notes types OSC. Pas terrible je sais :(
+	if (channel > INSTRUMENT_TYPE_SAMPLEB){
+		channel -= 2;
+	}
     FAT_player_playNoteWithCustomParams(note, channel, FAT_tracker.transpose, forceVolume, NULL_VALUE, NULL_VALUE);
 }
 

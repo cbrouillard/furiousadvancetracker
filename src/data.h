@@ -1122,7 +1122,9 @@ void FAT_data_note_previewNote(u8 block, u8 line) {
     FAT_tracker.allInstruments[instId].loopmode = 1;
     FAT_tracker.allInstruments[instId].soundlength = 0x20;
 
-    FAT_player_playNote(&FAT_tracker.allBlocks[block].notes[line], FAT_tracker.allInstruments[instId].type, NULL_VALUE);
+    FAT_player_playNote(&FAT_tracker.allBlocks[block].notes[line],
+    					FAT_tracker.allInstruments[instId].type,
+    									NULL_VALUE);
 
     FAT_tracker.allInstruments[instId].loopmode = mem_loopMode;
     FAT_tracker.allInstruments[instId].soundlength = mem_soundLength;
@@ -1511,7 +1513,8 @@ void FAT_data_instrument_changeSimulator(u8 inst, s8 addedValue) {
 void FAT_data_instrument_playSimulator(u8 inst) {
     u8 mem_loopMode = FAT_tracker.allInstruments[inst].loopmode;
     FAT_tracker.allInstruments[inst].loopmode = 1;
-    FAT_player_playNote(&FAT_data_simulator, FAT_tracker.allInstruments[inst].type, FAT_tracker.allInstruments[inst].envelope & 0x0f);
+    FAT_player_playNote(&FAT_data_simulator, FAT_tracker.allInstruments[inst].type,
+    		FAT_tracker.allInstruments[inst].envelope & 0x0f);
     FAT_tracker.allInstruments[inst].loopmode = mem_loopMode;
 }
 
@@ -2100,6 +2103,9 @@ void FAT_data_composer_addDefaultNote(u8 line) {
 
     FAT_data_initInstrumentIfNeeded(FAT_tracker.composer.notes[line].instrument, 0);
     FAT_tracker.composer.channels[line] = FAT_tracker.allInstruments[FAT_tracker.composer.notes[line].instrument].type;
+    if (FAT_tracker.composer.channels[line] > INSTRUMENT_TYPE_SAMPLEB){
+    	FAT_tracker.composer.channels[line] -= 2;
+    }
 
 }
 
