@@ -321,7 +321,6 @@ void FAT_screenInstrument_checkButtons() {
     if (hel_PadQuery()->Held.Select) {
         if (!FAT_screenInstrument_isPopuped) {
             FAT_screenInstrument_hideAllWavedutySprite();
-            FAT_screenInstrument_hideAllOscSprite();
             FAT_cursors_hideAllCursors();
             FAT_popup_show();
             FAT_screenInstrument_isPopuped = 1;

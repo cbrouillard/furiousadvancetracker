@@ -3,13 +3,15 @@
 
 #define SAMPLERATE 16384
 #define LUT_SIZE  64
+#define MAX_AMPLITUDE 31
+#define NBNOTES_PERSHAPE 12
 
 char myLut[LUT_SIZE];
 
 #define PRECISION 64
 
-const char* notes[12] = {"C0", "CS0", "D0", "DS0", "E0", "F0", "FS0", "G0", "GS0", "A0", "AS0", "B0"};
-const double freqs[12] = {261.7, 277.2, 293.7, 311.2, 329.7, 349.3, 370, 392, 415.3, 440, 466.2, 493.9};
+const char* notes[NBNOTES_PERSHAPE] = {"C0", "CS0", "D0", "DS0", "E0", "F0", "FS0", "G0", "GS0", "A0", "AS0", "B0"};
+const double freqs[NBNOTES_PERSHAPE] = {261.7, 277.2, 293.7, 311.2, 329.7, 349.3, 370, 392, 415.3, 440, 466.2, 493.9};
 
 void generate_sinLuts (){
     int ii;
@@ -29,13 +31,13 @@ void generate_sinLuts (){
     float bufferFreq = 0;
 
 
-    for (jj=0; jj< 12;jj++){
+    for (jj=0; jj< NBNOTES_PERSHAPE;jj++){
 
         // for each freq.
         fprintf(fp, "\n// %s, freq = %f\n", notes[jj], freqs[jj]);
         fprintf(fp, "const u32 snd_osc_sine_%s[LUT_PRECISION] = {\n", notes[jj]);
 
-        bufferFreq = ((LUT_SIZE * freqs[jj]) / SAMPLERATE) + jj;
+        bufferFreq = ((LUT_SIZE * freqs[jj]) / SAMPLERATE);
         //printf("Delta = %f\n", bufferFreq);
         //printf ("----\n");
         phase = 0;
@@ -112,7 +114,7 @@ void generate_squareLuts(){
     fprintf(fp, "#define _SOUND_API_OSC_SQUARELUTS_\n\n");
 
     fprintf(fp, "#ifndef LUT_PRECISION\n");
-    fprintf(fp, "#define LUT_PRECISION %d\n\n", PRECISION);
+    fprintf(fp, "#define LUT_PRECISION %d\n", PRECISION);
     fprintf(fp, "#endif\n");
 
     int bufferOsc = 0;
@@ -121,7 +123,7 @@ void generate_squareLuts(){
     int val = 0;
 
 
-    for (jj=0; jj< 12;jj++){
+    for (jj=0; jj< NBNOTES_PERSHAPE;jj++){
 
         // for each freq.
         fprintf(fp, "\n// %s, freq = %f\n", notes[jj], freqs[jj]);
@@ -133,52 +135,52 @@ void generate_squareLuts(){
         {
             bufferOsc = 0;
 
-            phase = phase + bufferFreq;
-            if (phase >= LUT_SIZE){
-                phase = phase - LUT_SIZE;
-            }
             if (phase < LUT_SIZE/2){
-                val = 63;
+                val = MAX_AMPLITUDE;
             } else {
-                val = -63;
+                val = -MAX_AMPLITUDE;
             }
             bufferOsc |= val;
             bufferOsc &= 0x000000ff;
-
             phase = phase + bufferFreq;
-            if (phase >= LUT_SIZE){
-                phase = phase - LUT_SIZE;
-            }
+			if (phase >= LUT_SIZE){
+				phase = phase - LUT_SIZE;
+			}
+
             if (phase < LUT_SIZE/2){
-                val = 63;
+                val = MAX_AMPLITUDE;
             } else {
-                val = -63;
+                val = -MAX_AMPLITUDE;
             }
             bufferOsc |= (val << 8);
             bufferOsc &= 0x0000ffff;
-
             phase = phase + bufferFreq;
-            if (phase >= LUT_SIZE){
-                phase = phase - LUT_SIZE;
-            }
+			if (phase >= LUT_SIZE){
+				phase = phase - LUT_SIZE;
+			}
+
             if (phase < LUT_SIZE/2){
-                val = 63;
+                val = MAX_AMPLITUDE;
             } else {
-                val = -63;
+                val = -MAX_AMPLITUDE;
             }
             bufferOsc |= (val << 16);
             bufferOsc &= 0x00ffffff;
-
             phase = phase + bufferFreq;
-            if (phase >= LUT_SIZE){
-                phase = phase - LUT_SIZE;
-            }
+			if (phase >= LUT_SIZE){
+				phase = phase - LUT_SIZE;
+			}
+
             if (phase < LUT_SIZE/2){
-                val = 63;
+                val = MAX_AMPLITUDE;
             } else {
-                val = -63;
+                val = -MAX_AMPLITUDE;
             }
             bufferOsc |= (val << 24);
+            phase = phase + bufferFreq;
+			if (phase >= LUT_SIZE){
+				phase = phase - LUT_SIZE;
+			}
 
             if(ii%8 == 0) {
                 fputs("\n\t", fp);
@@ -208,7 +210,7 @@ int main()
 {
     int i;
     for (i = 0; i < LUT_SIZE; ++i) {
-        myLut[i] = (char) roundf(63 * sinf(2.0f * M_PI * (float)i / LUT_SIZE));
+        myLut[i] = (char) roundf(MAX_AMPLITUDE * sinf(2.0f * M_PI * (float)i / LUT_SIZE));
         printf ("%d,", myLut[i]);
     }
     printf("\n");

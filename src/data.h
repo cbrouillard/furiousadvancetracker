@@ -1148,15 +1148,24 @@ void FAT_data_note_changeValue(u8 channel, u8 block, u8 noteLine, s8 addedValue)
 
     instrument* inst = &(FAT_tracker.allInstruments[FAT_tracker.allBlocks[block].notes[noteLine].instrument]);
     if (channel >= INSTRUMENT_TYPE_SAMPLEA) {
-        u8 nbMaxSample = snd_countSamplesInKitById(inst->kitNumber);
-        //if (FAT_tracker.allBlocks[block].notes[noteLine].freq >= nbMaxSample){
-        //    FAT_tracker.allBlocks[block].notes[noteLine].freq = nbMaxSample;
-        /*< \todo changer l'intitulé noteName et noteOctave pour affichage correct. */
-        //}
-        if ((addedValue > 0 && FAT_tracker.allBlocks[block].notes[noteLine].freq < nbMaxSample - 1) ||
-                (addedValue < 0 && FAT_tracker.allBlocks[block].notes[noteLine].freq > 0)) {
-            FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue;
-        }
+    	if (channel > INSTRUMENT_TYPE_SAMPLEB){
+    		// OSCILLATORS
+    		if ((addedValue > 0 && FAT_tracker.allBlocks[block].notes[noteLine].freq < NB_OSC_NOTES_PER_SHAPE - 1) ||
+					(addedValue < 0 && FAT_tracker.allBlocks[block].notes[noteLine].freq > 0)) {
+				FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue;
+			}
+    	} else {
+
+			u8 nbMaxSample = snd_countSamplesInKitById(inst->kitNumber);
+			//if (FAT_tracker.allBlocks[block].notes[noteLine].freq >= nbMaxSample){
+			//    FAT_tracker.allBlocks[block].notes[noteLine].freq = nbMaxSample;
+			/*< \todo changer l'intitulé noteName et noteOctave pour affichage correct. */
+			//}
+			if ((addedValue > 0 && FAT_tracker.allBlocks[block].notes[noteLine].freq < nbMaxSample - 1) ||
+					(addedValue < 0 && FAT_tracker.allBlocks[block].notes[noteLine].freq > 0)) {
+				FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue;
+			}
+    	}
     } else {
 
         if (addedValue < 0) {
