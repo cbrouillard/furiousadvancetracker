@@ -2,13 +2,13 @@
 #include <math.h>
 
 #define SAMPLERATE 16384
-#define LUT_SIZE  64
+#define LUT_SIZE  128
 #define MAX_AMPLITUDE 31
 #define NBNOTES_PERSHAPE 12
 
 char myLut[LUT_SIZE];
 
-#define PRECISION 64
+#define PRECISION 128
 
 const char* notes[NBNOTES_PERSHAPE] = {"C0", "CS0", "D0", "DS0", "E0", "F0", "FS0", "G0", "GS0", "A0", "AS0", "B0"};
 const double freqs[NBNOTES_PERSHAPE] = {261.7, 277.2, 293.7, 311.2, 329.7, 349.3, 370, 392, 415.3, 440, 466.2, 493.9};
@@ -206,6 +206,192 @@ void generate_squareLuts(){
     fclose(fp);
 }
 
+void generate_triangeLuts () {
+    int ii;
+    int jj;
+    FILE *fp= fopen("osc_triangleluts.h", "w");
+
+    fprintf(fp, "#ifndef _SOUND_API_OSC_TRIANGLELUTS_\n");
+    fprintf(fp, "#define _SOUND_API_OSC_TRIANGLELUTS_\n\n");
+
+    fprintf(fp, "#ifndef LUT_PRECISION\n");
+    fprintf(fp, "#define LUT_PRECISION %d\n", PRECISION);
+    fprintf(fp, "#endif\n");
+
+    int bufferOsc = 0;
+    double phase = 0;
+    double bufferFreq = 0;
+    int val = 0;
+
+
+    for (jj=0; jj< NBNOTES_PERSHAPE;jj++){
+
+        // for each freq.
+        fprintf(fp, "\n// %s, freq = %f\n", notes[jj], freqs[jj]);
+        fprintf(fp, "const u32 snd_osc_triangle_%s[LUT_PRECISION] = {\n", notes[jj]);
+
+        bufferFreq = ((LUT_SIZE * freqs[jj]) / SAMPLERATE);
+        phase = 0;
+        for(ii=0; ii<PRECISION; ii++)
+        {
+            bufferOsc = 0;
+
+            if (phase < LUT_SIZE/2){
+                val = (-MAX_AMPLITUDE + (2 * MAX_AMPLITUDE / (LUT_SIZE/2)) * phase);
+            } else {
+                val = (3*MAX_AMPLITUDE - (2 * MAX_AMPLITUDE / (LUT_SIZE/2)) * phase);
+            }
+            bufferOsc |= val;
+            bufferOsc &= 0x000000ff;
+            phase = phase + bufferFreq;
+            if (phase >= LUT_SIZE){
+                phase = phase - LUT_SIZE;
+            }
+
+            if (phase < LUT_SIZE/2){
+                val = (-MAX_AMPLITUDE + (2 * MAX_AMPLITUDE / (LUT_SIZE/2)) * phase);
+            } else {
+                val = (3*MAX_AMPLITUDE - (2 * MAX_AMPLITUDE / (LUT_SIZE/2)) * phase);
+            }
+            bufferOsc |= (val << 8);
+            bufferOsc &= 0x0000ffff;
+            phase = phase + bufferFreq;
+            if (phase >= LUT_SIZE){
+                phase = phase - LUT_SIZE;
+            }
+
+            if (phase < LUT_SIZE/2){
+                val = (-MAX_AMPLITUDE + (2 * MAX_AMPLITUDE / (LUT_SIZE/2)) * phase);
+            } else {
+                val = (3*MAX_AMPLITUDE - (2 * MAX_AMPLITUDE / (LUT_SIZE/2)) * phase);
+            }
+            bufferOsc |= (val << 16);
+            bufferOsc &= 0x00ffffff;
+            phase = phase + bufferFreq;
+            if (phase >= LUT_SIZE){
+                phase = phase - LUT_SIZE;
+            }
+
+            if (phase < LUT_SIZE/2){
+                val = (-MAX_AMPLITUDE + (2 * MAX_AMPLITUDE / (LUT_SIZE/2)) * phase);
+            } else {
+                val = (3*MAX_AMPLITUDE - (2 * MAX_AMPLITUDE / (LUT_SIZE/2)) * phase);
+            }
+            bufferOsc |= (val << 24);
+            phase = phase + bufferFreq;
+            if (phase >= LUT_SIZE){
+                phase = phase - LUT_SIZE;
+            }
+
+            if(ii%8 == 0) {
+                fputs("\n\t", fp);
+            }
+
+            fprintf(fp, "0x%.8X, ", bufferOsc);
+        }
+        fputs("\n};\n", fp);
+
+    }
+
+    fprintf(fp, "\n// pointers\n");
+    fprintf(fp, "const u32* snd_osc_triangle[%d] = {", 12);
+        for (jj=0; jj< 12;jj++) {
+            if(jj%4 == 0) {
+                fputs("\n\t", fp);
+            }
+            fprintf(fp, "snd_osc_triangle_%s, ", notes[jj]);
+        }
+    fputs("\n};\n", fp);
+
+    fprintf(fp, "#endif\n");
+    fclose(fp);
+}
+
+void generate_sawLuts (){
+    int ii;
+    int jj;
+    FILE *fp= fopen("osc_sawluts.h", "w");
+
+    fprintf(fp, "#ifndef _SOUND_API_OSC_SAWLUTS_\n");
+    fprintf(fp, "#define _SOUND_API_OSC_SAWLUTS_\n\n");
+
+    fprintf(fp, "#ifndef LUT_PRECISION\n");
+    fprintf(fp, "#define LUT_PRECISION %d\n", PRECISION);
+    fprintf(fp, "#endif\n");
+
+    int bufferOsc = 0;
+    double phase = 0;
+    double bufferFreq = 0;
+    int val = 0;
+
+    for (jj=0; jj< NBNOTES_PERSHAPE;jj++){
+
+        // for each freq.
+        fprintf(fp, "\n// %s, freq = %f\n", notes[jj], freqs[jj]);
+        fprintf(fp, "const u32 snd_osc_saw_%s[LUT_PRECISION] = {\n", notes[jj]);
+
+        bufferFreq = ((LUT_SIZE * freqs[jj]) / SAMPLERATE);
+        phase = 0;
+        for(ii=0; ii<PRECISION; ii++)
+        {
+            bufferOsc = 0;
+
+            val = MAX_AMPLITUDE - (MAX_AMPLITUDE / (LUT_SIZE/2) * phase);
+            bufferOsc |= val;
+            bufferOsc &= 0x000000ff;
+            phase = phase + bufferFreq;
+            if (phase >= LUT_SIZE){
+                phase = phase - LUT_SIZE;
+            }printf ("ph=%f, V=%d, ", phase, val);
+
+            val = MAX_AMPLITUDE - (MAX_AMPLITUDE / (LUT_SIZE/2) * phase);
+            bufferOsc |= (val << 8);
+            bufferOsc &= 0x0000ffff;
+            phase = phase + bufferFreq;
+            if (phase >= LUT_SIZE){
+                phase = phase - LUT_SIZE;
+            }printf ("ph=%f, V=%d, ", phase, val);
+
+            val = MAX_AMPLITUDE - (MAX_AMPLITUDE / (LUT_SIZE/2) * phase);
+            bufferOsc |= (val << 16);
+            bufferOsc &= 0x00ffffff;
+            phase = phase + bufferFreq;
+            if (phase >= LUT_SIZE){
+                phase = phase - LUT_SIZE;
+            }printf ("ph=%f, V=%d, ", phase, val);
+
+            val = MAX_AMPLITUDE - (MAX_AMPLITUDE / (LUT_SIZE/2) * phase);
+            bufferOsc |= (val << 24);
+            phase = phase + bufferFreq;
+            if (phase >= LUT_SIZE){
+                phase = phase - LUT_SIZE;
+            }printf ("ph=%f, V=%d\n ", phase, val);
+
+            if(ii%8 == 0) {
+                fputs("\n\t", fp);
+            }
+
+            fprintf(fp, "0x%.8X, ", bufferOsc);
+        }
+        fputs("\n};\n", fp);
+
+    }
+
+    fprintf(fp, "\n// pointers\n");
+    fprintf(fp, "const u32* snd_osc_saw[%d] = {", 12);
+        for (jj=0; jj< 12;jj++) {
+            if(jj%4 == 0) {
+                fputs("\n\t", fp);
+            }
+            fprintf(fp, "snd_osc_saw_%s, ", notes[jj]);
+        }
+    fputs("\n};\n", fp);
+
+    fprintf(fp, "#endif\n");
+    fclose(fp);
+
+}
+
 int main()
 {
     int i;
@@ -217,6 +403,8 @@ int main()
 
     generate_squareLuts();
     generate_sinLuts();
+    generate_triangeLuts ();
+    generate_sawLuts ();
 
     return 0;
 }

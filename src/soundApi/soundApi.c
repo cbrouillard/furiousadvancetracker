@@ -139,6 +139,10 @@ void snd_init_soundApi() {
     REG_SOUND3CNT_L = SOUND3BANK32 | SOUND3SETBANK1;
 
     snd_loadWav(0);
+
+    R_TIM0COUNT = 0xffff;
+    R_TIM0CNT = 0x00C3;
+    hel_IntrStartHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sample);
 }
 
 void snd_changeChannelOutput(u8 channelNumber, u8 outputValue) {
@@ -345,10 +349,6 @@ const u8 snd_countAvailableKits() {
 }
 
 void snd_init_kits() {
-    R_TIM0COUNT = 0xffff;
-    R_TIM0CNT = 0x00C3;
-    hel_IntrStartHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sample);
-
     snd_countAvailableKits();
     u8 cpt = 0;
 
@@ -481,18 +481,32 @@ void snd_timerFunc_sample() {
     snd_processSampleA();
     snd_processSampleB();
     snd_processOscillatorA ();
-    //snd_processOscillatorB ();
-    hel_IntrAcknowledge(INT_TYPE_TIM0);
+    snd_processOscillatorB ();
+    //hel_IntrAcknowledge(INT_TYPE_TIM0);
 }
 
-void snd_playOscillatorA (u8 shape, u8 freqN){
+void snd_playOscillatorA (u8 shape, u8 freqN, u8 loopmode, u8 soundlength){
     playSnAOsc = 0;
 
+    oscTimeCounterA = 0;
+    oscSamplerCounterA = 0;
+    snd_oscA_length = loopmode ? soundlength << 4 : NULL_VALUE;
     snd_oscA = (u32*) snd_oscShapes[shape][freqN];
-    oscCounterA = 0;
 
     // go
     playSnAOsc = 1;
+}
+
+void snd_playOscillatorB (u8 shape, u8 freqN, u8 loopmode, u8 soundlength){
+    playSnBOsc = 0;
+
+    oscTimeCounterB = 0;
+    oscSamplerCounterB = 0;
+    snd_oscB_length = loopmode ? soundlength << 4 : NULL_VALUE;
+    snd_oscB = (u32*) snd_oscShapes[shape][freqN];
+
+    // go
+    playSnBOsc = 1;
 }
 
 void snd_playChannelASample(u8 kitId, u8 sampleNumber,

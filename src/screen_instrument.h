@@ -158,7 +158,7 @@ void FAT_screenInstrument_printAllText(u8 type) {
             hel_BgTextPrintF(TEXT_LAYER, 1, 14, 0, "Offset(%) %.2d", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].offset);
             FAT_screenInstrument_showOutput(1, 15, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
 
-            hel_BgTextPrintF(TEXT_LAYER, 16, 12, 0, "Test it!  S%.2x\0", FAT_data_simulator.freq);
+            hel_BgTextPrintF(TEXT_LAYER, 16, 12, 0, "Test it!  #%.2x\0", FAT_data_simulator.freq);
 
             break;
 
@@ -168,7 +168,14 @@ void FAT_screenInstrument_printAllText(u8 type) {
             FAT_screenInstrument_showOscForm (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].wavedutyOrPolynomialStep,
                                                                   88, 32);
             hel_BgTextPrintF(TEXT_LAYER, 1, 5, 0, "Amplitude NA");
-            hel_BgTextPrintF(TEXT_LAYER, 1, 8, 0, "Test it!  S%.2x\0", FAT_data_simulator.freq);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 8, 0, "Timed     %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
+            if (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
+                hel_BgTextPrintF(TEXT_LAYER, 1, 9, 0, "Length    %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
+            } else {
+                hel_BgTextPrint(TEXT_LAYER, 1, 9, 0, "Length    NA");
+            }
+
+            hel_BgTextPrintF(TEXT_LAYER, 1, 12, 0, "Test it!  #%.2x\0", FAT_data_simulator.freq);
             break;
     }
 }
@@ -900,9 +907,14 @@ void FAT_screenInstrument_osc_pressA() {
             FAT_data_instrumentOsc_changeShape(FAT_screenInstrument_currentInstrumentId, addedValue);
             break;
         case 1: // AMPLITUDE
-
             break;
-        case 2: // SIMULATOR
+        case 2: // TIMED
+            FAT_data_instrumentOsc_changeLoopmode(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 3: // LENGTH
+            FAT_data_instrumentOsc_changeSoundLength(FAT_screenInstrument_currentInstrumentId, addedValue);
+            break;
+        case 4: // SIMULATOR
             FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);
             FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
             break;

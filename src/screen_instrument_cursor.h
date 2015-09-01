@@ -47,7 +47,7 @@
 /** \brief Nombre de lignes sur l'écran SAMPLE. */
 #define SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN 9
 /** \brief Nombre de lignes sur l'écran OSC. */
-#define SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN 3
+#define SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN 5
 
 /** \brief Position actuelle du cursor. */
 u8 FAT_screenInstrument_cursorX;
@@ -74,7 +74,7 @@ const u8 INST_WAVE_BLOCK_Y[SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN] = {31, 55, 
 /** \brief Positions des emplacements de paramètre dans l'écran SAMPLE. */
 const u8 INST_SAMPLE_BLOCK_Y[SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN] = {31, 55, 79, 87, 95, 103, 111, 119, 95};
 /** \brief Positions des emplacements de paramètre dans l'écran OSC. */
-const u8 INST_OSC_BLOCK_Y[SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN] = {31, 39, 63};
+const u8 INST_OSC_BLOCK_Y[SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN] = {31, 39, 63, 71, 95};
 
 /**
  * \brief Cache le curseur de tabulation. 
@@ -255,9 +255,13 @@ void FAT_screenInstrument_osc_commitCursorMove () {
     switch (FAT_screenInstruments_currentSelectedLine) {
         case 0:
         case 1:
+        case 3:
             hel_ObjSetXY(FAT_cursor2_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
         case 2:
+            hel_ObjSetXY(FAT_cursor1_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            break;
+        case 4:
             hel_ObjSetXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
     }
@@ -434,15 +438,22 @@ void FAT_screenInstrument_osc_displayGoodCursor() {
     switch (FAT_screenInstruments_currentSelectedLine) {
         case 0:
         case 1:
+        case 3:
             FAT_cursors_showCursor2();
             FAT_cursors_hideCursor1();
             FAT_cursors_hideCursor3();
             break;
         case 2:
+            FAT_cursors_showCursor1();
+            FAT_cursors_hideCursor2();
+            FAT_cursors_hideCursor3();
+            break;
+        case 4:
             FAT_cursors_showCursor3();
             FAT_cursors_hideCursor1();
             FAT_cursors_hideCursor2();
             break;
+
     }
 }
 

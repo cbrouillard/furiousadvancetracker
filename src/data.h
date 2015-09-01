@@ -141,6 +141,10 @@
  */
 #define INSTRUMENT_PULSE_LENGTH_MAX 64
 /**
+ * \brief Valeur de "soundlength" maximum pour un instrument de type OSC.
+ */
+#define INSTRUMENT_OSC_LENGTH_MAX 255
+/**
  * \brief Valeur de "sweep" maximum pour un instrument de type PULSE.
  */
 #define INSTRUMENT_PULSE_SWEEP_MAX 128
@@ -1797,6 +1801,19 @@ void FAT_data_instrumentNoise_changeSoundLength(u8 instrumentId, s8 value) {
     FAT_data_instrumentPulse_changeSoundLength(instrumentId, value);
 }
 
+void FAT_data_instrumentOsc_changeSoundLength (u8 instrumentId, s8 value) {
+   if (
+               (value < 0 && FAT_tracker.allInstruments[instrumentId].soundlength > (-value - 1)) ||
+               (value > 0 && FAT_tracker.allInstruments[instrumentId].soundlength < INSTRUMENT_OSC_LENGTH_MAX - value)
+               ) {
+       FAT_tracker.allInstruments[instrumentId].soundlength += value;
+   } else if (value < 0){
+       FAT_tracker.allInstruments[instrumentId].soundlength  = 0;
+   } else if (value > 0){
+       FAT_tracker.allInstruments[instrumentId].soundlength  = INSTRUMENT_OSC_LENGTH_MAX;
+   }
+}
+
 /**
  * \brief Change le paramètre "soundlength" (durée du son) pour un instrument de type WAVE.
  *  
@@ -1895,6 +1912,10 @@ void FAT_data_instrumentWave_changeLoopmode(u8 instrumentId, s8 value) {
  */
 void FAT_data_instrumentNoise_changeLoopmode(u8 instrumentId, s8 value) {
     FAT_data_instrumentPulse_changeLoopmode(instrumentId, value);
+}
+
+void FAT_data_instrumentOsc_changeLoopmode (u8 instrumentId, s8 value) {
+   FAT_data_instrumentPulse_changeLoopmode(instrumentId, value);
 }
 
 /**

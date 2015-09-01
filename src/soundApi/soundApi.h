@@ -214,7 +214,25 @@ void snd_playSampleOnChannelAById(u8 kitId, u8 sampleNumber);
  */
 void snd_playChannelASample(u8 kitId, u8 sampleNumber, u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset, u8 output);
 
-void snd_playOscillatorA (u8 shape, u8 freqN);
+/**
+ * \brief Joue un son oscillator sur le canal A en appliquant quelques paramètres.
+ *
+ * @param shape forme de l'onde (sin, square, triangle, saw)
+ * @param freqN le numéro de fréquence à jouer
+ * @param loopmode permet d'activer le mode timing 1 = actif 0 = inactif
+ * @param soundlength si timedMode = 1 alors ce paramètre permet de spécifier la longeur du sample 0 = 0% 64 = 100%
+ */
+void snd_playOscillatorA (u8 shape, u8 freqN, u8 loopmode, u8 soundlength);
+
+/**
+ * \brief Joue un son oscillator sur le canal B en appliquant quelques paramètres.
+ *
+ * @param shape forme de l'onde (sin, square, triangle, saw)
+ * @param freqN le numéro de fréquence à jouer
+ * @param loopmode permet d'activer le mode timing 1 = actif 0 = inactif
+ * @param soundlength si timedMode = 1 alors ce paramètre permet de spécifier la longeur du sample 0 = 0% 64 = 100%
+ */
+void snd_playOscillatorB (u8 shape, u8 freqN, u8 loopmode, u8 soundlength);
 
 /**
  * \brief Joue un sample sur le canal directsound B. Attention, il est nécessaire d'avoir
