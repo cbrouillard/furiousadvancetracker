@@ -491,6 +491,7 @@ void snd_timerFunc_sample() {
 }
 
 void snd_playOscillatorA (u8 shape, u8 freqN, u8 loopmode, u8 soundlength){
+    playSnASample = 0;
     playSnAOsc = 0;
 
     oscTimeCounterA = 0;
@@ -503,6 +504,7 @@ void snd_playOscillatorA (u8 shape, u8 freqN, u8 loopmode, u8 soundlength){
 }
 
 void snd_playOscillatorB (u8 shape, u8 freqN, u8 loopmode, u8 soundlength){
+    playSnBSample = 0;
     playSnBOsc = 0;
 
     oscTimeCounterB = 0;
@@ -516,7 +518,7 @@ void snd_playOscillatorB (u8 shape, u8 freqN, u8 loopmode, u8 soundlength){
 
 void snd_playChannelASample(u8 kitId, u8 sampleNumber,
         u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset, u8 output) {
-
+    playSnAOsc = 0;
     kit* kit = kits[kitId];
     if (kit) {
 
@@ -559,6 +561,7 @@ void snd_playChannelASample(u8 kitId, u8 sampleNumber,
 
 void snd_playChannelBSample(u8 kitId, u8 sampleNumber,
         u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset, u8 output) {
+    playSnBOsc = 0;
     kit* kit = kits[kitId];
     if (kit) {
 

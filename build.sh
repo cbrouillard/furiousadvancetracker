@@ -4,7 +4,7 @@ VERSION="1.1.0"
 echo "### Nettoyage"
 make clean
 find . -name "*.o" -exec rm {} \;
-find . -name "*.s" -exec rm {} \;
+find . -name "*.s" -exec rm {} \;
 find . -name "*.gba" -exec rm {} \;
 find . -name "*.elf" -exec rm {} \;
 rm src/gfx/raw/* -rf
