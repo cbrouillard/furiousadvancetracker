@@ -1152,9 +1152,9 @@ void FAT_data_note_changeValue(u8 channel, u8 block, u8 noteLine, s8 addedValue)
 
     instrument* inst = &(FAT_tracker.allInstruments[FAT_tracker.allBlocks[block].notes[noteLine].instrument]);
     if (channel >= INSTRUMENT_TYPE_SAMPLEA) {
-    	if (channel > INSTRUMENT_TYPE_SAMPLEB){
+    	if (inst->type > INSTRUMENT_TYPE_SAMPLEB){
     		// OSCILLATORS
-    		if ((addedValue > 0 && FAT_tracker.allBlocks[block].notes[noteLine].freq < NB_OSC_NOTES_PER_SHAPE - 1) ||
+    		if ((addedValue > 0 && FAT_tracker.allBlocks[block].notes[noteLine].freq < NB_FREQUENCES - 1) ||
 					(addedValue < 0 && FAT_tracker.allBlocks[block].notes[noteLine].freq > 0)) {
 				FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue;
 			}

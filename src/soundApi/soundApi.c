@@ -143,6 +143,11 @@ void snd_init_soundApi() {
     R_TIM0COUNT = 0xffff;
     R_TIM0CNT = 0x00C3;
     hel_IntrStartHandler(INT_TYPE_TIM0, (void*) &snd_timerFunc_sample);
+
+    playSnASample = 0;
+    playSnBSample = 0;
+    playSnAOsc = 0;
+    playSnBOsc = 0;
 }
 
 void snd_changeChannelOutput(u8 channelNumber, u8 outputValue) {
