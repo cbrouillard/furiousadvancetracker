@@ -142,6 +142,13 @@ const unsigned char CHARORDER[] =
 
 u8 ATTR_EWRAM ATTR_ALIGNED(4) g_ObjSystemBuffer[HEL_SUBSYSTEM_OBJ_REQUIREDMEMORY];
 
+// Reserve memory for the Map-System. This buffer
+// is used to manage internal states of the Map-System.
+// You can achieve a little performance increase when you
+// store it in IWRAM, but keep in mind, IWRAM is very limited!
+// The recommended memory location is EWRAM.
+u8 ATTR_EWRAM ATTR_ALIGNED(4) g_MapSystemBuffer[HEL_SUBSYSTEM_MAP_REQUIREDMEMORY];
+
 /**
  * \brief Initialisation de HAM et d'autres données propres à FAT. 
  * 
@@ -162,6 +169,7 @@ void FAT_init() {
 
     hel_BgSetMode(0);
 
+    hel_MapInit(g_MapSystemBuffer);
     hel_BgTextInit((void*) g_BgTextSystemMemory);
     hel_ObjInit(g_ObjSystemBuffer);
 
@@ -177,7 +185,7 @@ void FAT_init() {
     // mapset using regular HAMlib functions
     //ham_bg[TEXT_LAYER].ti = ham_InitTileSet(ResData(RES_TEXT_RAW), RES_TEXT_RAW_SIZE16, 1, 1);
     ham_bg[TEXT_LAYER].ti = ham_InitTileSet((void*) ResData(RES_TEXT_RAW), RES_TEXT_RAW_SIZE16, 1, 1);
-    ham_bg[TEXT_LAYER].mi = ham_InitMapEmptySet((u8) 1024, 0);
+    ham_bg[TEXT_LAYER].mi = ham_InitMapEmptySet((u8) 640, 0);
 
     hel_BgTextCreate(
             TEXT_LAYER, // BgNo
@@ -229,16 +237,25 @@ void FAT_initIntroPalette() {
     //hel_PalBgLoad256(ResData16(RES_INTRO_PAL));
 }
 
+#define RAM_SLOTS (224)
+
+  u16 ATTR_EWRAM BufferA[451];
+  u16 ATTR_EWRAM BufferB[RAM_SLOTS*3];
 /**
  * \brief Méthode pour afficher un simple écran "titre" avec une boucle infinie en
  * attente du bouton "START". 
  */
 void FAT_showIntro() {
 
-    FAT_reinitScreen();
-
     ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_INTRO_RAW), RES_INTRO_RAW_SIZE16, 1, 1);
-    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_INTRO_MAP), 640, 0, 0);
+    // Create a map for background 0
+    hel_MapCreate(SCREEN_LAYER,        // Background number
+                  32,   // width in tiles
+                  20,   // height in tiles
+                  ResData(RES_INTRO_MAP),   // Pointer to source MapData
+                  sizeof(u16),                  // DataTypeSize of one element from Source MapData
+                  MAP_FLAGS_DEFAULT);           // Flags to control map behaviour
+
     ham_InitBg(SCREEN_LAYER, 1, 3, FALSE);
 
     hel_BgTextPrintF(TEXT_LAYER, 23, 16, 0, "%.3dkits", snd_countAvailableKits());
