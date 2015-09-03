@@ -51,7 +51,7 @@ void generate_sinLuts (){
         fprintf(fp, "\n// %s, freq = %f\n", notes[jj], freqs[jj]);
         fprintf(fp, "const u32 snd_osc_sine_%s[LUT_PRECISION] = {\n", notes[jj]);
 
-        bufferFreq = ((LUT_SIZE * freqs[jj]) / SAMPLERATE);
+        bufferFreq = ((2*M_PI * freqs[jj]) / SAMPLERATE);
         //printf("Delta = %f\n", bufferFreq);
         //printf ("----\n");
         phase = 0;
@@ -59,40 +59,35 @@ void generate_sinLuts (){
         {
             bufferOsc = 0;
 
-	        val = roundf (myLut[lround(phase)]);
+	        val = roundf (MAX_AMPLITUDE * sinf(phase));
             bufferOsc |= val;
-            //printf("%.8X (p=%f) (lut=%x), ", bufferOsc, phase, myLut[(int)phase]);
             phase += bufferFreq;
-            if (phase >= LUT_SIZE){
-                phase = phase - LUT_SIZE;
+            if (phase > 2*M_PI){
+                phase = phase - 2*M_PI;
             }
             bufferOsc &= 0x000000ff;
 
-	        val = roundf (myLut[lround(phase)]);
+	        val = roundf (MAX_AMPLITUDE * sinf(phase));
             bufferOsc |= (val << 8);
-            //printf("%.8X (p=%f) (lut=%x), ", bufferOsc, phase, myLut[(int)phase]);
             phase += bufferFreq;
-            if (phase >= LUT_SIZE){
-                phase = phase - LUT_SIZE;
+            if (phase > 2*M_PI){
+                phase = phase - 2*M_PI;
             }
             bufferOsc &= 0x0000ffff;
 
-            val = roundf (myLut[lround(phase)]);
+            val = roundf (MAX_AMPLITUDE * sinf(phase));
             bufferOsc |= (val << 16);
-            //printf("%.8X (p=%f) (lut=%x), ", bufferOsc, phase, myLut[(int)phase]);
             phase += bufferFreq;
-            if (phase >= LUT_SIZE){
-                phase = phase - LUT_SIZE;
+            if (phase > 2*M_PI){
+                phase = phase - 2*M_PI;
             }
             bufferOsc &= 0x00ffffff;
 
-
-	        val = roundf (myLut[lround(phase)]);
+	        val = roundf (MAX_AMPLITUDE * sinf(phase));
             bufferOsc |= (val << 24);
-            //printf("%.8X (p=%f) (lut=%x)\n", bufferOsc, phase, myLut[(int)phase]);
             phase += bufferFreq;
-            if (phase >= LUT_SIZE){
-                phase = phase - LUT_SIZE;
+            if (phase > 2*M_PI){
+                phase = phase - 2*M_PI;
             }
 
             if(ii%8 == 0) {
