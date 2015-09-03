@@ -231,24 +231,13 @@ void FAT_init() {
 }
 
 /**
- * \brief Charge la palette réservée pour l'écran d'intro. 
- */
-void FAT_initIntroPalette() {
-    //hel_PalBgLoad256(ResData16(RES_INTRO_PAL));
-}
-
-#define RAM_SLOTS (224)
-
-  u16 ATTR_EWRAM BufferA[451];
-  u16 ATTR_EWRAM BufferB[RAM_SLOTS*3];
-/**
  * \brief Méthode pour afficher un simple écran "titre" avec une boucle infinie en
  * attente du bouton "START". 
  */
 void FAT_showIntro() {
 
     ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_INTRO_RAW), RES_INTRO_RAW_SIZE16, 1, 1);
-    // Create a map for background 0
+    // Create a map for background
     hel_MapCreate(SCREEN_LAYER,        // Background number
                   32,   // width in tiles
                   20,   // height in tiles
@@ -281,8 +270,6 @@ void FAT_showIntro() {
         // Wait for Vertical Blank
         hel_SwiVBlankIntrWait();
     }
-    
-    //FAT_initScreenPalette();
 }
 
 /**

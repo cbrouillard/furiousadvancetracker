@@ -33,7 +33,6 @@ include $(HAMDIR)/system/standard-targets.mak
 # custom  Makefile targets start here
 ######################################
 .PHONY gfx: makefile
-	#$(HAMDIR)/tools/linux/gfx2gba -t8 -m -fraw -osrc/gfx/raw -pintro.pal src/gfx/img/screens/intro.bmp
 	$(HAMDIR)/tools/linux/gfx2gba -t8 -m -fraw -osrc/gfx/raw -pscreen.pal src/gfx/img/screens/screen*.bmp src/gfx/img/text.bmp src/gfx/img/screens/intro.bmp
 	$(HAMDIR)/tools/linux/gfx2gba -t8 -D -c16 -fraw -osrc/gfx/raw -psprites.pal src/gfx/img/sprites/*.bmp
 	wine $(HAMDIR)/tools/win32/katie.exe --output-asm-arm --output-h --output-h-filename src/gfx/ResourceData.h --output-asm-arm-filename src/gfx/ResourceData.s src/gfx/raw/*.*
