@@ -221,7 +221,7 @@ void FAT_dialog_keyboardShow (u8 fromTrackNum){
     FAT_cursors_hideAllCursors();
 
     ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_DIALOG_KEYBOARD_RAW), RES_SCREEN_DIALOG_KEYBOARD_RAW_SIZE16, 1, 1);
-    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_DIALOG_KEYBOARD_MAP), 1024, 0, 0);
+    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_DIALOG_KEYBOARD_MAP), 640, 0, 0);
     ham_InitBg(DIALOG_LAYER, 1, 1, 0);
 
     hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_dialog_keyboardMainFunc);

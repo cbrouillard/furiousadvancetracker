@@ -115,7 +115,7 @@ void FAT_yesno_close() {
 void FAT_yesno_dialogSave() {
 
     ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_DIALOG_SAVE_RAW), RES_SCREEN_DIALOG_SAVE_RAW_SIZE16, 1, 1);
-    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_DIALOG_SAVE_MAP), 1024, 0, 0);
+    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_DIALOG_SAVE_MAP), 640, 0, 0);
     ham_InitBg(DIALOG_LAYER, 1, 0, 0);
 
     hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogSave_mainFunc);
@@ -128,7 +128,7 @@ void FAT_yesno_dialogSave() {
 void FAT_yesno_dialogLoad() {
 
     ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_DIALOG_LOAD_RAW), RES_SCREEN_DIALOG_LOAD_RAW_SIZE16, 1, 1);
-    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_DIALOG_LOAD_MAP), 1024, 0, 0);
+    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_DIALOG_LOAD_MAP), 640, 0, 0);
     ham_InitBg(DIALOG_LAYER, 1, 0, 0);
 
     hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogLoad_mainFunc);
@@ -142,7 +142,7 @@ void FAT_yesno_dialogLoad() {
  */
 void FAT_yesno_dialogNewProject() {
     ham_bg[DIALOG_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_DIALOG_NEW_RAW), RES_SCREEN_DIALOG_NEW_RAW_SIZE16, 1, 1);
-    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_DIALOG_NEW_MAP), 1024, 0, 0);
+    ham_bg[DIALOG_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_DIALOG_NEW_MAP), 640, 0, 0);
     ham_InitBg(DIALOG_LAYER, 1, 0, 0);
 
     hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &FAT_yesno_dialogNewProject_mainFunc);

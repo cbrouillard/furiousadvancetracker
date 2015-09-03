@@ -176,7 +176,7 @@ void FAT_screenBlocks_init(u8 fromScreenId) {
 
     // initialisation du fond (interface)
     ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_BLOCKS_RAW), RES_SCREEN_BLOCKS_RAW_SIZE16, 1, 1);
-    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_BLOCKS_MAP), 1024, 0, 0);
+    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_BLOCKS_MAP), 640, 0, 0);
     ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
     // affichage d'un peu de texte

@@ -169,6 +169,10 @@ void FAT_init() {
     hel_PadSetRepeatDelay(PAD_BUTTON_R | PAD_BUTTON_L | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT | PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_A | PAD_BUTTON_B | PAD_BUTTON_START, 1);
     hel_PadSetRepeatRate(PAD_BUTTON_R | PAD_BUTTON_L | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT | PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_A | PAD_BUTTON_B | PAD_BUTTON_START, 10);
 
+    // initialisation des palettes.
+    FAT_initSpritePalette();
+    FAT_initScreenPalette();
+
     // Initialize the tileset and an empty
     // mapset using regular HAMlib functions
     //ham_bg[TEXT_LAYER].ti = ham_InitTileSet(ResData(RES_TEXT_RAW), RES_TEXT_RAW_SIZE16, 1, 1);
@@ -187,19 +191,10 @@ void FAT_init() {
 
     ham_InitBg(TEXT_LAYER, TRUE, 0, FALSE);
 
-    hel_FxInit();
-    hel_FxSetMode(  FX_LAYER_SELECT(0, 0, 0, 0, 1, 0),
-                    FX_LAYER_SELECT(0, 0, 1, 1, 0, 0),
-                    FX_MODE_ALPHABLEND);
-    hel_FxSetAlphaLevel(7, 0);
-
-    hel_IntrStartHandler(INT_TYPE_VBL, (void*) &VBLInterruptHandler);
-
-    // initialisation des palettes.
-    FAT_initSpritePalette();
-
     // initialisation de l'écran "Popup" (la map de déplacement)
     FAT_popup_init();
+
+    hel_IntrStartHandler(INT_TYPE_VBL, (void*) &VBLInterruptHandler);
 
     // initialisation des curseurs
     FAT_initCursor1();
@@ -231,7 +226,7 @@ void FAT_init() {
  * \brief Charge la palette réservée pour l'écran d'intro. 
  */
 void FAT_initIntroPalette() {
-    hel_PalBgLoad256(ResData16(RES_INTRO_PAL));
+    //hel_PalBgLoad256(ResData16(RES_INTRO_PAL));
 }
 
 /**
@@ -239,22 +234,16 @@ void FAT_initIntroPalette() {
  * attente du bouton "START". 
  */
 void FAT_showIntro() {
+
     FAT_reinitScreen();
 
-    FAT_initIntroPalette();
-
     ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_INTRO_RAW), RES_INTRO_RAW_SIZE16, 1, 1);
-    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_INTRO_MAP), 1024, 0, 0);
+    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_INTRO_MAP), 640, 0, 0);
+    ham_InitBg(SCREEN_LAYER, 1, 3, FALSE);
 
-    ham_InitBg(SCREEN_LAYER, 1, 3, 0);
+    hel_BgTextPrintF(TEXT_LAYER, 23, 16, 0, "%.3dkits", snd_countAvailableKits());
 
-#ifdef DEBUG_ON
-    hel_BgTextPrint(TEXT_LAYER, 1, 14, 0, "DEBUG ON");
-    hel_BgTextPrintF(TEXT_LAYER, 1, 16, 0, "SIZE %d octets", (SIZEOF_8BIT (tracker)));
-#endif
-    hel_BgTextPrintF(TEXT_LAYER, 22, 19, 0, "%.3d kits", snd_countAvailableKits());
-
-    while (1) {
+    for (;;) {
 
         hel_PadCapture();
 
@@ -276,8 +265,7 @@ void FAT_showIntro() {
         hel_SwiVBlankIntrWait();
     }
     
-    ham_InitBg(SCREEN_LAYER, 0, 3, 0);
-    FAT_initScreenPalette();
+    //FAT_initScreenPalette();
 }
 
 /**
