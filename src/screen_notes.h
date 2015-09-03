@@ -387,7 +387,7 @@ void FAT_screenNotes_pressOrHeldA() {
                         FAT_screenNotes_currentSelectedLine, -1);
             }
 
-            if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying) {
+            if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying && hel_PadQuery()->Pressed.A) {
                 FAT_data_note_previewNote(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_currentSelectedLine);
             }

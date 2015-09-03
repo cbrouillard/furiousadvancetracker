@@ -775,7 +775,9 @@ void FAT_screenInstrument_pulse_pressA() {
             break;
         case 8: // SIMULATOR
             FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);
-            FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
+            if (hel_PadQuery()->Pressed.A){
+                FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
+            }
 
             break;
     }
@@ -813,7 +815,9 @@ void FAT_screenInstrument_wave_pressA() {
             break;
         case 7: // SIMULATOR
             FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);
-            FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
+            if (hel_PadQuery()->Pressed.A){
+                FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
+            }
 
             break;
     }
@@ -851,7 +855,9 @@ void FAT_screenInstrument_noise_pressA() {
             break;
         case 7: // SIMULATOR
             FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);
-            FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
+            if (hel_PadQuery()->Pressed.A){
+                FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
+            }
 
             break;
     }
@@ -894,7 +900,9 @@ void FAT_screenInstrument_sample_pressA() {
         }
     } else{
         FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);
-        FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
+        if (hel_PadQuery()->Pressed.A){
+            FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
+        }
     }
 
     FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
@@ -916,7 +924,9 @@ void FAT_screenInstrument_osc_pressA() {
             break;
         case 4: // SIMULATOR
             FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);
-            FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
+            if (hel_PadQuery()->Pressed.A){
+                FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
+            }
             break;
     }
 

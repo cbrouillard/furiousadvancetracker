@@ -315,7 +315,7 @@ void FAT_screenComposer_pressOrHeldA() {
 					}
                 }
 
-                if (FAT_data_isPreviewEnabled()) {
+                if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying && hel_PadQuery()->Pressed.A) {
                     FAT_data_composer_previewNote(realLine);
                 }
 
@@ -456,10 +456,6 @@ void FAT_screenComposer_switchLocking() {
  * teste elle même l'appui sur les touches.
  */
 void FAT_screenComposer_playAffectedNotes() {
-    //    if (FAT_tracker.composer.keyRepeat) {
-    //        iCanPressAKey = 0;
-    //    }
-
     if (hel_PadQuery()->Pressed.Start) {
         FAT_screenComposer_switchLocking();
     }
@@ -495,10 +491,6 @@ void FAT_screenComposer_playAffectedNotes() {
     if (hel_PadQuery()->Pressed.Left) {
         FAT_player_playComposerNote(SCREENCOMPOSER_BTN_LEFT);
     }
-
-    //    if (FAT_tracker.composer.keyRepeat || iCanPressAKey == 0) {
-    //        FAT_keys_waitForAnotherKeyTouch();
-    //    }
 }
 
 #endif	/* SCREEN_COMPOSER_H */
