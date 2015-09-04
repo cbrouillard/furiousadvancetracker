@@ -403,12 +403,28 @@ void generate_sawLuts (){
 
 int main()
 {
+    FILE *fp= fopen("generic_sinlut.h", "w");
+    fprintf(fp, "#ifndef _SOUND_API_SINLUT_\n");
+    fprintf(fp, "#define _SOUND_API_SINLUT_\n\n");
+
+    fprintf(fp, "#ifndef LUT_SIZE\n");
+    fprintf(fp, "#define LUT_SIZE %d\n", LUT_SIZE);
+    fprintf(fp, "#endif\n\n");
+
+    fprintf(fp, "const s8 snd_sin_lut[LUT_SIZE] = {\n");
     int i;
     for (i = 0; i < LUT_SIZE; ++i) {
         myLut[i] = (float) MAX_AMPLITUDE * sinf(2.0f * M_PI * (float)i / LUT_SIZE);
-        printf ("%f,", myLut[i]);
+        if(i%8 == 0) {
+            fputs("\n\t", fp);
+        }
+
+        fprintf(fp, "%d, ", (int) lround(myLut[i]));
+
     }
-    printf("\n");
+    fputs("\n};\n", fp);
+    fprintf(fp, "#endif\n");
+    fclose(fp);
 
     generate_squareLuts();
     generate_sinLuts();

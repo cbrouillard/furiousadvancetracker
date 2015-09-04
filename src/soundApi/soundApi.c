@@ -19,7 +19,7 @@ typedef unsigned int u32;
 #include <stdio.h>
 
 #include "soundApi.h"
-#include "sine.h"
+#include "luts/generic_sinlut.h"
 
 #define NULL_VALUE 0xff
 
@@ -443,11 +443,24 @@ void snd_resetFIFOB() {
     REG_SOUNDCNT_H |= 1 << 0xF;
 }
 
+volatile u32 bufferFM;
+
+void snd_FMSampleA (){
+    // formule : registreGBA = Asin(2PIFc + Isin (2PIFm + thetam) + thetac)
+    // avec A = variable, I variable, Fc=carrier (mon sample), Fm=modulator (mon oscillateur), thetam=variable(0), thethac=variable(0)
+    //bufferFM |= snd_sin_lut [6 * (snASample[snASampleOffset >> 2] & 0x000000ff )+ (1 * snd_sin_lut[6 * (snd_osc_sine_C3[oscSamplerCounterA] & 0x000000ff)])];
+    //bufferFM |= snd_sin_lut [6 * (snASample[snASampleOffset >> 2] & 0x000000ff )+ (1 * snd_sin_lut[6 * (snd_osc_sine_C3[oscSamplerCounterA] & 0x000000ff)])];
+    //bufferFM |= snd_sin_lut [6 * (snASample[snASampleOffset >> 2] & 0x000000ff )+ (1 * snd_sin_lut[6 * (snd_osc_sine_C3[oscSamplerCounterA] & 0x000000ff)])];
+    //bufferFM |= snd_sin_lut [6 * (snASample[snASampleOffset >> 2] & 0x000000ff )+ (1 * snd_sin_lut[6 * (snd_osc_sine_C3[oscSamplerCounterA] & 0x000000ff)])];
+    bufferFM = snASample[snASampleOffset >> 2];
+}
+
 void snd_processSampleA() {
     if (playSnASample) {
         REG_SOUNDCNT_H &= ~(1 << 0xB);
         if (!(snASampleOffset & 3)) {
-            SND_REG_SGFIFOA = snASample[snASampleOffset >> 2]; // u32
+            snd_FMSampleA();
+            SND_REG_SGFIFOA = bufferFM; // u32
         }
         snASampleOffset+=snASpeed;
         //HEL_DEBUG_MSG ("o: %d s: %d", snASampleOffset, snASmpSize);
