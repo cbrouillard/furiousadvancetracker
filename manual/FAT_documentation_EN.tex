@@ -310,51 +310,53 @@
 
     \medskip The better choice is the ezflashI.
 
-    \subsection{Changements pour la \fatversion}
+    \subsection{Changelog for \fatversion}
     
-    Liste des changements pour cette version de \FAT: \medskip
+    Changelog for this \FAT's version: \medskip
     \begin{itemize}
-        \item{la gestion des samples a été implémentée : il est possible de les lancer depuis les channels SNA et SNB}
-        \item{la gestion des kits fait ses premier pas: branchez à chaud vos samples dans la ROM ! Faites le manuellement ou utilisez le site web dédié.}
-        \item{apparition et implémentation de l'écran LIVE : jouez vos tracks sur scène !}
-	\item{la sauvegarde des tracks se fait maintenant de manière compressée (enfin. RLE. Ce qui n'est pas un foudre de compression)}
-	\item{la gestion du tempo a été revue}
-        \item{refonte complète de la gestion des touches : c'est plus smooth.}
-  	\item{de gros chantiers techniques ont été menés pour : limiter l'utilisation mémoire, revoir les palettes, nettoyer un peu tout le bazar qu'était devenu le code}
+        \item{samples management is on : you can launch it on the SNA or SNB channel}
+        \item{kits management is also on the way ! hotplug all your beloved samples in the ROM ! You can do it handly or simply use the dedicated website.}
+        \item{a new screen appeared : the LIVE screen. Play your tracks on scene !}
+	    \item{save is now RLE compressed}
+	    \item{tempo management has been reworked}
+        \item{keystrocke management is better now}
+  	    \item{a lot of technical code refactoring has also been done !}
     \end{itemize}
     
-    \subsection{Roadmap pour la version suivante}
+    \subsection{Next version roadmap}
     
-    La version suivante sera la \fatnextversion. \medskip    
+    The next version should be \fatnextversion. \medskip
     \begin{itemize}
-        \item{ajout de commandes}
-        \item{stabilisation générale}
-        \item{gestion de courbes détaillées dans le channel WAV}
-        \item{recherche de documentation pour implémenter la synthèse FM (si vous en avez je suis preneur) afin de moduler les samples et les faire sonner différemment.
-                    L'objectif serait de se rapprocher du son de Nanoloop.}
+        \item{new commands}
+        \item{more stability}
+        \item{WAV's voice fine tune}
+        \item{seeking some help for synth FM}
     \end{itemize}
     
-    \subsection{Premier son}
+    \subsection{First sound}
 
-    Commençons simple ! Nous allons poser notre premier son dans \FAT.\medskip
+    Let's start easy ! We gonna play our first sound with \FAT.\medskip
     
-    Lorsque \FAT démarre, c'est l'écran SONG qui apparaît en premier. Ne bougez pas le curseur, appuyez simplement une première fois sur A. Un "00" apparait en haut a gauche du tableau: c'est une séquence. 
+    When \FAT starts, the SONG screen appears first. Don't move the curser, simply press on 'A' button.
+    A "00" magically appears: this is a {\bf sequence}.
     
-    \Image{images/screen_song}{1.0}{L'écran SONG}
+    \Image{images/screen_song}{1.0}{SONG screen}
     
-    Pressez ensuite SELECT (laissez la touche enfoncée) et déplacez vous d'un écran vers la droite: l'interface change. 
+    Press the SELECT button (hold it) et move to the right only once : the interface change.
+
+    \Image{images/screen_popup}{1.0}{POPUP screen}
+
+    Now, without to move the cursor, press again on the 'A' button. A new "00" appears but this time, it's a {\bf block}.
+
+    \Image{images/screen_blocks}{1.0}{BLOCKS screen}
+
+    Press SELECT (hold it) and move to the right. Welcome to a new screen !
+    Press 'A' another time : here is your first {\bf note} !
+    Let's hear it : simply press START. \FAT is currently playing your first track on a GBA. Enjoy.
+
+    \Image{images/screen_notes}{1.0}{NOTES screen - press START !}
     
-    \Image{images/screen_popup}{1.0}{L'écran POPUP}
-    
-    Sans bouger le curseur, appuyez une fois sur A: un nouveau "00" apparait. Cette fois-ci il s'agit d'un block. 
-    
-    \Image{images/screen_blocks}{1.0}{L'écran BLOCKS}
-        
-    Pressez à nouveau SELECT (restez appuyé) et déplacez vous encore d'un cran vers la droite. L'interface a encore changé ! Appuyez une dernière fois sur A : un "C 3" apparait. Votre première note ! Appuyez sur START : voici votre premier son avec \FAT sur une Gameboy Advance !
-    
-    \Image{images/screen_notes}{1.0}{L'écran NOTES - appuyez sur START !}    
-    
-    \subsection{Structure des données}
+    \subsection{Data structure}
     
     Nous avons abordé les notions de "séquences", "blocks" et de "notes". \FAT est globalement organisé de la même façon qu'LSDJ:
     \begin{itemize}
