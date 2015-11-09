@@ -357,45 +357,51 @@
     \Image{images/screen_notes}{1.0}{NOTES screen - press START !}
     
     \subsection{Data structure}
-    
-    Nous avons abordé les notions de "séquences", "blocks" et de "notes". \FAT est globalement organisé de la même façon qu'LSDJ:
+
+    Ok, we have the "sequences", "blocks" and "notes" notions in mind. \FAT is globally organized the same as LSDJ :
     \begin{itemize}
-        \item{un tableau de séquences sur 6 colonnes: la GBA sait jouer 6 sons en même temps.}
-        \item{dans chaque séquence, un nombre défini de blocks (16 maximum)}
-        \item{dans chaque block, les notes ! 16 maximum.}
+        \item{a sequences table on 6 columns : GBA can natively play 6 sounds at the same time.}
+        \item{for each sequence, we have 16 blocks.}
+        \item{for each block, we have 16 notes.}
     \end{itemize}\medskip
+
+    The way to organize all the data is like "russians dolls". Sequences contains blocks which themselves contains notes.
+    When \FAT is playing a sequence, it's running all blocks in it one after others.
+
+    In order to avoid each notes ring like others, we "plug" an "instrument" on it.
+    Each instrument provides you some parameters.
+    If you change instrument's parameters, then your notes will ring differently.
+    You also have to know that \FAT provides you several types of instruments ! allowing you to make differents things on the GBA's channels.
+
+    \subsection{Technical data}
+
+    The GameboyAdvance provide us 4 "analogic" channels in order to generate sounds and noises.
+    These channels are almost the same as on the first Gameboy (the greybrick).
+    In addition, GBA has 2 "numeric" channels : use them to play some elaborate sounds.
+
+    GBA's speaker is mono ! You'll have to plug some earphones to enjoy \FAT's stereo capacities.
     
-    La façon d'organiser une chanson ressemble un peu au principe de "poupées russes". Les séquences contiennent des blocks qui eux même embarquent les notes. Quand \FAT lit une séquence, il passe d'un block à l'autre et lit toutes les notes une par une.\medskip
-    
-    Pour éviter que chaque note sonne de la même façon, on les "branche" sur des "instruments". Chaque instrument contient un certain nombre de paramètres. Si vous changez les valeurs de ces paramètres, alors la note sonnera différemment. Il faut également savoir qu'il existe plusieurs types d'instruments : les canaux sonores de la GBA permettent de faire des choses différentes sur chacun d'eux.
-    
-    \subsection{Données techniques de la Gameboy Advance}
-    
-    La GameboyAdvance fournit 4 canaux "analogiques" pour la génération de sons et de bruits. Ces canaux sont sensiblement les mêmes que ceux présents dans la Gameboy première du nom. La GBA propose en plus 2 canaux "numériques": ils peuvent être utilisés afin de jouer des sons plus compliqués. Attention, la Gameboy ne "génère" plus le son en passant par ces 2 derniers canaux: on s'éloigne ainsi de l'esprit "chiptunes".
-    
-    La GBA ne possède qu'un haut-parleur mono. Si vous souhaitez profiter des possibilités stéréo de \FAT, il vous faudra brancher un casque sur la sortie prévue à cet effet. La GBA ne sort du stéréo que via cette prise.
-    
-        \paragraph{Canal 1 : PU1} Le canal permet de jouer des mélodies et/ou d'appliquer un effet SWEEP sur les notes. Attention, seul le canal 1 en est capable ! 
+        \paragraph{Channel 1 : PU1} Le canal permet de jouer des mélodies et/ou d'appliquer un effet SWEEP sur les notes. Attention, seul le canal 1 en est capable !
         
         \ColoredAnnotation{Vous pouvez utiliser ce canal pour générer un kick avec le sweep, ou comme basse principale}
         
-        \paragraph{Canal 2 : PU2} Le canal 2 est exactement le même que le 1 à la différence qu'il n'est pas capable de gérer un sweep.
+        \paragraph{Channel 2 : PU2} Le canal 2 est exactement le même que le 1 à la différence qu'il n'est pas capable de gérer un sweep.
         
         \ColoredAnnotation{Vous pouvez utiliser ce canal pour jouer une mélodie.}
         
-        \paragraph{Canal 3 : WAVE} Le canal 3 est capable de lire des minis-samples répartis dans 2 banques. 
+        \paragraph{Channel 3 : WAVE} Le canal 3 est capable de lire des minis-samples répartis dans 2 banques.
         
         \ColoredAnnotation{Ce canal peut servir de soutien à la basse, ou faire office de "guitare electrique" et ajouter un coté saturé à votre morceau.}
         
-        \paragraph{Canal 4 : NOISE} Ce canal est spécialisé dans la génération de bruits blancs.
+        \paragraph{Channel 4 : NOISE} Ce canal est spécialisé dans la génération de bruits blancs.
         
         \ColoredAnnotation{Utilisez ce canal comme soutien au kick, ou pour des effets spéciaux (comme le son d'une plage en été par exemple, ...)}
         
-        \paragraph{Canal 5 : SOUNDA} Ce canal sait jouer des samples et du son plus proches des machines actuelles que du "vrai" chiptunes. 
+        \paragraph{Channel 5 : SOUNDA} Ce canal sait jouer des samples et du son plus proches des machines actuelles que du "vrai" chiptunes.
         
         \ColoredAnnotation{Ce canal fait ses premiers pas dans cette version de \FAT. Certains de ses paramètres ne sont pas encore appliqués.}
         
-        \paragraph{Canal 6 : SOUNDB} Ce canal sait jouer des samples et du son plus proches des machines actuelles que du "vrai" chiptunes. 
+        \paragraph{Channel 6 : SOUNDB} Ce canal sait jouer des samples et du son plus proches des machines actuelles que du "vrai" chiptunes.
         
         \ColoredAnnotation{Ce canal fait ses premiers pas dans cette version de \FAT. Certains de ses paramètres ne sont pas encore appliqués.}
         
