@@ -1258,9 +1258,9 @@ void FAT_data_note_changeInstrument(u8 currentChannel, u8 block, u8 noteLine, s8
 
         FAT_data_initInstrumentIfNeeded(FAT_tracker.allBlocks[block].notes[noteLine].instrument,
                 currentChannel);
-    } else if (addedValue < 0){
+    } else if (addedValue < 0 && FAT_tracker.allBlocks[block].notes[noteLine].instrument != NULL_VALUE){
         FAT_data_note_changeInstrument (currentChannel, block, noteLine, -FAT_tracker.allBlocks[block].notes[noteLine].instrument);
-    } else if (addedValue > 0){
+    } else if (addedValue > 0 && FAT_tracker.allBlocks[block].notes[noteLine].instrument != NULL_VALUE){
         FAT_data_note_changeInstrument (currentChannel, block, noteLine, NB_MAX_INSTRUMENTS-FAT_tracker.allBlocks[block].notes[noteLine].instrument);
     }
 }
