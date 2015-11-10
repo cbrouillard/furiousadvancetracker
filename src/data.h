@@ -1778,7 +1778,11 @@ void FAT_data_instrumentSample_changeOutput(u8 instrumentId, s8 value) {
  * @param value la valeur à ajouter ou retrancher
  */
 void FAT_data_instrumentPulse_changeSoundLength(u8 instrumentId, s8 value) {
-    if (
+
+    if (FAT_tracker.allInstruments[instrumentId].soundlength > INSTRUMENT_PULSE_LENGTH_MAX){
+        FAT_tracker.allInstruments[instrumentId].soundlength = INSTRUMENT_PULSE_LENGTH_MAX -1;
+
+    } else if (
             (value < 0 && FAT_tracker.allInstruments[instrumentId].soundlength > (-value - 1)) ||
             (value > 0 && FAT_tracker.allInstruments[instrumentId].soundlength < INSTRUMENT_PULSE_LENGTH_MAX - value)
 
