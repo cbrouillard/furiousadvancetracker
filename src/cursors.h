@@ -41,6 +41,15 @@ THandle FAT_cursorChange_obj;
 THandle FAT_cursorKeyboard_obj;
 THandle FAT_cursorKeyboard_select_obj;
 
+/** \brief Objet HAM pour référencer le sprite "curseur player" de taille 2. */
+THandle FAT_cursor_player3_obj;
+/** \brief Objet HAM pour référencer le sprite "curseur player" de taille 3. */
+THandle FAT_cursor_player2_obj;
+/** \brief Objet HAM pour référencer les sprites "curseur player" utilisés dans l'écran SONG. */
+THandle FAT_cursor_playerSequences_obj[6];
+/** \brief Les curseurs d'attente indiquant que le channel a été activé mais en attente de synchro avant de se lancer */
+THandle FAT_cursor_playerLiveWait_obj[6];
+
 void FAT_initCursorsKeyboard (){
     FAT_cursorKeyboard_obj = hel_ObjCreate(ResData(RES_CURSOR_KEYBOARD_RAW), // Pointer to source graphic
                                            OBJ_SHAPE_SQUARE,       // Obj Shape

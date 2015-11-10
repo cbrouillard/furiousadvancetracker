@@ -1116,22 +1116,10 @@ effect* FAT_data_block_getEffect(u8 sequence, u8 line) {
  * @param line le numéro de ligne de la note dans le block
  */
 void FAT_data_note_previewNote(u8 block, u8 line) {
-    // copie en mémoire de l'instruemnt -> on doit modifier certaines données pour la preview comme la durée.
     u8 instId = FAT_tracker.allBlocks[block].notes[line].instrument;
-
-    // se souvenir des vrais paramètres
-    u8 mem_loopMode = FAT_tracker.allInstruments[instId].loopmode;
-    u8 mem_soundLength = FAT_tracker.allInstruments[instId].soundlength;
-
-    FAT_tracker.allInstruments[instId].loopmode = 1;
-    FAT_tracker.allInstruments[instId].soundlength = 0x20;
-
     FAT_player_playNote(&FAT_tracker.allBlocks[block].notes[line],
     					FAT_tracker.allInstruments[instId].type,
     									NULL_VALUE);
-
-    FAT_tracker.allInstruments[instId].loopmode = mem_loopMode;
-    FAT_tracker.allInstruments[instId].soundlength = mem_soundLength;
 }
 
 /**
@@ -1524,11 +1512,8 @@ void FAT_data_instrument_changeSimulator(u8 inst, s8 addedValue) {
  * @param inst l'instrument a utiliser
  */
 void FAT_data_instrument_playSimulator(u8 inst) {
-    u8 mem_loopMode = FAT_tracker.allInstruments[inst].loopmode;
-    FAT_tracker.allInstruments[inst].loopmode = 1;
     FAT_player_playNote(&FAT_data_simulator, FAT_tracker.allInstruments[inst].type,
-    		FAT_tracker.allInstruments[inst].envelope & 0x0f);
-    FAT_tracker.allInstruments[inst].loopmode = mem_loopMode;
+    		NULL_VALUE);
 }
 
 /**
@@ -2391,7 +2376,7 @@ void FAT_data_project_changeKeyRepeat(s8 addedValue) {
 
             ) {
         FAT_tracker.keyRepeat += addedValue;
-        hel_PadSetRepeatRate(PAD_BUTTON_R | PAD_BUTTON_L | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT | PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_A | PAD_BUTTON_B | PAD_BUTTON_START, FAT_tracker.keyRepeat);
+        hel_PadSetRepeatRate(PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT | PAD_BUTTON_UP | PAD_BUTTON_DOWN, FAT_tracker.keyRepeat);
         hel_PadSetRepeatDelay(PAD_BUTTON_R | PAD_BUTTON_L | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT | PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_A | PAD_BUTTON_B | PAD_BUTTON_START, FAT_tracker.keyRepeat > 9 ? FAT_tracker.keyRepeat - 9 : 1);
     } else if (addedValue < 0){
         FAT_data_project_changeKeyRepeat (-FAT_tracker.keyRepeat);

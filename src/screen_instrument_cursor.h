@@ -733,5 +733,34 @@ void FAT_screenInstrument_moveCursorLeft(u8 type) {
     }
 }
 
+void FAT_screenInstrument_showSimulatorCursor (u8 type){
+    switch (type) {
+       case INSTRUMENT_TYPE_PULSE:
+       case INSTRUMENT_TYPE_PULSE2:
+           hel_ObjSetXY (FAT_cursor_player3_obj,SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_PULSE_BLOCK_Y[SCREENINSTRUMENT_PULSE_NB_LINES_ON_SCREEN - 1]);
+           break;
+       case INSTRUMENT_TYPE_WAVE:
+           hel_ObjSetXY (FAT_cursor_player3_obj,SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_WAVE_BLOCK_Y[SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN - 1]);
+           break;
+       case INSTRUMENT_TYPE_NOISE:
+           hel_ObjSetXY (FAT_cursor_player3_obj,SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_NOISE_BLOCK_Y[SCREENINSTRUMENT_NOISE_NB_LINES_ON_SCREEN - 1]);
+           break;
+       case INSTRUMENT_TYPE_SAMPLEA:
+       case INSTRUMENT_TYPE_SAMPLEB:
+           hel_ObjSetXY (FAT_cursor_player3_obj,207,INST_SAMPLE_BLOCK_Y[SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN - 1]);
+           break;
+       case INSTRUMENT_TYPE_OSCILLATORA:
+       case INSTRUMENT_TYPE_OSCILLATORB:
+           hel_ObjSetXY (FAT_cursor_player3_obj,SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_OSC_BLOCK_Y[SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN - 1]);
+           break;
+    }
+
+    hel_ObjSetVisible (FAT_cursor_player3_obj, 1);
+}
+
+void FAT_screenInstrument_hideSimulatorCursor (){
+    hel_ObjSetVisible (FAT_cursor_player3_obj, 0);
+}
+
 #endif	/* SCREEN_INSTRUMENT_CURSOR_H */
 

@@ -61,6 +61,7 @@ void FAT_screenInstrument_showEnvdir(u8 envdirValue, u8 spriteX, u8 spriteY);
 void FAT_screenInstrument_hideAllEnvdirSprites();
 void FAT_screenInstrument_hideAllWavedutySprite();
 void FAT_screenInstrument_hideAllOscSprite();
+s8 FAT_screenInstrument_giveMeAddedValue();
 
 /**
  * \brief Affiche le numéro de l'écran en cours d'édition dans le cadre en haut à droite. 
@@ -417,20 +418,33 @@ void FAT_screenInstrument_checkButtons() {
                         }
                     }
 
-                    if (hel_PadQuery()->Pressed.Right) {
-                        FAT_screenInstrument_moveCursorRight(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                    if (hel_PadQuery()->Pressed.B) {
+                        FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
                     }
+                    if (hel_PadQuery()->Held.B) {
+                        FAT_screenInstrument_showSimulatorCursor (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
 
-                    if (hel_PadQuery()->Pressed.Left) {
-                        FAT_screenInstrument_moveCursorLeft(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-                    }
+                        s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
+                        FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);
+                        FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                    } else {
+                        FAT_screenInstrument_hideSimulatorCursor ();
 
-                    if (hel_PadQuery()->Pressed.Down) {
-                        FAT_screenInstrument_moveCursorDown(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-                    }
+                        if (hel_PadQuery()->Pressed.Right) {
+                            FAT_screenInstrument_moveCursorRight(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                        }
 
-                    if (hel_PadQuery()->Pressed.Up) {
-                        FAT_screenInstrument_moveCursorUp(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                        if (hel_PadQuery()->Pressed.Left) {
+                            FAT_screenInstrument_moveCursorLeft(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                        }
+
+                        if (hel_PadQuery()->Pressed.Down) {
+                            FAT_screenInstrument_moveCursorDown(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                        }
+
+                        if (hel_PadQuery()->Pressed.Up) {
+                            FAT_screenInstrument_moveCursorUp(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                        }
                     }
                 }
             }

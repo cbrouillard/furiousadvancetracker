@@ -46,15 +46,6 @@ u8 FAT_currentPlayedBlock = NULL_VALUE;
 bufferPlayer FAT_player_buffer[6];
 u8 firstAvailableSequenceForChannel[6];
 
-/** \brief Objet HAM pour référencer le sprite "curseur player" de taille 2. */
-THandle FAT_cursor_player3_obj;
-/** \brief Objet HAM pour référencer le sprite "curseur player" de taille 3. */
-THandle FAT_cursor_player2_obj;
-/** \brief Objet HAM pour référencer les sprites "curseur player" utilisés dans l'écran SONG. */
-THandle FAT_cursor_playerSequences_obj[6];
-/** \brief Les curseurs d'attente indiquant que le channel a été activé mais en attente de synchro avant de se lancer */
-THandle FAT_cursor_playerLiveWait_obj[6];
-
 /**
  * \brief Compteur pour le tempo.
  * 
