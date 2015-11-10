@@ -37,9 +37,10 @@ void FAT_yesno_dialogSave_mainFunc() {
     hel_ObjTransmit();
 
     hel_PadCapture();
-    if (hel_PadQuery()->Pressed.L) {
+    if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Pressed.Select) {
         FAT_yesno_close();
-    } else if (hel_PadQuery()->Pressed.R) {
+        hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Cancel");
+    } else if (hel_PadQuery()->Pressed.R || hel_PadQuery()->Pressed.Start) {
         FAT_filesystem_saveTrack(param1);//with RLE compression :)
         FAT_yesno_close();
         hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Saved ");
@@ -53,9 +54,10 @@ void FAT_yesno_dialogLoad_mainFunc() {
     hel_ObjTransmit();
 
     hel_PadCapture();
-    if (hel_PadQuery()->Pressed.L) {
+    if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Pressed.Select) {
         FAT_yesno_close();
-    } else if (hel_PadQuery()->Pressed.R) {
+        hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Cancel");
+    } else if (hel_PadQuery()->Pressed.R || hel_PadQuery()->Pressed.Start) {
         FAT_player_stopPlayer();
         FAT_filesystem_loadTrack(param1);
         FAT_currentScreen = SCREEN_PROJECT_ID;
@@ -71,9 +73,10 @@ void FAT_yesno_dialogNewProject_mainFunc() {
     hel_ObjTransmit();
 
     hel_PadCapture();
-    if (hel_PadQuery()->Pressed.L) {
+    if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Pressed.Select) {
         FAT_yesno_close();
-    } else if (hel_PadQuery()->Pressed.R) {
+        hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Cancel");
+    } else if (hel_PadQuery()->Pressed.R || hel_PadQuery()->Pressed.Start) {
         FAT_player_stopPlayer();
 
         // déplacer le curseur de la popup. C'est un peu naze comme ça. Mais c'est comme mon envie de faire mieux ... naze.

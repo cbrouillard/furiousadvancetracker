@@ -111,6 +111,10 @@ void FAT_popup_checkButtons() {
         FAT_popup_moveSelectionCursorLeft();
     }
 
+    if (hel_PadQuery()->Pressed.Up){
+        FAT_showHelp(FAT_popup_selectedIcon);
+    }
+
     FAT_popup_commitSelectionCursorMove();
 }
 

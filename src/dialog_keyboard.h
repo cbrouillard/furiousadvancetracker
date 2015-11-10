@@ -66,9 +66,10 @@ void FAT_dialog_keyboardPrintActualName (){
 
      hel_PadCapture();
 
-     if (hel_PadQuery()->Pressed.L) {
+     if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Pressed.Select) {
          FAT_dialog_close();
-     } else if (hel_PadQuery()->Pressed.R) {
+         hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Cancel");
+     } else if (hel_PadQuery()->Pressed.R || hel_PadQuery()->Pressed.Start) {
          // copie de la valeur dans tracker
          songNameBuffer[9] = '\0';
          strcpy (FAT_tracker.songName, songNameBuffer);

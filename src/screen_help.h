@@ -56,6 +56,8 @@ void FAT_screenHelp_init(u8 screenIdForHelp) {
             ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_NOTES_MAP), 640, 0, 0);
             break;
         case SCREEN_EFFECTS_ID:
+            ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_EFFECTS_RAW), RES_SCREEN_HELP_EFFECTS_RAW_SIZE16, 1, 1);
+            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_EFFECTS_MAP), 640, 0, 0);
             break;
         case SCREEN_COMPOSER_ID:
             ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_COMPOSER_RAW), RES_SCREEN_HELP_COMPOSER_RAW_SIZE16, 1, 1);
@@ -82,6 +84,8 @@ void FAT_screenHelp_init(u8 screenIdForHelp) {
     isHelpActivated = 1;
     FAT_currentScreen = SCREEN_HELP_ID;
     FAT_help_fromScreenId = screenIdForHelp;
+
+    FAT_popup_hide();
 }
 
 /**
@@ -90,34 +94,11 @@ void FAT_screenHelp_init(u8 screenIdForHelp) {
 void FAT_screenHelp_checkButtons() {
     hel_PadCapture();
 
-    if (hel_PadQuery()->Held.Select) {
-        if (!FAT_screenHelp_isPopuped) {
-            // TODO hide project cursor
-            FAT_popup_show();
-            FAT_screenHelp_isPopuped = 1;
-        }
-
-        FAT_popup_checkButtons();
-
-    } else {
-        if (FAT_screenHelp_isPopuped) {
-            FAT_popup_hide();
-            // TODO show project cursor
-            FAT_screenHelp_isPopuped = 0;
-
-            if (FAT_popup_getSelectedIcon() != SCREEN_HELP_ID) {
-                // TODO hide project cursor
-                isHelpActivated = 0;
-                FAT_switchToScreen(FAT_popup_getSelectedIcon(), SCREEN_HELP_ID);
-            }
-        }
-
-        if (hel_PadQuery()->Pressed.B) {
-            isHelpActivated = 0;
-            FAT_switchToScreen(FAT_help_fromScreenId, SCREEN_HELP_ID);
-        }
-
+    if (hel_PadQuery()->Pressed.B) {
+        isHelpActivated = 0;
+        FAT_switchToScreen(FAT_help_fromScreenId, SCREEN_HELP_ID);
     }
+
 }
 
 #endif	/* SCREEN_HELP_H */
