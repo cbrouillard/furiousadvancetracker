@@ -1237,9 +1237,11 @@ void FAT_data_note_changeOctave(u8 block, u8 noteLine, s8 addedValue) {
  */
 void FAT_data_note_changeInstrument(u8 currentChannel, u8 block, u8 noteLine, s8 addedValue) {
     if (
+            FAT_tracker.allBlocks[block].notes[noteLine].instrument != NULL_VALUE &&
+            (
             (addedValue < 0 && FAT_tracker.allBlocks[block].notes[noteLine].instrument > (-addedValue - 1)) ||
             (addedValue > 0 && FAT_tracker.allBlocks[block].notes[noteLine].instrument <= NB_MAX_INSTRUMENTS - addedValue)
-
+            )
             ) {
         FAT_tracker.allBlocks[block].notes[noteLine].instrument += addedValue;
         FAT_data_lastNoteWritten.instrument = FAT_tracker.allBlocks[block].notes[noteLine].instrument;
