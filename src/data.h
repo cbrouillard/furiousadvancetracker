@@ -488,6 +488,11 @@ u8 ATTR_EWRAM FAT_lastUsedInstrumentId = 0;
 void FAT_player_playNote(note* note, u8 channel, u8 forceVolume);
 
 /**
+ * \brief Pour savoir si on simule une note (pour pouvoir la stopper si infinie).
+*/
+u8 FAT_isCurrentlySimulating = FALSE;
+
+/**
  * \brief Initialise les données du tracker. Utile lors de l'allumage de la console.
  */
 void FAT_data_initData() {
@@ -1508,6 +1513,14 @@ void FAT_data_instrument_changeSimulator(u8 inst, s8 addedValue) {
     }
 }
 
+void FAT_data_instrument_setCurrentlySimulating (u8 val){
+    FAT_isCurrentlySimulating = val;
+}
+
+u8 FAT_data_instrument_isCurrentlySimulating (){
+    return FAT_isCurrentlySimulating;
+}
+
 /**
  * \brief Joue la note présente dans le simulator en fonction de l'instrument en cours d'édition.
  *  
@@ -1515,7 +1528,8 @@ void FAT_data_instrument_changeSimulator(u8 inst, s8 addedValue) {
  */
 void FAT_data_instrument_playSimulator(u8 inst) {
     FAT_player_playNote(&FAT_data_simulator, FAT_tracker.allInstruments[inst].type,
-    		NULL_VALUE);
+            NULL_VALUE);
+    FAT_data_instrument_setCurrentlySimulating (TRUE);
 }
 
 /**

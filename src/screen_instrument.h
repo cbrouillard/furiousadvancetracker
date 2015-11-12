@@ -325,7 +325,22 @@ void FAT_screenInstrument_changeInstrumentType(s8 move) {
  */
 void FAT_screenInstrument_checkButtons() {
     hel_PadCapture();
-    
+
+    if ( FAT_isCurrentlySimulating == TRUE && !FAT_isCurrentlyPlaying && (
+                    hel_PadQuery()->Pressed.Start ||
+                    hel_PadQuery()->Pressed.Select ||
+                    hel_PadQuery()->Pressed.A ||
+                    hel_PadQuery()->Pressed.Up ||
+                    hel_PadQuery()->Pressed.Down ||
+                    hel_PadQuery()->Pressed.Right ||
+                    hel_PadQuery()->Pressed.Left ||
+                    hel_PadQuery()->Pressed.R ||
+                    hel_PadQuery()->Pressed.L)
+                    ) {
+        FAT_player_stopPlayer();
+        FAT_data_instrument_setCurrentlySimulating (FALSE);
+    }
+
     if (hel_PadQuery()->Held.Select) {
         if (!FAT_screenInstrument_isPopuped) {
             FAT_screenInstrument_hideAllWavedutySprite();
@@ -423,7 +438,6 @@ void FAT_screenInstrument_checkButtons() {
                     }
                     if (hel_PadQuery()->Held.B) {
                         FAT_screenInstrument_showSimulatorCursor (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-
                         s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
                         FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);
                         FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);

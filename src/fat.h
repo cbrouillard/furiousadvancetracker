@@ -163,7 +163,7 @@ u8 ATTR_EWRAM ATTR_ALIGNED(4) g_MapSystemBuffer[HEL_SUBSYSTEM_MAP_REQUIREDMEMORY
 void FAT_init() {
     // HAM !
     ham_Init();
-    hel_SysSetPrefetch(TRUE);
+    hel_SysSetPrefetch(FALSE);
 
     FAT_filesystem_checkFs();
 
