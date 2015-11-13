@@ -371,7 +371,7 @@ void FAT_screenComposer_pressOrHeldA() {
                         FAT_data_composer_changeInstrument(realLine, -16);
                     }
 
-                    if (FAT_data_isPreviewEnabled()) {
+                    if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying && hel_PadQuery()->Pressed.A) {
                         FAT_data_composer_previewNote(realLine);
                     }
                 }
@@ -397,7 +397,7 @@ void FAT_screenComposer_pressOrHeldA() {
                     }
                 }
 
-                if (FAT_data_isPreviewEnabled()) {
+                if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying && hel_PadQuery()->Pressed.A) {
                     FAT_data_composer_previewNote(realLine);
                 }
 
