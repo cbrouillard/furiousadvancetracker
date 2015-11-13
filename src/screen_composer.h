@@ -202,6 +202,22 @@ void FAT_screenComposer_init() {
 void FAT_screenComposer_checkButtons() {
     hel_PadCapture();
 
+    if ( FAT_isCurrentlySimulating == TRUE && !FAT_isCurrentlyPlaying && (
+                        hel_PadQuery()->Pressed.Start ||
+                        hel_PadQuery()->Pressed.Select ||
+                        hel_PadQuery()->Pressed.A ||
+                        hel_PadQuery()->Pressed.B ||
+                        hel_PadQuery()->Pressed.Up ||
+                        hel_PadQuery()->Pressed.Down ||
+                        hel_PadQuery()->Pressed.Right ||
+                        hel_PadQuery()->Pressed.Left ||
+                        hel_PadQuery()->Pressed.R ||
+                        hel_PadQuery()->Pressed.L)
+                        ) {
+        FAT_player_stopPlayer();
+        FAT_data_instrument_setCurrentlySimulating (FALSE);
+    }
+
     if (hel_PadQuery()->Held.Select) {
         if (!FAT_screenComposer_isPopuped) {
             FAT_cursors_hideCursor3();

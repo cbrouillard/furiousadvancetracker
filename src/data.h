@@ -2106,20 +2106,8 @@ bool FAT_data_composer_isNoteEmpty(u8 line) {
  * @param line la ligne à jouer
  */
 void FAT_data_composer_previewNote(u8 line) {
-    // copie en mémoire de l'instruemnt -> on doit modifier certaines données pour la preview comme la durée.
-    u8 instId = FAT_tracker.composer.notes[line].instrument;
-
-    // se souvenir des vrais paramètres
-    u8 mem_loopMode = FAT_tracker.allInstruments[instId].loopmode;
-    u8 mem_soundLength = FAT_tracker.allInstruments[instId].soundlength;
-
-    FAT_tracker.allInstruments[instId].loopmode = 1;
-    FAT_tracker.allInstruments[instId].soundlength = 0x20;
-
     FAT_player_playNote(&FAT_tracker.composer.notes[line], FAT_tracker.composer.channels[line], NULL_VALUE);
-
-    FAT_tracker.allInstruments[instId].loopmode = mem_loopMode;
-    FAT_tracker.allInstruments[instId].soundlength = mem_soundLength;
+    FAT_data_instrument_setCurrentlySimulating (TRUE);
 }
 
 /**
