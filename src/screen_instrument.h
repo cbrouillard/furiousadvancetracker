@@ -367,7 +367,7 @@ void FAT_screenInstrument_checkButtons() {
             }
         }
 
-        if (hel_PadQuery()->Pressed.Left) {
+        /*if (hel_PadQuery()->Pressed.Left) {
             if (hel_PadQuery()->Pressed.Left) {
             FAT_screenInstrument_changeInstrumentType(-1);
             FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
@@ -379,7 +379,7 @@ void FAT_screenInstrument_checkButtons() {
             FAT_screenInstrument_changeInstrumentType(1);
             FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
             }
-        }
+        }*/
 
 
         if (hel_PadQuery()->Held.L) {

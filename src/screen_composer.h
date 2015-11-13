@@ -297,21 +297,35 @@ void FAT_screenComposer_pressOrHeldA() {
 
                 if (hel_PadQuery()->Pressed.Right) {
                     FAT_data_composer_changeValue(realLine, 1); // ajout de 1
+
+                    if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying) {
+                        FAT_data_composer_previewNote(realLine);
+                    }
                 }
 
                 if (hel_PadQuery()->Pressed.Left) {
                     FAT_data_composer_changeValue(realLine, -1);
+
+                    if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying) {
+                        FAT_data_composer_previewNote(realLine);
+                    }
                 }
 
                 if (hel_PadQuery()->Pressed.Up) {
 					if (FAT_data_composer_getChannel(realLine) <= INSTRUMENT_TYPE_NOISE){	
-                    FAT_data_composer_changeOctave(realLine, 1); // ajout de 1
+                        FAT_data_composer_changeOctave(realLine, 1); // ajout de 1
+                        if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying) {
+                            FAT_data_composer_previewNote(realLine);
+                        }
 					}
                 }
 
                 if (hel_PadQuery()->Pressed.Down) {
 					if (FAT_data_composer_getChannel(realLine) <= INSTRUMENT_TYPE_NOISE) {
-                    FAT_data_composer_changeOctave(realLine, -1);
+                        FAT_data_composer_changeOctave(realLine, -1);
+                        if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying) {
+                            FAT_data_composer_previewNote(realLine);
+                        }
 					}
                 }
 
