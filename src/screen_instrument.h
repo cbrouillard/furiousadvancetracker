@@ -367,22 +367,7 @@ void FAT_screenInstrument_checkButtons() {
             }
         }
 
-        /*if (hel_PadQuery()->Pressed.Left) {
-            if (hel_PadQuery()->Pressed.Left) {
-            FAT_screenInstrument_changeInstrumentType(-1);
-            FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-            }
-        }
-
-        if (hel_PadQuery()->Pressed.Right) {
-            if (hel_PadQuery()->Pressed.Right) {
-            FAT_screenInstrument_changeInstrumentType(1);
-            FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-            }
-        }*/
-
-
-        if (hel_PadQuery()->Held.L) {
+        if (hel_PadQuery()->Held.L || FAT_screenInstruments_currentSelectedLine == -1) {
             if (!FAT_screenInstrument_isTabulating) {
                 FAT_screenInstrument_isTabulating = 1;
                 FAT_screenInstrument_showTabulationCursor();
@@ -396,8 +381,16 @@ void FAT_screenInstrument_checkButtons() {
                 FAT_screenInstrument_changeInstrumentType(1);
             }
 
+            if (hel_PadQuery()->Pressed.Down) {
+                FAT_screenInstrument_moveCursorDown(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+            }
+
+            if (hel_PadQuery()->Pressed.Up) {
+                FAT_screenInstrument_moveCursorUp(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+            }
+
         } else {
-            if (FAT_screenInstrument_isTabulating) {
+            if (FAT_screenInstrument_isTabulating && FAT_screenInstruments_currentSelectedLine == 0) {
                 // relachement du L
                 FAT_screenInstrument_isTabulating = 0;
                 FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
