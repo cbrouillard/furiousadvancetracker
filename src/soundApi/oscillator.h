@@ -6,6 +6,8 @@
 #include "luts/osc_triangleluts.h"
 #include "luts/osc_sawluts.h"
 
+#include "signalModulation.h"
+
 /**
     \brief Utilisé pour déterminer la forme d'oscillator à jouer.
 */
@@ -38,7 +40,7 @@ void snd_processOscillatorA() {
     if (playSnAOsc) {
         REG_SOUNDCNT_H &= ~(1 << 0xB);
         if (!(oscSamplerCounterA & 3)){
-            SND_REG_SGFIFOA = snd_oscA[oscSamplerCounterA >> 2];
+            SND_REG_SGFIFOA = (*snd_modulation_applyModulation[0]) (snd_oscA[oscSamplerCounterA >> 2], 1, 130, oscTimeCounterA, 500, 0);
             oscTimeCounterA ++;
         }
 
@@ -59,7 +61,7 @@ void snd_processOscillatorB() {
     if (playSnBOsc) {
         REG_SOUNDCNT_H &= ~(1 << 0xF);
         if (!(oscSamplerCounterB & 3)){
-            SND_REG_SGFIFOB = snd_oscB[oscSamplerCounterB >> 2];
+            SND_REG_SGFIFOB = (*snd_modulation_applyModulation[0]) (snd_oscB[oscSamplerCounterB >> 2], 1, 130, oscTimeCounterB, 500, 0);;
             oscTimeCounterB ++;
         }
 

@@ -148,6 +148,8 @@ void snd_init_soundApi() {
     playSnBSample = 0;
     playSnAOsc = 0;
     playSnBOsc = 0;
+
+    snd_synthFM_init();
 }
 
 void snd_changeChannelOutput(u8 channelNumber, u8 outputValue) {
@@ -443,24 +445,11 @@ void snd_resetFIFOB() {
     REG_SOUNDCNT_H |= 1 << 0xF;
 }
 
-volatile u32 bufferFM;
-
-void snd_FMSampleA (){
-    // formule : registreGBA = Asin(2PIFc + Isin (2PIFm + thetam) + thetac)
-    // avec A = variable, I variable, Fc=carrier (mon sample), Fm=modulator (mon oscillateur), thetam=variable(0), thethac=variable(0)
-    //bufferFM |= snd_sin_lut [6 * (snASample[snASampleOffset >> 2] & 0x000000ff )+ (1 * snd_sin_lut[6 * (snd_osc_sine_C3[oscSamplerCounterA] & 0x000000ff)])];
-    //bufferFM |= snd_sin_lut [6 * (snASample[snASampleOffset >> 2] & 0x000000ff )+ (1 * snd_sin_lut[6 * (snd_osc_sine_C3[oscSamplerCounterA] & 0x000000ff)])];
-    //bufferFM |= snd_sin_lut [6 * (snASample[snASampleOffset >> 2] & 0x000000ff )+ (1 * snd_sin_lut[6 * (snd_osc_sine_C3[oscSamplerCounterA] & 0x000000ff)])];
-    //bufferFM |= snd_sin_lut [6 * (snASample[snASampleOffset >> 2] & 0x000000ff )+ (1 * snd_sin_lut[6 * (snd_osc_sine_C3[oscSamplerCounterA] & 0x000000ff)])];
-    bufferFM = snASample[snASampleOffset >> 2];
-}
-
 void snd_processSampleA() {
     if (playSnASample) {
         REG_SOUNDCNT_H &= ~(1 << 0xB);
         if (!(snASampleOffset & 3)) {
-            snd_FMSampleA();
-            SND_REG_SGFIFOA = bufferFM; // u32
+            SND_REG_SGFIFOA = (*snd_modulation_applyModulation[0]) (snASample[snASampleOffset >> 2], 1, 130, snASampleOffset, 500, 0);
         }
         snASampleOffset+=snASpeed;
         //HEL_DEBUG_MSG ("o: %d s: %d", snASampleOffset, snASmpSize);
@@ -480,7 +469,7 @@ void snd_processSampleB() {
     if (playSnBSample) {
         REG_SOUNDCNT_H &= ~(1 << 0xF);
         if (!(snBSampleOffset & 3)) {
-            SND_REG_SGFIFOB = snBSample[snBSampleOffset >> 2]; // u32
+            SND_REG_SGFIFOB = (*snd_modulation_applyModulation[0]) (snBSample[snBSampleOffset >> 2], 1, 130, snBSampleOffset, 500, 0); // u32
         }
         
         snBSampleOffset += snBSpeed;
