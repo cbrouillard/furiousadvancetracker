@@ -131,6 +131,9 @@ void generate_squareLuts(){
     double bufferFreq = 0;
     int val = 0;
 
+    int roll = 0;
+    int buffer = 0;
+    int finalData = 0;
 
     for (jj=0; jj< NBNOTES_PERSHAPE;jj++){
 
@@ -196,6 +199,42 @@ void generate_squareLuts(){
             }
 
             fprintf(fp, "0x%.8X, ", bufferOsc);
+
+
+            // Modulation test
+            int time = 0;
+
+            roll = 500 * time;
+            buffer = bufferOsc & 0x000000ff;
+            buffer = buffer * (1 - 1 * (sin(roll)));
+            finalData |= buffer;
+            finalData &= 0x000000ff;
+
+            time += 1; // sin ?
+
+            roll = 500 * time;
+            buffer = (bufferOsc & 0x0000ff00) >> 8;
+            buffer = buffer * (1 - 1 * (sin(roll)));
+            finalData |= (buffer << 8);
+            finalData &= 0x0000ffff;
+
+            time += 1;
+
+            roll = 500 * time;
+            buffer = (bufferOsc & 0x00ff0000) >> 16;
+            buffer = buffer * (1 - 1 * (sin(roll)));
+            finalData |= (buffer << 16);
+            finalData &= 0x00ffffff;
+
+            time += 1;
+
+            roll = 500 * time;
+            buffer = (bufferOsc & 0xff000000) >> 24;
+            buffer = buffer * (1 - 1 * (sin(roll)));
+            finalData |= (buffer << 24);
+
+            fprintf(fp, "/* 0x%.8X, */ ", finalData);
+
         }
         fputs("\n};\n", fp);
 
@@ -297,6 +336,7 @@ void generate_triangeLuts () {
             }
 
             fprintf(fp, "0x%.8X, ", bufferOsc);
+
         }
         fputs("\n};\n", fp);
 
@@ -407,14 +447,14 @@ int main()
     fprintf(fp, "#ifndef _SOUND_API_SINLUT_\n");
     fprintf(fp, "#define _SOUND_API_SINLUT_\n\n");
 
-    fprintf(fp, "#ifndef LUT_SIZE\n");
-    fprintf(fp, "#define LUT_SIZE %d\n", LUT_SIZE);
+    fprintf(fp, "#ifndef LUT_GENERIC_SIZE\n");
+    fprintf(fp, "#define LUT_GENERIC_SIZE %d\n", 256);
     fprintf(fp, "#endif\n\n");
 
-    fprintf(fp, "const s8 snd_sin_lut[LUT_SIZE] = {\n");
+    fprintf(fp, "const s8 snd_sin_lut[LUT_GENERIC_SIZE] = {\n");
     int i;
-    for (i = 0; i < LUT_SIZE; ++i) {
-        myLut[i] = (float) MAX_AMPLITUDE * sinf(2.0f * M_PI * (float)i / LUT_SIZE);
+    for (i = 0; i < 256; ++i) {
+        myLut[i] = (float) MAX_AMPLITUDE * sinf(2.0f * M_PI * (float)i / 256);
         if(i%8 == 0) {
             fputs("\n\t", fp);
         }

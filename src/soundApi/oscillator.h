@@ -40,7 +40,7 @@ void snd_processOscillatorA() {
     if (playSnAOsc) {
         REG_SOUNDCNT_H &= ~(1 << 0xB);
         if (!(oscSamplerCounterA & 3)){
-            SND_REG_SGFIFOA = (*snd_modulation_applyModulation[2]) (snd_oscA[oscSamplerCounterA >> 2], 1, 130, oscSamplerCounterA >> 2, 5, 0);
+            SND_REG_SGFIFOA = (*snd_modulation_applyModulation[0]) (snd_oscA[oscSamplerCounterA >> 2], 1, 130, oscSamplerCounterA >> 2, 5, 0);
             oscTimeCounterA ++;
         }
 
