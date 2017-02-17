@@ -15,7 +15,7 @@ PROGNAME = FAT_v1.1.1
 # Set a list of files you want to compile 
 # Please let the libgbfs.o at last position. IMPORTANT !
 # 
-OFILES += main.o src/gfx/ResourceData.o src/soundApi/soundApi.o src/soundApi/libgbfs.o
+OFILES += src/main.o src/gfx/ResourceData.o src/soundApi/soundApi.o src/soundApi/libgbfs.o
 
 ######################################
 # Standard Makefile targets start here

@@ -22,7 +22,7 @@
 #define	_PLAYER_H_
 
 #include "data.h"
-#include "soundApi/soundApi.h"
+#include "../soundApi/soundApi.h"
 
 /*
  * Toutes ces variables sont des repères pour le player. Afin de savoir quelle séquence/block/note jouer.

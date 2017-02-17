@@ -76,7 +76,7 @@ void VBLInterruptHandler(void) {
     hel_IntrAcknowledge(INT_TYPE_VBL);
 }
 
-#include "gfx/ResourceData.h"
+#include "../gfx/ResourceData.h"
 
 #include "data.h"
 #include "filesystem.h"

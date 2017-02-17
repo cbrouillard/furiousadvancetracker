@@ -53,8 +53,8 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "src/soundApi/soundApi.h"
-#include "src/fat.h"
+#include "soundApi/soundApi.h"
+#include "headers/fat.h"
 
 void FAT_screens_init();
 
