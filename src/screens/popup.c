@@ -41,3 +41,50 @@ void FAT_popup_init() {
 
     FAT_popup_hide();
 }
+
+/**
+ * \brief Initialisation des curseurs spécifiques à l'écran popup.
+ *
+ * Chargement des bitmaps + positionnement aux valeurs
+ * par défauts. La méthode les cache ensuite.
+ */
+void FAT_popup_initCursors() {
+    FAT_popup_cursorSelectionX = POPUP_CURSOR_DEFAULT_X;
+    FAT_popup_cursorSelectionY = POPUP_CURSOR_DEFAULT_Y;
+
+    FAT_popup_cursorActualScreenX = ACTUAL_SCREEN_CURSOR_DEFAULT_X;
+    FAT_popup_cursorActualScreenY = ACTUAL_SCREEN_CURSOR_DEFAULT_Y;
+
+    FAT_popup_cursorSelectionObj = hel_ObjCreate(   ResData(RES_CURSOR_POPUP_RAW), // Pointer to source graphic
+                                                    OBJ_SHAPE_VERTICAL,       // Obj Shape
+                                                    3,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                    OBJ_MODE_SEMITRANSPARENT,        // Obj Mode
+                                                    COLORS_16,              // Use 16 color mode
+                                                    0,                      // Palette number. Only neccessary in 16 color mode
+                                                    FALSE,                  // Don't use mosaic
+                                                    FALSE,                  // Don't flip the sprite horizontally
+                                                    FALSE,                  // Don't flip the object vertically
+                                                    0,                      // Priority against background. 0=higest
+                                                    FALSE,                  // Don't make the object double-sized
+                                                    FAT_popup_cursorSelectionX,                    // Destination horzintal screen coordinate in pixels
+                                                    FAT_popup_cursorSelectionY                      // Destination vertical screen coordinate in pixels
+                                                    );
+
+    FAT_popup_cursorActualScreenObj = hel_ObjCreate(   ResData(RES_ACTUAL_SCREEN_POPUP_RAW), // Pointer to source graphic
+                                                       OBJ_SHAPE_SQUARE,       // Obj Shape
+                                                       0,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                                       OBJ_MODE_NORMAL,        // Obj Mode
+                                                       COLORS_16,              // Use 16 color mode
+                                                       0,                      // Palette number. Only neccessary in 16 color mode
+                                                       FALSE,                  // Don't use mosaic
+                                                       FALSE,                  // Don't flip the sprite horizontally
+                                                       FALSE,                  // Don't flip the object vertically
+                                                       0,                      // Priority against background. 0=higest
+                                                       FALSE,                  // Don't make the object double-sized
+                                                       FAT_popup_cursorActualScreenX,                    // Destination horzintal screen coordinate in pixels
+                                                       FAT_popup_cursorActualScreenY                      // Destination vertical screen coordinate in pixels
+                                                       );
+
+    // cachés par défaut
+    FAT_popup_hideCursors();
+}

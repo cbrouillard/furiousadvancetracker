@@ -83,9 +83,12 @@ void FAT_init() {
     FAT_initCursor8();
     FAT_initCursorChange();
     FAT_initCursorsKeyboard();
+
     FAT_popup_initCursors();
+
     FAT_screenInstrument_tabCursorInit();
 
+    // Initialisation du lecteur
     FAT_player_firstInit();
 
     // chargement des sprites pour l'écran instrument
