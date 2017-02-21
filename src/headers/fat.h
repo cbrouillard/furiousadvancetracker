@@ -12,13 +12,19 @@
 /**
  * \file fat.h
  * \brief Ce fichier contient quelques macros, définitions et des fonctions de routine pour le tracker.
- * 
+ *
  * Il contient également tous les include vers les autres fichiers.
  */
 
 #ifndef _FAT_H_
 #define _FAT_H_
 
+/**
+ * \brief Version actuelle de FAT.
+ */
+#define FAT_VERSION "1.1.0"
+
+#define POPUP_LAYER 0
 #define TEXT_LAYER 1
 #define SCREEN_LAYER 3
 
@@ -149,91 +155,13 @@ u8 ATTR_EWRAM ATTR_ALIGNED(4) g_ObjSystemBuffer[HEL_SUBSYSTEM_OBJ_REQUIREDMEMORY
 // The recommended memory location is EWRAM.
 u8 ATTR_EWRAM ATTR_ALIGNED(4) g_MapSystemBuffer[HEL_SUBSYSTEM_MAP_REQUIREDMEMORY];
 
-/**
- * \brief Initialisation de HAM et d'autres données propres à FAT. 
- * 
- * Initialisations:
- * - HAM (init, text, bgMode, textCol, fx)
- * - les palettes pour FAT (screen et sprite)
- * - la popup de déplacement 
- * - les curseurs
- * - les sprites
- * - les données du projet
- */
-void FAT_init() {
-    // HAM !
-    ham_Init();
-    hel_SysSetPrefetch(FALSE);
-
-    FAT_filesystem_checkFs();
-
-    hel_BgSetMode(0);
-
-    hel_MapInit(g_MapSystemBuffer);
-    hel_BgTextInit((void*) g_BgTextSystemMemory);
-    hel_ObjInit(g_ObjSystemBuffer);
-
-    hel_PadInit();
-    hel_PadSetRepeatDelay(PAD_BUTTON_R | PAD_BUTTON_L | PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT | PAD_BUTTON_UP | PAD_BUTTON_DOWN | PAD_BUTTON_A | PAD_BUTTON_B | PAD_BUTTON_START, 1);
-    hel_PadSetRepeatRate(PAD_BUTTON_LEFT | PAD_BUTTON_RIGHT | PAD_BUTTON_UP | PAD_BUTTON_DOWN, 10);
-    hel_PadSetRepeatRate(PAD_BUTTON_R | PAD_BUTTON_L | PAD_BUTTON_A | PAD_BUTTON_B | PAD_BUTTON_START, 0);
-
-    // initialisation des palettes.
-    FAT_initSpritePalette();
-    FAT_initScreenPalette();
-
-    // Initialize the tileset and an empty
-    // mapset using regular HAMlib functions
-    //ham_bg[TEXT_LAYER].ti = ham_InitTileSet(ResData(RES_TEXT_RAW), RES_TEXT_RAW_SIZE16, 1, 1);
-    ham_bg[TEXT_LAYER].ti = ham_InitTileSet((void*) ResData(RES_TEXT_RAW), RES_TEXT_RAW_SIZE16, 1, 1);
-    ham_bg[TEXT_LAYER].mi = ham_InitMapEmptySet((u8) 640, 0);
-
-    hel_BgTextCreate(
-            TEXT_LAYER, // BgNo
-            1, // Width of one character specified in tiles
-            1, // Height of one character specified in tiles
-            //ResData(RES_CHARSET8X8_MAP), // Pointer to character map
-            ResData(RES_TEXT_MAP),
-            CHARORDER, // Pointer to array that reflects the order of characters on source graphic
-            g_CharLUT, // Pointer to buffer that receives the generated lookup table
-            BGTEXT_FLAGS_GENERATELUT); // Flags that control creation and print behaviour
-
-    ham_InitBg(TEXT_LAYER, TRUE, 0, FALSE);
-
-    // initialisation de l'écran "Popup" (la map de déplacement)
-    FAT_popup_init();
-
-    hel_IntrStartHandler(INT_TYPE_VBL, (void*) &VBLInterruptHandler);
-
-    // initialisation des curseurs
-    FAT_initCursor1();
-    FAT_initCursor2();
-    FAT_initCursor3();
-    FAT_initCursor8();
-    FAT_initCursorChange();
-    FAT_initCursorsKeyboard();
-    FAT_popup_initCursors();
-    FAT_screenInstrument_tabCursorInit();
-
-    FAT_player_firstInit();
-
-    // chargement des sprites pour l'écran instrument
-    FAT_screenInstrument_initSpritesForInstrument();
-
-    FAT_screenSong_initCursor();
-    FAT_screenLive_initCursor();
-    FAT_screenNotes_initCursor();
-    FAT_screenBlocks_initCursor();
-    FAT_screenComposer_initCursor();
-    FAT_screenFilesystem_initCursor();
-
-    // intialisation des données "tracker" stockées en RAM
-    FAT_data_initData();
-}
+void FAT_init ();
+void FAT_initSpritePalette();
+void FAT_initScreenPalette();
 
 /**
  * \brief Méthode pour afficher un simple écran "titre" avec une boucle infinie en
- * attente du bouton "START". 
+ * attente du bouton "START".
  */
 void FAT_showIntro() {
 
@@ -275,7 +203,7 @@ void FAT_showIntro() {
 
 /**
  * \brief Méthode qui permet de réinitialiser le BG SCREEN_LAYER proprement.
- * 
+ *
  * <b>NE PAS TOUCHER !  </b>
  */
 void FAT_reinitScreen() {
@@ -287,8 +215,8 @@ void FAT_reinitScreen() {
 }
 
 /**
- * \brief Méthode à réfactorer : effacer l'écran texte en affichant des espaces partout. 
- * 
+ * \brief Méthode à réfactorer : effacer l'écran texte en affichant des espaces partout.
+ *
  * Performance warning ! Afficher du texte via HAM est lent !
  */
 void FAT_forceClearTextLayer() {
@@ -301,20 +229,6 @@ void FAT_forceClearTextLayer() {
         ham_bg[TEXT_LAYER].mi = ham_InitMapEmptySet((u8) 1024, 0);
     }
 
-}
-
-/**
- * \brief La palette pour les sprites est différente: cette fonction la charge au bon endroit.
- */
-void FAT_initSpritePalette() {
-    hel_PalObjLoad16(ResData16(RES_SPRITES_PAL), 0);
-}
-
-/**
- * \brief Charge la palette pour les écrans: les sprites sont exclus. 
- */
-void FAT_initScreenPalette() {
-    hel_PalBgLoad256(ResData16(RES_SCREEN_PAL));
 }
 
 void FAT_allScreen_singleCheckButtons() {
@@ -370,7 +284,7 @@ void FAT_mainLoop() {
 
 /**
  * \brief Cette méthode permet de changer d'écran.
- * 
+ *
  * @param screenId l'id de l'écran que l'on souhaite afficher.
  */
 void FAT_switchToScreen(u8 screenId, u8 fromId) {
@@ -410,14 +324,14 @@ void FAT_switchToScreen(u8 screenId, u8 fromId) {
 
 /**
  * \brief Affiche l'écran d'aide correspondant à l'id passé en paramètres.
- * \param screenId le numéro d'écran actuellement consulté. 
+ * \param screenId le numéro d'écran actuellement consulté.
  */
 void FAT_showHelp(u8 screenId) {
     FAT_screenHelp_init(screenId);
 }
 
 /**
- * \brief Attendre la synchronisation du balayage vertical. 
+ * \brief Attendre la synchronisation du balayage vertical.
  */
 // deprecated and dangerous. Don't use it.
 void FAT_waitVSync() {
@@ -438,11 +352,11 @@ void FAT_wait(u32 nbFrames) {
 }
 
 /**
- * \brief Bloque le cpu un certain temps. 
- * 
+ * \brief Bloque le cpu un certain temps.
+ *
  * Attention le temps n'est pas exprimé en secondes ! Il s'agit juste d'une variable:
  * plus elle est grande, plus le temps de blocage est long.
- * 
+ *
  * @param time variable pour définir le temps d'attente
  */
 // deprecated and dangerous. Don't use it.
@@ -454,4 +368,3 @@ void FAT_blockCPU(u16 time) {
 }
 
 #endif
-

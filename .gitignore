@@ -14,6 +14,7 @@ manual/FAT_documentation_FR.iso
 manual/*.pdf
 gfx/icons
 gfx/img
+src/gfx/raw/
 doc/html
 doc/latex
 doc/man

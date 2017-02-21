@@ -11,44 +11,39 @@
 
 /**
  * @mainpage FuriousAdvanceTracker
- * 
- * FAT (FuriousAdvanceTracker) est un logiciel concu pour la composition musicale sur Gameboy Advance. 
- * <b>FAT est actuellement en version de test (il n'est pas encore complet).</b><br/>
- * FAT est un <a href="http://fr.wikipedia.org/wiki/Tracker_%28musique%29">tracker</a> dont l'interface 
- * s'inspire très profondément de <a href="http://www.littlesounddj.com">LSDJ</a> (LittleSoundDJ), 
- * un logiciel très connu utilisable sur Gameboy. Malgré cela, FAT se démarque en ajoutant des fonctionnalités 
- * inédites pour la composition de chiptunes sur GBA.
- *       
- * - la GameboyAdvance dispose de 6 canaux sonores. FAT les exploite(ra) tous.
- * - FAT est (sera) orienté live. Un écran spécial est même prévu pour improviser des lignes mélodiques en live.
- * - et plein d'autres idées qui s'ajouteront au fur et à mesure !
  *
- * FAT est gratuit et libre ! Vous pouvez le télécharger, l'utiliser avec un émulateur ou le graver
+ * FAT (FuriousAdvanceTracker) est un logiciel concu pour la composition musicale sur Gameboy Advance.
+ * <b>FAT est actuellement en version de test (il n'est pas encore complet).</b><br/>
+ * FAT est un <a href="http://fr.wikipedia.org/wiki/Tracker_%28musique%29">tracker</a> dont l'interface
+ * s'inspire très profondément de <a href="http://www.littlesounddj.com">LSDJ</a> (LittleSoundDJ),
+ * un logiciel très connu utilisable sur Gameboy. Malgré cela, FAT se démarque en ajoutant des fonctionnalités
+ * inédites pour la composition de chiptunes sur GBA.
+ *
+ * - la GameboyAdvance dispose de 6 canaux sonores. FAT les exploite tous (plus ou moins complétement).
+ * - FAT est orienté live. Un écran spécial est même prévu pour improviser des lignes mélodiques en live.
+ * - et plein d'autres idées qui s'ajouteront probablement au fur et à mesure !
+ *
+ * FAT est gratuit et libre ! Vous pouvez le télécharger, l'utiliser avec un émulateur ou le "graver"
  * sur une cartouche GBA. Si vous remarquer un bug ou un comportement bizarre, faites un rapport de bug :
  * c'est simple, rapide, et surtout cela permet de faire évoluer le logiciel plus efficacement.<br/>
- * 
- * <b>Vous êtes actuellement en train de lire une documentation technique réservé aux développeurs. Si vous n'êtes
- * pas développeur et souhaitez simplement tester FAT, alors VOUS N'ETES PAS AU BON ENDROIT !. Si c'est le cas, retourner sur 
+ *
+ * <b>Vous êtes actuellement en train de lire une documentation technique réservée aux développeurs. Si vous n'êtes
+ * pas développeur et souhaitez simplement tester FAT, alors VOUS N'ETES PAS AU BON ENDROIT !. Si vous souhaitez tester, retournez sur
  * <a href="http://www.furiousadvancetracker.com">www.furiousadvancetracker.com</a> et téléchargez le manuel utilisateur au format PDF. Merci !</b>
  *
  */
 
 /**
- * \file main.c 
+ * \file main.c
  * \brief Fichier code source principal avec la fonction main et l'inclusion de fat.h.
  */
 
 /**
- * \brief Si cette variable est positionné à 1, le mode DEBUG pour FAT est activé. Certaines,
+ * \brief Si cette variable est positionnée à 1, le mode DEBUG pour FAT est activé. Certaines,
  * informations seront affichées.
  */
 #define DEBUG_ON "YES"
 #undef DEBUG_ON
-
-/**
- * \brief Version actuelle de FAT.
- */
-#define FAT_VERSION "1.1.0"
 
 #include <hel2.h>
 #include <stdarg.h>
@@ -77,4 +72,3 @@ int main() {
 
     return 0;
 }
-
