@@ -51,8 +51,6 @@
 #include "soundApi/soundApi.h"
 #include "headers/fat.h"
 
-void FAT_screens_init();
-
 /**
  * \brief Fonction main. Si vous lisez le code source, il est judicieux de commencer par comprendre cette fonction.
  */

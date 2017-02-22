@@ -11,7 +11,7 @@
 
 /**
  * \file screen_notes.h
- * \brief Ce fichier contient toutes les fonctions utiles pour gérer l'écran NOTE. 
+ * \brief Ce fichier contient toutes les fonctions utiles pour gérer l'écran NOTE.
  */
 
 #ifndef _SCREEN_NOTES_H_
@@ -57,7 +57,7 @@ u8 FAT_screenNotes_currentBlockId = NULL_VALUE;
 
 /**
  * \brief Cette fonction se content d'imprimer le numéro de ligne sur la partie
- * gauche de l'interface. 
+ * gauche de l'interface.
  */
 void FAT_screenNotes_printLineColumns() {
     u8 y = SCREENNOTES_LINE_START_Y;
@@ -69,8 +69,8 @@ void FAT_screenNotes_printLineColumns() {
 }
 
 /**
- * \brief Affiche des informations dynamiques (le numéro de ligne actuellement 
- * séléctionné). 
+ * \brief Affiche des informations dynamiques (le numéro de ligne actuellement
+ * séléctionné).
  */
 void FAT_screenNotes_printInfos() {
     hel_BgTextPrintF(TEXT_LAYER, 18, 4, 0, "Line     %.2x", FAT_screenNotes_currentSelectedLine);
@@ -80,7 +80,7 @@ void FAT_screenNotes_printInfos() {
 /**
  * \brief Affiche une note (nom, octave et instrument) située à la ligne donnée
  * sur le block en cours d'édition.
- * 
+ *
  * @param line le numéro de ligne de la note
  */
 void FAT_screenNotes_printNote(u8 line) {
@@ -106,7 +106,7 @@ void FAT_screenNotes_printNote(u8 line) {
 /**
  * \brief Affiche l'effet assigné à la note (nom et valeur): un effet peut être
  * assigné à une note vide.
- * 
+ *
  * @param line le numéro de ligne de la note
  */
 void FAT_screenNotes_printEffect(u8 line) {
@@ -158,24 +158,25 @@ void FAT_screenNotes_printAllNotes() {
 }
 
 /**
- * \brief Affiche le numéro de block actuellement en cours d'édition. 
+ * \brief Affiche le numéro de block actuellement en cours d'édition.
  */
 void FAT_screenNotes_printBlockNumber() {
     hel_BgTextPrintF(TEXT_LAYER, 18, 3, 0, "Block    %.2x", FAT_screenNotes_currentBlockId);
 }
 
 /**
- * \brief Affiche tous le texte sur l'écran (lignes, notes, infos). 
+ * \brief Affiche tous le texte sur l'écran (lignes, notes, infos).
  */
 void FAT_screenNotes_printAllScreenText() {
+    tracker* FAT_tracker = FAT_data_getTracker ();
     FAT_screenNotes_printLineColumns();
     FAT_screenNotes_printAllNotes();
     FAT_screenNotes_printInfos();
-    hel_BgTextPrintF(TEXT_LAYER, 18, 6, 0, "Tsp-Proj %2.x\nTempo   %.3d", FAT_tracker.transpose, FAT_tracker.tempo);
+    hel_BgTextPrintF(TEXT_LAYER, 18, 6, 0, "Tsp-Proj %2.x\nTempo   %.3d", FAT_tracker->transpose, FAT_tracker->tempo);
 }
 
 /**
- * \brief Initialisation de l'écran. 
+ * \brief Initialisation de l'écran.
  */
 void FAT_screenNotes_init(u8 fromScreenId) {
     FAT_reinitScreen();
@@ -188,7 +189,7 @@ void FAT_screenNotes_init(u8 fromScreenId) {
     // dans quelle block nous situons nous ?
     switch (fromScreenId){
         case SCREEN_BLOCKS_ID:
-            FAT_screenNotes_currentBlockId = FAT_data_getBlock(FAT_screenBlocks_currentSequenceId, FAT_screenBlocks_currentSelectedLine);
+            FAT_screenNotes_currentBlockId = FAT_data_getBlock(FAT_screenBlocks_getCurrentSequenceId(), FAT_screenBlocks_getCurrentSelectedLine());
             break;
     }
     if (FAT_screenNotes_currentBlockId == NULL_VALUE) {
@@ -211,11 +212,11 @@ void FAT_screenNotes_init(u8 fromScreenId) {
 }
 
 /**
- * \brief Test des actions utilisateurs sur les touches. 
+ * \brief Test des actions utilisateurs sur les touches.
  */
 void FAT_screenNotes_checkButtons() {
     hel_PadCapture();
-    
+
     if (hel_PadQuery()->Held.Select) {
         if (!FAT_screenNotes_isPopuped) {
             FAT_cursors_hideCursor3();
@@ -328,7 +329,7 @@ void FAT_screenNotes_checkButtons() {
 }
 
 /**
- * \brief Cette fonction est dédiée aux interactions avec la touche B. 
+ * \brief Cette fonction est dédiée aux interactions avec la touche B.
  */
 void FAT_screenNotes_pressB() {
     switch (FAT_screenNotes_currentSelectedColumn) {
@@ -354,7 +355,7 @@ void FAT_screenNotes_pressB() {
 }
 
 /**
- * \brief Cette fonction est dédiée aux interactions avec la touche A. 
+ * \brief Cette fonction est dédiée aux interactions avec la touche A.
  */
 void FAT_screenNotes_pressOrHeldA() {
     switch (FAT_screenNotes_currentSelectedColumn) {

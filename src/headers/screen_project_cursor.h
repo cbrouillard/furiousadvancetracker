@@ -28,7 +28,7 @@
 #define SCREENPROJECT_NB_LINES_ON_SCREEN 9
 
 /** \brief Position actuelle du curseur de sélection. */
-u8 FAT_screenProject_cursorX; 
+u8 FAT_screenProject_cursorX;
 /** \brief Position actuelle du curseur de sélection. */
 u8 FAT_screenProject_cursorY;
 /** \brief Numéro de ligne actuellement sélectionnée. */
@@ -37,35 +37,35 @@ u8 FAT_screenProject_currentSelectedLine;
 u8  FAT_screenProject_currentSelectedColumn;
 
 /**
- * \brief Tableau constant des positions des blocs de données sur l'écran. 
+ * \brief Tableau constant des positions des blocs de données sur l'écran.
  */
 const u8 PROJECT_PULSE_BLOCK_Y[SCREENPROJECT_NB_LINES_ON_SCREEN] = {31, 39, 63, 71, 79, 103, 111, 119, 63};
 
 /**
- * \brief Cette fonction permet de valider le déplacement du curseur de sélection sur l'écran. 
+ * \brief Cette fonction permet de valider le déplacement du curseur de sélection sur l'écran.
  */
 void FAT_screenProject_commitCursorMove() {
     switch (FAT_screenProject_currentSelectedLine) {
         case 0:
         case 3:
         case 4:
-            hel_ObjSetXY(FAT_cursor3_obj, FAT_screenProject_cursorX, FAT_screenProject_cursorY);
+            FAT_cursors_moveCursor3 (FAT_screenProject_cursorX, FAT_screenProject_cursorY);
             break;
         case 8:
-            hel_ObjSetXY(FAT_cursor3_obj, (SCREENPROJECT_FIRST_BLOCK_X-1) + 120, FAT_screenProject_cursorY);
+            FAT_cursors_moveCursor3 ((SCREENPROJECT_FIRST_BLOCK_X-1) + 120, FAT_screenProject_cursorY);
             break;
         case 1:
         case 2:
         case 5:
         case 6:
         case 7:
-            hel_ObjSetXY(FAT_cursor2_obj, FAT_screenProject_cursorX, FAT_screenProject_cursorY);
+            FAT_cursors_moveCursor2 (FAT_screenProject_cursorX, FAT_screenProject_cursorY);
             break;
     }
 }
 
 /**
- * \brief Affiche le curseur à la bonne taille en fonction de la donnée actuellement sélectionnée. 
+ * \brief Affiche le curseur à la bonne taille en fonction de la donnée actuellement sélectionnée.
  */
 void FAT_screenProject_displayGoodCursor() {
     switch (FAT_screenProject_currentSelectedLine) {
@@ -89,8 +89,8 @@ void FAT_screenProject_displayGoodCursor() {
 }
 
 /**
- * \brief Initialisation du curseur (position uniquement) et remise à zéro des 
- * numéros de ligne et colonne sélectionnés. 
+ * \brief Initialisation du curseur (position uniquement) et remise à zéro des
+ * numéros de ligne et colonne sélectionnés.
  */
 void FAT_screenProject_initCursor() {
 
@@ -156,4 +156,3 @@ void FAT_screenProject_moveCursorUp() {
 }
 
 #endif	/* SCREEN_PROJECT_CURSOR_H */
-

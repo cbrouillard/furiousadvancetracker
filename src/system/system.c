@@ -17,8 +17,24 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../soundApi/soundApi.h"
 #include "../headers/fat.h"
+
+u8 ATTR_EWRAM ATTR_ALIGNED(4) g_BgTextSystemMemory[HEL_SUBSYSTEM_BGTEXT_REQUIREDMEMORY];
+u16 ATTR_EWRAM g_CharLUT[256];
+// attention, table ASCII uniquement sinon ça fout la grouille.
+const unsigned char CHARORDER[] =
+        " BCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmn"\
+    "opqrstuvwxyz0123456789,.-;:A#^+*@"\
+    "!\"~$%&/()=?|\\<>[]{}¹²³°";
+
+u8 ATTR_EWRAM ATTR_ALIGNED(4) g_ObjSystemBuffer[HEL_SUBSYSTEM_OBJ_REQUIREDMEMORY];
+
+// Reserve memory for the Map-System. This buffer
+// is used to manage internal states of the Map-System.
+// You can achieve a little performance increase when you
+// store it in IWRAM, but keep in mind, IWRAM is very limited!
+// The recommended memory location is EWRAM.
+u8 ATTR_EWRAM ATTR_ALIGNED(4) g_MapSystemBuffer[HEL_SUBSYSTEM_MAP_REQUIREDMEMORY];
 
 /**
  * \brief Initialisation de HEL/HAM et d'autres données propres à FAT.

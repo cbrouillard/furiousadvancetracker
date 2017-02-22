@@ -17,8 +17,22 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../soundApi/soundApi.h"
-#include "../headers/fat.h"
+#include "../headers/cursors.h"
+
+/** \brief ID technique HAM pour le cursor de taille 1. */
+THandle FAT_cursor1_obj;
+/** \brief ID technique HAM pour le cursor de taille 2. */
+THandle FAT_cursor2_obj;
+/** \brief ID technique HAM pour le cursor de taille 3. */
+THandle FAT_cursor3_obj;
+/** \brief ID technique HAM pour le cursor de taille 8. */
+THandle FAT_cursor8_obj;
+/** \brief ID technique HAM pour le cursor de changement d'onglet (partie instrument). */
+THandle FAT_cursorChange_obj;
+/** \brief ID technique HAM pour le cursor de clavier. */
+THandle FAT_cursorKeyboard_obj;
+/** \brief ID technique HAM pour le cursor de sélection sur le clavier. */
+THandle FAT_cursorKeyboard_select_obj;
 
 /**
  * \brief Initialisation du curseur taille 1.
@@ -182,4 +196,241 @@ void FAT_initCursorsKeyboard (){
     hel_ObjSetVisible(FAT_cursorKeyboard_obj, 0);
     hel_ObjSetVisible(FAT_cursorKeyboard_select_obj, 0);
 
+}
+
+/**
+ * \brief Affiche le curseur 1.
+ *
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera visible
+ * au prochain commit.
+ */
+void FAT_cursors_showCursor1() {
+    hel_ObjSetVisible(FAT_cursor1_obj, 1);
+}
+
+/**
+ * \brief Affiche le curseur 2.
+ *
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera visible
+ * au prochain commit.
+ */
+void FAT_cursors_showCursor2() {
+    hel_ObjSetVisible(FAT_cursor2_obj, 1);
+}
+
+/**
+ * \brief Affiche le curseur 3.
+ *
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera visible
+ * au prochain commit.
+ */
+void FAT_cursors_showCursor3() {
+    hel_ObjSetVisible(FAT_cursor3_obj, 1);
+}
+
+/**
+ * \brief Affiche le curseur 8.
+ *
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera visible
+ * au prochain commit.
+ */
+void FAT_cursors_showCursor8() {
+    hel_ObjSetVisible(FAT_cursor8_obj, 1);
+}
+
+/**
+ * \brief Affiche le curseur de changement d'onglet.
+ *
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera visible
+ * au prochain commit.
+ */
+void FAT_cursors_showCursorChange() {
+    hel_ObjSetVisible(FAT_cursorChange_obj, 1);
+}
+
+/**
+ * \brief Affiche le curseur de sélection du clavier.
+ *
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera visible
+ * au prochain commit.
+ */
+void FAT_cursors_showCursorKeyboard() {
+    hel_ObjSetVisible(FAT_cursorKeyboard_obj, 1);
+}
+
+/**
+ * \brief Affiche le curseur de sélection du clavier.
+ *
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera visible
+ * au prochain commit.
+ */
+void FAT_cursors_showCursorKeyboard_select() {
+    hel_ObjSetVisible(FAT_cursorKeyboard_select_obj, 1);
+}
+
+/**
+ * \brief Cache le curseur 1.
+ *
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera invisible
+ * au prochain commit.
+ */
+void FAT_cursors_hideCursor1() {
+    hel_ObjSetVisible(FAT_cursor1_obj, 0);
+}
+
+/**
+ * \brief Cache le curseur 2.
+ *
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera invisible
+ * au prochain commit.
+ */
+void FAT_cursors_hideCursor2() {
+    hel_ObjSetVisible(FAT_cursor2_obj, 0);
+}
+
+/**
+ * \brief Cache le curseur 3.
+ *
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera invisible
+ * au prochain commit.
+ */
+void FAT_cursors_hideCursor3() {
+    hel_ObjSetVisible(FAT_cursor3_obj, 0);
+}
+
+/**
+ * \brief Cache le curseur 8.
+ *
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera invisible
+ * au prochain commit.
+ */
+void FAT_cursors_hideCursor8() {
+    hel_ObjSetVisible(FAT_cursor8_obj, 0);
+}
+
+/**
+ * \brief Cache le curseur clavier.
+ *
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera invisible
+ * au prochain commit.
+ */
+void FAT_cursors_hideCursorKeyboard() {
+    hel_ObjSetVisible(FAT_cursorKeyboard_obj, 0);
+}
+
+/**
+ * \brief Cache le curseur sélection clavier.
+ *
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera invisible
+ * au prochain commit.
+ */
+void FAT_cursors_hideCursorKeyboard_select() {
+    hel_ObjSetVisible(FAT_cursorKeyboard_select_obj, 0);
+}
+
+/**
+ * \brief Cache le curseur de changement d'onglet.
+ *
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera invisible
+ * au prochain commit.
+ */
+void FAT_cursors_hideCursorChange() {
+    hel_ObjSetVisible(FAT_cursorChange_obj, 0);
+}
+
+/**
+ * \brief Cache tous les curseurs.
+ */
+void FAT_cursors_hideAllCursors(){
+    FAT_cursors_hideCursor1();
+    FAT_cursors_hideCursor2();
+    FAT_cursors_hideCursor3();
+    FAT_cursors_hideCursor8();
+    FAT_cursors_hideCursorChange();
+    FAT_cursors_hideCursorKeyboard();
+    FAT_cursors_hideCursorKeyboard_select();
+}
+
+/**
+ * \brief Déplace le curseur de changement d'onglet.
+ *
+ * \param x abscisse (en px)
+ * \param y ordonnée (en px)
+ */
+void FAT_cursors_moveCursorChange(u8 x, u8 y) {
+    hel_ObjSetXY(FAT_cursorChange_obj, x, y);
+}
+
+/**
+ * \brief Déplace le curseur de taille 1.
+ *
+ * \param x abscisse (en px)
+ * \param y ordonnée (en px)
+ */
+void FAT_cursors_moveCursor1(u8 x, u8 y) {
+    hel_ObjSetXY(FAT_cursor1_obj, x, y);
+}
+
+/**
+ * \brief Déplace le curseur de taille 2.
+ *
+ * \param x abscisse (en px)
+ * \param y ordonnée (en px)
+ */
+void FAT_cursors_moveCursor2(u8 x, u8 y) {
+    hel_ObjSetXY(FAT_cursor2_obj, x, y);
+}
+
+/**
+ * \brief Déplace le curseur de taille 3.
+ *
+ * \param x abscisse (en px)
+ * \param y ordonnée (en px)
+ */
+void FAT_cursors_moveCursor3(u8 x, u8 y) {
+    hel_ObjSetXY(FAT_cursor3_obj, x, y);
+}
+
+/**
+ * \brief Déplace le curseur de taille 8.
+ *
+ * \param x abscisse (en px)
+ * \param y ordonnée (en px)
+ */
+void FAT_cursors_moveCursor8(u8 x, u8 y) {
+    hel_ObjSetXY(FAT_cursor8_obj, x, y);
+}
+
+/**
+ * \brief Déplace le curseur clavier.
+ *
+ * \param x abscisse (en px)
+ * \param y ordonnée (en px)
+ */
+void FAT_cursors_moveCursorKeyboard(u8 x, u8 y) {
+    hel_ObjSetXY(FAT_cursorKeyboard_obj, x,y);
+}
+
+/**
+ * \brief Déplace le curseur de sélection clavier.
+ *
+ * \param x abscisse (en px)
+ * \param y ordonnée (en px)
+ */
+void FAT_cursors_moveCursorKeyboard_select(u8 x, u8 y) {
+    hel_ObjSetXY(FAT_cursorKeyboard_select_obj, x,y);
 }

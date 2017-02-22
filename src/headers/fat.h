@@ -19,6 +19,8 @@
 #ifndef _FAT_H_
 #define _FAT_H_
 
+#include "../soundApi/soundApi.h"
+
 /**
  * \brief Version actuelle de FAT.
  */
@@ -137,23 +139,6 @@ const char* outputText [4] = {"  ", "L ", " R", "LR"};
 #include "screen_help.h"
 
 #include "player.h"
-
-u8 ATTR_EWRAM ATTR_ALIGNED(4) g_BgTextSystemMemory[HEL_SUBSYSTEM_BGTEXT_REQUIREDMEMORY];
-u16 ATTR_EWRAM g_CharLUT[256];
-// attention, table ASCII uniquement sinon ça fout la grouille.
-const unsigned char CHARORDER[] =
-        " BCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmn"\
-    "opqrstuvwxyz0123456789,.-;:A#^+*@"\
-    "!\"~$%&/()=?|\\<>[]{}¹²³°";
-
-u8 ATTR_EWRAM ATTR_ALIGNED(4) g_ObjSystemBuffer[HEL_SUBSYSTEM_OBJ_REQUIREDMEMORY];
-
-// Reserve memory for the Map-System. This buffer
-// is used to manage internal states of the Map-System.
-// You can achieve a little performance increase when you
-// store it in IWRAM, but keep in mind, IWRAM is very limited!
-// The recommended memory location is EWRAM.
-u8 ATTR_EWRAM ATTR_ALIGNED(4) g_MapSystemBuffer[HEL_SUBSYSTEM_MAP_REQUIREDMEMORY];
 
 void FAT_init ();
 void FAT_initSpritePalette();
@@ -328,43 +313,6 @@ void FAT_switchToScreen(u8 screenId, u8 fromId) {
  */
 void FAT_showHelp(u8 screenId) {
     FAT_screenHelp_init(screenId);
-}
-
-/**
- * \brief Attendre la synchronisation du balayage vertical.
- */
-// deprecated and dangerous. Don't use it.
-void FAT_waitVSync() {
-    while (F_VCNT_CURRENT_SCANLINE < 160) {
-    }
-}
-
-/**
- * \brief Permet de patienter un certain nombre de cycle de balayage vertical.
- * @param nbFrames le nombre de balayage à attendre.
- */
-// deprecated and dangerous. Don't use it.
-void FAT_wait(u32 nbFrames) {
-    u32 i = 0;
-
-    while (i++ < nbFrames)
-        FAT_waitVSync();
-}
-
-/**
- * \brief Bloque le cpu un certain temps.
- *
- * Attention le temps n'est pas exprimé en secondes ! Il s'agit juste d'une variable:
- * plus elle est grande, plus le temps de blocage est long.
- *
- * @param time variable pour définir le temps d'attente
- */
-// deprecated and dangerous. Don't use it.
-void FAT_blockCPU(u16 time) {
-    u16 i = 0;
-    while (i++ < time) {
-        // CPU bloqué
-    }
 }
 
 #endif

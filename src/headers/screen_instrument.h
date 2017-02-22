@@ -64,7 +64,7 @@ void FAT_screenInstrument_hideAllOscSprite();
 s8 FAT_screenInstrument_giveMeAddedValue();
 
 /**
- * \brief Affiche le numéro de l'écran en cours d'édition dans le cadre en haut à droite. 
+ * \brief Affiche le numéro de l'écran en cours d'édition dans le cadre en haut à droite.
  */
 void FAT_screenInstrument_printInstrumentNumber() {
     hel_BgTextPrintF(TEXT_LAYER, 16, 3, 0, "Instrument %.2x", FAT_screenInstrument_currentInstrumentId);
@@ -72,119 +72,123 @@ void FAT_screenInstrument_printInstrumentNumber() {
 
 /**
  * \brief Affiche toutes les valeurs des paramètres de l'instrument selon son type.
- * 
+ *
  * @param type le type de l'instrument
  */
 void FAT_screenInstrument_printAllText(u8 type) {
+    tracker* FAT_tracker = FAT_data_getTracker ();
+    note* FAT_data_simulator = FAT_data_getSimulator();
+
     switch (type) {
         case INSTRUMENT_TYPE_PULSE:
         case INSTRUMENT_TYPE_PULSE2:
-            hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Volume    %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0x0f);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Volume    %.1x", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0x0f);
             hel_BgTextPrint(TEXT_LAYER, 1, 5, 0, "Direction");
-            FAT_screenInstrument_showEnvdir((FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0x10) >> 4,
+            FAT_screenInstrument_showEnvdir((FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0x10) >> 4,
                     88, 40);
-            hel_BgTextPrintF(TEXT_LAYER, 1, 6, 0, "Steptime  %.1x", (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0xe0) >> 5);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 6, 0, "Steptime  %.1x", (FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0xe0) >> 5);
             hel_BgTextPrint(TEXT_LAYER, 1, 7, 0, "Wave");
-            FAT_screenInstrument_showWaveduty(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].wavedutyOrPolynomialStep,
+            FAT_screenInstrument_showWaveduty(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].wavedutyOrPolynomialStep,
                     88, 56);
-            hel_BgTextPrintF(TEXT_LAYER, 1, 10, 0, "Timed     %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
-            if (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
-                hel_BgTextPrintF(TEXT_LAYER, 1, 11, 0, "Length    %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 10, 0, "Timed     %.1x", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
+            if (FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
+                hel_BgTextPrintF(TEXT_LAYER, 1, 11, 0, "Length    %.2x", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
             } else {
                 hel_BgTextPrint(TEXT_LAYER, 1, 11, 0, "Length    NA");
             }
-            FAT_screenInstrument_showOutput(1, 12, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
-            hel_BgTextPrintF(TEXT_LAYER, 1, 13, 0, "Sweep     %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].sweep);
+            FAT_screenInstrument_showOutput(1, 12, FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].output);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 13, 0, "Sweep     %.2x", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].sweep);
             hel_BgTextPrintF(TEXT_LAYER, 1, 16, 0, "Test it!  %s%1x\0",
-                    noteName[(FAT_data_simulator.note & 0xf0) >> 4], FAT_data_simulator.note & 0x0f);
+                    noteName[(FAT_data_simulator->note & 0xf0) >> 4], FAT_data_simulator->note & 0x0f);
             break;
         case INSTRUMENT_TYPE_WAVE:
-            hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Volume    %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].volumeRatio & 0x0f);
-            hel_BgTextPrintF(TEXT_LAYER, 1, 7, 0, "Timed     %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
-            if (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
-                hel_BgTextPrintF(TEXT_LAYER, 1, 8, 0, "Length    %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Volume    %.1x", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].volumeRatio & 0x0f);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 7, 0, "Timed     %.1x", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
+            if (FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
+                hel_BgTextPrintF(TEXT_LAYER, 1, 8, 0, "Length    %.2x", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
             } else {
                 hel_BgTextPrint(TEXT_LAYER, 1, 8, 0, "Length    NA");
             }
 
-            hel_BgTextPrintF(TEXT_LAYER, 1, 9, 0, "Voice     %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank & 0x1f);
-            hel_BgTextPrintF(TEXT_LAYER, 1, 10, 0, "Bank      %.1x", (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank & 0x20) >> 5);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 9, 0, "Voice     %.2x", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank & 0x1f);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 10, 0, "Bank      %.1x", (FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank & 0x20) >> 5);
 
-            if ((FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank & 0x40) >> 6 == 0) {
+            if ((FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].voiceAndBank & 0x40) >> 6 == 0) {
                 hel_BgTextPrint(TEXT_LAYER, 1, 11, 0, "Bankmode  SIN");
             } else {
                 hel_BgTextPrintF(TEXT_LAYER, 1, 11, 0, "Bankmode  DUA");
             }
-            FAT_screenInstrument_showOutput(1, 12, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
+            FAT_screenInstrument_showOutput(1, 12, FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].output);
             hel_BgTextPrintF(TEXT_LAYER, 1, 15, 0, "Test it!  %s%1x\0",
-                    noteName[(FAT_data_simulator.note & 0xf0) >> 4], FAT_data_simulator.note & 0x0f);
+                    noteName[(FAT_data_simulator->note & 0xf0) >> 4], FAT_data_simulator->note & 0x0f);
             break;
         case INSTRUMENT_TYPE_NOISE:
-            hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Volume    %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0x0f);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Volume    %.1x", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0x0f);
             hel_BgTextPrint(TEXT_LAYER, 1, 5, 0, "Direction");
-            FAT_screenInstrument_showEnvdir((FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0x10) >> 4,
+            FAT_screenInstrument_showEnvdir((FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0x10) >> 4,
                     88, 40);
-            hel_BgTextPrintF(TEXT_LAYER, 1, 6, 0, "Steptime  %.1x", (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0xe0) >> 5);
-            hel_BgTextPrintF(TEXT_LAYER, 1, 7, 0, "Polystep  %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].wavedutyOrPolynomialStep);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 6, 0, "Steptime  %.1x", (FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].envelope & 0xe0) >> 5);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 7, 0, "Polystep  %.1x", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].wavedutyOrPolynomialStep);
 
-            hel_BgTextPrintF(TEXT_LAYER, 1, 10, 0, "Timed     %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
-            if (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
-                hel_BgTextPrintF(TEXT_LAYER, 1, 11, 0, "Length    %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 10, 0, "Timed     %.1x", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
+            if (FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
+                hel_BgTextPrintF(TEXT_LAYER, 1, 11, 0, "Length    %.2x", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
             } else {
                 hel_BgTextPrint(TEXT_LAYER, 1, 11, 0, "Length    NA");
             }
-            FAT_screenInstrument_showOutput(1, 12, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
+            FAT_screenInstrument_showOutput(1, 12, FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].output);
             hel_BgTextPrintF(TEXT_LAYER, 1, 16, 0, "Test it!  %s%1x\0",
-                    noteName[(FAT_data_simulator.note & 0xf0) >> 4], FAT_data_simulator.note & 0x0f);
+                    noteName[(FAT_data_simulator->note & 0xf0) >> 4], FAT_data_simulator->note & 0x0f);
             break;
         case INSTRUMENT_TYPE_SAMPLEA:
         case INSTRUMENT_TYPE_SAMPLEB:
-            hel_BgTextPrintF(TEXT_LAYER, 16, 4, 0, "Nb samples %.2x", snd_countSamplesInKitById(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].kitNumber));
+            hel_BgTextPrintF(TEXT_LAYER, 16, 4, 0, "Nb samples %.2x", snd_countSamplesInKitById(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].kitNumber));
             //ham_DrawText(16, 5, "NB KITS    %.2x", snd_countAvailableKits ());
 
-            hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Name %s", snd_getKitNameById(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].kitNumber));
-            hel_BgTextPrintF(TEXT_LAYER, 1, 7, 0, "Volume    %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].volumeRatio >> 4);
-            hel_BgTextPrintF(TEXT_LAYER, 1, 10, 0, "Speed     %.1xx", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].speedOrLooping & 0x0f);
-            if (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].speedOrLooping >> 4) {
+            hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Name %s", snd_getKitNameById(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].kitNumber));
+            hel_BgTextPrintF(TEXT_LAYER, 1, 7, 0, "Volume    %.1x", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].volumeRatio >> 4);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 10, 0, "Speed     %.1xx", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].speedOrLooping & 0x0f);
+            if (FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].speedOrLooping >> 4) {
                 hel_BgTextPrintF(TEXT_LAYER, 1, 11, 0, "Loop      %s", "YES");
             } else {
                 hel_BgTextPrintF(TEXT_LAYER, 1, 11, 0, "Loop      %s", "NOP");
             }
-            hel_BgTextPrintF(TEXT_LAYER, 1, 12, 0, "Timed     %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
-            if (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
-                hel_BgTextPrintF(TEXT_LAYER, 1, 13, 0, "Length(%) %.3d", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 12, 0, "Timed     %.1x", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
+            if (FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
+                hel_BgTextPrintF(TEXT_LAYER, 1, 13, 0, "Length(%) %.3d", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
             } else {
                 hel_BgTextPrint(TEXT_LAYER, 1, 13, 0, "Length    N/A");
             }
-            hel_BgTextPrintF(TEXT_LAYER, 1, 14, 0, "Offset(%) %.2d", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].offset);
-            FAT_screenInstrument_showOutput(1, 15, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 14, 0, "Offset(%) %.2d", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].offset);
+            FAT_screenInstrument_showOutput(1, 15, FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].output);
 
-            hel_BgTextPrintF(TEXT_LAYER, 16, 12, 0, "Test it!  #%.2x\0", FAT_data_simulator.freq);
+            hel_BgTextPrintF(TEXT_LAYER, 16, 12, 0, "Test it!  #%.2x\0", FAT_data_simulator->freq);
 
             break;
 
         case INSTRUMENT_TYPE_OSCILLATORA:
         case INSTRUMENT_TYPE_OSCILLATORB:
             hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "OSC Shape");
-            FAT_screenInstrument_showOscForm (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].wavedutyOrPolynomialStep,
+            FAT_screenInstrument_showOscForm (FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].wavedutyOrPolynomialStep,
                                                                   88, 32);
             hel_BgTextPrintF(TEXT_LAYER, 1, 5, 0, "Amplitude NA");
-            hel_BgTextPrintF(TEXT_LAYER, 1, 8, 0, "Timed     %.1x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
-            if (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
-                hel_BgTextPrintF(TEXT_LAYER, 1, 9, 0, "Length    %.2x", FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 8, 0, "Timed     %.1x", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode);
+            if (FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].loopmode) {
+                hel_BgTextPrintF(TEXT_LAYER, 1, 9, 0, "Length    %.2x", FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].soundlength);
             } else {
                 hel_BgTextPrint(TEXT_LAYER, 1, 9, 0, "Length    NA");
             }
 
-            hel_BgTextPrintF(TEXT_LAYER, 1, 12, 0, "Test it!  #%.2x\0", FAT_data_simulator.freq);
+            hel_BgTextPrintF(TEXT_LAYER, 1, 12, 0, "Test it!  #%.2x\0", FAT_data_simulator->freq);
             break;
     }
 }
 
 /**
- * \brief Initialisation de l'écran instrument. 
+ * \brief Initialisation de l'écran instrument.
  */
 void FAT_screenInstrument_init() {
+    tracker* FAT_tracker = FAT_data_getTracker ();
     // quel instrument est en cours d'édition ?
     note* FAT_screenInstrument_currentNote = FAT_data_getNote(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine);
     FAT_screenInstrument_currentInstrumentId = FAT_screenInstrument_currentNote->instrument;
@@ -195,10 +199,10 @@ void FAT_screenInstrument_init() {
     FAT_data_initInstrumentIfNeeded(FAT_screenInstrument_currentInstrumentId, FAT_screenSong_currentSelectedColumn);
 
     // initialisation des curseurs
-    FAT_screenInstrument_initCursor(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+    FAT_screenInstrument_initCursor(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
 
     // initialisation du fond (interface)
-    FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+    FAT_screenInstrument_switchScreen(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
 
     // initialisation des autre curseurs
     FAT_cursors_moveCursorChange(INPUT_R_CURSOR_CHANGE_X, INPUT_R_CURSOR_CHANGE_Y);
@@ -208,8 +212,8 @@ void FAT_screenInstrument_init() {
 
 /**
  * \brief Utilisez cette méthode pour changer d'écran selon le type d'instrument
- * édité. 
- * 
+ * édité.
+ *
  * @param type le type d'instru à éditer cf. #define INSTRUMENT_TYPE_*
  */
 void FAT_screenInstrument_switchScreen(u8 type) {
@@ -271,12 +275,13 @@ void FAT_screenInstrument_switchScreen(u8 type) {
 
 /**
  * \brief Cette fonction permet de changer le type de l'instrument en cours d'édition.
- * 
+ *
  * Elle gère le déplacement du sprite onglet et permet le switchscreen.
  * @param move +1 -> type vers la droite, -1 type vers la gauche
  */
 void FAT_screenInstrument_changeInstrumentType(s8 move) {
-    u8 currentType = FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type;
+    tracker* FAT_tracker = FAT_data_getTracker ();
+    u8 currentType = FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type;
 
     switch (currentType) {
         case INSTRUMENT_TYPE_PULSE:
@@ -315,18 +320,19 @@ void FAT_screenInstrument_changeInstrumentType(s8 move) {
             break;
     }
 
-    FAT_screenInstrument_moveTabulationCursor(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+    FAT_screenInstrument_moveTabulationCursor(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
 }
 
 /**
  * \brief Tester l'appui sur les boutons.
- * 
+ *
  * <b>TODO cette méthode est trop grosse et difficilement maintenable. A refactorer. </b>
  */
 void FAT_screenInstrument_checkButtons() {
+    tracker* FAT_tracker = FAT_data_getTracker ();
     hel_PadCapture();
 
-    if ( FAT_isCurrentlySimulating == TRUE && !FAT_isCurrentlyPlaying && (
+    if ( FAT_data_isCurrentlySimulating() == TRUE && !FAT_isCurrentlyPlaying && (
                     hel_PadQuery()->Pressed.Start ||
                     hel_PadQuery()->Pressed.Select ||
                     hel_PadQuery()->Pressed.A ||
@@ -354,8 +360,8 @@ void FAT_screenInstrument_checkButtons() {
     } else {
         if (FAT_screenInstrument_isPopuped) {
             FAT_popup_hide();
-            FAT_screenInstrument_displayGoodCursor(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
-            FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+            FAT_screenInstrument_displayGoodCursor(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+            FAT_screenInstrument_printAllText(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
             FAT_screenInstrument_isPopuped = 0;
 
             if (FAT_popup_getSelectedIcon() != SCREEN_INSTRUMENTS_ID) {
@@ -382,18 +388,18 @@ void FAT_screenInstrument_checkButtons() {
             }
 
             if (hel_PadQuery()->Pressed.Down) {
-                FAT_screenInstrument_moveCursorDown(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                FAT_screenInstrument_moveCursorDown(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
             }
 
             if (hel_PadQuery()->Pressed.Up) {
-                FAT_screenInstrument_moveCursorUp(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                FAT_screenInstrument_moveCursorUp(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
             }
 
         } else {
             if (FAT_screenInstrument_isTabulating && FAT_screenInstruments_currentSelectedLine == 0) {
                 // relachement du L
                 FAT_screenInstrument_isTabulating = 0;
-                FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                FAT_screenInstrument_switchScreen(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
                 FAT_screenInstrument_hideTabulationCursor();
             }
 
@@ -402,23 +408,23 @@ void FAT_screenInstrument_checkButtons() {
 
                 if (hel_PadQuery()->Pressed.Right) {
                     if (FAT_screenInstrument_currentInstrumentId < NB_MAX_INSTRUMENTS - 1) {
-                        u8 type = FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type;
+                        u8 type = FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type;
                         FAT_screenInstrument_currentInstrumentId++;
                         FAT_data_initInstrumentIfNeeded(FAT_screenInstrument_currentInstrumentId, type);
-                        FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                        FAT_screenInstrument_switchScreen(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
                         FAT_screenInstrument_printInstrumentNumber();
-                        FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                        FAT_screenInstrument_printAllText(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
                     }
                 }
 
                 if (hel_PadQuery()->Pressed.Left) {
                     if (FAT_screenInstrument_currentInstrumentId > 0) {
-                        u8 type = FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type;
+                        u8 type = FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type;
                         FAT_screenInstrument_currentInstrumentId--;
                         FAT_data_initInstrumentIfNeeded(FAT_screenInstrument_currentInstrumentId, type);
-                        FAT_screenInstrument_switchScreen(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                        FAT_screenInstrument_switchScreen(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
                         FAT_screenInstrument_printInstrumentNumber();
-                        FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                        FAT_screenInstrument_printAllText(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
                     }
                 }
 
@@ -444,27 +450,27 @@ void FAT_screenInstrument_checkButtons() {
                         FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
                     }
                     if (hel_PadQuery()->Held.B) {
-                        FAT_screenInstrument_showSimulatorCursor (FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                        FAT_screenInstrument_showSimulatorCursor (FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
                         s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
                         FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);
-                        FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                        FAT_screenInstrument_printAllText(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
                     } else {
                         FAT_screenInstrument_hideSimulatorCursor ();
 
                         if (hel_PadQuery()->Pressed.Right) {
-                            FAT_screenInstrument_moveCursorRight(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                            FAT_screenInstrument_moveCursorRight(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
                         }
 
                         if (hel_PadQuery()->Pressed.Left) {
-                            FAT_screenInstrument_moveCursorLeft(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                            FAT_screenInstrument_moveCursorLeft(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
                         }
 
                         if (hel_PadQuery()->Pressed.Down) {
-                            FAT_screenInstrument_moveCursorDown(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                            FAT_screenInstrument_moveCursorDown(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
                         }
 
                         if (hel_PadQuery()->Pressed.Up) {
-                            FAT_screenInstrument_moveCursorUp(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+                            FAT_screenInstrument_moveCursorUp(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
                         }
                     }
                 }
@@ -476,13 +482,13 @@ void FAT_screenInstrument_checkButtons() {
             FAT_showHelp(SCREEN_INSTRUMENTS_ID);
         }
 
-        FAT_screenInstrument_commitCursorMove(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+        FAT_screenInstrument_commitCursorMove(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
     }
 }
 
 /**
  * \brief Cette méthode charge les sprites utilisés dans l'écran de gestion des instruments.
- * 
+ *
  * Attention, ne faire appel à cette méthode qu'une seule fois !
  */
 void FAT_screenInstrument_initSpritesForInstrument() {
@@ -642,7 +648,7 @@ void FAT_screenInstrument_initSpritesForInstrument() {
 }
 
 /**
- * \brief Cache tous les sprites relatifs à l'affiche de la direction de l'enveloppe. 
+ * \brief Cache tous les sprites relatifs à l'affiche de la direction de l'enveloppe.
  */
 void FAT_screenInstrument_hideAllEnvdirSprites() {
 
@@ -651,7 +657,7 @@ void FAT_screenInstrument_hideAllEnvdirSprites() {
 }
 
 /**
- * \brief Cache tous les sprites relatifs à l'affiche du paramètre waveduty. 
+ * \brief Cache tous les sprites relatifs à l'affiche du paramètre waveduty.
  */
 void FAT_screenInstrument_hideAllWavedutySprite() {
 
@@ -670,7 +676,7 @@ void FAT_screenInstrument_hideAllOscSprite(){
 
 /**
  * \brief Affiche le bon sprite pour la valeur de la direction de l'enveloppe.
- *  
+ *
  * @param envdirValue la valeur du paramètre
  * @param spriteX position en X pour l'affichage
  * @param spriteY position en Y pour l'affichage
@@ -690,7 +696,7 @@ void FAT_screenInstrument_showEnvdir(u8 envdirValue, u8 spriteX, u8 spriteY) {
 
 /**
  * \brief Affiche la valeur de l'output.
- *  
+ *
  * @param x la position du texte (en tiles)
  * @param y la position du texte (en tiles)
  * @param output la valeur de paramètre (0,1,2 ou 3)
@@ -702,7 +708,7 @@ void FAT_screenInstrument_showOutput(u8 x, u8 y, u8 output) {
 
 /**
  * \brief Affiche le bon sprite pour la valeur du waveduty.
- * 
+ *
  * @param wavedutyValue la valeur du paramètre
  * @param spriteX position en X pour l'affichage
  * @param spriteY position en Y pour l'affichage
@@ -752,7 +758,7 @@ void FAT_screenInstrument_showOscForm(u8 oscFormValue, u8 spriteX, u8 spriteY) {
 
 /**
  * \brief Fonction outil permettant de demander une valeur en fonction d'une touche appuyée.
- *  
+ *
  * @return Droite: 1, Gauche: -1, Haut: 16, Bas: -16
  */
 s8 FAT_screenInstrument_giveMeAddedValue() {
@@ -780,6 +786,7 @@ s8 FAT_screenInstrument_giveMeAddedValue() {
  * \brief Cette fonction permet de gérer l'appui sur la touche A pour un instrument de type PULSE.
  */
 void FAT_screenInstrument_pulse_pressA() {
+    tracker* FAT_tracker = FAT_data_getTracker ();
 
     s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
 
@@ -817,13 +824,15 @@ void FAT_screenInstrument_pulse_pressA() {
             break;
     }
 
-    FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+    FAT_screenInstrument_printAllText(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
 }
 
 /**
  * \brief Cette fonction permet de gérer l'appui sur la touche A pour un instrument de type WAVE.
  */
 void FAT_screenInstrument_wave_pressA() {
+    tracker* FAT_tracker = FAT_data_getTracker ();
+
     s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
 
     switch (FAT_screenInstruments_currentSelectedLine) {
@@ -857,13 +866,15 @@ void FAT_screenInstrument_wave_pressA() {
             break;
     }
 
-    FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+    FAT_screenInstrument_printAllText(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
 }
 
 /**
  * \brief Cette fonction permet de gérer l'appui sur la touche A pour un instrument de type NOISE.
  */
 void FAT_screenInstrument_noise_pressA() {
+    tracker* FAT_tracker = FAT_data_getTracker ();
+
     s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
 
     switch (FAT_screenInstruments_currentSelectedLine) {
@@ -897,13 +908,15 @@ void FAT_screenInstrument_noise_pressA() {
             break;
     }
 
-    FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+    FAT_screenInstrument_printAllText(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
 }
 
 /**
  * \brief Cette fonction permet de gérer l'appui sur la touche A pour un instrument de type SAMPLE.
  */
 void FAT_screenInstrument_sample_pressA() {
+    tracker* FAT_tracker = FAT_data_getTracker ();
+
     s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
 
     if (FAT_screenInstruments_currentSelectedColumn == 0){
@@ -940,11 +953,14 @@ void FAT_screenInstrument_sample_pressA() {
         }
     }
 
-    FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+    FAT_screenInstrument_printAllText(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
 }
 
 void FAT_screenInstrument_osc_pressA() {
+    tracker* FAT_tracker = FAT_data_getTracker ();
+
     s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
+
     switch (FAT_screenInstruments_currentSelectedLine) {
         case 0: // SHAPE
             FAT_data_instrumentOsc_changeShape(FAT_screenInstrument_currentInstrumentId, addedValue);
@@ -965,14 +981,16 @@ void FAT_screenInstrument_osc_pressA() {
             break;
     }
 
-    FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);
+    FAT_screenInstrument_printAllText(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
 }
 
 /**
  * \brief Fonction wrapper pour gérer l'appui sur la touche A.
  */
 void FAT_screenInstrument_pressOrHeldA() {
-    u8 currentType = FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type;
+    tracker* FAT_tracker = FAT_data_getTracker ();
+
+    u8 currentType = FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type;
 
     switch (currentType) {
         case INSTRUMENT_TYPE_PULSE:
@@ -998,4 +1016,3 @@ void FAT_screenInstrument_pressOrHeldA() {
 }
 
 #endif	/* SCREEN_INSTRUMENT_H */
-

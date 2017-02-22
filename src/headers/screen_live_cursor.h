@@ -64,7 +64,7 @@ void FAT_screenLive_commitCursorMove();
 
 /**
  * \brief Initialisation du curseur (seulement la position) et remise à zéro
- * des valeurs de ligne et colonne sélectionnées. 
+ * des valeurs de ligne et colonne sélectionnées.
  */
 void FAT_screenLive_initCursor() {
     FAT_screenLive_cursorX = SCREENLIVE_FIRST_BLOCK_X - 1;
@@ -77,7 +77,7 @@ void FAT_screenLive_initCursor() {
 };
 
 /**
- * \brief Déplace le curseur vers la droite. 
+ * \brief Déplace le curseur vers la droite.
  */
 void FAT_screenLive_moveCursorRight() {
     if (!(FAT_screenLive_cursorX >= SCREENLIVE_LAST_BLOCK_X - 1)) {
@@ -97,7 +97,7 @@ void FAT_screenLive_moveCursorRight() {
 }
 
 /**
- * \brief Déplace le curseur vers la gauche. 
+ * \brief Déplace le curseur vers la gauche.
  */
 void FAT_screenLive_moveCursorLeft() {
     if (!(FAT_screenLive_cursorX <= SCREENLIVE_FIRST_BLOCK_X)) {
@@ -116,7 +116,7 @@ void FAT_screenLive_moveCursorLeft() {
 }
 
 /**
- * \brief Déplace le curseur d'une page vers le bas. 
+ * \brief Déplace le curseur d'une page vers le bas.
  */
 void FAT_screenLive_movePageDown() {
     if (FAT_screenLive_currentSelectedLine < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN) {
@@ -127,7 +127,7 @@ void FAT_screenLive_movePageDown() {
 }
 
 /**
- * \brief Déplace le curseur tout en bas du tableau. 
+ * \brief Déplace le curseur tout en bas du tableau.
  */
 void FAT_screenLive_moveCursorAllDown() {
     FAT_screenLive_cursorY = SCREENLIVE_LAST_BLOCK_Y;
@@ -137,7 +137,7 @@ void FAT_screenLive_moveCursorAllDown() {
 }
 
 /**
- * \brief Déplace le curseur vers le bas. 
+ * \brief Déplace le curseur vers le bas.
  */
 void FAT_screenLive_moveCursorDown() {
     if (FAT_screenLive_isCursorInSequencer){
@@ -183,7 +183,7 @@ void FAT_screenLive_moveCursorDown() {
 }
 
 /**
- * \brief Déplace le curseur d'une page vers le haut. 
+ * \brief Déplace le curseur d'une page vers le haut.
  */
 void FAT_screenLive_movePageUp() {
     if (FAT_screenLive_currentSelectedLine >= SCREENLIVE_NB_LINES_ON_SCREEN
@@ -195,7 +195,7 @@ void FAT_screenLive_movePageUp() {
 }
 
 /**
- * \brief Déplace le curseur tout en haut du tableau. 
+ * \brief Déplace le curseur tout en haut du tableau.
  */
 void FAT_screenLive_moveCursorAllUp() {
     FAT_screenLive_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1;
@@ -205,7 +205,7 @@ void FAT_screenLive_moveCursorAllUp() {
 }
 
 /**
- * \brief Déplace le curseur vers le haut. 
+ * \brief Déplace le curseur vers le haut.
  */
 void FAT_screenLive_moveCursorUp() {
     if (FAT_screenLive_isCursorInSequencer){
@@ -259,16 +259,16 @@ void FAT_screenLive_switchCursorToPart (bool part){
 }
 
 /**
- * \brief Valide le déplacement du curseur sur l'écran. 
+ * \brief Valide le déplacement du curseur sur l'écran.
  */
 void FAT_screenLive_commitCursorMove() {
     if (FAT_screenLive_isCursorInSequencer){
-        hel_ObjSetXY(FAT_cursor2_obj, FAT_screenLive_cursorX, FAT_screenLive_cursorY);
+        FAT_cursors_moveCursor2 (FAT_screenLive_cursorX, FAT_screenLive_cursorY);
     } else {
         if (FAT_screenLive_currentTableSelectedLine == 2) {
-            hel_ObjSetXY(FAT_cursor3_obj, FAT_screenLive_cursorX, FAT_screenLive_cursorY);
+            FAT_cursors_moveCursor3 (FAT_screenLive_cursorX, FAT_screenLive_cursorY);
         }else {
-            hel_ObjSetXY(FAT_cursor2_obj, FAT_screenLive_cursorX, FAT_screenLive_cursorY);
+            FAT_cursors_moveCursor2 (FAT_screenLive_cursorX, FAT_screenLive_cursorY);
         }
     }
 }

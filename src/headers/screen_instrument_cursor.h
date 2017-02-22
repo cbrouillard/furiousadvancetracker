@@ -19,7 +19,7 @@
 
 // Définit ou le curseur de tabluation se situe par défaut
 /** \brief Position par défaut du curseur de tabulation. */
-#define SCREENINSTRUMENT_TABULATION_CURSOR_DEFAULT_X 5 
+#define SCREENINSTRUMENT_TABULATION_CURSOR_DEFAULT_X 5
 /** \brief Position par défaut du curseur de tabulation. */
 #define SCREENINSTRUMENT_TABULATION_CURSOR_DEFAULT_Y 5
 /** \brief Position du curseur de tabulation pour le type d'instrument PULSE. */
@@ -77,23 +77,23 @@ const u8 INST_SAMPLE_BLOCK_Y[SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN] = {31, 
 const u8 INST_OSC_BLOCK_Y[SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN] = {31, 39, 63, 71, 95};
 
 /**
- * \brief Cache le curseur de tabulation. 
+ * \brief Cache le curseur de tabulation.
  */
 void FAT_screenInstrument_hideTabulationCursor() {
     hel_ObjSetVisible(FAT_screenInstrument_tabCursorObj, 0);
 }
 
 /**
- * \brief Affiche le curseur de tabulation. 
+ * \brief Affiche le curseur de tabulation.
  */
 void FAT_screenInstrument_showTabulationCursor() {
     hel_ObjSetVisible(FAT_screenInstrument_tabCursorObj, 1);
 }
 
 /**
- * \brief Déplace le curseur de tabulation. 
- * 
- * Le type d'instrument détermine les possibilités de mouvements. * 
+ * \brief Déplace le curseur de tabulation.
+ *
+ * Le type d'instrument détermine les possibilités de mouvements. *
  * @param instrumentType type de l'instrument actuellement en cours d'édition
  */
 void FAT_screenInstrument_moveTabulationCursor(u8 instrumentType) {
@@ -126,8 +126,8 @@ void FAT_screenInstrument_moveTabulationCursor(u8 instrumentType) {
 
 /**
  * \brief Initialisation du curseur de tabulation.
- * 
- * Charge le sprite et le cache. 
+ *
+ * Charge le sprite et le cache.
  */
 void FAT_screenInstrument_tabCursorInit() {
     FAT_screenInstrument_tabCursorX = SCREENINSTRUMENT_TABULATION_CURSOR_DEFAULT_X;
@@ -159,17 +159,17 @@ void FAT_screenInstrument_pulse_commitCursorMove() {
         case 1:
         case 2:
         case 4:
-            hel_ObjSetXY(FAT_cursor1_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            FAT_cursors_moveCursor1 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
 
         case 3:
         case 5:
         case 6:
         case 7:
-            hel_ObjSetXY(FAT_cursor2_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            FAT_cursors_moveCursor2 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
         case 8:
-            hel_ObjSetXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            FAT_cursors_moveCursor3 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
     }
 }
@@ -182,17 +182,17 @@ void FAT_screenInstrument_wave_commitCursorMove() {
         case 0:
         case 1:
         case 4:
-            hel_ObjSetXY(FAT_cursor1_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            FAT_cursors_moveCursor1 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
 
         case 2:
         case 3:
         case 6:
-            hel_ObjSetXY(FAT_cursor2_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            FAT_cursors_moveCursor2 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
         case 5:
         case 7:
-            hel_ObjSetXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            FAT_cursors_moveCursor3 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
     }
 }
@@ -207,15 +207,15 @@ void FAT_screenInstrument_noise_commitCursorMove() {
         case 2:
         case 3:
         case 4:
-            hel_ObjSetXY(FAT_cursor1_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            FAT_cursors_moveCursor1 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
 
         case 5:
         case 6:
-            hel_ObjSetXY(FAT_cursor2_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            FAT_cursors_moveCursor2 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
         case 7:
-            hel_ObjSetXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            FAT_cursors_moveCursor3 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
     }
 }
@@ -228,26 +228,26 @@ void FAT_screenInstrument_sample_commitCursorMove() {
     if (FAT_screenInstruments_currentSelectedColumn == 0){
         switch (FAT_screenInstruments_currentSelectedLine) {
             case 0:
-                hel_ObjSetXY(FAT_cursor8_obj, 48, FAT_screenInstrument_cursorY + 1);
+                FAT_cursors_moveCursor8 (48, FAT_screenInstrument_cursorY + 1);
                 break;
             case 1:
             case 4:
-                hel_ObjSetXY(FAT_cursor1_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+                FAT_cursors_moveCursor1 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
                 break;
 
             case 2:
             case 6:
             case 7:
-                hel_ObjSetXY(FAT_cursor2_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+                FAT_cursors_moveCursor2 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
                 break;
 
             case 3:
             case 5:
-                hel_ObjSetXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+                FAT_cursors_moveCursor3 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
                 break;
         }
     } else {
-        hel_ObjSetXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+        FAT_cursors_moveCursor3 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
     }
 }
 
@@ -256,20 +256,20 @@ void FAT_screenInstrument_osc_commitCursorMove () {
         case 0:
         case 1:
         case 3:
-            hel_ObjSetXY(FAT_cursor2_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            FAT_cursors_moveCursor2 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
         case 2:
-            hel_ObjSetXY(FAT_cursor1_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            FAT_cursors_moveCursor1 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
         case 4:
-            hel_ObjSetXY(FAT_cursor3_obj, FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+            FAT_cursors_moveCursor3 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
             break;
     }
 }
 
 /**
  * \brief Validation du déplacement du curseur d'édition (fonction wrapper).
- * 
+ *
  * @param type type de l'instrument sur lequel on veut déplacer le curseur
  */
 void FAT_screenInstrument_commitCursorMove(u8 type) {
@@ -305,7 +305,7 @@ void FAT_screenInstrument_commitCursorMove(u8 type) {
 }
 
 /**
- * \brief Affiche le bon curseur (taille) selon sa position sur l'écran PULSE. 
+ * \brief Affiche le bon curseur (taille) selon sa position sur l'écran PULSE.
  */
 void FAT_screenInstrument_pulse_displayGoodCursor() {
     switch (FAT_screenInstruments_currentSelectedLine) {
@@ -339,7 +339,7 @@ void FAT_screenInstrument_pulse_displayGoodCursor() {
 }
 
 /**
- * \brief Affiche le bon curseur (taille) selon sa position sur l'écran NOISE. 
+ * \brief Affiche le bon curseur (taille) selon sa position sur l'écran NOISE.
  */
 void FAT_screenInstrument_noise_displayGoodCursor() {
     switch (FAT_screenInstruments_currentSelectedLine) {
@@ -372,7 +372,7 @@ void FAT_screenInstrument_noise_displayGoodCursor() {
 }
 
 /**
- * \brief Affiche le bon curseur (taille) selon sa position sur l'écran WAVE. 
+ * \brief Affiche le bon curseur (taille) selon sa position sur l'écran WAVE.
  */
 void FAT_screenInstrument_wave_displayGoodCursor() {
     switch (FAT_screenInstruments_currentSelectedLine) {
@@ -406,7 +406,7 @@ void FAT_screenInstrument_wave_displayGoodCursor() {
 }
 
 /**
- * \brief Affiche le bon curseur (taille) selon sa position sur l'écran SAMPLE. 
+ * \brief Affiche le bon curseur (taille) selon sa position sur l'écran SAMPLE.
  */
 void FAT_screenInstrument_sample_displayGoodCursor() {
 
@@ -529,7 +529,7 @@ void FAT_screenInstrument_initCursor(u8 instrumentType) {
 }
 
 /**
- * \brief Déplace le curseur vers le bas en fonction du type d'instrument édité. 
+ * \brief Déplace le curseur vers le bas en fonction du type d'instrument édité.
  * @param type le type d'instrument
  */
 void FAT_screenInstrument_moveCursorDown(u8 type) {
@@ -623,7 +623,7 @@ void FAT_screenInstrument_moveCursorDown(u8 type) {
 }
 
 /**
- * \brief Déplace le curseur vers le haut en fonction du type d'instrument édité. 
+ * \brief Déplace le curseur vers le haut en fonction du type d'instrument édité.
  * @param type le type d'instrument
  */
 void FAT_screenInstrument_moveCursorUp(u8 type) {
@@ -724,7 +724,7 @@ void FAT_screenInstrument_moveCursorUp(u8 type) {
 }
 
 /**
- * \brief Déplace le curseur vers la droite en fonction du type d'instrument édité. 
+ * \brief Déplace le curseur vers la droite en fonction du type d'instrument édité.
  * @param type le type d'instrument
  */
 void FAT_screenInstrument_moveCursorRight(u8 type) {
@@ -751,7 +751,7 @@ void FAT_screenInstrument_moveCursorRight(u8 type) {
 }
 
 /**
- * \brief Déplace le curseur vers la gauche en fonction du type d'instrument édité. 
+ * \brief Déplace le curseur vers la gauche en fonction du type d'instrument édité.
  * @param type le type d'instrument
  */
 void FAT_screenInstrument_moveCursorLeft(u8 type) {
@@ -781,30 +781,29 @@ void FAT_screenInstrument_showSimulatorCursor (u8 type){
     switch (type) {
        case INSTRUMENT_TYPE_PULSE:
        case INSTRUMENT_TYPE_PULSE2:
-           hel_ObjSetXY (FAT_cursor_player3_obj,SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_PULSE_BLOCK_Y[SCREENINSTRUMENT_PULSE_NB_LINES_ON_SCREEN - 1]);
-           break;
+            FAT_cursors_moveCursor3  (SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_PULSE_BLOCK_Y[SCREENINSTRUMENT_PULSE_NB_LINES_ON_SCREEN - 1]);
+            break;
        case INSTRUMENT_TYPE_WAVE:
-           hel_ObjSetXY (FAT_cursor_player3_obj,SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_WAVE_BLOCK_Y[SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN - 1]);
-           break;
+            FAT_cursors_moveCursor3  (SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_WAVE_BLOCK_Y[SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN - 1]);
+            break;
        case INSTRUMENT_TYPE_NOISE:
-           hel_ObjSetXY (FAT_cursor_player3_obj,SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_NOISE_BLOCK_Y[SCREENINSTRUMENT_NOISE_NB_LINES_ON_SCREEN - 1]);
-           break;
+            FAT_cursors_moveCursor3  (SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_NOISE_BLOCK_Y[SCREENINSTRUMENT_NOISE_NB_LINES_ON_SCREEN - 1]);
+            break;
        case INSTRUMENT_TYPE_SAMPLEA:
        case INSTRUMENT_TYPE_SAMPLEB:
-           hel_ObjSetXY (FAT_cursor_player3_obj,207,INST_SAMPLE_BLOCK_Y[SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN - 1]);
-           break;
+            FAT_cursors_moveCursor3  (207,INST_SAMPLE_BLOCK_Y[SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN - 1]);
+            break;
        case INSTRUMENT_TYPE_OSCILLATORA:
        case INSTRUMENT_TYPE_OSCILLATORB:
-           hel_ObjSetXY (FAT_cursor_player3_obj,SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_OSC_BLOCK_Y[SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN - 1]);
+            FAT_cursors_moveCursor3 (SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_OSC_BLOCK_Y[SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN - 1]);
            break;
     }
 
-    hel_ObjSetVisible (FAT_cursor_player3_obj, 1);
+    FAT_cursors_showCursor3();
 }
 
 void FAT_screenInstrument_hideSimulatorCursor (){
-    hel_ObjSetVisible (FAT_cursor_player3_obj, 0);
+    FAT_cursors_hideCursor3();
 }
 
 #endif	/* SCREEN_INSTRUMENT_CURSOR_H */
-

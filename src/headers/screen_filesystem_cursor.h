@@ -45,7 +45,7 @@ void FAT_screenFilesystem_commitCursorMove();
 
 /**
  * \brief Initialisation du curseur (position uniquement), remise à zéro de la ligne
- * sélectionnée. 
+ * sélectionnée.
  */
 void FAT_screenFilesystem_initCursor() {
     FAT_screenFilesystem_cursorY = SCREENFILESYSTEM_FIRST_BLOCK_Y - 1;
@@ -53,15 +53,15 @@ void FAT_screenFilesystem_initCursor() {
 }
 
 /**
- * \brief Cette fonction permet de valider le déplacement du curseur sur l'écran. 
+ * \brief Cette fonction permet de valider le déplacement du curseur sur l'écran.
  */
 void FAT_screenFilesystem_commitCursorMove() {
-    hel_ObjSetXY(FAT_cursor8_obj, SCREENFILESYSTEM_FIRST_BLOCK_X, FAT_screenFilesystem_cursorY+1);
-    hel_ObjSetXY(FAT_cursor2_obj, SCREENFILESYSTEM_FIRST_ACTION_X, FAT_screenFilesystem_cursorY);
+    FAT_cursors_moveCursor8 (SCREENFILESYSTEM_FIRST_BLOCK_X, FAT_screenFilesystem_cursorY+1);
+    FAT_cursors_moveCursor2 (SCREENFILESYSTEM_FIRST_ACTION_X, FAT_screenFilesystem_cursorY);
 }
 
 /**
- * \brief Déplace le curseur vers le bas. 
+ * \brief Déplace le curseur vers le bas.
  */
 void FAT_screenFilesystem_moveCursorDown() {
     if (FAT_screenFilesystem_currentSelectedLine < SCREENFILESYSTEM_NB_LINES_ON_SCREEN - 1) {
@@ -78,7 +78,7 @@ void FAT_screenFilesystem_moveCursorDown() {
 }
 
 /**
- * \brief Déplace le curseur vers le haut. 
+ * \brief Déplace le curseur vers le haut.
  */
 void FAT_screenFilesystem_moveCursorUp() {
 
@@ -98,4 +98,3 @@ void FAT_screenFilesystem_moveCursorUp() {
 
 
 #endif	/* SCREEN_FILESYSTEM_CURSOR_H */
-

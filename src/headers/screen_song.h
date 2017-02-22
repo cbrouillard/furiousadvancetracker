@@ -30,8 +30,8 @@
 
 /** \brief Cette variable contient le numéro de la première ligne actuellement affichée. */
 u8 FAT_screenSong_currentStartLine = 0;
-/** 
- * \brief cette variable permet de savoir si l'écran song est actuellement sous la popup. 
+/**
+ * \brief cette variable permet de savoir si l'écran song est actuellement sous la popup.
  * \todo cette variable pourrait etre mutualisée pour tous les écrans ?
  */
 bool FAT_screenSong_isPopuped = 0;
@@ -81,16 +81,17 @@ void FAT_screenSong_init() {
 
 /**
  * \brief Affiche quelques infos (nom du projet, ligne actuellement sélectionnée et nom du channel)
- * sur l'écran. 
+ * sur l'écran.
  */
 void FAT_screenSong_printInfos() {
-    hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "%s\nChan %s\nLine  %.2x", FAT_tracker.songName, CHANNEL_NAME[FAT_screenSong_currentSelectedColumn], FAT_screenSong_currentSelectedLine);
-    hel_BgTextPrintF(TEXT_LAYER, 21, 6, 0, "TSP   %2.x\nTmpo %.3d", FAT_tracker.transpose, FAT_tracker.tempo);
+    tracker* FAT_tracker = FAT_data_getTracker();
+    hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "%s\nChan %s\nLine  %.2x", FAT_tracker->songName, CHANNEL_NAME[FAT_screenSong_currentSelectedColumn], FAT_screenSong_currentSelectedLine);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 6, 0, "TSP   %2.x\nTmpo %.3d", FAT_tracker->transpose, FAT_tracker->tempo);
 }
 
 /**
- * \brief Imprime les numéros de lignes. 
- * 
+ * \brief Imprime les numéros de lignes.
+ *
  * L'impression démarre depuis la valeur de FAT_screenSong_currentStartLine jusqu'à FAT_screenSong_currentStartLine + SCREENSONG_NB_LINES_ON_SCREEN
  */
 void FAT_screenSong_printLineColumns() {
@@ -103,21 +104,22 @@ void FAT_screenSong_printLineColumns() {
 }
 
 /**
- * \brief Affiche toutes les séquences actuellement visibles.  
+ * \brief Affiche toutes les séquences actuellement visibles.
  */
 void FAT_screenSong_printSequences() {
     u8 c;
     u8 v;
+    tracker* FAT_tracker = FAT_data_getTracker ();
     for (v = 0; v < SCREENSONG_NB_LINES_ON_SCREEN; v++) {
 
         for (c = 0; c < 6; c++) {
-            if (FAT_tracker.channels[c].sequences[v + FAT_screenSong_currentStartLine] == NULL_VALUE) {
+            if (FAT_tracker->channels[c].sequences[v + FAT_screenSong_currentStartLine] == NULL_VALUE) {
                 hel_BgTextPrint(TEXT_LAYER, SCREENSONG_SEQUENCE_LINE_X + (c * 3),
                         v + SCREENSONG_LINE_START_Y, 0, "  ");
             } else {
                 hel_BgTextPrintF(TEXT_LAYER, SCREENSONG_SEQUENCE_LINE_X + (c * 3),
                         v + SCREENSONG_LINE_START_Y, 0, "%.2x ",
-                        FAT_tracker.channels[c].sequences[v + FAT_screenSong_currentStartLine]);
+                        FAT_tracker->channels[c].sequences[v + FAT_screenSong_currentStartLine]);
             }
         }
 
@@ -125,17 +127,18 @@ void FAT_screenSong_printSequences() {
 }
 
 /**
- * \brief Affiche une seule séquence. 
- *  
+ * \brief Affiche une seule séquence.
+ *
  * @param channel le numéro de channel sur lequel la séquence est inscrite
  * @param lineOnScreen le numéro de ligne à l'écran, compris entre 0 et SCREENSONG_NB_LINES_ON_SCREEN
  * @param realLine le vrai numéro de ligne dans le tracker ou la séquence a été inscrite
  */
 void FAT_screenSong_printSequence(u8 channel, u8 lineOnScreen, u8 realLine) {
-    if (FAT_tracker.channels[channel].sequences[realLine] != NULL_VALUE) {
+    tracker* FAT_tracker = FAT_data_getTracker ();
+    if (FAT_tracker->channels[channel].sequences[realLine] != NULL_VALUE) {
         hel_BgTextPrintF(TEXT_LAYER, SCREENSONG_SEQUENCE_LINE_X + (3 * channel),
                 lineOnScreen + SCREENSONG_LINE_START_Y, 0,
-                "%.2x\0", FAT_tracker.channels[channel].sequences[realLine]);
+                "%.2x\0", FAT_tracker->channels[channel].sequences[realLine]);
     } else {
         hel_BgTextPrint(TEXT_LAYER, SCREENSONG_SEQUENCE_LINE_X + (3 * channel),
                 lineOnScreen + SCREENSONG_LINE_START_Y, 0, "  ");
@@ -152,7 +155,7 @@ void FAT_screenSong_printAllScreenText() {
 }
 
 /**
- * \brief Cette fonction s'occupe de tester les interactions utilisateurs. 
+ * \brief Cette fonction s'occupe de tester les interactions utilisateurs.
  */
 void FAT_screenSong_checkButtons() {
 
@@ -236,7 +239,7 @@ void FAT_screenSong_checkButtons() {
 }
 
 /**
- * \brief Cette fonction est dédiée à l'interaction avec la touche B. 
+ * \brief Cette fonction est dédiée à l'interaction avec la touche B.
  */
 void FAT_screenSong_pressB() {
     if (hel_PadQuery()->Held.L) {
@@ -264,7 +267,7 @@ void FAT_screenSong_pressB() {
 }
 
 /**
- * \brief Cette fonction est dédiée à l'interaction avec la touche A. 
+ * \brief Cette fonction est dédiée à l'interaction avec la touche A.
  */
 void FAT_screenSong_pressOrHeldA() {
     if (hel_PadQuery()->Pressed.L) {
@@ -303,4 +306,3 @@ void FAT_screenSong_pressOrHeldA() {
 }
 
 #endif
-
