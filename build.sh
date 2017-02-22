@@ -14,6 +14,7 @@ rm src/gfx/raw/* -rf
 cleanAll
 
 echo "### Compilation"
+mkdir -p src/gfx/raw
 make gfx
 make
 
