@@ -13,7 +13,11 @@ http://brouillard.me/shared/howto_FAT_install.zip
 
 Then follow this procedure.
 ------------------------------------------------------------------
+0. Unzip the "howto_FAT_install.zip"
 
+    unzip howto_FAT_install.zip
+    cd howto_FAT_install/
+    
 1. Copy the libraries directories in a cool space. Mine is "/home/cyril/Coding/GBA/"
 
     mkdir /home/cyril/Coding/GBA
@@ -34,6 +38,7 @@ Then follow this procedure.
 
 4. Copy the old libstdc++ shared lib on your disk
 
+    cd howto_FAT_install/
     cp libstdc++-libc6.1-1.so.2 /usr/lib/
     sudo ldconfig
 
@@ -49,6 +54,8 @@ If there are errors at this point, please verify that all developers packets had
 A convenient script is also provided to clear, build gfx code and make all the project.
 
     ./build.sh
+    
+Please note you'll have to get wine installed on your system before using the build.sh script.    
 
 Easy as ABC. You have to install VisualBoyAdvance before use this script.
 Have fun !
