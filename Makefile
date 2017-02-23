@@ -21,7 +21,7 @@ OFILES += src/main.o \
  	src/screens/popup.o src/screens/project.o src/screens/filesystem.o \
 	src/screens/blocks.o src/screens/composer.o src/screens/effects.o \
 	src/screens/help.o src/screens/instrument.o src/screens/live.o \
-	src/screens/song.o \
+	src/screens/song.o src/screens/notes.o \
 	src/dialogs/keyboard.o src/dialogs/yesno.o \
 	src/gfx/ResourceData.o src/soundApi/soundApi.o \
 	src/soundApi/libgbfs.o
