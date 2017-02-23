@@ -36,6 +36,27 @@ u8 ATTR_EWRAM ATTR_ALIGNED(4) g_ObjSystemBuffer[HEL_SUBSYSTEM_OBJ_REQUIREDMEMORY
 // The recommended memory location is EWRAM.
 u8 ATTR_EWRAM ATTR_ALIGNED(4) g_MapSystemBuffer[HEL_SUBSYSTEM_MAP_REQUIREDMEMORY];
 
+/** \brief Stocke l'id de l'écran sur lequel l'utilisateur se situe. */
+u8 FAT_currentScreen = SCREEN_SONG_ID;
+u8 FAT_getCurrentScreen (){
+  return FAT_currentScreen;
+}
+
+/** \brief Variable quasi temporaire afin de savoir si on a activé l'écran d'aide. */
+u8 isHelpActivated = 0;
+u8 FAT_getIsHelpActivated (){
+  return isHelpActivated;
+}
+
+/**
+ * \brief Permet de savoir si le player est en train de jouer la chanson.
+ */
+bool FAT_isCurrentlyPlaying = 0;
+u8 FAT_live_nbChannelPlaying = 0;
+
+/** \brief Repères pour le player: les valeurs dans les tableaux représentent des numéros de lignes (séquences). */
+u8 actualSequencesForChannel[6];
+
 /**
  * \brief Initialisation de HEL/HAM et d'autres données propres à FAT.
  *
@@ -133,4 +154,181 @@ void FAT_initSpritePalette() {
  */
 void FAT_initScreenPalette() {
     hel_PalBgLoad256(ResData16(RES_SCREEN_PAL));
+}
+
+void VBLInterruptHandler(void) {
+    hel_ObjTransmit();
+    // acknowledge interrupt
+    hel_IntrAcknowledge(INT_TYPE_VBL);
+}
+
+/**
+ * \brief Méthode pour afficher un simple écran "titre" avec une boucle infinie en
+ * attente du bouton "START".
+ */
+void FAT_showIntro() {
+
+    ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_INTRO_RAW), RES_INTRO_RAW_SIZE16, 1, 1);
+    // Create a map for background
+    hel_MapCreate(SCREEN_LAYER,        // Background number
+                  32,   // width in tiles
+                  20,   // height in tiles
+                  ResData(RES_INTRO_MAP),   // Pointer to source MapData
+                  sizeof(u16),                  // DataTypeSize of one element from Source MapData
+                  MAP_FLAGS_DEFAULT);           // Flags to control map behaviour
+
+    ham_InitBg(SCREEN_LAYER, 1, 3, FALSE);
+
+    hel_BgTextPrintF(TEXT_LAYER, 23, 16, 0, "%.3dkits", snd_countAvailableKits());
+
+    for (;;) {
+
+        hel_PadCapture();
+
+        if (hel_PadQuery()->Pressed.Start ||
+                hel_PadQuery()->Pressed.Select ||
+                hel_PadQuery()->Pressed.A ||
+                hel_PadQuery()->Pressed.B ||
+                hel_PadQuery()->Pressed.Up ||
+                hel_PadQuery()->Pressed.Down ||
+                hel_PadQuery()->Pressed.Right ||
+                hel_PadQuery()->Pressed.Left ||
+                hel_PadQuery()->Pressed.R ||
+                hel_PadQuery()->Pressed.L
+                ) {
+            break;
+        }
+
+        // Wait for Vertical Blank
+        hel_SwiVBlankIntrWait();
+    }
+}
+
+/**
+ * \brief Méthode qui permet de réinitialiser le BG SCREEN_LAYER proprement.
+ *
+ * <b>NE PAS TOUCHER !  </b>
+ */
+void FAT_reinitScreen() {
+    if (ham_bg[SCREEN_LAYER].ti) {
+        ham_DeInitTileSet(ham_bg[SCREEN_LAYER].ti);
+        ham_DeInitMapSet(ham_bg[SCREEN_LAYER].mi);
+        FAT_forceClearTextLayer();
+    }
+}
+
+/**
+ * \brief Méthode à réfactorer : effacer l'écran texte en affichant des espaces partout.
+ *
+ * Performance warning ! Afficher du texte via HAM est lent !
+ */
+void FAT_forceClearTextLayer() {
+    if (ham_bg[TEXT_LAYER].ti) {
+
+        ham_DeInitTileSet(ham_bg[TEXT_LAYER].ti);
+        ham_DeInitMapSet(ham_bg[TEXT_LAYER].mi);
+
+        ham_bg[TEXT_LAYER].ti = ham_InitTileSet((void*) ResData(RES_TEXT_RAW), RES_TEXT_RAW_SIZE16, 1, 1);
+        ham_bg[TEXT_LAYER].mi = ham_InitMapEmptySet((u8) 1024, 0);
+    }
+
+}
+
+void FAT_allScreen_singleCheckButtons() {
+    switch (FAT_currentScreen) {
+        case SCREEN_PROJECT_ID:
+            FAT_screenProject_checkButtons();
+            break;
+        case SCREEN_LIVE_ID:
+            FAT_screenLive_checkButtons();
+            break;
+        case SCREEN_SONG_ID:
+            FAT_screenSong_checkButtons();
+            break;
+        case SCREEN_BLOCKS_ID:
+            FAT_screenBlocks_checkButtons();
+            break;
+        case SCREEN_NOTES_ID:
+            FAT_screenNotes_checkButtons();
+            break;
+        case SCREEN_EFFECTS_ID:
+            FAT_screenEffects_checkButtons();
+            break;
+        case SCREEN_COMPOSER_ID:
+            FAT_screenComposer_checkButtons();
+            break;
+        case SCREEN_INSTRUMENTS_ID:
+            FAT_screenInstrument_checkButtons();
+            break;
+        case SCREEN_FILESYSTEM_ID:
+            FAT_screenFilesystem_checkButtons();
+            break;
+        case SCREEN_HELP_ID:
+            FAT_screenHelp_checkButtons();
+
+            break;
+    }
+}
+
+void FAT_mainLoop() {
+    for (;;) {
+
+        if (FAT_isCurrentlyPlaying) {
+
+            FAT_player_continueToPlay();
+        }
+
+        FAT_allScreen_singleCheckButtons();
+        // Wait for Vertical Blank
+        hel_SwiVBlankIntrWait();
+
+    }
+}
+
+/**
+ * \brief Cette méthode permet de changer d'écran.
+ *
+ * @param screenId l'id de l'écran que l'on souhaite afficher.
+ */
+void FAT_switchToScreen(u8 screenId, u8 fromId) {
+    FAT_currentScreen = screenId;
+    switch (screenId) {
+        case SCREEN_PROJECT_ID:
+            FAT_screenProject_init();
+            break;
+        case SCREEN_LIVE_ID:
+            FAT_screenLive_init();
+            break;
+        case SCREEN_SONG_ID:
+            FAT_screenSong_init();
+            break;
+        case SCREEN_BLOCKS_ID:
+            FAT_screenBlocks_init(fromId);
+            break;
+        case SCREEN_NOTES_ID:
+            FAT_screenNotes_init(fromId);
+            break;
+        case SCREEN_EFFECTS_ID:
+            FAT_screenEffects_init();
+            break;
+        case SCREEN_COMPOSER_ID:
+            FAT_screenComposer_init();
+            break;
+        case SCREEN_INSTRUMENTS_ID:
+            FAT_screenInstrument_init();
+            break;
+        case SCREEN_FILESYSTEM_ID:
+            FAT_screenFilesystem_init();
+            break;
+    }
+
+    FAT_popup_moveSelectedScreenCursor();
+}
+
+/**
+ * \brief Affiche l'écran d'aide correspondant à l'id passé en paramètres.
+ * \param screenId le numéro d'écran actuellement consulté.
+ */
+void FAT_showHelp(u8 screenId) {
+    FAT_screenHelp_init(screenId);
 }

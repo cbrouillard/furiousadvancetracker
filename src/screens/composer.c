@@ -31,7 +31,7 @@ void FAT_screenComposer_printInfos() {
     tracker* FAT_tracker = FAT_data_getTracker ();
     hel_BgTextPrintF(TEXT_LAYER, 18, 3, 0, "Composer  %.1x", 0);
     hel_BgTextPrintF(TEXT_LAYER, 18, 4, 0, "Line     %.2x",
-            FAT_screenComposer_currentSelectedLine);
+            FAT_screenComposer_getCurrentSelectedLine());
 
     hel_BgTextPrintF(TEXT_LAYER, 1, 3, 0, "Transpose  %.2x", FAT_tracker->composer.transpose);
     hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Key Repeat %.2x", FAT_tracker->composer.keyRepeat);
@@ -141,9 +141,9 @@ void FAT_screenComposer_init() {
     FAT_cursors_hideCursor2();
     FAT_cursors_hideCursor3();
     FAT_cursors_hideCursor1();
-    if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_NOTES && FAT_screenComposer_currentSelectedLine > 1) {
+    if (FAT_screenComposer_getCurrentSelectedColumn() == SCREENCOMPOSER_COLUMN_ID_NOTES && FAT_screenComposer_getCurrentSelectedLine() > 1) {
         FAT_cursors_showCursor3();
-    } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CHANNEL && FAT_screenComposer_currentSelectedLine > 1) {
+    } else if (FAT_screenComposer_getCurrentSelectedColumn() == SCREENCOMPOSER_COLUMN_ID_CHANNEL && FAT_screenComposer_getCurrentSelectedLine() > 1) {
         FAT_cursors_showCursor1();
     } else {
         FAT_cursors_showCursor2();
@@ -188,9 +188,9 @@ void FAT_screenComposer_checkButtons() {
         if (FAT_screenComposer_isPopuped) {
             FAT_popup_hide();
             if (!FAT_screenComposer_isLocked) {
-                if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_NOTES) {
+                if (FAT_screenComposer_getCurrentSelectedColumn() == SCREENCOMPOSER_COLUMN_ID_NOTES) {
                     FAT_cursors_showCursor3();
-                } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CHANNEL) {
+                } else if (FAT_screenComposer_getCurrentSelectedColumn() == SCREENCOMPOSER_COLUMN_ID_CHANNEL) {
                     FAT_cursors_showCursor1();
                 } else {
                     FAT_cursors_showCursor2();
@@ -257,9 +257,9 @@ void FAT_screenComposer_checkButtons() {
  */
 void FAT_screenComposer_pressOrHeldA() {
 
-    if (FAT_screenComposer_currentSelectedLine >= SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN) {
-        u8 realLine = FAT_screenComposer_currentSelectedLine - SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN;
-        switch (FAT_screenComposer_currentSelectedColumn) {
+    if (FAT_screenComposer_getCurrentSelectedLine() >= SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN) {
+        u8 realLine = FAT_screenComposer_getCurrentSelectedLine() - SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN;
+        switch (FAT_screenComposer_getCurrentSelectedColumn()) {
             case SCREENCOMPOSER_COLUMN_ID_NOTES:
                 if (FAT_data_composer_isNoteEmpty(realLine)) {
                     // espace libre
@@ -363,7 +363,7 @@ void FAT_screenComposer_pressOrHeldA() {
         FAT_screenComposer_printNote(realLine);
     } else {
         // on joue avec les paramètres
-        switch (FAT_screenComposer_currentSelectedLine) {
+        switch (FAT_screenComposer_getCurrentSelectedLine()) {
             case 0: // param transpose
                 if (hel_PadQuery()->Pressed.Right) {
                     FAT_data_composer_changeTranspose(0, 1);
@@ -402,8 +402,8 @@ void FAT_screenComposer_pressOrHeldA() {
  * \brief Fonction spécialisée dans la gestion de la touche B.
  */
 void FAT_screenComposer_pressB() {
-    if (FAT_screenComposer_currentSelectedLine >= SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN) {
-        u8 realLine = FAT_screenComposer_currentSelectedLine - SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN;
+    if (FAT_screenComposer_getCurrentSelectedLine() >= SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN) {
+        u8 realLine = FAT_screenComposer_getCurrentSelectedLine() - SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN;
         if (FAT_data_composer_isNoteEmpty(realLine)) {
             FAT_data_composer_pasteNote(realLine);
         } else {
@@ -426,9 +426,9 @@ void FAT_screenComposer_switchLocking() {
         FAT_cursors_hideCursor3();
         FAT_cursors_hideCursor1();
     } else {
-        if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_NOTES) {
+        if (FAT_screenComposer_getCurrentSelectedColumn() == SCREENCOMPOSER_COLUMN_ID_NOTES) {
             FAT_cursors_showCursor3();
-        } else if (FAT_screenComposer_currentSelectedColumn == SCREENCOMPOSER_COLUMN_ID_CHANNEL) {
+        } else if (FAT_screenComposer_getCurrentSelectedColumn() == SCREENCOMPOSER_COLUMN_ID_CHANNEL) {
             FAT_cursors_showCursor1();
         } else {
             FAT_cursors_showCursor2();

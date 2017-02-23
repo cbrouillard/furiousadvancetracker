@@ -22,6 +22,10 @@ OFILES += src/main.o \
 	src/screens/blocks.o src/screens/composer.o src/screens/effects.o \
 	src/screens/help.o src/screens/instrument.o src/screens/live.o \
 	src/screens/song.o src/screens/notes.o \
+	src/screens/cursors/blocks_cursor.o src/screens/cursors/composer_cursor.o  \
+	src/screens/cursors/filesystem_cursor.o src/screens/cursors/instrument_cursor.o \
+	src/screens/cursors/live_cursor.o src/screens/notes_cursor.o \
+	src/screens/cursors/project_cursor.o src/screens/song_cursor.o \
 	src/dialogs/keyboard.o src/dialogs/yesno.o \
 	src/gfx/ResourceData.o src/soundApi/soundApi.o \
 	src/soundApi/libgbfs.o

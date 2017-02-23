@@ -72,10 +72,10 @@ void FAT_screenFilesystem_printAllTracksName() {
  * sélectionnée, ...
  */
 void FAT_screenFilesystem_printInfos() {
-    hel_BgTextPrintF(TEXT_LAYER, 16, 5, 0, "Line %.2x", FAT_screenFilesystem_currentSelectedLine);
-    hel_BgTextPrintF(TEXT_LAYER, 16, 6, 0, "Name %.8s", FAT_filesystem_getTrackName(FAT_screenFilesystem_currentSelectedLine));
-    hel_BgTextPrintF(TEXT_LAYER, 16, 7, 0, "Size %.5d B", FAT_filesystem_getTrackSize(FAT_screenFilesystem_currentSelectedLine));
-    hel_BgTextPrintF(TEXT_LAYER, 16, 8, 0, "Work %.2x", FAT_filesystem_getTrackNbWork(FAT_screenFilesystem_currentSelectedLine));
+    hel_BgTextPrintF(TEXT_LAYER, 16, 5, 0, "Line %.2x", FAT_screenFilesystem_getCurrentSelectedLine());
+    hel_BgTextPrintF(TEXT_LAYER, 16, 6, 0, "Name %.8s", FAT_filesystem_getTrackName(FAT_screenFilesystem_getCurrentSelectedLine()));
+    hel_BgTextPrintF(TEXT_LAYER, 16, 7, 0, "Size %.5d B", FAT_filesystem_getTrackSize(FAT_screenFilesystem_getCurrentSelectedLine()));
+    hel_BgTextPrintF(TEXT_LAYER, 16, 8, 0, "Work %.2x", FAT_filesystem_getTrackNbWork(FAT_screenFilesystem_getCurrentSelectedLine()));
 }
 
 /**
@@ -165,11 +165,11 @@ void FAT_screenFilesystem_checkButtons() {
 void FAT_screenFilesystem_pressOrHeldA() {
     switch (FAT_filesystem_actualMode) {
         case FILESYSTEM_MODE_LOAD:
-            FAT_yesno_show(DIALOG_LOAD, FAT_screenFilesystem_currentSelectedLine);
+            FAT_yesno_show(DIALOG_LOAD, FAT_screenFilesystem_getCurrentSelectedLine());
             break;
 
         case FILESYSTEM_MODE_SAVE:
-            FAT_dialog_keyboardShow (FAT_screenFilesystem_currentSelectedLine);
+            FAT_dialog_keyboardShow (FAT_screenFilesystem_getCurrentSelectedLine());
             break;
     }
 

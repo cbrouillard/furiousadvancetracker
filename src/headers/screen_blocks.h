@@ -42,14 +42,6 @@
 /** \brief Id de la colonne de la valeur de la commande. Utile seulement pour la gestion du curseur. */
 #define SCREENBLOCKS_COLUMN_ID_CMD_PARAM 3
 
-u8 FAT_screenBlocks_getCurrentSequenceId ();
-u8 FAT_screenBlocks_getCurrentSelectedLine();
-void FAT_screenBlocks_setCurrentSelectedLine(u8 value);
-u8 FAT_screenBlocks_getCurrentSelectedColumn();
-void FAT_screenBlocks_setCurrentSelectedColumn(u8 value);
-void FAT_screenBlocks_incCurrentSelectedLine ();
-void FAT_screenBlocks_decCurrentSelectedLine ();
-
 void FAT_screenBlocks_printLineColumns();
 void FAT_screenBlocks_printInfos();
 void FAT_screenBlocks_printSequenceNumber();
@@ -62,6 +54,8 @@ void FAT_screenBlocks_init(u8 fromScreenId);
 void FAT_screenBlocks_checkButtons();
 void FAT_screenBlocks_pressB();
 void FAT_screenBlocks_pressOrHeldA();
+
+u8 FAT_screenBlocks_getCurrentSequenceId ();
 
 #include "cursors.h"
 #include "fat.h"

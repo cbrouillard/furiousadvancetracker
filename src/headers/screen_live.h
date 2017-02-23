@@ -40,7 +40,6 @@ void FAT_screenLive_printSequences();
 void FAT_screenLive_printAllScreenText();
 void FAT_screenLive_init();
 void FAT_screenLive_applyBufferIfNeeded();
-void FAT_screenLive_switchActivePart(bool part);
 void FAT_screenLive_checkButtons();
 void FAT_screenLive_pressOrHeldA_inSequencer();
 void FAT_screenLive_pressOrHeldA_inDataTable();
@@ -53,7 +52,6 @@ u8 FAT_screenLive_getCurrentStartLine ();
 void FAT_screenLive_setCurrentStartLine (u8 value);
 void FAT_screenLive_incCurrentStartLine(u8 add);
 void FAT_screenLive_decCurrentStartLine(u8 remove);
-bool FAT_screenLive_getIsCursorInSequencer ();
 
 #include "cursors.h"
 #include "fat.h"

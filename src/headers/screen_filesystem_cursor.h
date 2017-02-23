@@ -30,71 +30,13 @@
 /** \brief Hauteur d'un block en pixels. */
 #define SCREENFILESYSTEM_BLOCK_SIZE_Y 8
 
-/** \brief Position actuelle du curseur d'action. */
-u8 FAT_screenFilesystem_action_cursorX;
-/** \brief Position actuelle du curseur. */
-u8 FAT_screenFilesystem_cursorY;
-/** \brief Numéro de ligne actuellement sélectionnée. */
-u8 FAT_screenFilesystem_currentSelectedLine;
-
-
 void FAT_screenFilesystem_initCursor();
 void FAT_screenFilesystem_moveCursorDown();
 void FAT_screenFilesystem_moveCursorUp();
 void FAT_screenFilesystem_commitCursorMove();
 
-/**
- * \brief Initialisation du curseur (position uniquement), remise à zéro de la ligne
- * sélectionnée.
- */
-void FAT_screenFilesystem_initCursor() {
-    FAT_screenFilesystem_cursorY = SCREENFILESYSTEM_FIRST_BLOCK_Y - 1;
-    FAT_screenFilesystem_currentSelectedLine = 0;
-}
+u8 FAT_screenFilesystem_getCurrentSelectedLine();
 
-/**
- * \brief Cette fonction permet de valider le déplacement du curseur sur l'écran.
- */
-void FAT_screenFilesystem_commitCursorMove() {
-    FAT_cursors_moveCursor8 (SCREENFILESYSTEM_FIRST_BLOCK_X, FAT_screenFilesystem_cursorY+1);
-    FAT_cursors_moveCursor2 (SCREENFILESYSTEM_FIRST_ACTION_X, FAT_screenFilesystem_cursorY);
-}
-
-/**
- * \brief Déplace le curseur vers le bas.
- */
-void FAT_screenFilesystem_moveCursorDown() {
-    if (FAT_screenFilesystem_currentSelectedLine < SCREENFILESYSTEM_NB_LINES_ON_SCREEN - 1) {
-        if (!(FAT_screenFilesystem_cursorY >= SCREENFILESYSTEM_LAST_BLOCK_Y - 1)) {
-            FAT_screenFilesystem_cursorY += SCREENFILESYSTEM_BLOCK_SIZE_Y;
-            FAT_screenFilesystem_currentSelectedLine++;
-            FAT_screenFilesystem_printInfos();
-        }
-    } else {
-        FAT_screenFilesystem_cursorY = SCREENFILESYSTEM_FIRST_BLOCK_Y - 1;
-        FAT_screenFilesystem_currentSelectedLine = 0;
-        FAT_screenFilesystem_printInfos();
-    }
-}
-
-/**
- * \brief Déplace le curseur vers le haut.
- */
-void FAT_screenFilesystem_moveCursorUp() {
-
-    if (FAT_screenFilesystem_currentSelectedLine > 0) {
-        if (!(FAT_screenFilesystem_cursorY <= SCREENFILESYSTEM_FIRST_BLOCK_Y - 1)) {
-            FAT_screenFilesystem_cursorY -= SCREENFILESYSTEM_BLOCK_SIZE_Y;
-            FAT_screenFilesystem_currentSelectedLine--;
-            FAT_screenFilesystem_printInfos();
-        }
-    } else {
-        FAT_screenFilesystem_cursorY = (SCREENFILESYSTEM_FIRST_BLOCK_Y - 1) + (SCREENFILESYSTEM_BLOCK_SIZE_Y *15);
-        FAT_screenFilesystem_currentSelectedLine = 0xf;
-        FAT_screenFilesystem_printInfos();
-    }
-
-}
-
+#include "screen_filesystem.h"
 
 #endif	/* SCREEN_FILESYSTEM_CURSOR_H */

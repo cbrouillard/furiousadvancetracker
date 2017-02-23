@@ -33,33 +33,6 @@ u8 FAT_screenBlocks_getCurrentSequenceId (){
 }
 
 /**
- * \brief Numéro de la ligne actuellement sélectionné.
- */
-u8 FAT_screenBlocks_currentSelectedLine;
-u8 FAT_screenBlocks_getCurrentSelectedLine(){
-  return FAT_screenBlocks_currentSelectedLine;
-};
-void FAT_screenBlocks_setCurrentSelectedLine(u8 value){
-  FAT_screenBlocks_currentSelectedLine = value;
-};
-void FAT_screenBlocks_incCurrentSelectedLine (){
-  FAT_screenBlocks_currentSelectedLine++;
-}
-void FAT_screenBlocks_decCurrentSelectedLine (){
-  FAT_screenBlocks_currentSelectedLine--;
-}
-/**
- * \brief Numéro de colonne actuellement sélectionné.
- */
-u8 FAT_screenBlocks_currentSelectedColumn;
-u8 FAT_screenBlocks_getCurrentSelectedColumn(){
-  return FAT_screenBlocks_currentSelectedColumn;
-};
-void FAT_screenBlocks_setCurrentSelectedColumn(u8 value){
-  FAT_screenBlocks_currentSelectedColumn = value;
-};
-
-/**
  * \brief Fonction de routine qui affiche les numéros de ligne.
  */
 void FAT_screenBlocks_printLineColumns() {
@@ -78,7 +51,7 @@ void FAT_screenBlocks_printLineColumns() {
  * en cours d'édition.
  */
 void FAT_screenBlocks_printInfos() {
-    hel_BgTextPrintF(TEXT_LAYER, 18, 4, 0, "Line     %.2x", FAT_screenBlocks_currentSelectedLine);
+    hel_BgTextPrintF(TEXT_LAYER, 18, 4, 0, "Line     %.2x", FAT_screenBlocks_getCurrentSelectedLine());
 }
 
 /**
@@ -182,10 +155,10 @@ void FAT_screenBlocks_init(u8 fromScreenId) {
     // numéro de la séquence en cours d'édition, tout est dans SCREEN_SONG ou le SCREEN_LIVE !
     switch (fromScreenId){
         case SCREEN_SONG_ID:
-            FAT_screenBlocks_currentSequenceId = FAT_data_getSequence(FAT_screenSong_currentSelectedColumn, FAT_screenSong_currentSelectedLine);
+            FAT_screenBlocks_currentSequenceId = FAT_data_getSequence(FAT_screenSong_getCurrentSelectedColumn(), FAT_screenSong_getCurrentSelectedLine());
             break;
         case SCREEN_LIVE_ID:
-            FAT_screenBlocks_currentSequenceId = FAT_data_getSequence(FAT_screenLive_currentSelectedColumn, FAT_screenLive_currentSelectedLine);
+            FAT_screenBlocks_currentSequenceId = FAT_data_getSequence(FAT_screenLive_getCurrentSelectedColumn(), FAT_screenLive_getCurrentSelectedLine());
             break;
     }
     if (FAT_screenBlocks_currentSequenceId == NULL_VALUE) {
@@ -271,7 +244,7 @@ void FAT_screenBlocks_checkButtons() {
                 if (hel_PadQuery()->Pressed.Start) {
                     if (!FAT_isCurrentlyPlaying) {
                         FAT_player_startPlayerFromBlocks(FAT_screenBlocks_currentSequenceId,
-                                FAT_screenBlocks_currentSelectedLine, FAT_screenSong_currentSelectedColumn);
+                                FAT_screenBlocks_getCurrentSelectedLine(), FAT_screenSong_getCurrentSelectedColumn());
                     } else {
                         FAT_player_stopPlayer();
                     }
@@ -322,39 +295,39 @@ void FAT_screenBlocks_checkButtons() {
  * \brief Fonction pour gérer la touche B sur l'écran BLOCKS.
  */
 void FAT_screenBlocks_pressB() {
-    switch (FAT_screenBlocks_currentSelectedColumn) {
+    switch (FAT_screenBlocks_getCurrentSelectedColumn()) {
         case SCREENBLOCKS_COLUMN_ID_BLK:
             if (hel_PadQuery()->Held.L) {
                 if (FAT_data_isBlockAllocatable(FAT_screenBlocks_currentSequenceId,
-                        FAT_screenBlocks_currentSelectedLine)) {
+                        FAT_screenBlocks_getCurrentSelectedLine())) {
                     // espace libre
                     FAT_data_pasteBlockWithNewNumber(FAT_screenBlocks_currentSequenceId,
-                            FAT_screenBlocks_currentSelectedLine);
+                            FAT_screenBlocks_getCurrentSelectedLine());
                 } else {
                     FAT_data_cloneBlock(FAT_screenBlocks_currentSequenceId,
-                            FAT_screenBlocks_currentSelectedLine);
+                            FAT_screenBlocks_getCurrentSelectedLine());
                 }
 
             } else {
                 if (FAT_data_isBlockAllocatable(FAT_screenBlocks_currentSequenceId,
-                        FAT_screenBlocks_currentSelectedLine)) {
+                        FAT_screenBlocks_getCurrentSelectedLine())) {
                     // espace libre
                     FAT_data_pasteBlock(FAT_screenBlocks_currentSequenceId,
-                            FAT_screenBlocks_currentSelectedLine);
+                            FAT_screenBlocks_getCurrentSelectedLine());
                 } else {
                     FAT_data_cutBlock(FAT_screenBlocks_currentSequenceId,
-                            FAT_screenBlocks_currentSelectedLine);
+                            FAT_screenBlocks_getCurrentSelectedLine());
                 }
 
             }
 
-            FAT_screenBlocks_printBlock(FAT_screenBlocks_currentSelectedLine);
+            FAT_screenBlocks_printBlock(FAT_screenBlocks_getCurrentSelectedLine());
             break;
         case SCREENBLOCKS_COLUMN_ID_TSP:
             FAT_data_removeBlockTranspose(FAT_screenBlocks_currentSequenceId,
-                    FAT_screenBlocks_currentSelectedLine);
+                    FAT_screenBlocks_getCurrentSelectedLine());
 
-            FAT_screenBlocks_printTranspose(FAT_screenBlocks_currentSelectedLine);
+            FAT_screenBlocks_printTranspose(FAT_screenBlocks_getCurrentSelectedLine());
             break;
     }
 }
@@ -363,65 +336,65 @@ void FAT_screenBlocks_pressB() {
  * \brief Fonction pour gérer la touche A sur l'écran BLOCKS.
  */
 void FAT_screenBlocks_pressOrHeldA() {
-    switch (FAT_screenBlocks_currentSelectedColumn) {
+    switch (FAT_screenBlocks_getCurrentSelectedColumn()) {
         case SCREENBLOCKS_COLUMN_ID_BLK:
 
             if (hel_PadQuery()->Pressed.L) {
                 FAT_data_smartAllocateBlock(FAT_screenBlocks_currentSequenceId,
-                        FAT_screenBlocks_currentSelectedLine);
+                        FAT_screenBlocks_getCurrentSelectedLine());
             } else {
                 FAT_data_allocateBlock(FAT_screenBlocks_currentSequenceId,
-                        FAT_screenBlocks_currentSelectedLine);
+                        FAT_screenBlocks_getCurrentSelectedLine());
             }
 
             if (hel_PadQuery()->Pressed.Right) {
                 FAT_data_block_changeValue(FAT_screenBlocks_currentSequenceId,
-                        FAT_screenBlocks_currentSelectedLine, 1); // ajout de 1
+                        FAT_screenBlocks_getCurrentSelectedLine(), 1); // ajout de 1
             }
 
             if (hel_PadQuery()->Pressed.Left) {
                 FAT_data_block_changeValue(FAT_screenBlocks_currentSequenceId,
-                        FAT_screenBlocks_currentSelectedLine, -1); // retrait de 1
+                        FAT_screenBlocks_getCurrentSelectedLine(), -1); // retrait de 1
             }
 
             if (hel_PadQuery()->Pressed.Up) {
                 FAT_data_block_changeValue(FAT_screenBlocks_currentSequenceId,
-                        FAT_screenBlocks_currentSelectedLine, 16);
+                        FAT_screenBlocks_getCurrentSelectedLine(), 16);
             }
 
             if (hel_PadQuery()->Pressed.Down) {
                 FAT_data_block_changeValue(FAT_screenBlocks_currentSequenceId,
-                        FAT_screenBlocks_currentSelectedLine, -16);
+                        FAT_screenBlocks_getCurrentSelectedLine(), -16);
             }
 
-            FAT_screenBlocks_printBlock(FAT_screenBlocks_currentSelectedLine);
+            FAT_screenBlocks_printBlock(FAT_screenBlocks_getCurrentSelectedLine());
             break;
 
         case SCREENBLOCKS_COLUMN_ID_TSP:
             FAT_data_block_allocateTranspose(FAT_screenBlocks_currentSequenceId,
-                    FAT_screenBlocks_currentSelectedLine);
+                    FAT_screenBlocks_getCurrentSelectedLine());
 
             if (hel_PadQuery()->Pressed.Left) {
                 FAT_data_block_changeTransposeValue(FAT_screenBlocks_currentSequenceId,
-                        FAT_screenBlocks_currentSelectedLine, -1);
+                        FAT_screenBlocks_getCurrentSelectedLine(), -1);
             }
 
             if (hel_PadQuery()->Pressed.Right) {
                 FAT_data_block_changeTransposeValue(FAT_screenBlocks_currentSequenceId,
-                        FAT_screenBlocks_currentSelectedLine, 1);
+                        FAT_screenBlocks_getCurrentSelectedLine(), 1);
             }
 
             if (hel_PadQuery()->Pressed.Down) {
                 FAT_data_block_changeTransposeValue(FAT_screenBlocks_currentSequenceId,
-                        FAT_screenBlocks_currentSelectedLine, -16);
+                        FAT_screenBlocks_getCurrentSelectedLine(), -16);
             }
 
             if (hel_PadQuery()->Pressed.Up) {
                 FAT_data_block_changeTransposeValue(FAT_screenBlocks_currentSequenceId,
-                        FAT_screenBlocks_currentSelectedLine, 16);
+                        FAT_screenBlocks_getCurrentSelectedLine(), 16);
             }
 
-            FAT_screenBlocks_printTranspose(FAT_screenBlocks_currentSelectedLine);
+            FAT_screenBlocks_printTranspose(FAT_screenBlocks_getCurrentSelectedLine());
             break;
 
     }

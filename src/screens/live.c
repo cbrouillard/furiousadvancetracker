@@ -22,11 +22,6 @@
 /** \brief Permet de savoir si la popup de déplacement est affichée au dessus de l'écran. */
 bool FAT_screenLive_isPopuped = 0;
 
-bool FAT_screenLive_isCursorInSequencer = 1;
-bool FAT_screenLive_getIsCursorInSequencer (){
-  return FAT_screenLive_isCursorInSequencer;
-}
-
 /** \brief Cette variable contient le numéro de la première ligne actuellement affichée. */
 u8 FAT_screenLive_currentStartLine = 0;
 u8 FAT_screenLive_getCurrentStartLine (){
@@ -118,8 +113,8 @@ void FAT_screenLive_printLineColumns() {
 void FAT_screenLive_printInfos() {
     tracker* FAT_tracker = FAT_data_getTracker ();
     hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "%s", FAT_tracker->songName);
-    hel_BgTextPrintF(TEXT_LAYER, 21, 4, 0, "Chan %s", CHANNEL_NAME[FAT_screenLive_currentSelectedColumn]);
-    hel_BgTextPrintF(TEXT_LAYER, 21, 5, 0, "Line  %.2x", FAT_screenLive_currentSelectedLine);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 4, 0, "Chan %s", CHANNEL_NAME[FAT_screenLive_getCurrentSelectedColumn()]);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 5, 0, "Line  %.2x", FAT_screenLive_getCurrentSelectedLine());
     hel_BgTextPrintF(TEXT_LAYER, 21, 6, 0, "TSP   %2.x", FAT_tracker->transpose);
 
     FAT_screenLive_printLiveMode();
@@ -230,17 +225,6 @@ void FAT_screenLive_applyBufferIfNeeded(){
 }
 
 /**
- * \brief Change la partie active de l'écran.
- * @param part la partie vers laquelle switcher: 0 = table, 1 = sequenceur
- */
-void FAT_screenLive_switchActivePart(bool part) {
-    FAT_screenLive_isCursorInSequencer = part;
-    FAT_screenLive_currentTableSelectedLine = 0;
-    FAT_screenLive_switchCursorToPart(part);
-    FAT_screenLive_commitCursorMove();
-}
-
-/**
  * \brief Teste les actions utilisateurs.
  */
 void FAT_screenLive_checkButtons() {
@@ -274,7 +258,7 @@ void FAT_screenLive_checkButtons() {
         }
 
         if (hel_PadQuery()->Pressed.A || hel_PadQuery()->Held.A) {
-            if (FAT_screenLive_isCursorInSequencer){
+            if (FAT_screenLive_getIsCursorInSequencer()){
                 FAT_screenLive_pressOrHeldA_inSequencer();
             } else {
                 FAT_screenLive_pressOrHeldA_inDataTable();
@@ -321,21 +305,21 @@ void FAT_screenLive_checkButtons() {
             if(hel_PadQuery()->Held.R){
                 // tout se lance en maintenant à partir de la ligne sélectionnée.
                 if (!FAT_isCurrentlyPlaying) {
-                    FAT_player_startPlayerFromSequences(FAT_screenLive_currentSelectedLine);
+                    FAT_player_startPlayerFromSequences(FAT_screenLive_getCurrentSelectedLine());
                 } else {
                     FAT_player_stopPlayer();
                 }
             }else {
                 if (!FAT_isCurrentlyPlaying) {
                     // seule la colonne sélectionnée se lance à partir de la ligne courante.
-                    FAT_player_startPlayerFromLive_oneChannel(FAT_screenLive_currentSelectedLine, FAT_screenLive_currentSelectedColumn);
+                    FAT_player_startPlayerFromLive_oneChannel(FAT_screenLive_getCurrentSelectedLine(), FAT_screenLive_getCurrentSelectedColumn());
                 } else {
                     // si le channel joue actuellement, on l'arrete.
-                    if (FAT_isChannelCurrentlyPlaying (FAT_screenLive_currentSelectedColumn)){
-                        FAT_player_stopPlayer_onlyOneColumn(FAT_screenLive_currentSelectedColumn);
+                    if (FAT_isChannelCurrentlyPlaying (FAT_screenLive_getCurrentSelectedColumn())){
+                        FAT_player_stopPlayer_onlyOneColumn(FAT_screenLive_getCurrentSelectedColumn());
                     } else {
                         // sinon on le démarre
-                        FAT_player_startPlayerFromLive_oneChannel(FAT_screenLive_currentSelectedLine, FAT_screenLive_currentSelectedColumn);
+                        FAT_player_startPlayerFromLive_oneChannel(FAT_screenLive_getCurrentSelectedLine(), FAT_screenLive_getCurrentSelectedColumn());
                     }
                 }
             }
@@ -355,14 +339,14 @@ void FAT_screenLive_pressOrHeldA_inSequencer(){
 
 void FAT_screenLive_pressOrHeldA_inDataTable(){
     tracker* FAT_tracker = FAT_data_getTracker ();
-    switch (FAT_screenLive_currentTableSelectedLine){
+    switch (FAT_screenLive_getCurrentTableSelectedLine()){
         case 0:
             // volume colonne
             if (hel_PadQuery()->Pressed.Right) {
                 if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Held.L){
                     FAT_screenLive_changeAllVolumes (1);
                 } else{
-                    FAT_screenLive_changeVolume (FAT_screenLive_currentSelectedColumn, 1);
+                    FAT_screenLive_changeVolume (FAT_screenLive_getCurrentSelectedColumn(), 1);
                 }
             }
 
@@ -370,7 +354,7 @@ void FAT_screenLive_pressOrHeldA_inDataTable(){
                 if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Held.L){
                     FAT_screenLive_changeAllVolumes (-1);
                 } else{
-                    FAT_screenLive_changeVolume (FAT_screenLive_currentSelectedColumn, -1);
+                    FAT_screenLive_changeVolume (FAT_screenLive_getCurrentSelectedColumn(), -1);
                 }
 
             }
@@ -379,7 +363,7 @@ void FAT_screenLive_pressOrHeldA_inDataTable(){
                 if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Held.L){
                     FAT_screenLive_setAllVolumes (0xf);
                 } else {
-                    FAT_screenLive_changeVolume (FAT_screenLive_currentSelectedColumn, NULL_VALUE - FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn]);
+                    FAT_screenLive_changeVolume (FAT_screenLive_getCurrentSelectedColumn(), NULL_VALUE - FAT_screenLive_bufferVolume[FAT_screenLive_getCurrentSelectedColumn()]);
                 }
             }
 
@@ -387,7 +371,7 @@ void FAT_screenLive_pressOrHeldA_inDataTable(){
                 if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Held.L){
                     FAT_screenLive_setAllVolumes (0);
                 }else{
-                    FAT_screenLive_changeVolume (FAT_screenLive_currentSelectedColumn, -FAT_screenLive_bufferVolume[FAT_screenLive_currentSelectedColumn]);
+                    FAT_screenLive_changeVolume (FAT_screenLive_getCurrentSelectedColumn(), -FAT_screenLive_bufferVolume[FAT_screenLive_getCurrentSelectedColumn()]);
                 }
 
             }
@@ -400,7 +384,7 @@ void FAT_screenLive_pressOrHeldA_inDataTable(){
                 if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Held.L){
                     FAT_screenLive_changeAllTransposes (1);
                 } else {
-                    FAT_screenLive_changeTranspose (FAT_screenLive_currentSelectedColumn, 1);
+                    FAT_screenLive_changeTranspose (FAT_screenLive_getCurrentSelectedColumn(), 1);
                 }
             }
 
@@ -408,7 +392,7 @@ void FAT_screenLive_pressOrHeldA_inDataTable(){
                 if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Held.L){
                     FAT_screenLive_changeAllTransposes (-1);
                 } else {
-                    FAT_screenLive_changeTranspose (FAT_screenLive_currentSelectedColumn, -1);
+                    FAT_screenLive_changeTranspose (FAT_screenLive_getCurrentSelectedColumn(), -1);
                 }
             }
 
@@ -416,7 +400,7 @@ void FAT_screenLive_pressOrHeldA_inDataTable(){
                 if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Held.L){
                     FAT_screenLive_changeAllTransposes (12);
                 } else {
-                    FAT_screenLive_changeTranspose (FAT_screenLive_currentSelectedColumn, 12);
+                    FAT_screenLive_changeTranspose (FAT_screenLive_getCurrentSelectedColumn(), 12);
                 }
             }
 
@@ -424,7 +408,7 @@ void FAT_screenLive_pressOrHeldA_inDataTable(){
                 if (hel_PadQuery()->Pressed.L || hel_PadQuery()->Held.L){
                     FAT_screenLive_changeAllTransposes (-12);
                 } else {
-                    FAT_screenLive_changeTranspose (FAT_screenLive_currentSelectedColumn, -12);
+                    FAT_screenLive_changeTranspose (FAT_screenLive_getCurrentSelectedColumn(), -12);
                 }
             }
 
@@ -432,7 +416,7 @@ void FAT_screenLive_pressOrHeldA_inDataTable(){
             break;
         case 2:
             // mode, tempo
-            if (FAT_screenLive_currentSelectedColumn == 1){
+            if (FAT_screenLive_getCurrentSelectedColumn() == 1){
                 if (hel_PadQuery()->Pressed.Right) {
                     FAT_tracker->liveData.liveMode = 0;
                 }
@@ -442,7 +426,7 @@ void FAT_screenLive_pressOrHeldA_inDataTable(){
                 }
 
                 FAT_screenLive_printLiveMode();
-            } else if (FAT_screenLive_currentSelectedColumn == 4){
+            } else if (FAT_screenLive_getCurrentSelectedColumn() == 4){
                 if (hel_PadQuery()->Pressed.Right && FAT_screenLive_bufferTempo < MAX_TEMPO) {
                     FAT_screenLive_bufferTempo ++;
                     FAT_screenLive_haveToApplyBuffer = true;

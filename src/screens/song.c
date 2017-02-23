@@ -70,7 +70,7 @@ void FAT_screenSong_init() {
  */
 void FAT_screenSong_printInfos() {
     tracker* FAT_tracker = FAT_data_getTracker();
-    hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "%s\nChan %s\nLine  %.2x", FAT_tracker->songName, CHANNEL_NAME[FAT_screenSong_currentSelectedColumn], FAT_screenSong_currentSelectedLine);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "%s\nChan %s\nLine  %.2x", FAT_tracker->songName, CHANNEL_NAME[FAT_screenSong_getCurrentSelectedColumn()], FAT_screenSong_getCurrentSelectedLine());
     hel_BgTextPrintF(TEXT_LAYER, 21, 6, 0, "TSP   %2.x\nTmpo %.3d", FAT_tracker->transpose, FAT_tracker->tempo);
 }
 
@@ -175,7 +175,7 @@ void FAT_screenSong_checkButtons() {
 
             if (hel_PadQuery()->Pressed.Start) {
                 if (!FAT_isCurrentlyPlaying) {
-                    FAT_player_startPlayerFromSequences(FAT_screenSong_currentSelectedLine);
+                    FAT_player_startPlayerFromSequences(FAT_screenSong_getCurrentSelectedLine());
                 } else {
                     FAT_player_stopPlayer();
                 }
@@ -229,26 +229,26 @@ void FAT_screenSong_checkButtons() {
 void FAT_screenSong_pressB() {
     if (hel_PadQuery()->Held.L) {
 
-        if (FAT_data_isSequenceAllocatable(FAT_screenSong_currentSelectedColumn,
-                FAT_screenSong_currentSelectedLine)) {
+        if (FAT_data_isSequenceAllocatable(FAT_screenSong_getCurrentSelectedColumn(),
+                FAT_screenSong_getCurrentSelectedLine())) {
             // espace vide
-            FAT_data_pasteSequenceWithNewNumber(FAT_screenSong_currentSelectedColumn, FAT_screenSong_currentSelectedLine);
+            FAT_data_pasteSequenceWithNewNumber(FAT_screenSong_getCurrentSelectedColumn(), FAT_screenSong_getCurrentSelectedLine());
         } else {
-            FAT_data_cloneSequence(FAT_screenSong_currentSelectedColumn, FAT_screenSong_currentSelectedLine);
+            FAT_data_cloneSequence(FAT_screenSong_getCurrentSelectedColumn(), FAT_screenSong_getCurrentSelectedLine());
         }
 
     } else {
 
-        if (FAT_data_isSequenceAllocatable(FAT_screenSong_currentSelectedColumn,
-                FAT_screenSong_currentSelectedLine)) {
+        if (FAT_data_isSequenceAllocatable(FAT_screenSong_getCurrentSelectedColumn(),
+                FAT_screenSong_getCurrentSelectedLine())) {
             // espace vide
-            FAT_data_pasteSequence(FAT_screenSong_currentSelectedColumn, FAT_screenSong_currentSelectedLine);
+            FAT_data_pasteSequence(FAT_screenSong_getCurrentSelectedColumn(), FAT_screenSong_getCurrentSelectedLine());
         } else {
-            FAT_data_cutSequence(FAT_screenSong_currentSelectedColumn, FAT_screenSong_currentSelectedLine);
+            FAT_data_cutSequence(FAT_screenSong_getCurrentSelectedColumn(), FAT_screenSong_getCurrentSelectedLine());
         }
     }
 
-    FAT_screenSong_printSequence(FAT_screenSong_currentSelectedColumn, FAT_screenSong_currentSelectedLine - FAT_screenSong_currentStartLine, FAT_screenSong_currentSelectedLine);
+    FAT_screenSong_printSequence(FAT_screenSong_getCurrentSelectedColumn(), FAT_screenSong_getCurrentSelectedLine() - FAT_screenSong_currentStartLine, FAT_screenSong_getCurrentSelectedLine());
 }
 
 /**
@@ -256,36 +256,36 @@ void FAT_screenSong_pressB() {
  */
 void FAT_screenSong_pressOrHeldA() {
     if (hel_PadQuery()->Pressed.L) {
-        FAT_data_smartAllocateSequence(FAT_screenSong_currentSelectedColumn,
-                FAT_screenSong_currentSelectedLine);
+        FAT_data_smartAllocateSequence(FAT_screenSong_getCurrentSelectedColumn(),
+                FAT_screenSong_getCurrentSelectedLine());
     } else {
         FAT_data_allocateSequence(
-                FAT_screenSong_currentSelectedColumn,
-                FAT_screenSong_currentSelectedLine);
+                FAT_screenSong_getCurrentSelectedColumn(),
+                FAT_screenSong_getCurrentSelectedLine());
     }
 
     if (hel_PadQuery()->Pressed.Right) {
-        FAT_data_sequence_changeValue(FAT_screenSong_currentSelectedColumn,
-                FAT_screenSong_currentSelectedLine, 1); // ajout de 1
+        FAT_data_sequence_changeValue(FAT_screenSong_getCurrentSelectedColumn(),
+                FAT_screenSong_getCurrentSelectedLine(), 1); // ajout de 1
     }
 
     if (hel_PadQuery()->Pressed.Left) {
-        FAT_data_sequence_changeValue(FAT_screenSong_currentSelectedColumn,
-                FAT_screenSong_currentSelectedLine, -1); // retrait de 1
+        FAT_data_sequence_changeValue(FAT_screenSong_getCurrentSelectedColumn(),
+                FAT_screenSong_getCurrentSelectedLine(), -1); // retrait de 1
     }
 
     if (hel_PadQuery()->Pressed.Up) {
-        FAT_data_sequence_changeValue(FAT_screenSong_currentSelectedColumn,
-                FAT_screenSong_currentSelectedLine, 16);
+        FAT_data_sequence_changeValue(FAT_screenSong_getCurrentSelectedColumn(),
+                FAT_screenSong_getCurrentSelectedLine(), 16);
     }
 
     if (hel_PadQuery()->Pressed.Down) {
-        FAT_data_sequence_changeValue(FAT_screenSong_currentSelectedColumn,
-                FAT_screenSong_currentSelectedLine, -16);
+        FAT_data_sequence_changeValue(FAT_screenSong_getCurrentSelectedColumn(),
+                FAT_screenSong_getCurrentSelectedLine(), -16);
     }
 
     FAT_screenSong_printSequence(
-            FAT_screenSong_currentSelectedColumn,
-            FAT_screenSong_currentSelectedLine - FAT_screenSong_currentStartLine,
-            FAT_screenSong_currentSelectedLine);
+            FAT_screenSong_getCurrentSelectedColumn(),
+            FAT_screenSong_getCurrentSelectedLine() - FAT_screenSong_currentStartLine,
+            FAT_screenSong_getCurrentSelectedLine());
 }

@@ -175,13 +175,13 @@ void FAT_screenInstrument_printAllText(u8 type) {
 void FAT_screenInstrument_init() {
     tracker* FAT_tracker = FAT_data_getTracker ();
     // quel instrument est en cours d'édition ?
-    note* FAT_screenInstrument_currentNote = FAT_data_getNote(FAT_screenNotes_getCurrentBlockId(), FAT_screenNotes_currentSelectedLine);
+    note* FAT_screenInstrument_currentNote = FAT_data_getNote(FAT_screenNotes_getCurrentBlockId(), FAT_screenNotes_getCurrentSelectedLine());
     FAT_screenInstrument_currentInstrumentId = FAT_screenInstrument_currentNote->instrument;
     if (FAT_screenInstrument_currentInstrumentId == NULL_VALUE) {
 
         FAT_screenInstrument_currentInstrumentId = 0;
     }
-    FAT_data_initInstrumentIfNeeded(FAT_screenInstrument_currentInstrumentId, FAT_screenSong_currentSelectedColumn);
+    FAT_data_initInstrumentIfNeeded(FAT_screenInstrument_currentInstrumentId, FAT_screenSong_getCurrentSelectedColumn());
 
     // initialisation des curseurs
     FAT_screenInstrument_initCursor(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
@@ -358,7 +358,7 @@ void FAT_screenInstrument_checkButtons() {
             }
         }
 
-        if (hel_PadQuery()->Held.L || FAT_screenInstruments_currentSelectedLine == -1) {
+        if (hel_PadQuery()->Held.L || FAT_screenInstruments_getCurrentSelectedLine() == -1) {
             if (!FAT_screenInstrument_isTabulating) {
                 FAT_screenInstrument_isTabulating = 1;
                 FAT_screenInstrument_showTabulationCursor();
@@ -381,7 +381,7 @@ void FAT_screenInstrument_checkButtons() {
             }
 
         } else {
-            if (FAT_screenInstrument_isTabulating && FAT_screenInstruments_currentSelectedLine == 0) {
+            if (FAT_screenInstrument_isTabulating && FAT_screenInstruments_getCurrentSelectedLine() == 0) {
                 // relachement du L
                 FAT_screenInstrument_isTabulating = 0;
                 FAT_screenInstrument_switchScreen(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);
@@ -425,7 +425,7 @@ void FAT_screenInstrument_checkButtons() {
                     if (hel_PadQuery()->Pressed.Start) {
                         if (!FAT_isCurrentlyPlaying) {
                             FAT_player_startPlayerFromNotes(FAT_screenNotes_getCurrentBlockId(),
-                                    0, FAT_screenSong_currentSelectedColumn);
+                                    0, FAT_screenSong_getCurrentSelectedColumn());
                         } else {
                             FAT_player_stopPlayer();
                         }
@@ -775,7 +775,7 @@ void FAT_screenInstrument_pulse_pressA() {
 
     s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
 
-    switch (FAT_screenInstruments_currentSelectedLine) {
+    switch (FAT_screenInstruments_getCurrentSelectedLine()) {
         case 0: // VOLUME
             FAT_data_instrumentPulse_changeVolume(FAT_screenInstrument_currentInstrumentId, addedValue);
             break;
@@ -820,7 +820,7 @@ void FAT_screenInstrument_wave_pressA() {
 
     s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
 
-    switch (FAT_screenInstruments_currentSelectedLine) {
+    switch (FAT_screenInstruments_getCurrentSelectedLine()) {
         case 0: // VOLUME RATIO
             FAT_data_instrumentWave_changeVolume(FAT_screenInstrument_currentInstrumentId, addedValue);
             break;
@@ -862,7 +862,7 @@ void FAT_screenInstrument_noise_pressA() {
 
     s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
 
-    switch (FAT_screenInstruments_currentSelectedLine) {
+    switch (FAT_screenInstruments_getCurrentSelectedLine()) {
         case 0: // VOLUME
             FAT_data_instrumentNoise_changeVolume(FAT_screenInstrument_currentInstrumentId, addedValue);
             break;
@@ -904,8 +904,8 @@ void FAT_screenInstrument_sample_pressA() {
 
     s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
 
-    if (FAT_screenInstruments_currentSelectedColumn == 0){
-        switch (FAT_screenInstruments_currentSelectedLine) {
+    if (FAT_screenInstruments_getCurrentSelectedColumn() == 0){
+        switch (FAT_screenInstruments_getCurrentSelectedLine()) {
             case 0: // KIT COLLECTION
                 FAT_data_instrumentSample_changeKitNumber(FAT_screenInstrument_currentInstrumentId, addedValue);
                 break;
@@ -946,7 +946,7 @@ void FAT_screenInstrument_osc_pressA() {
 
     s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
 
-    switch (FAT_screenInstruments_currentSelectedLine) {
+    switch (FAT_screenInstruments_getCurrentSelectedLine()) {
         case 0: // SHAPE
             FAT_data_instrumentOsc_changeShape(FAT_screenInstrument_currentInstrumentId, addedValue);
             break;

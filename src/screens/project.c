@@ -112,7 +112,7 @@ void FAT_screenProject_checkButtons() {
 
             if (hel_PadQuery()->Pressed.Start) {
                 if (!FAT_isCurrentlyPlaying) {
-                    FAT_player_startPlayerFromSequences(FAT_screenSong_currentSelectedLine);
+                    FAT_player_startPlayerFromSequences(FAT_screenSong_getCurrentSelectedLine());
                 } else {
                     FAT_player_stopPlayer();
                 }
@@ -164,7 +164,7 @@ void FAT_screenProject_pressOrHeldA() {
         addedValue = -16;
     }
 
-    switch (FAT_screenProject_currentSelectedLine) {
+    switch (FAT_screenProject_getCurrentSelectedLine()) {
         case 0:
             FAT_data_project_changeTempo(addedValue);
             FAT_screenProject_printInfos();
