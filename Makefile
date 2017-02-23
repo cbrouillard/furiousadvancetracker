@@ -18,7 +18,10 @@ PROGNAME = FAT_v1.1.1
 OFILES += src/main.o \
 	src/system/system.o src/system/data.o src/system/filesystem.o src/system/player.c \
  	src/sprites/cursors.o src/sprites/player_cursors.o \
- 	src/screens/popup.o src/screens/project.o src/screens/filesystem.o src/screens/blocks.o \
+ 	src/screens/popup.o src/screens/project.o src/screens/filesystem.o \
+	src/screens/blocks.o src/screens/composer.o src/screens/effects.o \
+	src/screens/help.o src/screens/instrument.o src/screens/live.o \
+	src/screens/song.o \
 	src/dialogs/keyboard.o src/dialogs/yesno.o \
 	src/gfx/ResourceData.o src/soundApi/soundApi.o \
 	src/soundApi/libgbfs.o

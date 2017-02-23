@@ -60,7 +60,7 @@ void FAT_screenSong_initCursor() {
     FAT_screenSong_cursorX = SCREENSONG_FIRST_BLOCK_X - 1;
     FAT_screenSong_cursorY = SCREENSONG_FIRST_BLOCK_Y - 1;
     FAT_screenSong_currentSelectedLine = 0;
-    FAT_screenSong_currentStartLine = 0;
+    FAT_screenSong_setCurrentStartLine(0);
     FAT_screenSong_currentSelectedColumn = 0;
 
 };
@@ -92,7 +92,7 @@ void FAT_screenSong_moveCursorLeft() {
  */
 void FAT_screenSong_movePageDown() {
     if (FAT_screenSong_currentSelectedLine < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENSONG_NB_LINES_ON_SCREEN) {
-        FAT_screenSong_currentStartLine += SCREENSONG_NB_LINES_ON_SCREEN;
+        FAT_screenSong_incCurrentStartLine(SCREENSONG_NB_LINES_ON_SCREEN);
         FAT_screenSong_currentSelectedLine += SCREENSONG_NB_LINES_ON_SCREEN;
         FAT_screenSong_printAllScreenText();
     }
@@ -103,7 +103,7 @@ void FAT_screenSong_movePageDown() {
  */
 void FAT_screenSong_moveCursorAllDown() {
     FAT_screenSong_cursorY = SCREENSONG_LAST_BLOCK_Y;
-    FAT_screenSong_currentStartLine = NB_SEQUENCES_IN_ONE_CHANNEL - SCREENSONG_NB_LINES_ON_SCREEN;
+    FAT_screenSong_setCurrentStartLine(NB_SEQUENCES_IN_ONE_CHANNEL - SCREENSONG_NB_LINES_ON_SCREEN);
     FAT_screenSong_currentSelectedLine = NB_SEQUENCES_IN_ONE_CHANNEL - 1;
     FAT_screenSong_printAllScreenText();
 }
@@ -114,9 +114,9 @@ void FAT_screenSong_moveCursorAllDown() {
 void FAT_screenSong_moveCursorDown() {
     if (FAT_screenSong_currentSelectedLine < NB_SEQUENCES_IN_ONE_CHANNEL) {
         if (FAT_screenSong_cursorY >= SCREENSONG_LAST_BLOCK_Y - 1) {
-            if (FAT_screenSong_currentStartLine < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENSONG_NB_LINES_ON_SCREEN) {
+            if (FAT_screenSong_getCurrentStartLine() < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENSONG_NB_LINES_ON_SCREEN) {
                 // on n'avance pas mais on change de ligne
-                FAT_screenSong_currentStartLine++;
+                FAT_screenSong_incCurrentStartLine(1);
                 FAT_screenSong_currentSelectedLine++;
                 FAT_screenSong_printAllScreenText();
             }
@@ -133,8 +133,8 @@ void FAT_screenSong_moveCursorDown() {
  */
 void FAT_screenSong_movePageUp() {
     if (FAT_screenSong_currentSelectedLine >= SCREENSONG_NB_LINES_ON_SCREEN
-            && FAT_screenSong_currentStartLine >= SCREENSONG_NB_LINES_ON_SCREEN) {
-        FAT_screenSong_currentStartLine -= SCREENSONG_NB_LINES_ON_SCREEN;
+            && FAT_screenSong_getCurrentStartLine() >= SCREENSONG_NB_LINES_ON_SCREEN) {
+        FAT_screenSong_decCurrentStartLine(SCREENSONG_NB_LINES_ON_SCREEN);
         FAT_screenSong_currentSelectedLine -= SCREENSONG_NB_LINES_ON_SCREEN;
         FAT_screenSong_printAllScreenText();
     }
@@ -145,7 +145,7 @@ void FAT_screenSong_movePageUp() {
  */
 void FAT_screenSong_moveCursorAllUp() {
     FAT_screenSong_cursorY = SCREENSONG_FIRST_BLOCK_Y-1;
-    FAT_screenSong_currentStartLine = 0;
+    FAT_screenSong_setCurrentStartLine(0);
     FAT_screenSong_currentSelectedLine = 0;
     FAT_screenSong_printAllScreenText();
 }
@@ -157,9 +157,9 @@ void FAT_screenSong_moveCursorUp() {
 
     if (FAT_screenSong_currentSelectedLine > 0) {
         if (FAT_screenSong_cursorY <= SCREENSONG_FIRST_BLOCK_Y - 1) {
-            if (FAT_screenSong_currentStartLine > 0) {
+            if (FAT_screenSong_getCurrentStartLine() > 0) {
                 // on ne recule pas mais on change de ligne
-                FAT_screenSong_currentStartLine--;
+                FAT_screenSong_decCurrentStartLine(1);
                 FAT_screenSong_currentSelectedLine--;
                 FAT_screenSong_printAllScreenText();
             }

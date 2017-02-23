@@ -150,10 +150,10 @@ void FAT_player_hideNoteCursor() {
 void FAT_player_live_showOrHideCursorWait(u8 channel){
     if (FAT_currentScreen == SCREEN_LIVE_ID){
         if (FAT_isChannelCurrentlyPlaying(channel) && actualSequencesForChannel[channel] < NB_MAX_SEQUENCES
-            && actualSequencesForChannel[channel] >= FAT_screenLive_currentStartLine && !isHelpActivated
+            && actualSequencesForChannel[channel] >= FAT_screenLive_getCurrentStartLine() && !isHelpActivated
             && FAT_player_live_getWaitForOtherChannel(channel) == 1){
             // affichage
-            u8 yPosition = 15 + ((actualSequencesForChannel[channel] - FAT_screenSong_currentStartLine)*8);
+            u8 yPosition = 15 + ((actualSequencesForChannel[channel] - FAT_screenSong_getCurrentStartLine())*8);
             if (yPosition < 140){
                 hel_ObjSetXY(FAT_cursor_playerLiveWait_obj[channel],
                         23 + (channel * (8 + 16)),
@@ -181,10 +181,10 @@ void FAT_player_moveOrHideCursor(u8 channel) {
             FAT_player_hideBlockCursor();
             FAT_player_hideNoteCursor();
             if (actualSequencesForChannel[channel] != NULL_VALUE && actualSequencesForChannel[channel] < NB_MAX_SEQUENCES
-                    && actualSequencesForChannel[channel] >= FAT_screenSong_currentStartLine && !isHelpActivated) {
+                    && actualSequencesForChannel[channel] >= FAT_screenSong_getCurrentStartLine() && !isHelpActivated) {
                 // la lecture a été lancée depuis l'écran SONG
                 // on dispose du numéro de ligne actuellement jouée dans actualSequencesForChannel[channel]
-                u8 yPosition = 15 + ((actualSequencesForChannel[channel] - FAT_screenSong_currentStartLine)*8);
+                u8 yPosition = 15 + ((actualSequencesForChannel[channel] - FAT_screenSong_getCurrentStartLine())*8);
                 if (yPosition < 140){
                     hel_ObjSetXY(FAT_cursor_playerSequences_obj[channel],
                             23 + (channel * (8 + 16)),
@@ -205,15 +205,15 @@ void FAT_player_moveOrHideCursor(u8 channel) {
             FAT_player_hideBlockCursor();
             FAT_player_hideNoteCursor();
             if (actualSequencesForChannel[channel] != NULL_VALUE && actualSequencesForChannel[channel] < NB_MAX_SEQUENCES
-                    && actualSequencesForChannel[channel] >= FAT_screenLive_currentStartLine && !isHelpActivated) {
+                    && actualSequencesForChannel[channel] >= FAT_screenLive_getCurrentStartLine() && !isHelpActivated) {
                 // la lecture a été lancée depuis l'écran SONG
                 // on dispose du numéro de ligne actuellement jouée dans actualSequencesForChannel[channel]
-                u8 yPosition = 15 + ((actualSequencesForChannel[channel] - FAT_screenSong_currentStartLine)*8);
+                u8 yPosition = 15 + ((actualSequencesForChannel[channel] - FAT_screenSong_getCurrentStartLine())*8);
 
                 if (yPosition < 90){
                     hel_ObjSetXY(FAT_cursor_playerSequences_obj[channel],
                             23 + (channel * (8 + 16)),
-                            15 + ((actualSequencesForChannel[channel] - FAT_screenLive_currentStartLine)*8));
+                            15 + ((actualSequencesForChannel[channel] - FAT_screenLive_getCurrentStartLine())*8));
 
                     hel_ObjSetVisible(FAT_cursor_playerSequences_obj[channel], 1);
                 } else {

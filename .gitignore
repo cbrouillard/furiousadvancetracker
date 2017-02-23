@@ -3,6 +3,7 @@ FuriousAdvanceTracker_v0.2.0.gba
 *.elf
 *.s
 *.mk
+*.i
 nbproject
 *.o
 *.zip

@@ -70,7 +70,7 @@ void FAT_screenLive_initCursor() {
     FAT_screenLive_cursorX = SCREENLIVE_FIRST_BLOCK_X - 1;
     FAT_screenLive_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1;
     FAT_screenLive_currentSelectedLine = 0;
-    FAT_screenLive_currentStartLine = 0;
+    FAT_screenLive_setCurrentStartLine (0);
     FAT_screenLive_currentSelectedColumn = 0;
     FAT_screenLive_currentTableSelectedLine = 0;
 
@@ -82,7 +82,7 @@ void FAT_screenLive_initCursor() {
 void FAT_screenLive_moveCursorRight() {
     if (!(FAT_screenLive_cursorX >= SCREENLIVE_LAST_BLOCK_X - 1)) {
 
-        if (!FAT_screenLive_isCursorInSequencer && FAT_screenLive_currentTableSelectedLine == 2){
+        if (!FAT_screenLive_getIsCursorInSequencer() && FAT_screenLive_currentTableSelectedLine == 2){
             if (FAT_screenLive_currentSelectedColumn == 1){
                 FAT_screenLive_cursorX = SCREEN_LIVE_TEMPO_BLOCK_X - 1;
                 FAT_screenLive_currentSelectedColumn = 4;
@@ -102,7 +102,7 @@ void FAT_screenLive_moveCursorRight() {
 void FAT_screenLive_moveCursorLeft() {
     if (!(FAT_screenLive_cursorX <= SCREENLIVE_FIRST_BLOCK_X)) {
 
-        if (!FAT_screenLive_isCursorInSequencer && FAT_screenLive_currentTableSelectedLine == 2){
+        if (!FAT_screenLive_getIsCursorInSequencer() && FAT_screenLive_currentTableSelectedLine == 2){
             if (FAT_screenLive_currentSelectedColumn == 4){
                 FAT_screenLive_cursorX = SCREEN_LIVE_MODE_BLOCK_X - 1;
                 FAT_screenLive_currentSelectedColumn = 1;
@@ -120,7 +120,7 @@ void FAT_screenLive_moveCursorLeft() {
  */
 void FAT_screenLive_movePageDown() {
     if (FAT_screenLive_currentSelectedLine < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN) {
-        FAT_screenLive_currentStartLine += SCREENLIVE_NB_LINES_ON_SCREEN;
+        FAT_screenLive_incCurrentStartLine (SCREENLIVE_NB_LINES_ON_SCREEN);
         FAT_screenLive_currentSelectedLine += SCREENLIVE_NB_LINES_ON_SCREEN;
         FAT_screenLive_printAllScreenText();
     }
@@ -131,7 +131,7 @@ void FAT_screenLive_movePageDown() {
  */
 void FAT_screenLive_moveCursorAllDown() {
     FAT_screenLive_cursorY = SCREENLIVE_LAST_BLOCK_Y;
-    FAT_screenLive_currentStartLine = NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN;
+    FAT_screenLive_setCurrentStartLine(NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN);
     FAT_screenLive_currentSelectedLine = NB_SEQUENCES_IN_ONE_CHANNEL - 1;
     FAT_screenLive_printAllScreenText();
 }
@@ -140,12 +140,12 @@ void FAT_screenLive_moveCursorAllDown() {
  * \brief Déplace le curseur vers le bas.
  */
 void FAT_screenLive_moveCursorDown() {
-    if (FAT_screenLive_isCursorInSequencer){
+    if (FAT_screenLive_getIsCursorInSequencer()){
         if (FAT_screenLive_currentSelectedLine < NB_SEQUENCES_IN_ONE_CHANNEL) {
             if (FAT_screenLive_cursorY >= SCREENLIVE_LAST_BLOCK_Y - 1) {
-                if (FAT_screenLive_currentStartLine < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN) {
+                if (FAT_screenLive_getCurrentStartLine() < NB_SEQUENCES_IN_ONE_CHANNEL - SCREENLIVE_NB_LINES_ON_SCREEN) {
                     // on n'avance pas mais on change de ligne
-                    FAT_screenLive_currentStartLine++;
+                    FAT_screenLive_incCurrentStartLine(1);
                     FAT_screenLive_currentSelectedLine++;
                     FAT_screenLive_printAllScreenText();
                 }
@@ -187,8 +187,8 @@ void FAT_screenLive_moveCursorDown() {
  */
 void FAT_screenLive_movePageUp() {
     if (FAT_screenLive_currentSelectedLine >= SCREENLIVE_NB_LINES_ON_SCREEN
-            && FAT_screenLive_currentStartLine >= SCREENLIVE_NB_LINES_ON_SCREEN) {
-        FAT_screenLive_currentStartLine -= SCREENLIVE_NB_LINES_ON_SCREEN;
+            && FAT_screenLive_getCurrentStartLine() >= SCREENLIVE_NB_LINES_ON_SCREEN) {
+        FAT_screenLive_decCurrentStartLine(SCREENLIVE_NB_LINES_ON_SCREEN);
         FAT_screenLive_currentSelectedLine -= SCREENLIVE_NB_LINES_ON_SCREEN;
         FAT_screenLive_printAllScreenText();
     }
@@ -199,7 +199,7 @@ void FAT_screenLive_movePageUp() {
  */
 void FAT_screenLive_moveCursorAllUp() {
     FAT_screenLive_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1;
-    FAT_screenLive_currentStartLine = 0;
+    FAT_screenLive_setCurrentStartLine(0);
     FAT_screenLive_currentSelectedLine = 0;
     FAT_screenLive_printAllScreenText();
 }
@@ -208,12 +208,12 @@ void FAT_screenLive_moveCursorAllUp() {
  * \brief Déplace le curseur vers le haut.
  */
 void FAT_screenLive_moveCursorUp() {
-    if (FAT_screenLive_isCursorInSequencer){
+    if (FAT_screenLive_getIsCursorInSequencer()){
         if (FAT_screenLive_currentSelectedLine > 0) {
             if (FAT_screenLive_cursorY <= SCREENLIVE_FIRST_BLOCK_Y - 1) {
-                if (FAT_screenLive_currentStartLine > 0) {
+                if (FAT_screenLive_getCurrentStartLine() > 0) {
                     // on ne recule pas mais on change de ligne
-                    FAT_screenLive_currentStartLine--;
+                    FAT_screenLive_decCurrentStartLine(1);
                     FAT_screenLive_currentSelectedLine--;
                     FAT_screenLive_printAllScreenText();
                 }
@@ -250,7 +250,7 @@ void FAT_screenLive_switchCursorToPart (bool part){
     FAT_cursors_showCursor2();
     if (part == 1){
         // sequenceur.
-        FAT_screenLive_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1 + (8* (FAT_screenLive_currentSelectedLine-FAT_screenLive_currentStartLine));
+        FAT_screenLive_cursorY = SCREENLIVE_FIRST_BLOCK_Y - 1 + (8* (FAT_screenLive_currentSelectedLine-FAT_screenLive_getCurrentStartLine()));
     } else {
         // table
         FAT_screenLive_cursorY = SCREENLIVE_FIRST_TABLE_DATA_Y - 1;
@@ -262,7 +262,7 @@ void FAT_screenLive_switchCursorToPart (bool part){
  * \brief Valide le déplacement du curseur sur l'écran.
  */
 void FAT_screenLive_commitCursorMove() {
-    if (FAT_screenLive_isCursorInSequencer){
+    if (FAT_screenLive_getIsCursorInSequencer()){
         FAT_cursors_moveCursor2 (FAT_screenLive_cursorX, FAT_screenLive_cursorY);
     } else {
         if (FAT_screenLive_currentTableSelectedLine == 2) {
