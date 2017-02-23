@@ -240,7 +240,7 @@ void FAT_player_moveOrHideCursor(u8 channel) {
             FAT_player_hideSequencesCursors();
             FAT_player_hideBlockCursor();
             if (FAT_player_getActualNoteForChannel(channel) != NULL_VALUE
-                    && FAT_player_getCurrentPlayedBlock() == FAT_screenNotes_currentBlockId && !isHelpActivated) {
+                    && FAT_player_getCurrentPlayedBlock() == FAT_screenNotes_getCurrentBlockId() && !isHelpActivated) {
                 hel_ObjSetXY(FAT_cursor_player3_obj, 23, 15 + (FAT_player_getActualNoteForChannel(channel)*8));
                 hel_ObjSetVisible(FAT_cursor_player3_obj, 1);
             } else {

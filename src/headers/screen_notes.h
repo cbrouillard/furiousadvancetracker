@@ -53,6 +53,7 @@ void FAT_screenNotes_printAllNotes();
 void FAT_screenNotes_printEffect(u8 line);
 void FAT_screenNotes_printNote(u8 line);
 void FAT_screenNotes_printLineColumns();
+u8 FAT_screenNotes_getCurrentBlockId();
 
 #include "cursors.h"
 #include "fat.h"

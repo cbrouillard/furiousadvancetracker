@@ -175,7 +175,7 @@ void FAT_screenInstrument_printAllText(u8 type) {
 void FAT_screenInstrument_init() {
     tracker* FAT_tracker = FAT_data_getTracker ();
     // quel instrument est en cours d'édition ?
-    note* FAT_screenInstrument_currentNote = FAT_data_getNote(FAT_screenNotes_currentBlockId, FAT_screenNotes_currentSelectedLine);
+    note* FAT_screenInstrument_currentNote = FAT_data_getNote(FAT_screenNotes_getCurrentBlockId(), FAT_screenNotes_currentSelectedLine);
     FAT_screenInstrument_currentInstrumentId = FAT_screenInstrument_currentNote->instrument;
     if (FAT_screenInstrument_currentInstrumentId == NULL_VALUE) {
 
@@ -424,7 +424,7 @@ void FAT_screenInstrument_checkButtons() {
 
                     if (hel_PadQuery()->Pressed.Start) {
                         if (!FAT_isCurrentlyPlaying) {
-                            FAT_player_startPlayerFromNotes(FAT_screenNotes_currentBlockId,
+                            FAT_player_startPlayerFromNotes(FAT_screenNotes_getCurrentBlockId(),
                                     0, FAT_screenSong_currentSelectedColumn);
                         } else {
                             FAT_player_stopPlayer();

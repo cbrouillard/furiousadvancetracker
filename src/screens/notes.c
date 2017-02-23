@@ -23,6 +23,9 @@
 bool FAT_screenNotes_isPopuped = 0;
 /** \brief Id de block en cours d'édition. */
 u8 FAT_screenNotes_currentBlockId = NULL_VALUE;
+u8 FAT_screenNotes_getCurrentBlockId(){
+  return FAT_screenNotes_currentBlockId;  
+}
 
 /**
  * \brief Cette fonction se content d'imprimer le numéro de ligne sur la partie
