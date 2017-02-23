@@ -157,7 +157,7 @@ void FAT_screenComposer_init() {
 void FAT_screenComposer_checkButtons() {
     hel_PadCapture();
 
-    if ( FAT_data_isCurrentlySimulating() == TRUE && !FAT_isCurrentlyPlaying && (
+    if ( FAT_data_isCurrentlySimulating() == TRUE && !FAT_getIsCurrentlyPlaying() && (
                         hel_PadQuery()->Pressed.Start ||
                         hel_PadQuery()->Pressed.Select ||
                         hel_PadQuery()->Pressed.A ||
@@ -269,7 +269,7 @@ void FAT_screenComposer_pressOrHeldA() {
                 if (hel_PadQuery()->Pressed.Right) {
                     FAT_data_composer_changeValue(realLine, 1); // ajout de 1
 
-                    if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying) {
+                    if (FAT_data_isPreviewEnabled() && !FAT_getIsCurrentlyPlaying()) {
                         FAT_data_composer_previewNote(realLine);
                     }
                 }
@@ -277,7 +277,7 @@ void FAT_screenComposer_pressOrHeldA() {
                 if (hel_PadQuery()->Pressed.Left) {
                     FAT_data_composer_changeValue(realLine, -1);
 
-                    if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying) {
+                    if (FAT_data_isPreviewEnabled() && !FAT_getIsCurrentlyPlaying()) {
                         FAT_data_composer_previewNote(realLine);
                     }
                 }
@@ -285,7 +285,7 @@ void FAT_screenComposer_pressOrHeldA() {
                 if (hel_PadQuery()->Pressed.Up) {
 					if (FAT_data_composer_getChannel(realLine) <= INSTRUMENT_TYPE_NOISE){
                         FAT_data_composer_changeOctave(realLine, 1); // ajout de 1
-                        if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying) {
+                        if (FAT_data_isPreviewEnabled() && !FAT_getIsCurrentlyPlaying()) {
                             FAT_data_composer_previewNote(realLine);
                         }
 					}
@@ -294,13 +294,13 @@ void FAT_screenComposer_pressOrHeldA() {
                 if (hel_PadQuery()->Pressed.Down) {
 					if (FAT_data_composer_getChannel(realLine) <= INSTRUMENT_TYPE_NOISE) {
                         FAT_data_composer_changeOctave(realLine, -1);
-                        if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying) {
+                        if (FAT_data_isPreviewEnabled() && !FAT_getIsCurrentlyPlaying()) {
                             FAT_data_composer_previewNote(realLine);
                         }
 					}
                 }
 
-                if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying && hel_PadQuery()->Pressed.A) {
+                if (FAT_data_isPreviewEnabled() && !FAT_getIsCurrentlyPlaying() && hel_PadQuery()->Pressed.A) {
                     FAT_data_composer_previewNote(realLine);
                 }
 
@@ -326,7 +326,7 @@ void FAT_screenComposer_pressOrHeldA() {
                         FAT_data_composer_changeInstrument(realLine, -16);
                     }
 
-                    if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying && hel_PadQuery()->Pressed.A) {
+                    if (FAT_data_isPreviewEnabled() && !FAT_getIsCurrentlyPlaying() && hel_PadQuery()->Pressed.A) {
                         FAT_data_composer_previewNote(realLine);
                     }
                 }
@@ -352,7 +352,7 @@ void FAT_screenComposer_pressOrHeldA() {
                     }
                 }
 
-                if (FAT_data_isPreviewEnabled() && !FAT_isCurrentlyPlaying && hel_PadQuery()->Pressed.A) {
+                if (FAT_data_isPreviewEnabled() && !FAT_getIsCurrentlyPlaying() && hel_PadQuery()->Pressed.A) {
                     FAT_data_composer_previewNote(realLine);
                 }
 

@@ -52,7 +52,7 @@ void FAT_yesno_dialogLoad_mainFunc() {
     } else if (hel_PadQuery()->Pressed.R || hel_PadQuery()->Pressed.Start) {
         FAT_player_stopPlayer();
         FAT_filesystem_loadTrack(param1);
-        FAT_currentScreen = SCREEN_PROJECT_ID;
+        FAT_setCurrentScreen(SCREEN_PROJECT_ID);
         FAT_yesno_close();
         hel_BgTextPrint(TEXT_LAYER, 24, 16, 0, "Loaded");
     }
@@ -78,7 +78,7 @@ void FAT_yesno_dialogNewProject_mainFunc() {
         FAT_popup_setSelectedIcon(SCREEN_SONG_ID);
 
         FAT_data_initData();
-        FAT_currentScreen = SCREEN_SONG_ID;
+        FAT_setCurrentScreen(SCREEN_SONG_ID);
         FAT_yesno_close();
         hel_BgTextPrint(TEXT_LAYER, 22, 16, 0, "Created");
     }
@@ -101,7 +101,7 @@ void FAT_onlyyes_dialog_mainFunc() {
 void FAT_yesno_close() {
     FAT_popup_init();
     hel_IntrUpdateHandler(INT_TYPE_VBL, (void*) &VBLInterruptHandler);
-    FAT_switchToScreen(FAT_currentScreen, SCREEN_DIALOG_ANY);
+    FAT_switchToScreen(FAT_getCurrentScreen(), SCREEN_DIALOG_ANY);
 }
 
 /**

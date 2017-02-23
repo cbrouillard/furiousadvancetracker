@@ -242,7 +242,7 @@ void FAT_screenBlocks_checkButtons() {
                 FAT_cursors_hideCursorChange();
 
                 if (hel_PadQuery()->Pressed.Start) {
-                    if (!FAT_isCurrentlyPlaying) {
+                    if (!FAT_getIsCurrentlyPlaying()) {
                         FAT_player_startPlayerFromBlocks(FAT_screenBlocks_currentSequenceId,
                                 FAT_screenBlocks_getCurrentSelectedLine(), FAT_screenSong_getCurrentSelectedColumn());
                     } else {

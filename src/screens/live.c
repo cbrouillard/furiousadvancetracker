@@ -304,13 +304,13 @@ void FAT_screenLive_checkButtons() {
         if (hel_PadQuery()->Pressed.Start) {
             if(hel_PadQuery()->Held.R){
                 // tout se lance en maintenant à partir de la ligne sélectionnée.
-                if (!FAT_isCurrentlyPlaying) {
+                if (!FAT_getIsCurrentlyPlaying()) {
                     FAT_player_startPlayerFromSequences(FAT_screenLive_getCurrentSelectedLine());
                 } else {
                     FAT_player_stopPlayer();
                 }
             }else {
-                if (!FAT_isCurrentlyPlaying) {
+                if (!FAT_getIsCurrentlyPlaying()) {
                     // seule la colonne sélectionnée se lance à partir de la ligne courante.
                     FAT_player_startPlayerFromLive_oneChannel(FAT_screenLive_getCurrentSelectedLine(), FAT_screenLive_getCurrentSelectedColumn());
                 } else {

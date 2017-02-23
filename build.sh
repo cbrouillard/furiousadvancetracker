@@ -5,6 +5,7 @@ cleanAll () {
 echo "### Nettoyage"
 make clean
 find . -name "*.o" -exec rm {} \;
+find . -name "*.i" -exec rm {} \;
 find . -name "*.s" -exec rm {} \;
 find . -name "*.gba" -exec rm {} \;
 find . -name "*.elf" -exec rm {} \;

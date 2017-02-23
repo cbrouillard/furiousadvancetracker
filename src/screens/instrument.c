@@ -317,7 +317,7 @@ void FAT_screenInstrument_checkButtons() {
     tracker* FAT_tracker = FAT_data_getTracker ();
     hel_PadCapture();
 
-    if ( FAT_data_isCurrentlySimulating() == TRUE && !FAT_isCurrentlyPlaying && (
+    if ( FAT_data_isCurrentlySimulating() == TRUE && !FAT_getIsCurrentlyPlaying() && (
                     hel_PadQuery()->Pressed.Start ||
                     hel_PadQuery()->Pressed.Select ||
                     hel_PadQuery()->Pressed.A ||
@@ -423,7 +423,7 @@ void FAT_screenInstrument_checkButtons() {
                 } else {
 
                     if (hel_PadQuery()->Pressed.Start) {
-                        if (!FAT_isCurrentlyPlaying) {
+                        if (!FAT_getIsCurrentlyPlaying()) {
                             FAT_player_startPlayerFromNotes(FAT_screenNotes_getCurrentBlockId(),
                                     0, FAT_screenSong_getCurrentSelectedColumn());
                         } else {

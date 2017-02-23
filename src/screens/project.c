@@ -111,7 +111,7 @@ void FAT_screenProject_checkButtons() {
         } else {
 
             if (hel_PadQuery()->Pressed.Start) {
-                if (!FAT_isCurrentlyPlaying) {
+                if (!FAT_getIsCurrentlyPlaying()) {
                     FAT_player_startPlayerFromSequences(FAT_screenSong_getCurrentSelectedLine());
                 } else {
                     FAT_player_stopPlayer();

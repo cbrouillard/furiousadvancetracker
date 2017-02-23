@@ -80,8 +80,9 @@ void VBLInterruptHandler(void);
 void FAT_initScreenPalette() ;
 void FAT_initSpritePalette();
 
-u8 FAT_getIsHelpActivated ();
 u8 FAT_getCurrentScreen ();
+void FAT_setCurrentScreen (u8 screen);
+u8* FAT_getActualSequencesForChannel ();
 
 #include "../gfx/ResourceData.h"
 #include "data.h"

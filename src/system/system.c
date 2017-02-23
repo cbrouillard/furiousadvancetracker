@@ -41,21 +41,17 @@ u8 FAT_currentScreen = SCREEN_SONG_ID;
 u8 FAT_getCurrentScreen (){
   return FAT_currentScreen;
 }
-
-/** \brief Variable quasi temporaire afin de savoir si on a activé l'écran d'aide. */
-u8 isHelpActivated = 0;
-u8 FAT_getIsHelpActivated (){
-  return isHelpActivated;
+void FAT_setCurrentScreen (u8 screen){
+  FAT_currentScreen = screen;
 }
 
-/**
- * \brief Permet de savoir si le player est en train de jouer la chanson.
- */
-bool FAT_isCurrentlyPlaying = 0;
 u8 FAT_live_nbChannelPlaying = 0;
 
 /** \brief Repères pour le player: les valeurs dans les tableaux représentent des numéros de lignes (séquences). */
 u8 actualSequencesForChannel[6];
+u8* FAT_getActualSequencesForChannel (){
+  return actualSequencesForChannel;
+}
 
 /**
  * \brief Initialisation de HEL/HAM et d'autres données propres à FAT.
@@ -273,7 +269,7 @@ void FAT_allScreen_singleCheckButtons() {
 void FAT_mainLoop() {
     for (;;) {
 
-        if (FAT_isCurrentlyPlaying) {
+        if (FAT_getIsCurrentlyPlaying()) {
 
             FAT_player_continueToPlay();
         }

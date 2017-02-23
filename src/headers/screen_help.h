@@ -21,6 +21,7 @@
 void FAT_screenHelp_init(u8 screenIdForHelp);
 void FAT_screenHelp_checkButtons();
 
-#include "fat.h"
+u8 FAT_getIsHelpActivated ();
 
+#include "fat.h"
 #endif	/* SCREEN_HELP_H */

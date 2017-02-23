@@ -50,6 +50,14 @@ u8 FAT_player_getCurrentPlayedBlock (){
   return FAT_currentPlayedBlock;
 }
 
+/**
+ * \brief Permet de savoir si le player est en train de jouer la chanson.
+ */
+bool FAT_isCurrentlyPlaying = 0;
+bool FAT_getIsCurrentlyPlaying(){
+  return FAT_isCurrentlyPlaying;
+}
+
 bufferPlayer FAT_player_buffer[6];
 u8 firstAvailableSequenceForChannel[6];
 

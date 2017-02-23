@@ -34,6 +34,9 @@ void FAT_player_playFromBlocks();
 void FAT_player_playFromNotes();
 void FAT_player_playFromLive();
 void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel);
+void FAT_player_startPlayerFromSequences(u8 startLine);
+void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel);
+void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel);
 void FAT_player_continueToPlay();
 
 bool FAT_isChannelCurrentlyPlaying (u8 channel);
@@ -59,6 +62,7 @@ void FAT_player_timerFunc();
 void FAT_resetTempo ();
 void FAT_player_firstInit ();
 
+bool FAT_getIsCurrentlyPlaying();
 void FAT_player_progressInSong(u8 channel, sequence* seq);
 void FAT_player_progressInSequence (sequence* seq);
 void FAT_player_progressInBlock ();

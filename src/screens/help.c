@@ -25,6 +25,12 @@ bool FAT_screenHelp_isPopuped = 0;
 /** \brief Cette variable permet de savoir depuis quel écran l'aide à été appelée. */
 u8 FAT_help_fromScreenId;
 
+/** \brief Variable quasi temporaire afin de savoir si on a activé l'écran d'aide. */
+u8 isHelpActivated = 0;
+u8 FAT_getIsHelpActivated (){
+  return isHelpActivated;
+}
+
 /**
  * \brief Initialisation de l'écran.
  */
@@ -76,7 +82,7 @@ void FAT_screenHelp_init(u8 screenIdForHelp) {
     FAT_cursors_hideAllCursors();
 
     isHelpActivated = 1;
-    FAT_currentScreen = SCREEN_HELP_ID;
+    FAT_setCurrentScreen(SCREEN_HELP_ID);
     FAT_help_fromScreenId = screenIdForHelp;
 
     FAT_popup_hide();
