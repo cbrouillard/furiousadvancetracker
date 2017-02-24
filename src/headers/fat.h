@@ -22,7 +22,7 @@
 /**
  * \brief Version actuelle de FAT.
  */
-#define FAT_VERSION "1.1.0"
+#define FAT_VERSION "1.2.0"
 
 #define POPUP_LAYER 0
 #define TEXT_LAYER 1

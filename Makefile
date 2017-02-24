@@ -9,7 +9,7 @@ ADD_LIBS += $(GCCARM)/lib/libhel2.a
 #
 # Set the name of your desired GBA image name here
 #
-PROGNAME = FAT_v1.1.1
+PROGNAME = FAT_v1.2.0
 
 #
 # Set a list of files you want to compile
@@ -34,7 +34,7 @@ OFILES += src/main.o \
 # Standard Makefile targets start here
 ######################################
 
-all : $(PROGNAME).$(EXT) clean
+all :	$(shell mkdir -p src/gfx/raw)	$(PROGNAME).$(EXT) clean
 
 #
 # Most Makefile targets are predefined for you, suchas

@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION="1.1.1"
+VERSION="1.2.0"
 
 cleanAll () {
 echo "### Nettoyage"
@@ -47,10 +47,12 @@ echo "### Patch du GBA pour inclusion des samples"
 cat FAT_v$VERSION.gba kits/infos.gbfs kits/devmess.gbfs kits/littlescale-md.gbfs kits/c64-drums.gbfs kits/ym-drums.gbfs kits/battery.gbfs kits/rhythms.gbfs kits/tr606.gbfs > TMP.gba
 mv TMP.gba FAT_v$VERSION.gba
 
+./gbafix FAT_v$VERSION.gba -tFAT
+
 echo "### Copie dans les daily_builds"
 cp FAT_v$VERSION.gba daily_builds/FuriousAdvanceTracker_v$VERSION-`date '+%d-%B-%Y'`.gba
 
 echo "### Lancement de l'émulateur"
 vba  FAT_v$VERSION.gba
 
-cleanAll
+#cleanAll
