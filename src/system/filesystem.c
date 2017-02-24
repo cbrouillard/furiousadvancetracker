@@ -23,7 +23,7 @@
 const char* emptyName = "EMPTY   ";
 
 /** \brief Buffer pour le nom de la track. */
-extern char songNameBuffer[9] = "FATSONG!\0";
+char songNameBuffer[9] = "FATSONG!\0";
 
 /** \brief Pointeur vers la mémoire SRAM. */
 u8 *gamepak = GAMEPAK_RAM;

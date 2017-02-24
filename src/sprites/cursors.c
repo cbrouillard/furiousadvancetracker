@@ -33,6 +33,8 @@ THandle FAT_cursorChange_obj;
 THandle FAT_cursorKeyboard_obj;
 /** \brief ID technique HAM pour le cursor de sélection sur le clavier. */
 THandle FAT_cursorKeyboard_select_obj;
+/** \brief ID technique pour le sprite spécial du simulateur */
+THandle FAT_cursorSimulator_obj;
 
 /**
  * \brief Initialisation du curseur taille 1.
@@ -199,6 +201,31 @@ void FAT_initCursorsKeyboard (){
 }
 
 /**
+ * \brief Initialisation du curseur taille 3.
+ *
+ * S'occupe de créer le sprite "curseur 3" en mode transparence. Le sprite est configuré
+ * comme invisible par défaut.
+ */
+void FAT_initCursorSimulator() {
+    FAT_cursorSimulator_obj = hel_ObjCreate(  ResData(RES_CURSOR_SIMULATOR_RAW), // Pointer to source graphic
+                                      OBJ_SHAPE_HORIZONTAL,       // Obj Shape
+                                      2,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
+                                      OBJ_MODE_SEMITRANSPARENT,        // Obj Mode
+                                      COLORS_16,              // Use 16 color mode
+                                      0,                      // Palette number. Only neccessary in 16 color mode
+                                      FALSE,                  // Don't use mosaic
+                                      FALSE,                  // Don't flip the sprite horizontally
+                                      FALSE,                  // Don't flip the object vertically
+                                      1,                      // Priority against background. 0=higest
+                                      FALSE,                  // Don't make the object double-sized
+                                      0,                    // Destination horzintal screen coordinate in pixels
+                                      0                      // Destination vertical screen coordinate in pixels
+                                      );
+
+    hel_ObjSetVisible(FAT_cursorSimulator_obj, 0);
+}
+
+/**
  * \brief Affiche le curseur 1.
  *
  * Attention ! cette fonction ne s'occupe pas de commiter
@@ -229,6 +256,17 @@ void FAT_cursors_showCursor2() {
  */
 void FAT_cursors_showCursor3() {
     hel_ObjSetVisible(FAT_cursor3_obj, 1);
+}
+
+/**
+ * \brief Affiche le curseur simulateur.
+ *
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera visible
+ * au prochain commit.
+ */
+void FAT_cursors_showCursorSimulator() {
+    hel_ObjSetVisible(FAT_cursorSimulator_obj, 1);
 }
 
 /**
@@ -309,6 +347,17 @@ void FAT_cursors_hideCursor3() {
 }
 
 /**
+ * \brief Cache le curseur simulateur.
+ *
+ * Attention ! cette fonction ne s'occupe pas de commiter
+ * l'affichage dans la mémoire GBA: seulement indiquer que le sprite sera invisible
+ * au prochain commit.
+ */
+void FAT_cursors_hideCursorSimulator() {
+    hel_ObjSetVisible(FAT_cursorSimulator_obj, 0);
+}
+
+/**
  * \brief Cache le curseur 8.
  *
  * Attention ! cette fonction ne s'occupe pas de commiter
@@ -363,6 +412,7 @@ void FAT_cursors_hideAllCursors(){
     FAT_cursors_hideCursorChange();
     FAT_cursors_hideCursorKeyboard();
     FAT_cursors_hideCursorKeyboard_select();
+    FAT_cursors_hideCursorSimulator();
 }
 
 /**
@@ -403,6 +453,16 @@ void FAT_cursors_moveCursor2(u8 x, u8 y) {
  */
 void FAT_cursors_moveCursor3(u8 x, u8 y) {
     hel_ObjSetXY(FAT_cursor3_obj, x, y);
+}
+
+/**
+ * \brief Déplace le curseur de simulateur.
+ *
+ * \param x abscisse (en px)
+ * \param y ordonnée (en px)
+ */
+void FAT_cursors_moveCursorSimulator(u8 x, u8 y) {
+    hel_ObjSetXY(FAT_cursorSimulator_obj, x, y);
 }
 
 /**

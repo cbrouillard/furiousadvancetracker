@@ -381,7 +381,7 @@ void FAT_screenInstrument_checkButtons() {
             }
 
         } else {
-            if (FAT_screenInstrument_isTabulating && FAT_screenInstruments_getCurrentSelectedLine() == 0) {
+            if (FAT_screenInstrument_isTabulating) {// && FAT_screenInstruments_getCurrentSelectedLine() == 0) {
                 // relachement du L
                 FAT_screenInstrument_isTabulating = 0;
                 FAT_screenInstrument_switchScreen(FAT_tracker->allInstruments[FAT_screenInstrument_currentInstrumentId].type);

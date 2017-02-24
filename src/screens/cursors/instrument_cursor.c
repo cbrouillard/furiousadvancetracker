@@ -757,27 +757,27 @@ void FAT_screenInstrument_showSimulatorCursor (u8 type){
     switch (type) {
        case INSTRUMENT_TYPE_PULSE:
        case INSTRUMENT_TYPE_PULSE2:
-            FAT_cursors_moveCursor3  (SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_PULSE_BLOCK_Y[SCREENINSTRUMENT_PULSE_NB_LINES_ON_SCREEN - 1]);
+            FAT_cursors_moveCursorSimulator  (SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_PULSE_BLOCK_Y[SCREENINSTRUMENT_PULSE_NB_LINES_ON_SCREEN - 1]);
             break;
        case INSTRUMENT_TYPE_WAVE:
-            FAT_cursors_moveCursor3  (SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_WAVE_BLOCK_Y[SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN - 1]);
+            FAT_cursors_moveCursorSimulator  (SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_WAVE_BLOCK_Y[SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN - 1]);
             break;
        case INSTRUMENT_TYPE_NOISE:
-            FAT_cursors_moveCursor3  (SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_NOISE_BLOCK_Y[SCREENINSTRUMENT_NOISE_NB_LINES_ON_SCREEN - 1]);
+            FAT_cursors_moveCursorSimulator  (SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_NOISE_BLOCK_Y[SCREENINSTRUMENT_NOISE_NB_LINES_ON_SCREEN - 1]);
             break;
        case INSTRUMENT_TYPE_SAMPLEA:
        case INSTRUMENT_TYPE_SAMPLEB:
-            FAT_cursors_moveCursor3  (207,INST_SAMPLE_BLOCK_Y[SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN - 1]);
+            FAT_cursors_moveCursorSimulator  (207,INST_SAMPLE_BLOCK_Y[SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN - 1]);
             break;
        case INSTRUMENT_TYPE_OSCILLATORA:
        case INSTRUMENT_TYPE_OSCILLATORB:
-            FAT_cursors_moveCursor3 (SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_OSC_BLOCK_Y[SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN - 1]);
+            FAT_cursors_moveCursorSimulator (SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_OSC_BLOCK_Y[SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN - 1]);
            break;
     }
 
-    FAT_cursors_showCursor3();
+    FAT_cursors_showCursorSimulator();
 }
 
 void FAT_screenInstrument_hideSimulatorCursor (){
-    FAT_cursors_hideCursor3();
+    FAT_cursors_hideCursorSimulator();
 }

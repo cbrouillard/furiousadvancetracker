@@ -112,6 +112,7 @@ void FAT_init() {
     FAT_initCursor8();
     FAT_initCursorChange();
     FAT_initCursorsKeyboard();
+    FAT_initCursorSimulator();
 
     FAT_popup_initCursors();
 
