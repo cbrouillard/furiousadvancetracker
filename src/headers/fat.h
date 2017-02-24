@@ -66,7 +66,9 @@
 /**
  * \brief Tableau constant de chaines utiles à l'affichage du paramètre output d'un instrument.
  */
-const char* outputText [4] = {"  ", "L ", " R", "LR"};
+extern const char* outputText [4];
+
+extern u8 FAT_live_nbChannelPlaying;
 
 void FAT_init();
 void FAT_showHelp(u8 screenId);

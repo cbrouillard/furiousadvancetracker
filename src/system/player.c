@@ -97,7 +97,7 @@ void FAT_player_firstInit (){
     u8 i;
     R_TIM3CNT = 0x0003;
 
-    memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
+    memset(FAT_getActualSequencesForChannel(), NULL_VALUE, sizeof (u8)*6);
     memset(actualBlocksForChannel, 0, sizeof (u8)*6);
     memset(actualNotesForChannel, 0, sizeof (u8)*6);
     memset(firstAvailableSequenceForChannel, 0, sizeof (u8)*6);
@@ -311,7 +311,7 @@ u8 FAT_player_searchFirstAvailableSequenceForChannel_returnLine (u8 channel, u8 
 void FAT_player_startPlayerFromSequences(u8 startLine) {
 
     // initialisation des séquences au démarrage
-    memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
+    memset(FAT_getActualSequencesForChannel(), NULL_VALUE, sizeof (u8)*6);
     memset(actualBlocksForChannel, 0, sizeof (u8)*6);
     memset(actualNotesForChannel, 0, sizeof (u8)*6);
     memset(firstAvailableSequenceForChannel, 0, sizeof (u8)*6);
@@ -325,8 +325,8 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
     u8 i;
     for (i = 0; i<6; i++){
         firstAvailableSequenceForChannel[i] = FAT_player_searchFirstAvailableSequenceForChannel_returnLine(i, startLine);
-        actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
-        if (actualSequencesForChannel[i]!=NULL_VALUE){
+        FAT_getActualSequencesForChannel()[i] = firstAvailableSequenceForChannel[i];
+        if (FAT_getActualSequencesForChannel()[i]!=NULL_VALUE){
             FAT_live_nbChannelPlaying++;
         }
         FAT_player_moveOrHideCursor(i);
@@ -340,7 +340,7 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
 void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
     // initialisation seulement si d'autres colonnes n'ont pas déjà été lancées !
     if (!FAT_isCurrentlyPlaying){
-        memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
+        memset(FAT_getActualSequencesForChannel(), NULL_VALUE, sizeof (u8)*6);
         memset(actualBlocksForChannel, 0, sizeof (u8)*6);
         memset(actualNotesForChannel, 0, sizeof (u8)*6);
         memset(firstAvailableSequenceForChannel, 0, sizeof (u8)*6);
@@ -359,7 +359,7 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
 
     // positionnement du player sur le channel
     firstAvailableSequenceForChannel[channel] = FAT_player_searchFirstAvailableSequenceForChannel_returnLine(channel, line);
-    actualSequencesForChannel[channel] = firstAvailableSequenceForChannel[channel];
+    FAT_getActualSequencesForChannel()[channel] = firstAvailableSequenceForChannel[channel];
     actualBlocksForChannel[channel] = 0;
     actualNotesForChannel[channel] = 0;
     FAT_live_nbChannelPlaying ++;
@@ -383,7 +383,7 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
 void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
 
     // initialisation
-    memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
+    memset(FAT_getActualSequencesForChannel(), NULL_VALUE, sizeof (u8)*6);
     memset(actualBlocksForChannel, 0, sizeof (u8)*6);
     memset(actualNotesForChannel, 0, sizeof (u8)*6);
     actualBlocksForChannel[channel] = startLine;
@@ -409,7 +409,7 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
  */
 void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
 
-    memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
+    memset(FAT_getActualSequencesForChannel(), NULL_VALUE, sizeof (u8)*6);
     memset(actualBlocksForChannel, NULL_VALUE, sizeof (u8)*6);
     memset(actualNotesForChannel, 0, sizeof (u8)*6);
     actualNotesForChannel[channel] = startLine;
@@ -443,12 +443,12 @@ void FAT_player_progressInSong(u8 channel, sequence* seq){
                 || seq->blocks[actualBlocksForChannel[channel]] == NULL_VALUE) {
             actualBlocksForChannel[channel] = 0;
 
-            actualSequencesForChannel[channel]++;
-            if (actualSequencesForChannel[channel] > NB_MAX_SEQUENCES
-                    || FAT_tracker->channels[channel].sequences[actualSequencesForChannel[channel]] == NULL_VALUE
-                    || FAT_data_isSequenceEmpty(FAT_tracker->channels[channel].sequences[actualSequencesForChannel[channel]])) {
+            FAT_getActualSequencesForChannel()[channel]++;
+            if (FAT_getActualSequencesForChannel()[channel] > NB_MAX_SEQUENCES
+                    || FAT_tracker->channels[channel].sequences[FAT_getActualSequencesForChannel()[channel]] == NULL_VALUE
+                    || FAT_data_isSequenceEmpty(FAT_tracker->channels[channel].sequences[FAT_getActualSequencesForChannel()[channel]])) {
 
-                actualSequencesForChannel[channel] = firstAvailableSequenceForChannel[channel];
+                FAT_getActualSequencesForChannel()[channel] = firstAvailableSequenceForChannel[channel];
             }
         }
     }
@@ -489,8 +489,8 @@ void FAT_player_playFromSequences() {
             FAT_player_buffer[i].volume = NULL_VALUE;
             FAT_player_buffer[i].sweep = NULL_VALUE;
             FAT_player_buffer[i].output = NULL_VALUE;
-            if (FAT_isChannelCurrentlyPlaying(i) && actualSequencesForChannel[i] < NB_MAX_SEQUENCES){
-                FAT_currentPlayedSequence = FAT_tracker->channels[i].sequences[actualSequencesForChannel[i]];
+            if (FAT_isChannelCurrentlyPlaying(i) && FAT_getActualSequencesForChannel()[i] < NB_MAX_SEQUENCES){
+                FAT_currentPlayedSequence = FAT_tracker->channels[i].sequences[FAT_getActualSequencesForChannel()[i]];
                 if (FAT_currentPlayedSequence != NULL_VALUE) {
                     // lire la séquence actuelle
                     sequence* seq = &(FAT_tracker->allSequences[FAT_currentPlayedSequence]);
@@ -519,12 +519,12 @@ void FAT_player_playFromSequences() {
                                             || seq->blocks[actualBlocksForChannel[i]] == NULL_VALUE) {
                                         actualBlocksForChannel[i] = 0;
 
-                                        actualSequencesForChannel[i]++;
-                                        if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES
-                                                || FAT_tracker->channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
-                                                || FAT_data_isSequenceEmpty(FAT_tracker->channels[i].sequences[actualSequencesForChannel[i]])) {
+                                        FAT_getActualSequencesForChannel()[i]++;
+                                        if (FAT_getActualSequencesForChannel()[i] > NB_MAX_SEQUENCES
+                                                || FAT_tracker->channels[i].sequences[FAT_getActualSequencesForChannel()[i]] == NULL_VALUE
+                                                || FAT_data_isSequenceEmpty(FAT_tracker->channels[i].sequences[FAT_getActualSequencesForChannel()[i]])) {
 
-                                            actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+                                            FAT_getActualSequencesForChannel()[i] = firstAvailableSequenceForChannel[i];
                                         }
                                     }
 
@@ -545,15 +545,15 @@ void FAT_player_playFromSequences() {
 
                     } else {
                         actualBlocksForChannel[i] = 0;
-                        actualSequencesForChannel[i]++;
-                        if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES) {
-                            actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+                        FAT_getActualSequencesForChannel()[i]++;
+                        if (FAT_getActualSequencesForChannel()[i] > NB_MAX_SEQUENCES) {
+                            FAT_getActualSequencesForChannel()[i] = firstAvailableSequenceForChannel[i];
                         }
                         FAT_player_moveOrHideCursor(i);
                     }
 
                 } else {
-                    actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+                    FAT_getActualSequencesForChannel()[i] = firstAvailableSequenceForChannel[i];
                     FAT_player_moveOrHideCursor(i);
                 }
             }
@@ -599,9 +599,9 @@ void FAT_player_playFromLive(){
             FAT_player_buffer[i].volume = NULL_VALUE;
             FAT_player_buffer[i].sweep = NULL_VALUE;
             FAT_player_buffer[i].output = NULL_VALUE;
-            if (FAT_isChannelCurrentlyPlaying(i) && actualSequencesForChannel[i] < NB_MAX_SEQUENCES && FAT_live_waitForOtherChannel[i] == 0){
+            if (FAT_isChannelCurrentlyPlaying(i) && FAT_getActualSequencesForChannel()[i] < NB_MAX_SEQUENCES && FAT_live_waitForOtherChannel[i] == 0){
 
-                FAT_currentPlayedSequence = FAT_tracker->channels[i].sequences[actualSequencesForChannel[i]];
+                FAT_currentPlayedSequence = FAT_tracker->channels[i].sequences[FAT_getActualSequencesForChannel()[i]];
 
                 if (FAT_currentPlayedSequence != NULL_VALUE) {
                     // lire la séquence actuelle
@@ -632,12 +632,12 @@ void FAT_player_playFromLive(){
                                         actualBlocksForChannel[i] = 0;
 
                                         if (!FAT_tracker->liveData.liveMode){ // mode auto?
-                                            actualSequencesForChannel[i]++;
-                                            if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES
-                                                    || FAT_tracker->channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
-                                                    || FAT_data_isSequenceEmpty(FAT_tracker->channels[i].sequences[actualSequencesForChannel[i]])) {
+                                            FAT_getActualSequencesForChannel()[i]++;
+                                            if (FAT_getActualSequencesForChannel()[i] > NB_MAX_SEQUENCES
+                                                    || FAT_tracker->channels[i].sequences[FAT_getActualSequencesForChannel()[i]] == NULL_VALUE
+                                                    || FAT_data_isSequenceEmpty(FAT_tracker->channels[i].sequences[FAT_getActualSequencesForChannel()[i]])) {
 
-                                                actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+                                                FAT_getActualSequencesForChannel()[i] = firstAvailableSequenceForChannel[i];
                                                 // si pas de séquences dispo -> NULL_VALUE
                                             }
                                         }
@@ -665,12 +665,12 @@ void FAT_player_playFromLive(){
                                 actualBlocksForChannel[i] = 0;
 
                                 if (!FAT_tracker->liveData.liveMode){ // mode auto?
-                                    actualSequencesForChannel[i]++;
-                                    if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES
-                                            || FAT_tracker->channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
-                                            || FAT_data_isSequenceEmpty(FAT_tracker->channels[i].sequences[actualSequencesForChannel[i]])) {
+                                    FAT_getActualSequencesForChannel()[i]++;
+                                    if (FAT_getActualSequencesForChannel()[i] > NB_MAX_SEQUENCES
+                                            || FAT_tracker->channels[i].sequences[FAT_getActualSequencesForChannel()[i]] == NULL_VALUE
+                                            || FAT_data_isSequenceEmpty(FAT_tracker->channels[i].sequences[FAT_getActualSequencesForChannel()[i]])) {
 
-                                        actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+                                        FAT_getActualSequencesForChannel()[i] = firstAvailableSequenceForChannel[i];
                                         // si pas de séquences dispo -> NULL_VALUE
                                     }
                                 }
@@ -683,9 +683,9 @@ void FAT_player_playFromLive(){
                         actualBlocksForChannel[i] = 0;
 
                         if (!FAT_tracker->liveData.liveMode){ // mode auto?
-                            actualSequencesForChannel[i]++;
-                            if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES) {
-                                actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+                            FAT_getActualSequencesForChannel()[i]++;
+                            if (FAT_getActualSequencesForChannel()[i] > NB_MAX_SEQUENCES) {
+                                FAT_getActualSequencesForChannel()[i] = firstAvailableSequenceForChannel[i];
                             }
                             FAT_player_moveOrHideCursor(i);
                         }
@@ -694,7 +694,7 @@ void FAT_player_playFromLive(){
                     }
 
                 } else if (!FAT_tracker->liveData.liveMode){ // mode auto?
-                    actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+                    FAT_getActualSequencesForChannel()[i] = firstAvailableSequenceForChannel[i];
                     willHaveToSyncAfterNote = 1;
                     FAT_player_moveOrHideCursor(i);
                 }
@@ -870,7 +870,7 @@ void FAT_player_continueToPlay() {
  * \brief Arrete la lecture d'un channel. Si c'est le dernier, stop le player completement.
  */
 void FAT_player_stopPlayer_onlyOneColumn(u8 channel){
-    actualSequencesForChannel[channel] = NULL_VALUE;
+    FAT_getActualSequencesForChannel()[channel] = NULL_VALUE;
     actualBlocksForChannel[channel] = 0;
     actualNotesForChannel[channel] = 0;
     firstAvailableSequenceForChannel[channel] = 0;
@@ -890,7 +890,7 @@ void FAT_player_stopPlayer_onlyOneColumn(u8 channel){
 }
 
 bool FAT_isChannelCurrentlyPlaying (u8 channel){
-    return actualSequencesForChannel[channel] != NULL_VALUE;
+    return FAT_getActualSequencesForChannel()[channel] != NULL_VALUE;
 }
 
 /**
@@ -913,7 +913,7 @@ void FAT_player_stopPlayer() {
     FAT_live_nbChannelPlaying = 0;
 
     // réinit propre.
-    memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
+    memset(FAT_getActualSequencesForChannel(), NULL_VALUE, sizeof (u8)*6);
     memset (FAT_live_waitForOtherChannel, 0, sizeof(u8)*6);
     memset(FAT_player_buffer, 0, sizeof(bufferPlayer)*6);
 

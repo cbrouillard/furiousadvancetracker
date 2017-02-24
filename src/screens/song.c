@@ -19,6 +19,8 @@
 
 #include "../headers/screen_song.h"
 
+const char* CHANNEL_NAME[6] = {"PU1\0", "PU2\0", "WAV\0", "NOI\0", "SNA\0", "SNB\0"};
+
 /** \brief Cette variable contient le numéro de la première ligne actuellement affichée. */
 u8 FAT_screenSong_currentStartLine = 0;
 u8 FAT_screenSong_getCurrentStartLine (){

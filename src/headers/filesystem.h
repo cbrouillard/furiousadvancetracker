@@ -20,6 +20,8 @@
 #include "../soundApi/soundApi.h"
 #include "../headers/data.h"
 
+extern char songNameBuffer[9];
+
 /**
  * \brief Addresse vers la mémoire SRAM (la mémoire pour la sauvegarde).
  */
@@ -29,9 +31,6 @@
 #define MAX_TRACKS 16
 
 #define DEFAULT_FIRST_DATA_OFFSET (MAX_TRACKS*4)+16
-
-/** \brief Chaine de caractère pour les chansons non initialisées. */
-const char* emptyName = "EMPTY   ";
 
 void FAT_filesystem_checkFs();
 char* FAT_filesystem_getTrackName(u8 trackNumber);

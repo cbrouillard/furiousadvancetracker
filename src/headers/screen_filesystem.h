@@ -29,9 +29,6 @@
 /** \brief Numéro de case ou l'affichage des noms des tracks démarre. */
 #define SCREENFILESYSTEM_LINE_TRACKNAME_X 3
 
-/** \brief Chaines de caractères pour représenter le mode actuel de l'écran filesystem. */
-const char* modes[2] = {"SAVE", "LOAD"};
-
 void FAT_screenFilesystem_setMode(u8 modeId);
 void FAT_screenFilesystem_printMode();
 void FAT_screenFilesystem_printLineColumns();

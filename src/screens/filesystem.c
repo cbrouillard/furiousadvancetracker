@@ -19,6 +19,9 @@
 
 #include "../headers/screen_filesystem.h"
 
+/** \brief Chaines de caractères pour représenter le mode actuel de l'écran filesystem. */
+const char* modes[2] = {"SAVE", "LOAD"};
+
 /** \brief Permet de savoir si la popup est affichée au dessus de l'écran ou non. */
 bool FAT_screenFilesystem_isPopuped = 0;
 /** \brief Quel est le mode actuel pour l'écran filesystem ? LOAD/SAVE */

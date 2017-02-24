@@ -19,6 +19,8 @@
 
 #include "../../headers/screen_composer_cursor.h"
 
+const u8 screenComposer_parametersCursorsPositions [SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN] = {23, 31};
+
 /** \brief Position actuelle du curseur pour le composeur. */
 u8 FAT_screenComposer_cursorX;
 /** \brief Position actuelle du curseur pour le composeur. */

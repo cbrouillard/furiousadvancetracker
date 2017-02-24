@@ -18,9 +18,6 @@
 #ifndef _SCREEN_PROJECT_H_
 #define _SCREEN_PROJECT_H_
 
-/** \brief Petit tableau pour stocker les chaines YES et NOP. */
-const char* yesOrNo[2] = {"NOP\0", "YES\0"};
-
 void FAT_screenProject_printInfos();
 void FAT_screenProject_printProject();
 void FAT_screenProject_init();

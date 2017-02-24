@@ -49,17 +49,6 @@
 /** \brief Nombre de lignes sur l'écran OSC. */
 #define SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN 5
 
-/** \brief Positions des emplacements de paramètre dans l'écran PULSE. */
-const u8 INST_PULSE_BLOCK_Y[SCREENINSTRUMENT_PULSE_NB_LINES_ON_SCREEN] = {31, 39, 47, 55, 79, 87, 95, 103, 127};
-/** \brief Positions des emplacements de paramètre dans l'écran NOISE. */
-const u8 INST_NOISE_BLOCK_Y[SCREENINSTRUMENT_NOISE_NB_LINES_ON_SCREEN] = {31, 39, 47, 55, 79, 87, 95, 127};
-/** \brief Positions des emplacements de paramètre dans l'écran WAVE. */
-const u8 INST_WAVE_BLOCK_Y[SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN] = {31, 55, 63, 71, 79, 87, 95, 119};
-/** \brief Positions des emplacements de paramètre dans l'écran SAMPLE. */
-const u8 INST_SAMPLE_BLOCK_Y[SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN] = {31, 55, 79, 87, 95, 103, 111, 119, 95};
-/** \brief Positions des emplacements de paramètre dans l'écran OSC. */
-const u8 INST_OSC_BLOCK_Y[SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN] = {31, 39, 63, 71, 95};
-
 void FAT_screenInstrument_hideTabulationCursor();
 void FAT_screenInstrument_showTabulationCursor();
 void FAT_screenInstrument_moveTabulationCursor(u8 instrumentType);

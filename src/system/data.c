@@ -19,6 +19,16 @@
 
 #include "../headers/data.h"
 
+/** \brief Tableau constant contenant toutes les notes sous formes de chaînes de caractères. */
+const char* noteName[NB_NOTE] = {"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ", "G#", "A ", "A#", "B "};
+/** \brief Tableau constant contenant tous les noms d'effets disponibles pour les notes. */
+const char* noteEffectName[NB_NOTE_EFFECT] = {"HO", "KL", "OU", "SW", "VO"};
+/** \brief Mapping entre le nom de l'effet et son numéro dans la soundApi. Si le mapping
+ * a pour valeur NULL_VALUE, alors l'effet n'est pas géré par la soundAPI. */
+const u8 noteEffectNum[NB_NOTE_EFFECT] = {EFFECT_HOP, EFFECT_KILL, EFFECT_OUTPUT, EFFECT_SWEEP, EFFECT_VOLUME};
+/** \brief Tableau constant contenant tous les noms d'effets disponibles pour les blocks. */
+const char* blockEffectName[NB_BLOCK_EFFECT] = {"K "};
+
 /**
  * \brief Espace mémoire contenant le dernier effet écrit. Par défaut, l'effet est initialisé avec NULL_VALUE.
  */

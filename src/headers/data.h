@@ -115,14 +115,14 @@
 #define NULL_VALUE 0xff
 
 /** \brief Tableau constant contenant toutes les notes sous formes de chaînes de caractères. */
-const char* noteName[NB_NOTE] = {"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ", "G#", "A ", "A#", "B "};
+extern const char* noteName[NB_NOTE];
 /** \brief Tableau constant contenant tous les noms d'effets disponibles pour les notes. */
-const char* noteEffectName[NB_NOTE_EFFECT] = {"HO", "KL", "OU", "SW", "VO"};
+extern const char* noteEffectName[NB_NOTE_EFFECT];
 /** \brief Mapping entre le nom de l'effet et son numéro dans la soundApi. Si le mapping
  * a pour valeur NULL_VALUE, alors l'effet n'est pas géré par la soundAPI. */
-const u8 noteEffectNum[NB_NOTE_EFFECT] = {EFFECT_HOP, EFFECT_KILL, EFFECT_OUTPUT, EFFECT_SWEEP, EFFECT_VOLUME};
+extern const u8 noteEffectNum[NB_NOTE_EFFECT];
 /** \brief Tableau constant contenant tous les noms d'effets disponibles pour les blocks. */
-const char* blockEffectName[NB_BLOCK_EFFECT] = {"K "};
+extern const char* blockEffectName[NB_BLOCK_EFFECT];
 
 /**
  * \brief Nombre total de fréquences de notes.

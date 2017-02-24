@@ -24,9 +24,6 @@ u8 keyboard_actualCol = 0;
 u8 keyboard_actualLine = 0;
 u8 willSaveTrackNumber = 0;
 
-/** \brief Buffer pour le nom de la track. */
-char songNameBuffer[9] = "FATSONG!\0";
-
 /**
  * \brief Ferme la boite de dialogue et reinitialise la popup (qui est sur le même layer).
  */

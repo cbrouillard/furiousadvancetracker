@@ -40,8 +40,6 @@
 /** \brief Position des blocks de paramètres. */
 #define SCREENCOMPOSER_PARAMETER_BLOCK_X 95
 
-const u8 screenComposer_parametersCursorsPositions [SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN] = {23, 31};
-
 void FAT_screenComposer_initCursor();
 void FAT_screenComposer_moveCursorRight();
 void FAT_screenComposer_moveCursorLeft();

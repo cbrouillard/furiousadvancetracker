@@ -19,6 +19,8 @@
 
 #include "../headers/fat.h"
 
+const char* outputText [4] = {"  ", "L ", " R", "LR"};
+
 u8 ATTR_EWRAM ATTR_ALIGNED(4) g_BgTextSystemMemory[HEL_SUBSYSTEM_BGTEXT_REQUIREDMEMORY];
 u16 ATTR_EWRAM g_CharLUT[256];
 // attention, table ASCII uniquement sinon ça fout la grouille.
@@ -45,7 +47,7 @@ void FAT_setCurrentScreen (u8 screen){
   FAT_currentScreen = screen;
 }
 
-u8 FAT_live_nbChannelPlaying = 0;
+extern u8 FAT_live_nbChannelPlaying = 0;
 
 /** \brief Repères pour le player: les valeurs dans les tableaux représentent des numéros de lignes (séquences). */
 u8 actualSequencesForChannel[6];

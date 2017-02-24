@@ -19,8 +19,11 @@
 
 #include "../headers/filesystem.h"
 
+/** \brief Chaine de caractère pour les chansons non initialisées. */
+const char* emptyName = "EMPTY   ";
+
 /** \brief Buffer pour le nom de la track. */
-char songNameBuffer[9] = "FATSONG!\0";
+extern char songNameBuffer[9] = "FATSONG!\0";
 
 /** \brief Pointeur vers la mémoire SRAM. */
 u8 *gamepak = GAMEPAK_RAM;

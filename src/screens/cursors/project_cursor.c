@@ -19,6 +19,11 @@
 
 #include "../../headers/screen_project_cursor.h"
 
+/**
+ * \brief Tableau constant des positions des blocs de données sur l'écran.
+ */
+const u8 PROJECT_PULSE_BLOCK_Y[SCREENPROJECT_NB_LINES_ON_SCREEN] = {31, 39, 63, 71, 79, 103, 111, 119, 63};
+
 /** \brief Position actuelle du curseur de sélection. */
 u8 FAT_screenProject_cursorX;
 /** \brief Position actuelle du curseur de sélection. */

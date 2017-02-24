@@ -27,11 +27,6 @@
 /** \brief Nombre de lignes affichées à l'écran. */
 #define SCREENPROJECT_NB_LINES_ON_SCREEN 9
 
-/**
- * \brief Tableau constant des positions des blocs de données sur l'écran.
- */
-const u8 PROJECT_PULSE_BLOCK_Y[SCREENPROJECT_NB_LINES_ON_SCREEN] = {31, 39, 63, 71, 79, 103, 111, 119, 63};
-
 void FAT_screenProject_commitCursorMove();
 void FAT_screenProject_displayGoodCursor();
 void FAT_screenProject_initCursor();

@@ -29,7 +29,7 @@
 #define SCREENSONG_SEQUENCE_LINE_X 3
 
 /** \brief Stocke tous les noms des channels (afin de pouvoir les afficher). */
-const char* CHANNEL_NAME[6] = {"PU1\0", "PU2\0", "WAV\0", "NOI\0", "SNA\0", "SNB\0"};
+extern const char* CHANNEL_NAME[6];
 
 void FAT_screenSong_init();
 void FAT_screenSong_printInfos();

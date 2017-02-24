@@ -19,6 +19,9 @@
 
 #include "../headers/screen_project.h"
 
+/** \brief Petit tableau pour stocker les chaines YES et NOP. */
+const char* yesOrNo[2] = {"NOP\0", "YES\0"};
+
 /**
  * \brief Permet de savoir si la popup est affichée au dessus de l'écran.
  */
