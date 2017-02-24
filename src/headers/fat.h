@@ -82,7 +82,6 @@ void FAT_initSpritePalette();
 
 u8 FAT_getCurrentScreen ();
 void FAT_setCurrentScreen (u8 screen);
-u8* FAT_getActualSequencesForChannel ();
 
 #include "../soundApi/soundApi.h"
 #include "../gfx/ResourceData.h"

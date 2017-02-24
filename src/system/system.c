@@ -49,12 +49,6 @@ void FAT_setCurrentScreen (u8 screen){
 
 extern u8 FAT_live_nbChannelPlaying = 0;
 
-/** \brief Repères pour le player: les valeurs dans les tableaux représentent des numéros de lignes (séquences). */
-u8 actualSequencesForChannel[6];
-u8* FAT_getActualSequencesForChannel (){
-  return actualSequencesForChannel;
-}
-
 /**
  * \brief Initialisation de HEL/HAM et d'autres données propres à FAT.
  *

@@ -43,16 +43,12 @@ void FAT_player_stopPlayer();
 void FAT_player_playNote(note* note, u8 channel, u8 forceVolume);
 void FAT_player_playNoteWithCustomParams(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
 
-/** POINTEURISEES **/
 void FAT_player_playNoteWithCustomParams_chan1(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
 void FAT_player_playNoteWithCustomParams_chan2(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
 void FAT_player_playNoteWithCustomParams_chan3(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
 void FAT_player_playNoteWithCustomParams_chan4(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
 void FAT_player_playNoteWithCustomParams_chan5(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
 void FAT_player_playNoteWithCustomParams_chan6(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
-// pointeurs (cf player.c)
-   // void (*FAT_player_playNoteWithCustomParams_chanX[6]) (note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
-/**/
 
 void FAT_player_timerFunc();
 void FAT_resetTempo ();
@@ -65,8 +61,14 @@ void FAT_player_progressInBlock ();
 void FAT_player_liveSynchro();
 
 u8 FAT_player_live_getWaitForOtherChannel (u8 n);
-u8 FAT_player_getActualBlocksForChannel (u8 n);
-u8 FAT_player_getActualNoteForChannel (u8 n);
+
+/** \brief Repères pour le player: les valeurs dans les tableaux représentent des numéros de lignes (séquences). */
+extern u8 actualSequencesForChannel[6];
+/** \brief Repères pour le player: les valeurs dans les tableaux représentent des numéros de lignes (blocks). */
+extern u8 actualBlocksForChannel[6];
+/** \brief Repères pour le player: les valeurs dans les tableaux représentent des numéros de lignes (notes). */
+extern u8 actualNotesForChannel[6];
+
 u8 FAT_player_getCurrentPlayedSequence ();
 u8 FAT_player_getCurrentPlayedBlock ();
 
