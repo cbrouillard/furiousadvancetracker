@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../../headers/screen_filesystem_cursor.h"
+#include "../../headers/fat.h"
 
 /** \brief Position actuelle du curseur d'action. */
 u8 FAT_screenFilesystem_action_cursorX;

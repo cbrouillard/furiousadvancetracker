@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../headers/player.h"
+#include "../headers/fat.h"
 
 /*
  * Toutes ces variables sont des repères pour le player. Afin de savoir quelle séquence/block/note jouer.

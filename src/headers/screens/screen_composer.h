@@ -66,8 +66,6 @@ void FAT_screenComposer_pressB();
 void FAT_screenComposer_switchLocking();
 void FAT_screenComposer_playAffectedNotes();
 
-#include "cursors.h"
-#include "fat.h"
 #include "screen_composer_cursor.h"
 
 #endif	/* SCREEN_COMPOSER_H */

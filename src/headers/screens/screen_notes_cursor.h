@@ -48,6 +48,4 @@ void FAT_screenNotes_moveCursorAllDown ();
 u8 FAT_screenNotes_getCurrentSelectedLine();
 u8 FAT_screenNotes_getCurrentSelectedColumn();
 
-#include "screen_notes.h"
-
 #endif	/* SCREEN_NOTES_CURSOR_H */

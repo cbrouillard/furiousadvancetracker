@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../headers/cursors.h"
+#include "../headers/fat.h"
 
 /** \brief ID technique HAM pour le cursor de taille 1. */
 THandle FAT_cursor1_obj;

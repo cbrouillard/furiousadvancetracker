@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../headers/screen_instrument.h"
+#include "../headers/fat.h"
 
 // Variables permettant de savoir l'état de l'écran (popup affichée, onglet affiché)
 /** \brief Permet de savoir si la popup de déplacement est affichée au dessus de l'écran. */

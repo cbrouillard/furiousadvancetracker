@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../headers/screen_help.h"
+#include "../headers/fat.h"
 
 /** \brief Permet de savoir si la popup est affichée au dessus de l'écran ou non. */
 bool FAT_screenHelp_isPopuped = 0;

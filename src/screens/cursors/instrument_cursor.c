@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../../headers/screen_instrument_cursor.h"
+#include "../../headers/fat.h"
 
 /** \brief Positions des emplacements de paramètre dans l'écran PULSE. */
 const u8 INST_PULSE_BLOCK_Y[SCREENINSTRUMENT_PULSE_NB_LINES_ON_SCREEN] = {31, 39, 47, 55, 79, 87, 95, 103, 127};

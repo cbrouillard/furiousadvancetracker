@@ -23,5 +23,4 @@ void FAT_screenHelp_checkButtons();
 
 u8 FAT_getIsHelpActivated ();
 
-#include "fat.h"
 #endif	/* SCREEN_HELP_H */

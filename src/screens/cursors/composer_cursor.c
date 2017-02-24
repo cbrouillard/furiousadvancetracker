@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../../headers/screen_composer_cursor.h"
+#include "../../headers/fat.h"
 
 const u8 screenComposer_parametersCursorsPositions [SCREENCOMPOSER_NB_PARAMETERS_ON_SCREEN] = {23, 31};
 

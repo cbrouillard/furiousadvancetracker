@@ -49,6 +49,4 @@ void FAT_screenSong_commitCursorMove();
 u8 FAT_screenSong_getCurrentSelectedLine();
 u8 FAT_screenSong_getCurrentSelectedColumn();
 
-#include "screen_song.h"
-
 #endif

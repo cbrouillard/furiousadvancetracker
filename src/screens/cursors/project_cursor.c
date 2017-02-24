@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../../headers/screen_project_cursor.h"
+#include "../../headers/fat.h"
 
 /**
  * \brief Tableau constant des positions des blocs de données sur l'écran.

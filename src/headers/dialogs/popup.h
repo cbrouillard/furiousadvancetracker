@@ -58,7 +58,4 @@ u8 FAT_popup_getSelectedIcon();
 void FAT_popup_setSelectedIcon (u8 value);
 void FAT_popup_moveSelectedScreenCursor();
 
-#include "../soundApi/soundApi.h"
-#include "fat.h"
-
 #endif

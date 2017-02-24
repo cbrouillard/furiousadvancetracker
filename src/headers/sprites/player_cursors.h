@@ -8,25 +8,17 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+#ifndef _PLAYER_CURSORS_H_
+#define	_PLAYER_CURSORS_H_
 
-/**
- * \file screen_project.h
- * \brief Ce fichier contient toutes les fonctions utiles pour la gestion de l'écran
- * project.
- */
-
-#ifndef _SCREEN_PROJECT_H_
-#define _SCREEN_PROJECT_H_
-
-void FAT_screenProject_printInfos();
-void FAT_screenProject_printProject();
-void FAT_screenProject_init();
-void FAT_screenProject_checkButtons();
-void FAT_screenProject_pressOrHeldA();
-
-#include "cursors.h"
-#include "data.h"
-#include "fat.h"
-#include "screen_project_cursor.h"
+void FAT_player_initCursors();
+void FAT_player_hideAllCursors();
+void FAT_player_live_showOrHideCursorWait(u8 channel);
+void FAT_player_hideWaitCursors ();
+void FAT_player_hideSequencesCursors();
+void FAT_player_hideBlockCursor();
+void FAT_player_hideNoteCursor();
+void FAT_player_moveOrHideCursor(u8 channel);
+void FAT_player_hidePlayerSequenceCursor (u8 n);
 
 #endif

@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../../headers/screen_blocks_cursor.h"
+#include "../../headers/fat.h"
 
 /** \brief Position du curseur. */
 u8 FAT_screenBlocks_cursorX;

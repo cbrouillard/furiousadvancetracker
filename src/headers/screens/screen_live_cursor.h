@@ -59,6 +59,4 @@ u8 FAT_screenLive_getCurrentSelectedLine();
 u8 FAT_screenLive_getCurrentSelectedColumn();
 u8 FAT_screenLive_getCurrentTableSelectedLine();
 
-#include "screen_live.h"
-
 #endif

@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../headers/screen_blocks.h"
+#include "../headers/fat.h"
 
 /**
  * \brief Permet de savoir si l'écran BLOCKS est actuellement "popupé".

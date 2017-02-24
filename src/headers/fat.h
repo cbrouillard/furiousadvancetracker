@@ -19,8 +19,6 @@
 #ifndef _FAT_H_
 #define _FAT_H_
 
-#include "../soundApi/soundApi.h"
-
 /**
  * \brief Version actuelle de FAT.
  */
@@ -86,23 +84,29 @@ u8 FAT_getCurrentScreen ();
 void FAT_setCurrentScreen (u8 screen);
 u8* FAT_getActualSequencesForChannel ();
 
+#include "../soundApi/soundApi.h"
 #include "../gfx/ResourceData.h"
-#include "data.h"
-#include "filesystem.h"
-#include "cursors.h"
-#include "popup.h"
-#include "yesno_dialog.h"
-#include "dialog_keyboard.h"
-#include "screen_song.h"
-#include "screen_filesystem.h"
-#include "screen_project.h"
-#include "screen_live.h"
-#include "screen_composer.h"
-#include "screen_blocks.h"
-#include "screen_notes.h"
-#include "screen_instrument.h"
-#include "screen_effects.h"
-#include "screen_help.h"
-#include "player.h"
+
+#include "sprites/cursors.h"
+#include "sprites/player_cursors.h"
+
+#include "system/data.h"
+#include "system/filesystem.h"
+#include "system/player.h"
+
+#include "dialogs/popup.h"
+#include "dialogs/yesno.h"
+#include "dialogs/keyboard.h"
+
+#include "screens/screen_song.h"
+#include "screens/screen_filesystem.h"
+#include "screens/screen_project.h"
+#include "screens/screen_live.h"
+#include "screens/screen_composer.h"
+#include "screens/screen_blocks.h"
+#include "screens/screen_notes.h"
+#include "screens/screen_instrument.h"
+#include "screens/screen_effects.h"
+#include "screens/screen_help.h"
 
 #endif

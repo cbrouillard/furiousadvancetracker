@@ -17,9 +17,6 @@
 #ifndef _FILESYSTEM_H_
 #define	_FILESYSTEM_H_
 
-#include "../soundApi/soundApi.h"
-#include "../headers/data.h"
-
 extern char songNameBuffer[9];
 
 /**

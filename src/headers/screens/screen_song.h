@@ -46,8 +46,6 @@ void FAT_screenSong_setCurrentStartLine (u8 value);
 void FAT_screenSong_incCurrentStartLine(u8 add);
 void FAT_screenSong_decCurrentStartLine(u8 remove);
 
-#include "cursors.h"
-#include "fat.h"
 #include "screen_song_cursor.h"
 
 #endif

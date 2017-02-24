@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../headers/popup.h"
+#include "../headers/fat.h"
 
 /** \brief Id Sprite pour l'objet curseur de sélection dans l'écran POPUP. */
 THandle FAT_popup_cursorSelectionObj;

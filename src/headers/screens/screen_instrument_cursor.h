@@ -80,6 +80,4 @@ void FAT_screenInstrument_hideSimulatorCursor ();
 s8 FAT_screenInstruments_getCurrentSelectedLine();
 u8 FAT_screenInstruments_getCurrentSelectedColumn();
 
-#include "screen_instrument.h"
-
 #endif	/* SCREEN_INSTRUMENT_CURSOR_H */

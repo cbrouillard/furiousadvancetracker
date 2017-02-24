@@ -17,8 +17,6 @@
 #ifndef _CURSORS_H_
 #define _CURSORS_H_
 
-#include "../gfx/ResourceData.h"
-
 void FAT_initCursor1();
 void FAT_initCursor2();
 void FAT_initCursor3();

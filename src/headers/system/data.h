@@ -23,8 +23,6 @@
 #ifndef _DATA_H_
 #define	_DATA_H_
 
-#include "../soundApi/soundApi.h"
-
 /** \brief Nombre de séquences disponibles <b>au total</b> en mémoire. 0x80 = 128 */
 #define NB_MAX_SEQUENCES 64
 /** \brief Nombre de séquences référençables par canal. 0x40 = 64 */

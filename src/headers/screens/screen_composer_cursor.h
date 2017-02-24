@@ -17,8 +17,6 @@
 #ifndef _SCREEN_COMPOSER_CURSOR_H_
 #define	_SCREEN_COMPOSER_CURSOR_H_
 
-#include "screen_composer.h"
-
 /** \brief Taille d'un block mesurant 3 cases (en pixels). */
 #define SCREENCOMPOSER_BLOCK3_SIZE_X 24
 /** \brief Taille d'un block mesurant 2 cases (en pixels). */

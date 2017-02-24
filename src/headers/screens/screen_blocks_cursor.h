@@ -48,6 +48,4 @@ void FAT_screenBlocks_moveCursorAllDown ();
 u8 FAT_screenBlocks_getCurrentSelectedLine();
 u8 FAT_screenBlocks_getCurrentSelectedColumn();
 
-#include "screen_blocks.h"
-
 #endif	/* SCREEN_BLOCKS_CURSOR_H */

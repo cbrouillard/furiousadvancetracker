@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../../headers/screen_song_cursor.h"
+#include "../../headers/fat.h"
 
 /** \brief Position actuelle du curseur de sélection sur l'écran. */
 u8 FAT_screenSong_cursorX;

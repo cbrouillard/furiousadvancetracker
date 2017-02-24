@@ -38,6 +38,4 @@ void FAT_screenProject_moveCursorUp();
 u8 FAT_screenProject_getCurrentSelectedLine();
 u8 FAT_screenProject_getCurrentSelectedColumn();
 
-#include "screen_project.h"
-
 #endif	/* SCREEN_PROJECT_CURSOR_H */

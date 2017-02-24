@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../headers/screen_project.h"
+#include "../headers/fat.h"
 
 /** \brief Petit tableau pour stocker les chaines YES et NOP. */
 const char* yesOrNo[2] = {"NOP\0", "YES\0"};

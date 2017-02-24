@@ -9,13 +9,16 @@
  * GNU General Public License for more details.
  */
 
-#ifndef _DIALOG_KEYBOARD_H_
-#define	_DIALOG_KEYBOARD_H_
+/**
+ * \file screen_filesystem.h
+ * \brief Ce fichier contient toutes les fonctions utiles pour la gestion de l'écran filesystem.
+ */
 
-#define DIALOG_KEYBOARD_FIRST_LETTER_X 22
-#define DIALOG_KEYBOARD_FIRST_LETTER_Y 38
-#define DIALOG_KEYBOARD_WRITER_X 110
-#define DIALOG_KEYBOARD_WRITER_Y 22
+#ifndef _SCREEN_FILESYSTEM_H_
+#define _SCREEN_FILESYSTEM_H_
+
+#define FILESYSTEM_MODE_SAVE 0
+#define FILESYSTEM_MODE_LOAD 1
 
 /** \brief Numéro de case ou l'affichage des notes démarre. */
 #define SCREENFILESYSTEM_LINE_START_Y 2
@@ -26,14 +29,15 @@
 /** \brief Numéro de case ou l'affichage des noms des tracks démarre. */
 #define SCREENFILESYSTEM_LINE_TRACKNAME_X 3
 
-void FAT_dialog_close();
-void FAT_dialog_keyboardSelectorCursor ();
-void FAT_dialog_keyboardPrintActualName ();
-void FAT_dialog_keyboardMainFunc();
-void FAT_dialog_cheat_printLineColumns();
-void FAT_dialog_cheat_printLastTracksName();
-void FAT_dialog_keyboardShow (u8 fromTrackNum);
+void FAT_screenFilesystem_setMode(u8 modeId);
+void FAT_screenFilesystem_printMode();
+void FAT_screenFilesystem_printLineColumns();
+void FAT_screenFilesystem_printAllTracksName();
+void FAT_screenFilesystem_printInfos();
+void FAT_screenFilesystem_init();
+void FAT_screenFilesystem_checkButtons();
+void FAT_screenFilesystem_pressOrHeldA();
 
-#include "popup.h"
+#include "screen_filesystem_cursor.h"
 
 #endif

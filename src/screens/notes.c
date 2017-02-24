@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../headers/screen_notes.h"
+#include "../headers/fat.h"
 
 /** \brief Cette variable permet de savoir si la popup est affichée au dessus de l'écran. */
 bool FAT_screenNotes_isPopuped = 0;

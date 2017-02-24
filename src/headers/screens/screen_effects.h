@@ -22,6 +22,4 @@
 void FAT_screenEffects_init();
 void FAT_screenEffects_checkButtons();
 
-#include "fat.h"
-
 #endif

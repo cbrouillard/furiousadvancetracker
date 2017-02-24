@@ -57,8 +57,6 @@ void FAT_screenBlocks_pressOrHeldA();
 
 u8 FAT_screenBlocks_getCurrentSequenceId ();
 
-#include "cursors.h"
-#include "fat.h"
 #include "screen_blocks_cursor.h"
 
 #endif

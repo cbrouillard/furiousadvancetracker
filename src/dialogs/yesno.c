@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../headers/yesno_dialog.h"
+#include "../headers/fat.h"
 
 /** \brief Variable pour stocker un premier paramètre (variable) pour une boite de dialogue. */
 u8 param1;

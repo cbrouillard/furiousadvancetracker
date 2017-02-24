@@ -18,8 +18,6 @@
 #ifndef _YESNO_DIALOG_H_
 #define	_YESNO_DIALOG_H_
 
-#include "popup.h"
-
 #define DIALOG_LAYER 0
 
 #define DIALOG_SAVE 0

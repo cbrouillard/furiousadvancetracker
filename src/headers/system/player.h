@@ -21,10 +21,6 @@
 #ifndef _PLAYER_H_
 #define	_PLAYER_H_
 
-#include "../soundApi/soundApi.h"
-#include "data.h"
-#include "player_cursors.h"
-
 void FAT_player_firstInit ();
 void FAT_player_playComposerNote(u8 noteLine);
 u8 FAT_player_searchFirstAvailableSequenceForChannel_returnLine (u8 channel, u8 startingLine);

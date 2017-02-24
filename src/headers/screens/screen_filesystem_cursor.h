@@ -37,6 +37,4 @@ void FAT_screenFilesystem_commitCursorMove();
 
 u8 FAT_screenFilesystem_getCurrentSelectedLine();
 
-#include "screen_filesystem.h"
-
 #endif	/* SCREEN_FILESYSTEM_CURSOR_H */

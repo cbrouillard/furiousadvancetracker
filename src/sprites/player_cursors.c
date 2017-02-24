@@ -16,7 +16,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../headers/player_cursors.h"
+#include "../headers/fat.h"
 
 /** \brief Objet HAM pour référencer le sprite "curseur player" de taille 2. */
 THandle FAT_cursor_player3_obj;

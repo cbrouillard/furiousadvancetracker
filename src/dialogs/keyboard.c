@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../headers/dialog_keyboard.h"
+#include "../headers/fat.h"
 
 u8 keyboard_actualSelectedLetter = 0;
 u8 keyboard_actualCol = 0;

@@ -39,9 +39,6 @@ void FAT_screenInstrument_sample_pressA();
 void FAT_screenInstrument_osc_pressA();
 void FAT_screenInstrument_pressOrHeldA();
 
-#include "cursors.h"
-#include "data.h"
-#include "fat.h"
 #include "screen_instrument_cursor.h"
 
 #endif	/* SCREEN_INSTRUMENT_H */

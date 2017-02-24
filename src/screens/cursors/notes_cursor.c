@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../../headers/screen_notes_cursor.h"
+#include "../../headers/fat.h"
 
 /** \brief Position actuelle du curseur. */
 u8 FAT_screenNotes_cursorX;

@@ -53,8 +53,6 @@ void FAT_screenLive_setCurrentStartLine (u8 value);
 void FAT_screenLive_incCurrentStartLine(u8 add);
 void FAT_screenLive_decCurrentStartLine(u8 remove);
 
-#include "cursors.h"
-#include "fat.h"
 #include "screen_live_cursor.h"
 
 #endif
