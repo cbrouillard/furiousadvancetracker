@@ -3,6 +3,7 @@ FuriousAdvanceTracker_v0.2.0.gba
 *.elf
 *.s
 *.mk
+*.i
 nbproject
 *.o
 *.zip
@@ -14,6 +15,7 @@ manual/FAT_documentation_FR.iso
 manual/*.pdf
 gfx/icons
 gfx/img
+src/gfx/raw/
 doc/html
 doc/latex
 doc/man
