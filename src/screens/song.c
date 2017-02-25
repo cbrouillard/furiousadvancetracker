@@ -71,9 +71,8 @@ void FAT_screenSong_init() {
  * sur l'écran.
  */
 void FAT_screenSong_printInfos() {
-    tracker* FAT_tracker = FAT_data_getTracker();
-    hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "%s\nChan %s\nLine  %.2x", FAT_tracker->songName, CHANNEL_NAME[FAT_screenSong_getCurrentSelectedColumn()], FAT_screenSong_getCurrentSelectedLine());
-    hel_BgTextPrintF(TEXT_LAYER, 21, 6, 0, "TSP   %2.x\nTmpo %.3d", FAT_tracker->transpose, FAT_tracker->tempo);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "%s\nChan %s\nLine  %.2x", FAT_tracker.songName, CHANNEL_NAME[FAT_screenSong_getCurrentSelectedColumn()], FAT_screenSong_getCurrentSelectedLine());
+    hel_BgTextPrintF(TEXT_LAYER, 21, 6, 0, "TSP   %2.x\nTmpo %.3d", FAT_tracker.transpose, FAT_tracker.tempo);
 }
 
 /**
@@ -96,17 +95,16 @@ void FAT_screenSong_printLineColumns() {
 void FAT_screenSong_printSequences() {
     u8 c;
     u8 v;
-    tracker* FAT_tracker = FAT_data_getTracker ();
     for (v = 0; v < SCREENSONG_NB_LINES_ON_SCREEN; v++) {
 
         for (c = 0; c < 6; c++) {
-            if (FAT_tracker->channels[c].sequences[v + FAT_screenSong_currentStartLine] == NULL_VALUE) {
+            if (FAT_tracker.channels[c].sequences[v + FAT_screenSong_currentStartLine] == NULL_VALUE) {
                 hel_BgTextPrint(TEXT_LAYER, SCREENSONG_SEQUENCE_LINE_X + (c * 3),
                         v + SCREENSONG_LINE_START_Y, 0, "  ");
             } else {
                 hel_BgTextPrintF(TEXT_LAYER, SCREENSONG_SEQUENCE_LINE_X + (c * 3),
                         v + SCREENSONG_LINE_START_Y, 0, "%.2x ",
-                        FAT_tracker->channels[c].sequences[v + FAT_screenSong_currentStartLine]);
+                        FAT_tracker.channels[c].sequences[v + FAT_screenSong_currentStartLine]);
             }
         }
 
@@ -121,11 +119,10 @@ void FAT_screenSong_printSequences() {
  * @param realLine le vrai numéro de ligne dans le tracker ou la séquence a été inscrite
  */
 void FAT_screenSong_printSequence(u8 channel, u8 lineOnScreen, u8 realLine) {
-    tracker* FAT_tracker = FAT_data_getTracker ();
-    if (FAT_tracker->channels[channel].sequences[realLine] != NULL_VALUE) {
+    if (FAT_tracker.channels[channel].sequences[realLine] != NULL_VALUE) {
         hel_BgTextPrintF(TEXT_LAYER, SCREENSONG_SEQUENCE_LINE_X + (3 * channel),
                 lineOnScreen + SCREENSONG_LINE_START_Y, 0,
-                "%.2x\0", FAT_tracker->channels[channel].sequences[realLine]);
+                "%.2x\0", FAT_tracker.channels[channel].sequences[realLine]);
     } else {
         hel_BgTextPrint(TEXT_LAYER, SCREENSONG_SEQUENCE_LINE_X + (3 * channel),
                 lineOnScreen + SCREENSONG_LINE_START_Y, 0, "  ");

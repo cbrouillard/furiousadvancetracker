@@ -60,7 +60,7 @@ void FAT_dialog_keyboardPrintActualName (){
      } else if (hel_PadQuery()->Pressed.R || hel_PadQuery()->Pressed.Start) {
          // copie de la valeur dans tracker
          songNameBuffer[9] = '\0';
-         strcpy (FAT_data_getTracker()->songName, songNameBuffer);
+         strcpy (FAT_tracker.songName, songNameBuffer);
 
          // fin du dialogue
          FAT_cursors_hideAllCursors();

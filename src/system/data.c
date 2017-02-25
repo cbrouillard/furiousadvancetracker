@@ -72,9 +72,6 @@ u8 ATTR_EWRAM FAT_data_sequenceClipboard;
  * et vice versa pour le chargement.
  */
 tracker ATTR_ALIGNED(8) ATTR_EWRAM FAT_tracker;
-tracker* FAT_data_getTracker (){
-  return &FAT_tracker;
-}
 
 /**
  * \brief Espace mémoire déjà alloué (d'une vingtaine de kilo) permettant de servir de buffer pour
@@ -84,9 +81,6 @@ tracker* FAT_data_getTracker (){
  * et vice versa pour le chargement.
  */
 tracker ATTR_ALIGNED(8) ATTR_EWRAM FAT_compressed_tracker;
-tracker* FAT_data_getCompressedTracker () {
-  return &FAT_compressed_tracker;
-}
 
 /**
  * \brief Stocke le numéro de la prochaine séquence disponible.

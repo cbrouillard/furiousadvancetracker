@@ -129,12 +129,11 @@ void FAT_screenBlocks_printAllBlocks() {
  * \brief Fonction wrapping qui affiche toutes les informations intéressantes à l'écran.
  */
 void FAT_screenBlocks_printAllScreenText() {
-    tracker* FAT_tracker = FAT_data_getTracker ();
     FAT_screenBlocks_printLineColumns();
     FAT_screenBlocks_printAllBlocks();
 
     FAT_screenBlocks_printInfos();
-    hel_BgTextPrintF(TEXT_LAYER, 18, 6, 0, "Tsp-Proj %2.x\nTempo   %.3d", FAT_tracker->transpose, FAT_tracker->tempo);
+    hel_BgTextPrintF(TEXT_LAYER, 18, 6, 0, "Tsp-Proj %2.x\nTempo   %.3d", FAT_tracker.transpose, FAT_tracker.tempo);
 }
 
 /**

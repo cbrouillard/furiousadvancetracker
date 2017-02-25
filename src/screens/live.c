@@ -47,25 +47,22 @@ bool FAT_screenLive_haveToApplyBuffer = false;
  * \brief Affiche uniquement la valeur du tempo au bon endroit.
  */
 void FAT_screenLive_printTempo() {
-    tracker* FAT_tracker = FAT_data_getTracker ();
     hel_BgTextPrintF(TEXT_LAYER, 15, 16, 0, "%3d", FAT_screenLive_bufferTempo);
-    hel_BgTextPrintF(TEXT_LAYER, 21, 7, 0, "Tmpo %.3d", FAT_tracker->tempo);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 7, 0, "Tmpo %.3d", FAT_tracker.tempo);
 }
 
 /**
  * \brief Affiche uniquement la valeur du transpose au bon endroit.
  */
 void FAT_screenLive_printTranspose() {
-    tracker* FAT_tracker = FAT_data_getTracker ();
-    hel_BgTextPrintF(TEXT_LAYER, 10, 16, 0, "%.2x", FAT_tracker->transpose);
+    hel_BgTextPrintF(TEXT_LAYER, 10, 16, 0, "%.2x", FAT_tracker.transpose);
 }
 
 /**
  * \brief Affiche uniquement la valeur du mode live au bon endroit.
  */
 void FAT_screenLive_printLiveMode() {
-    tracker* FAT_tracker = FAT_data_getTracker ();
-    if (FAT_tracker->liveData.liveMode) {
+    if (FAT_tracker.liveData.liveMode) {
         hel_BgTextPrint(TEXT_LAYER, 6, 16, 0, "MAN");
     } else {
         hel_BgTextPrintF(TEXT_LAYER, 6, 16, 0, "AUT");
@@ -111,11 +108,10 @@ void FAT_screenLive_printLineColumns() {
  * sur l'écran.
  */
 void FAT_screenLive_printInfos() {
-    tracker* FAT_tracker = FAT_data_getTracker ();
-    hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "%s", FAT_tracker->songName);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "%s", FAT_tracker.songName);
     hel_BgTextPrintF(TEXT_LAYER, 21, 4, 0, "Chan %s", CHANNEL_NAME[FAT_screenLive_getCurrentSelectedColumn()]);
     hel_BgTextPrintF(TEXT_LAYER, 21, 5, 0, "Line  %.2x", FAT_screenLive_getCurrentSelectedLine());
-    hel_BgTextPrintF(TEXT_LAYER, 21, 6, 0, "TSP   %2.x", FAT_tracker->transpose);
+    hel_BgTextPrintF(TEXT_LAYER, 21, 6, 0, "TSP   %2.x", FAT_tracker.transpose);
 
     FAT_screenLive_printLiveMode();
     FAT_screenLive_printTempo();
@@ -129,11 +125,10 @@ void FAT_screenLive_printInfos() {
  * @param realLine le vrai numéro de ligne dans le tracker ou la séquence a été inscrite
  */
 void FAT_screenLive_printSequence(u8 channel, u8 lineOnScreen, u8 realLine) {
-    tracker* FAT_tracker = FAT_data_getTracker ();
-    if (FAT_tracker->channels[channel].sequences[realLine] != NULL_VALUE) {
+    if (FAT_tracker.channels[channel].sequences[realLine] != NULL_VALUE) {
         hel_BgTextPrintF(TEXT_LAYER, SCREENLIVE_SEQUENCE_LINE_X + (3 * channel),
                 lineOnScreen + SCREENLIVE_LINE_START_Y, 0,
-                "%.2x\0", FAT_tracker->channels[channel].sequences[realLine]);
+                "%.2x\0", FAT_tracker.channels[channel].sequences[realLine]);
     } else {
         hel_BgTextPrint(TEXT_LAYER, SCREENLIVE_SEQUENCE_LINE_X + (3 * channel),
                 lineOnScreen + SCREENLIVE_LINE_START_Y, 0, "  ");
@@ -146,17 +141,16 @@ void FAT_screenLive_printSequence(u8 channel, u8 lineOnScreen, u8 realLine) {
 void FAT_screenLive_printSequences() {
     u8 c;
     u8 v;
-    tracker* FAT_tracker = FAT_data_getTracker ();
     for (v = 0; v < SCREENLIVE_NB_LINES_ON_SCREEN; v++) {
 
         for (c = 0; c < 6; c++) {
-            if (FAT_tracker->channels[c].sequences[v + FAT_screenLive_currentStartLine] == NULL_VALUE) {
+            if (FAT_tracker.channels[c].sequences[v + FAT_screenLive_currentStartLine] == NULL_VALUE) {
                 hel_BgTextPrint(TEXT_LAYER, SCREENLIVE_SEQUENCE_LINE_X + (c * 3),
                         v + SCREENLIVE_LINE_START_Y, 0, "  ");
             } else {
                 hel_BgTextPrintF(TEXT_LAYER, SCREENLIVE_SEQUENCE_LINE_X + (c * 3),
                         v + SCREENLIVE_LINE_START_Y, 0, "%.2x ",
-                        FAT_tracker->channels[c].sequences[v + FAT_screenLive_currentStartLine]);
+                        FAT_tracker.channels[c].sequences[v + FAT_screenLive_currentStartLine]);
             }
         }
 
@@ -176,8 +170,6 @@ void FAT_screenLive_printAllScreenText() {
  * \brief Initialisation de l'écran.
  */
 void FAT_screenLive_init() {
-    tracker* FAT_tracker = FAT_data_getTracker ();
-
     FAT_reinitScreen();
 
     // initialisation du fond (interface)
@@ -190,13 +182,13 @@ void FAT_screenLive_init() {
     FAT_screenLive_commitCursorMove();
     FAT_cursors_showCursor2();
 
-    FAT_screenLive_bufferTempo = FAT_tracker->tempo;
+    FAT_screenLive_bufferTempo = FAT_tracker.tempo;
 
     u8 i;
     for (i = 0;i<6;i++){
         FAT_player_moveOrHideCursor(i);
-        FAT_screenLive_bufferVolume[i] = FAT_tracker->liveData.volume[i];
-        FAT_screenLive_bufferTranspose[i] = FAT_tracker->liveData.transpose[i];
+        FAT_screenLive_bufferVolume[i] = FAT_tracker.liveData.volume[i];
+        FAT_screenLive_bufferTranspose[i] = FAT_tracker.liveData.transpose[i];
     }
 
     FAT_screenLive_printAllScreenText();
@@ -210,17 +202,16 @@ void FAT_screenLive_init() {
 */
 void FAT_screenLive_applyBufferIfNeeded(){
     if (FAT_screenLive_haveToApplyBuffer){
-        tracker* FAT_tracker = FAT_data_getTracker ();
-        FAT_tracker->tempo = FAT_screenLive_bufferTempo;
+        FAT_tracker.tempo = FAT_screenLive_bufferTempo;
 
         u8 i;
         for (i = 0;i<6;i++){
-            FAT_tracker->liveData.volume[i] = FAT_screenLive_bufferVolume[i];
-            FAT_tracker->liveData.transpose[i] = FAT_screenLive_bufferTranspose[i];
+            FAT_tracker.liveData.volume[i] = FAT_screenLive_bufferVolume[i];
+            FAT_tracker.liveData.transpose[i] = FAT_screenLive_bufferTranspose[i];
         }
 
         FAT_screenLive_haveToApplyBuffer = false;
-        hel_BgTextPrintF(TEXT_LAYER, 21, 7, 0, "Tmpo %.3d", FAT_tracker->tempo);
+        hel_BgTextPrintF(TEXT_LAYER, 21, 7, 0, "Tmpo %.3d", FAT_tracker.tempo);
     }
 }
 
@@ -228,8 +219,6 @@ void FAT_screenLive_applyBufferIfNeeded(){
  * \brief Teste les actions utilisateurs.
  */
 void FAT_screenLive_checkButtons() {
-    tracker* FAT_tracker = FAT_data_getTracker ();
-
     hel_PadCapture();
 
     if (hel_PadQuery()->Held.Select) {
@@ -325,7 +314,7 @@ void FAT_screenLive_checkButtons() {
             }
         }
 
-        if (!FAT_tracker->bufferChangeInLive){
+        if (!FAT_tracker.bufferChangeInLive){
             FAT_screenLive_applyBufferIfNeeded();
         }
 
@@ -338,7 +327,6 @@ void FAT_screenLive_pressOrHeldA_inSequencer(){
 }
 
 void FAT_screenLive_pressOrHeldA_inDataTable(){
-    tracker* FAT_tracker = FAT_data_getTracker ();
     switch (FAT_screenLive_getCurrentTableSelectedLine()){
         case 0:
             // volume colonne
@@ -418,11 +406,11 @@ void FAT_screenLive_pressOrHeldA_inDataTable(){
             // mode, tempo
             if (FAT_screenLive_getCurrentSelectedColumn() == 1){
                 if (hel_PadQuery()->Pressed.Right) {
-                    FAT_tracker->liveData.liveMode = 0;
+                    FAT_tracker.liveData.liveMode = 0;
                 }
 
                 if (hel_PadQuery()->Pressed.Left) {
-                    FAT_tracker->liveData.liveMode = 1;
+                    FAT_tracker.liveData.liveMode = 1;
                 }
 
                 FAT_screenLive_printLiveMode();

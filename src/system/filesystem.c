@@ -184,15 +184,12 @@ u16 FAT_filesystem_hasJumpToApply (u16 offset, bool saveMode) {
  * @param trackNumber numéro du slot d'enregistrement
  */
 void FAT_filesystem_saveTrack(u8 trackNumber) {
-    tracker* FAT_tracker = FAT_data_getTracker();
-    tracker* FAT_compressed_tracker = FAT_data_getCompressedTracker();
+    FAT_tracker.nbWork++;
 
-    FAT_tracker->nbWork++;
+    u8* tracker = (u8*) &FAT_tracker;
+    u8* buffer = (u8*) &FAT_compressed_tracker;
 
-    u8* tracker = (u8*) FAT_tracker;
-    u8* buffer = (u8*) FAT_compressed_tracker;
-
-    u32 totalSize = SIZEOF_8BIT(*FAT_tracker);
+    u32 totalSize = SIZEOF_8BIT(FAT_tracker);
     u8 currentByte = 0;
     u8 previousByte = tracker[0];
     int cpt = 1; int rleCpt = 1; int bufferOffset = 0;
@@ -262,8 +259,8 @@ void FAT_filesystem_saveTrack(u8 trackNumber) {
  */
 void FAT_filesystem_loadTrack(u8 trackNumber) {
 
-    u8* tracker = (u8*) FAT_data_getTracker();
-    u8* buffer = (u8*) FAT_data_getCompressedTracker ();
+    u8* tracker = (u8*) &FAT_tracker;
+    u8* buffer = (u8*) &FAT_compressed_tracker;
 
     u32 trackSize = FAT_filesystem_getTrackSize(trackNumber);
     u16 offset = FAT_filesystem_getTrackOffset(trackNumber) + 3; // on saute le "SNG"

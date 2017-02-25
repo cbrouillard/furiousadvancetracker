@@ -318,11 +318,11 @@ typedef struct PLAYERBUFFER {
     u8 output; // pour la commande "OUTPUT". 0xff = non apply
 } bufferPlayer;
 
-/** \brief Prototype. Définit dans player.h. */
-void FAT_player_playNote(note* note, u8 channel, u8 forceVolume);
 
-tracker* FAT_data_getTracker ();
-tracker* FAT_data_getCompressedTracker ();
+extern tracker ATTR_ALIGNED(8) ATTR_EWRAM FAT_tracker;
+extern tracker ATTR_ALIGNED(8) ATTR_EWRAM FAT_compressed_tracker;
+
+void FAT_player_playNote(note* note, u8 channel, u8 forceVolume);
 
 void FAT_data_initData();
 bool FAT_data_isPreviewEnabled();

@@ -28,13 +28,12 @@ u8 FAT_screenComposer_isLocked = 0;
  * \brief Affiche les informations "dynamiques" dans l'écran COMPOSER (numéro de ligne, ...).
  */
 void FAT_screenComposer_printInfos() {
-    tracker* FAT_tracker = FAT_data_getTracker ();
     hel_BgTextPrintF(TEXT_LAYER, 18, 3, 0, "Composer  %.1x", 0);
     hel_BgTextPrintF(TEXT_LAYER, 18, 4, 0, "Line     %.2x",
             FAT_screenComposer_getCurrentSelectedLine());
 
-    hel_BgTextPrintF(TEXT_LAYER, 1, 3, 0, "Transpose  %.2x", FAT_tracker->composer.transpose);
-    hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Key Repeat %.2x", FAT_tracker->composer.keyRepeat);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 3, 0, "Transpose  %.2x", FAT_tracker.composer.transpose);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Key Repeat %.2x", FAT_tracker.composer.keyRepeat);
 }
 
 /**
@@ -44,7 +43,6 @@ void FAT_screenComposer_printInfos() {
  */
 void FAT_screenComposer_printNote(u8 line) {
     if (!FAT_data_composer_isNoteEmpty(line)) {
-        tracker* FAT_tracker = FAT_data_getTracker ();
         note* actualNote = FAT_data_composer_getNote(line);
 
         if (FAT_data_composer_getChannel(line) > INSTRUMENT_TYPE_NOISE) {
@@ -53,7 +51,7 @@ void FAT_screenComposer_printNote(u8 line) {
                     line + SCREENCOMPOSER_LINE_START_Y, 0,
                     "S%.2x %.2x      %.1x\0",
                     actualNote->freq, actualNote->instrument,
-                    FAT_tracker->composer.channels[line] + 1
+                    FAT_tracker.composer.channels[line] + 1
                     );
 
         } else {
@@ -62,7 +60,7 @@ void FAT_screenComposer_printNote(u8 line) {
                     line + SCREENCOMPOSER_LINE_START_Y, 0,
                     "%s%1x %.2x      %.1x\0",
                     noteName[(actualNote->note & 0xf0) >> 4], actualNote->note & 0x0f, actualNote->instrument,
-                    FAT_tracker->composer.channels[line] + 1
+                    FAT_tracker.composer.channels[line] + 1
                     );
         }
     } else {

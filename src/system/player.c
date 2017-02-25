@@ -121,14 +121,13 @@ void FAT_player_firstInit (){
  * @param noteLine le numéro de ligne de la note dans le composer
  */
 void FAT_player_playComposerNote(u8 noteLine) {
-    tracker* FAT_tracker = FAT_data_getTracker ();
-    note* note = &(FAT_tracker->composer.notes[noteLine]);
+    note* note = &(FAT_tracker.composer.notes[noteLine]);
 
     if (note->freq != NULL_VALUE) {
 
         FAT_player_playNoteWithCustomParams(    note,
-                                                FAT_tracker->composer.channels[noteLine],
-                                                FAT_tracker->composer.transpose + FAT_tracker->transpose,
+                                                FAT_tracker.composer.channels[noteLine],
+                                                FAT_tracker.composer.transpose + FAT_tracker.transpose,
                                                 NULL_VALUE, NULL_VALUE, NULL_VALUE); // TODO commandes et paramètres.
     }
 }
@@ -142,18 +141,16 @@ void FAT_player_playComposerNote(u8 noteLine) {
  * @param channel le channel sur lequel jouer la note
  */
 void FAT_player_playNote(note* note, u8 channel, u8 forceVolume) {
-    tracker* FAT_tracker = FAT_data_getTracker ();
   	// hack pour lire les notes types OSC. Pas terrible je sais :(
   	if (channel > INSTRUMENT_TYPE_SAMPLEB){
   		channel -= 2;
   	}
 
-    FAT_player_playNoteWithCustomParams(note, channel, FAT_tracker->transpose, forceVolume, NULL_VALUE, NULL_VALUE);
+    FAT_player_playNoteWithCustomParams(note, channel, FAT_tracker.transpose, forceVolume, NULL_VALUE, NULL_VALUE);
 }
 
 void FAT_player_playNoteWithCustomParams_chan1(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output){
-    tracker* FAT_tracker = FAT_data_getTracker ();
-    instrument* inst = &(FAT_tracker->allInstruments[note->instrument]);
+    instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
 
     u8 sweepValue = sweep != NULL_VALUE ? sweep : inst->sweep;
     u16 sweepshifts = (sweepValue & 0x70) >> 4;
@@ -169,45 +166,41 @@ void FAT_player_playNoteWithCustomParams_chan1(note* note, u8 channel, u8 transp
         volume != 0xff ? volume : inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->wavedutyOrPolynomialStep,
         inst->soundlength, inst->loopmode,
         output,
-        note->freq, transpose + FAT_tracker->transpose);
+        note->freq, transpose + FAT_tracker.transpose);
 
 }
 void FAT_player_playNoteWithCustomParams_chan2(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output){
-    tracker* FAT_tracker = FAT_data_getTracker ();
-    instrument* inst = &(FAT_tracker->allInstruments[note->instrument]);
+    instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
 
     snd_playSoundOnChannel2(
         volume != 0xff ? volume : inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5,
         inst->wavedutyOrPolynomialStep,
         inst->soundlength, inst->loopmode,
         output,
-        note->freq, transpose + FAT_tracker->transpose);
+        note->freq, transpose + FAT_tracker.transpose);
 
 }
 void FAT_player_playNoteWithCustomParams_chan3(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output){
-    tracker* FAT_tracker = FAT_data_getTracker ();
-    instrument* inst = &(FAT_tracker->allInstruments[note->instrument]);
+    instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
     volume = (volume > 0x4) ? 0xff : volume;
 
     snd_playSoundOnChannel3(
         volume != 0xff ? volume : inst->volumeRatio & 0x0f, inst->soundlength, inst->loopmode, inst->voiceAndBank & 0x1f,
         (inst->voiceAndBank & 0x20) >> 5, (inst->voiceAndBank & 0x40) >> 6,
-        output, note->freq, transpose + FAT_tracker->transpose);
+        output, note->freq, transpose + FAT_tracker.transpose);
 
 }
 void FAT_player_playNoteWithCustomParams_chan4(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output){
-    tracker* FAT_tracker = FAT_data_getTracker ();
-    instrument* inst = &(FAT_tracker->allInstruments[note->instrument]);
+    instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
 
     snd_playSoundOnChannel4(
         volume != 0xff ? volume : inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->soundlength,
         inst->loopmode, output, note->note & 0x0f, inst->wavedutyOrPolynomialStep,
-        note->freq / NB_FREQUENCES, transpose + FAT_tracker->transpose);
+        note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
 
 }
 void FAT_player_playNoteWithCustomParams_chan5(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output){
-    tracker* FAT_tracker = FAT_data_getTracker ();
-    instrument* inst = &(FAT_tracker->allInstruments[note->instrument]);
+    instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
     // todo pointeur de func pour plus de perf ?
     if (inst->type > INSTRUMENT_TYPE_SAMPLEB){
         // waveduty = shape
@@ -220,8 +213,7 @@ void FAT_player_playNoteWithCustomParams_chan5(note* note, u8 channel, u8 transp
     }
 }
 void FAT_player_playNoteWithCustomParams_chan6(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output){
-    tracker* FAT_tracker = FAT_data_getTracker ();
-    instrument* inst = &(FAT_tracker->allInstruments[note->instrument]);
+    instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
 
     if (inst->type > INSTRUMENT_TYPE_SAMPLEB){
         // waveduty = shape
@@ -242,9 +234,8 @@ void FAT_player_playNoteWithCustomParams_chan6(note* note, u8 channel, u8 transp
  * @param transpose la valeur de transpose, elle sera ajoutée à celle du projet
  */
 void FAT_player_playNoteWithCustomParams(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output) {
-    tracker* FAT_tracker = FAT_data_getTracker ();
     if (note->freq != NULL_VALUE) {
-        instrument* inst = &(FAT_tracker->allInstruments[note->instrument]);
+        instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
         u8 outputValue = output != NULL_VALUE ? output : inst->output;
 
         // play it on the right channel. Happy pointer :D
@@ -257,13 +248,12 @@ void FAT_player_playNoteWithCustomParams(note* note, u8 channel, u8 transpose, u
 }
 
 u8 FAT_player_searchFirstAvailableSequenceForChannel_returnLine (u8 channel, u8 startingLine){
-    tracker* FAT_tracker = FAT_data_getTracker ();
     s8 i = startingLine;
     u8 firstLine = NULL_VALUE;
 
     // 1. je cherche en partant de la ligne courante.
     while (i < NB_SEQUENCES_IN_ONE_CHANNEL){
-        if (FAT_tracker->channels[channel].sequences[i] != NULL_VALUE){
+        if (FAT_tracker.channels[channel].sequences[i] != NULL_VALUE){
             firstLine = i; // j'ai trouvé un bloc valide !
             break;
         }
@@ -274,7 +264,7 @@ u8 FAT_player_searchFirstAvailableSequenceForChannel_returnLine (u8 channel, u8 
     if (firstLine == NULL_VALUE){
         i = 0;
         while (i < startingLine){
-            if (FAT_tracker->channels[channel].sequences[i] != NULL_VALUE){
+            if (FAT_tracker.channels[channel].sequences[i] != NULL_VALUE){
                 firstLine = i;
                 break;
             }
@@ -284,11 +274,11 @@ u8 FAT_player_searchFirstAvailableSequenceForChannel_returnLine (u8 channel, u8 
 
     // 3. si j'ai trouvé un bloc valide, on s'assure qu'il s'agit bien du premier
     // attention, seulement en mode greedPlay
-    if (FAT_tracker->greedPlay){
+    if (FAT_tracker.greedPlay){
         if (firstLine != NULL_VALUE){
             i = firstLine;
             while (i >= 0){
-                if (FAT_tracker->channels[channel].sequences[i] == NULL_VALUE){
+                if (FAT_tracker.channels[channel].sequences[i] == NULL_VALUE){
                     break;
                 }
                 firstLine = i;
@@ -429,7 +419,6 @@ void ATTR_FASTFUNC FAT_player_timerFunc() {
 }
 
 void FAT_player_progressInSong(u8 channel, sequence* seq){
-    tracker* FAT_tracker = FAT_data_getTracker ();
     actualNotesForChannel[channel]++;
     if (actualNotesForChannel[channel] >= NB_NOTES_IN_ONE_BLOCK) {
         actualNotesForChannel[channel] = 0;
@@ -440,8 +429,8 @@ void FAT_player_progressInSong(u8 channel, sequence* seq){
 
             actualSequencesForChannel[channel]++;
             if (actualSequencesForChannel[channel] > NB_MAX_SEQUENCES
-                    || FAT_tracker->channels[channel].sequences[actualSequencesForChannel[channel]] == NULL_VALUE
-                    || FAT_data_isSequenceEmpty(FAT_tracker->channels[channel].sequences[actualSequencesForChannel[channel]])) {
+                    || FAT_tracker.channels[channel].sequences[actualSequencesForChannel[channel]] == NULL_VALUE
+                    || FAT_data_isSequenceEmpty(FAT_tracker.channels[channel].sequences[actualSequencesForChannel[channel]])) {
 
                 actualSequencesForChannel[channel] = firstAvailableSequenceForChannel[channel];
             }
@@ -475,7 +464,6 @@ void FAT_player_playFromSequences() {
     hel_BgTextPrintF(TEXT_LAYER, 22, 15, 0, "%.d", tempoReach);
     #endif
     if (tempoReach <= 0) {
-        tracker* FAT_tracker = FAT_data_getTracker ();
         tempoReach = 0;
         hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
         u8 i;
@@ -485,14 +473,14 @@ void FAT_player_playFromSequences() {
             FAT_player_buffer[i].sweep = NULL_VALUE;
             FAT_player_buffer[i].output = NULL_VALUE;
             if (FAT_isChannelCurrentlyPlaying(i) && actualSequencesForChannel[i] < NB_MAX_SEQUENCES){
-                FAT_currentPlayedSequence = FAT_tracker->channels[i].sequences[actualSequencesForChannel[i]];
+                FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
                 if (FAT_currentPlayedSequence != NULL_VALUE) {
                     // lire la séquence actuelle
-                    sequence* seq = &(FAT_tracker->allSequences[FAT_currentPlayedSequence]);
+                    sequence* seq = &(FAT_tracker.allSequences[FAT_currentPlayedSequence]);
 
                     FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
                     if (FAT_currentPlayedBlock != NULL_VALUE) {
-                        block* block = &(FAT_tracker->allBlocks[FAT_currentPlayedBlock]);
+                        block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
 
                         effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[i]);
                         if (effect){
@@ -516,15 +504,15 @@ void FAT_player_playFromSequences() {
 
                                         actualSequencesForChannel[i]++;
                                         if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES
-                                                || FAT_tracker->channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
-                                                || FAT_data_isSequenceEmpty(FAT_tracker->channels[i].sequences[actualSequencesForChannel[i]])) {
+                                                || FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
+                                                || FAT_data_isSequenceEmpty(FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]])) {
 
                                             actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                                         }
                                     }
 
                                     FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
-                                    block = &(FAT_tracker->allBlocks[FAT_currentPlayedBlock]);
+                                    block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
                                     break;
                             }
                         }
@@ -584,7 +572,6 @@ void FAT_player_playFromLive(){
     hel_BgTextPrintF(TEXT_LAYER, 22, 15, 0, "%.d", tempoReach);
     #endif
     if (tempoReach <= 0) {
-        tracker* FAT_tracker = FAT_data_getTracker ();
         tempoReach = 0;
         hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
         bool willHaveToSyncAfterNote = 0;
@@ -596,15 +583,15 @@ void FAT_player_playFromLive(){
             FAT_player_buffer[i].output = NULL_VALUE;
             if (FAT_isChannelCurrentlyPlaying(i) && actualSequencesForChannel[i] < NB_MAX_SEQUENCES && FAT_live_waitForOtherChannel[i] == 0){
 
-                FAT_currentPlayedSequence = FAT_tracker->channels[i].sequences[actualSequencesForChannel[i]];
+                FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
 
                 if (FAT_currentPlayedSequence != NULL_VALUE) {
                     // lire la séquence actuelle
-                    sequence* seq = &(FAT_tracker->allSequences[FAT_currentPlayedSequence]);
+                    sequence* seq = &(FAT_tracker.allSequences[FAT_currentPlayedSequence]);
 
                     FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
                     if (FAT_currentPlayedBlock != NULL_VALUE) {
-                        block* block = &(FAT_tracker->allBlocks[FAT_currentPlayedBlock]);
+                        block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
 
                         effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[i]);
                         if (effect){
@@ -626,11 +613,11 @@ void FAT_player_playFromLive(){
                                             || seq->blocks[actualBlocksForChannel[i]] == NULL_VALUE) {
                                         actualBlocksForChannel[i] = 0;
 
-                                        if (!FAT_tracker->liveData.liveMode){ // mode auto?
+                                        if (!FAT_tracker.liveData.liveMode){ // mode auto?
                                             actualSequencesForChannel[i]++;
                                             if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES
-                                                    || FAT_tracker->channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
-                                                    || FAT_data_isSequenceEmpty(FAT_tracker->channels[i].sequences[actualSequencesForChannel[i]])) {
+                                                    || FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
+                                                    || FAT_data_isSequenceEmpty(FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]])) {
 
                                                 actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                                                 // si pas de séquences dispo -> NULL_VALUE
@@ -642,7 +629,7 @@ void FAT_player_playFromLive(){
                                     }
 
                                     FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
-                                    block = &(FAT_tracker->allBlocks[FAT_currentPlayedBlock]);
+                                    block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
                                     break;
                             }
                         }
@@ -659,11 +646,11 @@ void FAT_player_playFromLive(){
                                     || seq->blocks[actualBlocksForChannel[i]] == NULL_VALUE) {
                                 actualBlocksForChannel[i] = 0;
 
-                                if (!FAT_tracker->liveData.liveMode){ // mode auto?
+                                if (!FAT_tracker.liveData.liveMode){ // mode auto?
                                     actualSequencesForChannel[i]++;
                                     if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES
-                                            || FAT_tracker->channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
-                                            || FAT_data_isSequenceEmpty(FAT_tracker->channels[i].sequences[actualSequencesForChannel[i]])) {
+                                            || FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
+                                            || FAT_data_isSequenceEmpty(FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]])) {
 
                                         actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                                         // si pas de séquences dispo -> NULL_VALUE
@@ -677,7 +664,7 @@ void FAT_player_playFromLive(){
                     } else {
                         actualBlocksForChannel[i] = 0;
 
-                        if (!FAT_tracker->liveData.liveMode){ // mode auto?
+                        if (!FAT_tracker.liveData.liveMode){ // mode auto?
                             actualSequencesForChannel[i]++;
                             if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES) {
                                 actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
@@ -688,7 +675,7 @@ void FAT_player_playFromLive(){
                         willHaveToSyncAfterNote = 1;
                     }
 
-                } else if (!FAT_tracker->liveData.liveMode){ // mode auto?
+                } else if (!FAT_tracker.liveData.liveMode){ // mode auto?
                     actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
                     willHaveToSyncAfterNote = 1;
                     FAT_player_moveOrHideCursor(i);
@@ -704,17 +691,17 @@ void FAT_player_playFromLive(){
             if (FAT_player_buffer[i].haveToPlay){
 
                 // calcul du volume
-                if (FAT_tracker->liveData.volume[i] == NULL_VALUE){
+                if (FAT_tracker.liveData.volume[i] == NULL_VALUE){
                     volume = FAT_player_buffer[i].volume;
                 } else if (FAT_player_buffer[i].volume == NULL_VALUE){
-                    volume = FAT_tracker->liveData.volume[i];
+                    volume = FAT_tracker.liveData.volume[i];
                 } else {
-                    volume = (FAT_player_buffer[i].volume + FAT_tracker->liveData.volume[i])/2;
+                    volume = (FAT_player_buffer[i].volume + FAT_tracker.liveData.volume[i])/2;
                 }
 
                 FAT_player_playNoteWithCustomParams(
                    FAT_player_buffer[i].note , i,
-                   FAT_player_buffer[i].transpose + FAT_tracker->liveData.transpose[i],
+                   FAT_player_buffer[i].transpose + FAT_tracker.liveData.transpose[i],
                    volume, FAT_player_buffer[i].sweep, FAT_player_buffer[i].output);
             }
         }
@@ -736,16 +723,15 @@ void FAT_player_playFromBlocks() {
     u8 sweep = NULL_VALUE;
     u8 output = NULL_VALUE;
     if (tempoReach <= 0) {
-        tracker* FAT_tracker = FAT_data_getTracker ();
         tempoReach = 0;
         hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
         if (FAT_currentPlayedSequence != NULL_VALUE) {
             // lire la séquence actuelle
-            sequence* seq = &(FAT_tracker->allSequences[FAT_currentPlayedSequence]);
+            sequence* seq = &(FAT_tracker.allSequences[FAT_currentPlayedSequence]);
 
             FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[FAT_currentPlayedChannel]];
             if (FAT_currentPlayedBlock != NULL_VALUE) {
-                block* block = &(FAT_tracker->allBlocks[FAT_currentPlayedBlock]);
+                block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
 
                 // Déplacement des curseurs de lecture
                 FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);
@@ -772,7 +758,7 @@ void FAT_player_playFromBlocks() {
                                 actualBlocksForChannel[FAT_currentPlayedChannel] = 0;
                             }
                             FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[FAT_currentPlayedChannel]];
-                            block = &(FAT_tracker->allBlocks[FAT_currentPlayedBlock]);
+                            block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
                             break;
                     }
                 }
@@ -803,11 +789,10 @@ void FAT_player_playFromNotes() {
     u8 sweep = NULL_VALUE;
     u8 output = NULL_VALUE;
     if (tempoReach <= 0) {
-        tracker* FAT_tracker = FAT_data_getTracker ();
         tempoReach = 0;
         hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
         if (FAT_currentPlayedBlock != NULL_VALUE) {
-            block* block = &(FAT_tracker->allBlocks[FAT_currentPlayedBlock]);
+            block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
 
             // Déplacement des curseurs de lecture
             FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);
@@ -921,6 +906,5 @@ void FAT_player_stopPlayer() {
 }
 
 void FAT_resetTempo (){
-    tracker* FAT_tracker = FAT_data_getTracker ();
-    tempoReach = (60000 / FAT_tracker->tempo) * 4;
+    tempoReach = (60000 / FAT_tracker.tempo) * 4;
 }

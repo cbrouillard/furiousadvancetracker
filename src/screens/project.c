@@ -31,12 +31,11 @@ bool FAT_screenProject_isPopuped = 0;
  * \brief Affiche les infos du projet sur l'écran.
  */
 void FAT_screenProject_printInfos() {
-    tracker* FAT_tracker = FAT_data_getTracker ();
-    hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Tempo     %3d", FAT_tracker->tempo);
-    hel_BgTextPrintF(TEXT_LAYER, 1, 5, 0, "Transpose %.2x", FAT_tracker->transpose);
-    hel_BgTextPrintF(TEXT_LAYER, 1, 8, 0, "KeyRepeat %.2x   Buffering %.3s", FAT_tracker->keyRepeat, yesOrNo[FAT_tracker->bufferChangeInLive != 0]);
-    hel_BgTextPrintF(TEXT_LAYER, 1, 9, 0, "Preview   %.3s", yesOrNo[FAT_tracker->previewEnable != 0]);
-    hel_BgTextPrintF(TEXT_LAYER, 1, 10, 0, "GreedPlay %.3s", yesOrNo[FAT_tracker->greedPlay != 0]);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Tempo     %3d", FAT_tracker.tempo);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 5, 0, "Transpose %.2x", FAT_tracker.transpose);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 8, 0, "KeyRepeat %.2x   Buffering %.3s", FAT_tracker.keyRepeat, yesOrNo[FAT_tracker.bufferChangeInLive != 0]);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 9, 0, "Preview   %.3s", yesOrNo[FAT_tracker.previewEnable != 0]);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 10, 0, "GreedPlay %.3s", yesOrNo[FAT_tracker.greedPlay != 0]);
     hel_BgTextPrintF(TEXT_LAYER, 1, 13, 0, "New  Prj  OK");
     hel_BgTextPrintF(TEXT_LAYER, 1, 14, 0, "Save Prj  OK");
     hel_BgTextPrintF(TEXT_LAYER, 1, 15, 0, "Load Prj  OK");
@@ -49,11 +48,9 @@ void FAT_screenProject_printInfos() {
  * le nombre de fois enregistré, ...)
  */
 void FAT_screenProject_printProject() {
-    tracker* FAT_tracker = FAT_data_getTracker ();
-    hel_BgTextPrintF(TEXT_LAYER, 16, 3, 0, "Name %.8s", FAT_tracker->songName);
-    hel_BgTextPrintF(TEXT_LAYER, 16, 4, 0, "Mem  %.d B", sizeof (*FAT_tracker));
-    hel_BgTextPrintF(TEXT_LAYER, 16, 5, 0, "Work %.2x", FAT_tracker->nbWork);
-
+    hel_BgTextPrintF(TEXT_LAYER, 16, 3, 0, "Name %.8s", FAT_tracker.songName);
+    hel_BgTextPrintF(TEXT_LAYER, 16, 4, 0, "Mem  %.d B", sizeof (FAT_tracker));
+    hel_BgTextPrintF(TEXT_LAYER, 16, 5, 0, "Work %.2x", FAT_tracker.nbWork);
 }
 
 /**

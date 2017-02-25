@@ -140,11 +140,10 @@ void FAT_screenNotes_printBlockNumber() {
  * \brief Affiche tous le texte sur l'écran (lignes, notes, infos).
  */
 void FAT_screenNotes_printAllScreenText() {
-    tracker* FAT_tracker = FAT_data_getTracker ();
     FAT_screenNotes_printLineColumns();
     FAT_screenNotes_printAllNotes();
     FAT_screenNotes_printInfos();
-    hel_BgTextPrintF(TEXT_LAYER, 18, 6, 0, "Tsp-Proj %2.x\nTempo   %.3d", FAT_tracker->transpose, FAT_tracker->tempo);
+    hel_BgTextPrintF(TEXT_LAYER, 18, 6, 0, "Tsp-Proj %2.x\nTempo   %.3d", FAT_tracker.transpose, FAT_tracker.tempo);
 }
 
 /**
