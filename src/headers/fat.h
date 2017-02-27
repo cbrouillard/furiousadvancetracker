@@ -20,6 +20,13 @@
 #define _FAT_H_
 
 /**
+ * \brief Si cette variable est positionnée à 1, le mode DEBUG pour FAT est activé. Certaines,
+ * informations seront affichées.
+ */
+#define DEBUG_ON "YES"
+#undef DEBUG_ON
+
+/**
  * \brief Version actuelle de FAT.
  */
 #define FAT_VERSION "1.2.0"

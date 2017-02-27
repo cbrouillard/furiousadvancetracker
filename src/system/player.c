@@ -90,7 +90,7 @@ void (*FAT_player_playNoteWithCustomParams_chanX[6]) (note* note, u8 channel, u8
 
 void FAT_player_firstInit (){
     u8 i;
-    R_TIM3CNT = 0x0003;
+    //R_TIM3CNT = 0x0003;
 
     memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
     memset(actualBlocksForChannel, 0, sizeof (u8)*6);
@@ -111,8 +111,36 @@ void FAT_player_firstInit (){
     FAT_player_playNoteWithCustomParams_chanX[4] = FAT_player_playNoteWithCustomParams_chan5;
     FAT_player_playNoteWithCustomParams_chanX[5] = FAT_player_playNoteWithCustomParams_chan6;
 
+    hel_IntrStartHandler(INT_TYPE_TIM3, (void*)&FAT_player_timerFunc);
+
     FAT_player_initCursors();
     FAT_resetTempo();
+}
+
+void FAT_player_runTimer (){
+  M_TIM3COUNT_SET(0xffff - (0x4000 / 1000))
+  // 0xffff = overflow
+  // 0x4000 = 4000 cycles = 1 secondes avec SpeedSelect = 3
+  // divisé par 1000 pour obtenir la ms (le tempo est calculé en ms)
+  M_TIM3CNT_SPEED_SELECT_SET(3)
+  M_TIM3CNT_IRQ_ENABLE
+  M_TIM3CNT_TIMER_START
+
+  /** EXTRAITS DE CODE SAMPLE HELL
+  ham_StartIntHandler(INT_TYPE_TIM3,(void*)&ham_prof_timer3_int);
+  M_TIM3COUNT_SET(65536-4399)
+  M_TIM3CNT_SPEED_SELECT_SET(1)
+  M_TIM3CNT_IRQ_ENABLE
+  M_TIM3CNT_TIMER_START
+
+  M_TIM3CNT_TIMER_STOP \
+  M_TIM3CNT_IRQ_DISABLE \
+  */
+}
+
+void FAT_player_stopTimer (){
+  M_TIM3CNT_TIMER_STOP
+  M_TIM3CNT_IRQ_DISABLE
 }
 
 /**
@@ -317,9 +345,7 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
         FAT_player_moveOrHideCursor(i);
     }
 
-    R_TIM3COUNT = 0xffff;
-    hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
-    R_TIM3CNT = 0x00C3;
+    FAT_player_runTimer ();
 }
 
 void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
@@ -351,10 +377,7 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
 
     if (FAT_live_waitForOtherChannel[channel] == 0){
         FAT_player_moveOrHideCursor(channel);
-
-        R_TIM3COUNT = 0xffff;
-        hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
-        R_TIM3CNT = 0x00C3;
+        FAT_player_runTimer ();
     }
 }
 
@@ -379,9 +402,7 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
     FAT_isCurrentlyPlaying = 1;
     FAT_player_isPlayingFrom = SCREEN_BLOCKS_ID;
 
-    R_TIM3COUNT = 0xffff;
-    hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
-    R_TIM3CNT = 0x00C3;
+    FAT_player_runTimer ();
 
 }
 
@@ -405,17 +426,19 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
     FAT_isCurrentlyPlaying = 1;
     FAT_player_isPlayingFrom = SCREEN_NOTES_ID;
 
-    R_TIM3COUNT = 0xffff;
-    hel_IntrStartHandler(INT_TYPE_TIM3, (void*) &FAT_player_timerFunc);
-    R_TIM3CNT = 0x00C3;
+    FAT_player_runTimer ();
+}
 
+int FAT_player_debug_getTempoReach(){
+  return tempoReach;
 }
 
 void ATTR_FASTFUNC FAT_player_timerFunc() {
-    if (tempoReach > 0) {
+    if (tempoReach >= 0) {
         tempoReach--;
     }
     tickCounter--;
+    //hel_IntrAcknowledge(INT_TYPE_TIM3);
 }
 
 void FAT_player_progressInSong(u8 channel, sequence* seq){
@@ -463,9 +486,11 @@ void FAT_player_playFromSequences() {
     #ifdef DEBUG_ON
     hel_BgTextPrintF(TEXT_LAYER, 22, 15, 0, "%.d", tempoReach);
     #endif
-    if (tempoReach <= 0) {
+    if (tempoReach < 0) {
         tempoReach = 0;
+        #ifdef DEBUG_ON
         hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
+        #endif
         u8 i;
         for (i = 0; i < 6; i++) {
             FAT_player_buffer[i].haveToPlay = 0;
@@ -571,9 +596,11 @@ void FAT_player_playFromLive(){
     #ifdef DEBUG_ON
     hel_BgTextPrintF(TEXT_LAYER, 22, 15, 0, "%.d", tempoReach);
     #endif
-    if (tempoReach <= 0) {
+    if (tempoReach < 0) {
         tempoReach = 0;
+        #ifdef DEBUG_ON
         hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
+        #endif
         bool willHaveToSyncAfterNote = 0;
         u8 i;
         for (i = 0; i < 6; i++) {
@@ -722,9 +749,11 @@ void FAT_player_playFromBlocks() {
     u8 volume=NULL_VALUE;
     u8 sweep = NULL_VALUE;
     u8 output = NULL_VALUE;
-    if (tempoReach <= 0) {
+    if (tempoReach < 0) {
         tempoReach = 0;
+        #ifdef DEBUG_ON
         hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
+        #endif
         if (FAT_currentPlayedSequence != NULL_VALUE) {
             // lire la séquence actuelle
             sequence* seq = &(FAT_tracker.allSequences[FAT_currentPlayedSequence]);
@@ -788,9 +817,11 @@ void FAT_player_playFromNotes() {
     u8 volume=NULL_VALUE;
     u8 sweep = NULL_VALUE;
     u8 output = NULL_VALUE;
-    if (tempoReach <= 0) {
+    if (tempoReach < 0) {
         tempoReach = 0;
+        #ifdef DEBUG_ON
         hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
+        #endif
         if (FAT_currentPlayedBlock != NULL_VALUE) {
             block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
 
@@ -879,7 +910,8 @@ bool FAT_isChannelCurrentlyPlaying (u8 channel){
 void FAT_player_stopPlayer() {
 
     //R_TIM3CNT = 0x0003;
-    hel_IntrStopHandler(INT_TYPE_TIM3);
+    //hel_IntrStopHandler(INT_TYPE_TIM3);
+    FAT_player_stopTimer();
 
     // stop le son
     snd_stopAllSounds();
@@ -906,5 +938,5 @@ void FAT_player_stopPlayer() {
 }
 
 void FAT_resetTempo (){
-    tempoReach = (60000 / FAT_tracker.tempo) * 4;
+    tempoReach = (60000 / FAT_tracker.tempo) / 4;
 }

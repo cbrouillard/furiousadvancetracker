@@ -37,14 +37,6 @@
  * \file main.c
  * \brief Fichier code source principal avec la fonction main et l'inclusion de fat.h.
  */
-
-/**
- * \brief Si cette variable est positionnée à 1, le mode DEBUG pour FAT est activé. Certaines,
- * informations seront affichées.
- */
-#define DEBUG_ON "YES"
-#undef DEBUG_ON
-
 #include <hel2.h>
 #include <stdarg.h>
 

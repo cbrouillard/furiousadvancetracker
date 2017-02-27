@@ -1062,7 +1062,10 @@ bool FAT_data_note_isEffectEmpty(u8 block, u8 line) {
  * @return un pointeur sur un objet EFFECT
  */
 effect* FAT_data_note_getEffect(u8 block, u8 line) {
-    return &(FAT_tracker.allBlocks[block].notes[line].effect);
+    if (!FAT_data_note_isEffectEmpty(block, line)){
+        return &(FAT_tracker.allBlocks[block].notes[line].effect);
+    }
+    return 0;
 }
 
 /**

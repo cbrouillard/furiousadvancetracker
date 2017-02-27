@@ -4,7 +4,9 @@
 
 include $(HAMDIR)/system/master.mak
 
-ADD_LIBS += $(GCCARM)/lib/libhel2.a
+CFLAGS   += -DHEL_DEBUG
+CFLAGS   += -DHEL_DEBUG_CALLSTACKTRACE
+ADD_LIBS += $(GCCARM)/lib/libhel2_dcs.a
 
 #
 # Set the name of your desired GBA image name here

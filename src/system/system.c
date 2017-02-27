@@ -47,7 +47,7 @@ void FAT_setCurrentScreen (u8 screen){
   FAT_currentScreen = screen;
 }
 
-extern u8 FAT_live_nbChannelPlaying = 0;
+u8 FAT_live_nbChannelPlaying = 0;
 
 /**
  * \brief Initialisation de HEL/HAM et d'autres données propres à FAT.
@@ -63,7 +63,7 @@ extern u8 FAT_live_nbChannelPlaying = 0;
 void FAT_init() {
     // HAM !
     ham_Init();
-    hel_SysSetPrefetch(FALSE);
+    hel_SysSetPrefetch(TRUE);
 
     FAT_filesystem_checkFs();
 
@@ -101,6 +101,7 @@ void FAT_init() {
     ham_InitBg(TEXT_LAYER, TRUE, 0, FALSE);
 
     // initialisation de l'écran "Popup" (la map de déplacement)
+    FAT_popup_initCursors();
     FAT_popup_init();
 
     hel_IntrStartHandler(INT_TYPE_VBL, (void*) &VBLInterruptHandler);
@@ -113,8 +114,6 @@ void FAT_init() {
     FAT_initCursorChange();
     FAT_initCursorsKeyboard();
     FAT_initCursorSimulator();
-
-    FAT_popup_initCursors();
 
     FAT_screenInstrument_tabCursorInit();
 
@@ -272,6 +271,11 @@ void FAT_mainLoop() {
         }
 
         FAT_allScreen_singleCheckButtons();
+
+        #ifdef DEBUG_ON
+        hel_BgTextPrintF(TEXT_LAYER, 20, 16, 0, "tempoR: %d", FAT_player_debug_getTempoReach();
+        #endif
+
         // Wait for Vertical Blank
         hel_SwiVBlankIntrWait();
 
