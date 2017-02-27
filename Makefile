@@ -3,6 +3,7 @@
 #################################
 
 include $(HAMDIR)/system/master.mak
+CFLAGS   += -Werror
 
 CFLAGS   += -DHEL_DEBUG
 CFLAGS   += -DHEL_DEBUG_CALLSTACKTRACE
@@ -83,6 +84,14 @@ release: clear gfx all
 	find . -name "*.s" -exec rm {} \;
 	find . -name "*.elf" -exec rm {} \;
 	rm src/gfx/raw/* -rf
+	echo "`tput setaf 2`FAT had been successfully built.`tput sgr 0`"
+	echo "`tput setaf 2`Run it with vba $(PROGNAME).$(EXT)`tput sgr 0`"
 
 run: release
 	vba $(PROGNAME).$(EXT)
+
+doc: makefile
+	manual/buildPDF.sh
+
+doxygen: doc
+		doxygen Doxyfile

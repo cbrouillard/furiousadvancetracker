@@ -1,7 +1,8 @@
 #!/bin/bash
 
+cd "$(dirname "$0")"
 DIR_TMP_BUILD=./tmp
-mkdir $DIR_TMP_BUILD
+mkdir -p $DIR_TMP_BUILD
 FILENAME=FAT_documentation_FR
 PDF_FILE_TO_GENERATE=FAT_documentation_FR.pdf
 
