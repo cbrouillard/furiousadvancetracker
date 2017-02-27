@@ -89,8 +89,7 @@ void FAT_screenFilesystem_init() {
 
     // initialisation du fond (interface)
     ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_FILESYSTEM_RAW), RES_SCREEN_FILESYSTEM_RAW_SIZE16, 1, 1);
-    ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_FILESYSTEM_MAP), 640, 0, 0);
-    ham_InitBg(SCREEN_LAYER, 1, 3, 0);
+    hel_MapCreate(SCREEN_LAYER, 32, 20, ResData(RES_SCREEN_FILESYSTEM_MAP), sizeof(u16), MAP_FLAGS_DEFAULT);
 
     // affichage d'un peu de texte
     FAT_screenFilesystem_printLineColumns();

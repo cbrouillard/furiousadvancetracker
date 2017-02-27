@@ -41,42 +41,41 @@ void FAT_screenHelp_init(u8 screenIdForHelp) {
     switch (screenIdForHelp) {
         case SCREEN_PROJECT_ID:
             ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_PROJET_RAW), RES_SCREEN_HELP_PROJET_RAW_SIZE16, 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_PROJET_MAP), 640, 0, 0);
+            hel_MapCreate(SCREEN_LAYER, 32, 20, ResData(RES_SCREEN_HELP_PROJET_MAP), sizeof(u16), MAP_FLAGS_DEFAULT);
             break;
         case SCREEN_SONG_ID:
             ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_SONG_RAW), RES_SCREEN_HELP_SONG_RAW_SIZE16, 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_SONG_MAP), 640, 0, 0);
+            hel_MapCreate(SCREEN_LAYER, 32, 20, ResData(RES_SCREEN_HELP_SONG_MAP), sizeof(u16), MAP_FLAGS_DEFAULT);
             break;
         case SCREEN_BLOCKS_ID:
             ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_BLOCKS_RAW), RES_SCREEN_HELP_BLOCKS_RAW_SIZE16, 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_BLOCKS_MAP), 640, 0, 0);
+            hel_MapCreate(SCREEN_LAYER, 32, 20, ResData(RES_SCREEN_HELP_BLOCKS_MAP), sizeof(u16), MAP_FLAGS_DEFAULT);
             break;
         case SCREEN_NOTES_ID:
             ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_NOTES_RAW), RES_SCREEN_HELP_NOTES_RAW_SIZE16, 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_NOTES_MAP), 640, 0, 0);
+            hel_MapCreate(SCREEN_LAYER, 32, 20, ResData(RES_SCREEN_HELP_NOTES_MAP), sizeof(u16), MAP_FLAGS_DEFAULT);
             break;
         case SCREEN_EFFECTS_ID:
             ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_EFFECTS_RAW), RES_SCREEN_HELP_EFFECTS_RAW_SIZE16, 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_EFFECTS_MAP), 640, 0, 0);
+            hel_MapCreate(SCREEN_LAYER, 32, 20, ResData(RES_SCREEN_HELP_EFFECTS_MAP), sizeof(u16), MAP_FLAGS_DEFAULT);
             break;
         case SCREEN_COMPOSER_ID:
             ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_COMPOSER_RAW), RES_SCREEN_HELP_COMPOSER_RAW_SIZE16, 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_COMPOSER_MAP), 640, 0, 0);
+            hel_MapCreate(SCREEN_LAYER, 32, 20, ResData(RES_SCREEN_HELP_COMPOSER_MAP), sizeof(u16), MAP_FLAGS_DEFAULT);
             break;
         case SCREEN_INSTRUMENTS_ID:
             ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_INSTRUMENT_RAW), RES_SCREEN_HELP_INSTRUMENT_RAW_SIZE16, 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_INSTRUMENT_MAP), 640, 0, 0);
+            hel_MapCreate(SCREEN_LAYER, 32, 20, ResData(RES_SCREEN_HELP_INSTRUMENT_MAP), sizeof(u16), MAP_FLAGS_DEFAULT);
             break;
         case SCREEN_FILESYSTEM_ID:
             ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_FILESYSTEM_RAW), RES_SCREEN_HELP_FILESYSTEM_RAW_SIZE16, 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_FILESYSTEM_MAP), 640, 0, 0);
+            hel_MapCreate(SCREEN_LAYER, 32, 20, ResData(RES_SCREEN_HELP_FILESYSTEM_MAP), sizeof(u16), MAP_FLAGS_DEFAULT);
             break;
         case SCREEN_LIVE_ID:
             ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_HELP_LIVE_RAW), RES_SCREEN_HELP_LIVE_RAW_SIZE16, 1, 1);
-            ham_bg[SCREEN_LAYER].mi = ham_InitMapSet((void*)ResData(RES_SCREEN_HELP_LIVE_MAP), 640, 0, 0);
+            hel_MapCreate(SCREEN_LAYER, 32, 20, ResData(RES_SCREEN_HELP_LIVE_MAP), sizeof(u16), MAP_FLAGS_DEFAULT);
             break;
     }
-    ham_InitBg(SCREEN_LAYER, 1, 3, 0);
 
     FAT_player_hideAllCursors ();
     FAT_cursors_hideAllCursors();
