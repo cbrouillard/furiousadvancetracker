@@ -85,6 +85,7 @@ void FAT_reinitScreen();
 void FAT_showIntro();
 void VBLInterruptHandler(void);
 void FAT_initScreenPalette() ;
+void FAT_initIntroPalette();
 void FAT_initSpritePalette();
 
 u8 FAT_getCurrentScreen ();

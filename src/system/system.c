@@ -80,7 +80,7 @@ void FAT_init() {
 
     // initialisation des palettes.
     FAT_initSpritePalette();
-    FAT_initScreenPalette();
+    FAT_initIntroPalette();
 
     // Initialize the tileset and an empty
     // mapset using regular HAMlib functions
@@ -148,6 +148,13 @@ void FAT_initScreenPalette() {
     hel_PalBgLoad256(ResData16(RES_SCREEN_PAL));
 }
 
+/**
+ * \brief Charge la palette pour l'écran d'intro.
+ */
+void FAT_initIntroPalette() {
+    hel_PalBgLoad256(ResData16(RES_INTRO_PAL));
+}
+
 void VBLInterruptHandler(void) {
     hel_ObjTransmit();
     // acknowledge interrupt
@@ -194,6 +201,8 @@ void FAT_showIntro() {
         // Wait for Vertical Blank
         hel_SwiVBlankIntrWait();
     }
+
+    FAT_initScreenPalette();
 }
 
 /**
