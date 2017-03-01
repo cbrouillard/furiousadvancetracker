@@ -109,21 +109,7 @@ volatile bool playSnBSample = 0;
 void snd_timerFunc_stopA ();
 void snd_timerFunc_stopB ();
 
-void snd_loadWav(u8 inst) {
-    REG_DMA3SAD = (u32) & voices[inst << 2];
-    REG_DMA3DAD = (u32) & REG_WAVE_RAM0;
-    REG_DMA3CNT_L = 4;
-    REG_DMA3CNT_H = 0x8400;
-    REG_SOUND3CNT_L ^= 0x0040;
-}
-
-u8 snd_calculateTransposedFrequency(u8 freq, u8 transpose) {
-    freq += transpose;
-    if (freq >= NB_FREQUENCES) {
-        freq = 0; // ok pour l'instant ca ira
-    }
-    return freq;
-}
+void snd_loadWav(u8 inst);
 
 void snd_init_soundApi() {
 
@@ -148,6 +134,14 @@ void snd_init_soundApi() {
     playSnBOsc = 0;
 
     snd_synthFM_init();
+}
+
+u8 snd_calculateTransposedFrequency(u8 freq, u8 transpose) {
+    freq += transpose;
+    if (freq >= NB_FREQUENCES) {
+        freq = 0; // ok pour l'instant ca ira
+    }
+    return freq;
 }
 
 void snd_changeChannelOutput(u8 channelNumber, u8 outputValue) {
@@ -234,6 +228,14 @@ void snd_modifyWaveCanalVolume(u16 volume) {
     }
 }
 
+void snd_loadWav(u8 inst) {
+    REG_DMA3SAD = (u32) & voices[inst << 2];
+    REG_DMA3DAD = (u32) & REG_WAVE_RAM0;
+    REG_DMA3CNT_L = 4;
+    REG_DMA3CNT_H = 0x8400;
+    REG_SOUND3CNT_L ^= 0x0040;
+};
+
 void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voice,
         u16 bank, u16 bankMode, u8 output, u8 freq, u8 transpose) {
 
@@ -319,10 +321,12 @@ void snd_effect_kill(u8 channelId, u8 value) {
             REG_SOUND4CNT_H |= (1 << 14);
             break;
         case 4:
+            R_DMA1CNT=0;
             playSnASample = 0;
             playSnAOsc = 0;
             break;
         case 5:
+            R_DMA2CNT=0;
             playSnBSample = 0;
             playSnBOsc = 0;
             break;
@@ -445,6 +449,7 @@ void snd_resetFIFOB() {
     REG_SOUNDCNT_H |= 1 << 0xF;
 }
 
+// deprecated
 void snd_processSampleA() {
     if (playSnASample) {
         REG_SOUNDCNT_H &= ~(1 << 0xB);
@@ -465,6 +470,7 @@ void snd_processSampleA() {
 
 }
 
+// deprecated
 void snd_processSampleB() {
     if (playSnBSample) {
         REG_SOUNDCNT_H &= ~(1 << 0xF);
@@ -484,11 +490,13 @@ void snd_processSampleB() {
     }
 }
 
+// deprecated
 void snd_timerFunc_sample() {
   //snd_processSampleA();
   //snd_processOscillatorA ();
 }
 
+// deprecated
 void snd_timerFunc_sampleB(){
   //snd_processSampleB();
   //snd_processOscillatorB ();
@@ -565,15 +573,15 @@ void snd_playChannelASample(u8 kitId, u8 sampleNumber,
             // output
             u8 mem = output >> 1;
             if (mem){
-                REG_SOUNDCNT_H |= 1 << 0x9;
+                REG_SOUNDCNT_H |= 1 << 0x8;
             }else{
-                REG_SOUNDCNT_H &= ~(1 << 0x9);
+                REG_SOUNDCNT_H &= ~(1 << 0x8);
             }
             mem = output & 0x1;
             if (mem){
-                REG_SOUNDCNT_H |= 1 << 0x8;
+                REG_SOUNDCNT_H |= 1 << 0x9;
             } else {
-                REG_SOUNDCNT_H &= ~(1 << 0x8);
+                REG_SOUNDCNT_H &= ~(1 << 0x9);
             }
 
             //snASpeed = speed;
@@ -627,15 +635,15 @@ void snd_playChannelBSample(u8 kitId, u8 sampleNumber,
             // output
             u8 mem = output >> 1;
             if (mem){
-                REG_SOUNDCNT_H |= 1 << 0xD;
+                REG_SOUNDCNT_H |= 1 << 0xC;
             }else{
-                REG_SOUNDCNT_H &= ~(1 << 0xD);
+                REG_SOUNDCNT_H &= ~(1 << 0xC);
             }
             mem = output & 0x1;
             if (mem){
-                REG_SOUNDCNT_H |= 1 << 0xC;
+                REG_SOUNDCNT_H |= 1 << 0xD;
             } else {
-                REG_SOUNDCNT_H &= ~(1 << 0xC);
+                REG_SOUNDCNT_H &= ~(1 << 0xD);
             }
 
             //snBSpeed = speed;
