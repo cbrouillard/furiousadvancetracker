@@ -51,7 +51,7 @@ u8 loopmodeA, loopmodeB;
 volatile bool playSnAOsc = 0;
 volatile bool playSnBOsc = 0;
 
-void snd_playOscillatorA (u8 shape, u8 freqN, u8 loopmode, u8 soundlength){
+void snd_playOscillatorA (u8 shape, u8 freqN, u8 loopmode, u8 soundlength, u8 volume, u8 output){
   // stop
   R_DMA1CNT = 0;
   R_DMA1SRC = 0;
@@ -64,6 +64,9 @@ void snd_playOscillatorA (u8 shape, u8 freqN, u8 loopmode, u8 soundlength){
   freqNA = freqN;
   loopmodeA = loopmode;
   oscLengthA = loopmode ? soundlength : 0xff;
+
+  snd_fifoA_setVolume(volume);
+  snd_fifoA_setOutput(output);
 
   // WITH DMA !!
   R_DMA1SRC=(unsigned long) snd_oscShapes[shape][freqN]; //dma1 source
@@ -83,7 +86,7 @@ void snd_playOscillatorA (u8 shape, u8 freqN, u8 loopmode, u8 soundlength){
   playSnAOsc = 1;
 }
 
-void snd_playOscillatorB (u8 shape, u8 freqN, u8 loopmode, u8 soundlength){
+void snd_playOscillatorB (u8 shape, u8 freqN, u8 loopmode, u8 soundlength, u8 volume, u8 output){
   // stop
   R_DMA2CNT = 0;
   R_DMA2SRC = 0;
@@ -95,6 +98,9 @@ void snd_playOscillatorB (u8 shape, u8 freqN, u8 loopmode, u8 soundlength){
   freqNB = freqN;
   loopmodeB = loopmode;
   oscLengthB = loopmode ? soundlength : 0xff;
+
+  snd_fifoB_setVolume(volume);
+  snd_fifoB_setOutput(output);
 
   // WITH DMA !!
   R_DMA2SRC=(unsigned long) snd_oscShapes[shape][freqN]; //dma1 source

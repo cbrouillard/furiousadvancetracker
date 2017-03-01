@@ -45,9 +45,9 @@
 /** \brief Nombre de lignes sur l'écran WAVE. */
 #define SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN 8
 /** \brief Nombre de lignes sur l'écran SAMPLE. */
-#define SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN 9
+#define SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN 8
 /** \brief Nombre de lignes sur l'écran OSC. */
-#define SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN 5
+#define SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN 7
 
 void FAT_screenInstrument_hideTabulationCursor();
 void FAT_screenInstrument_showTabulationCursor();

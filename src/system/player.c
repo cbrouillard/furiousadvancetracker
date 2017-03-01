@@ -232,7 +232,8 @@ void FAT_player_playNoteWithCustomParams_chan5(note* note, u8 channel, u8 transp
     // todo pointeur de func pour plus de perf ?
     if (inst->type > INSTRUMENT_TYPE_SAMPLEB){
         // waveduty = shape
-        snd_playOscillatorA (inst->wavedutyOrPolynomialStep, note->freq, inst->loopmode, inst->soundlength);
+        snd_playOscillatorA (inst->wavedutyOrPolynomialStep, note->freq, inst->loopmode,
+          inst->soundlength, inst->volumeRatio >> 4, output);
     } else {
         snd_playChannelASample(
             inst->kitNumber, note->freq, inst->volumeRatio >> 4,
@@ -245,7 +246,8 @@ void FAT_player_playNoteWithCustomParams_chan6(note* note, u8 channel, u8 transp
 
     if (inst->type > INSTRUMENT_TYPE_SAMPLEB){
         // waveduty = shape
-        snd_playOscillatorB (inst->wavedutyOrPolynomialStep, note->freq, inst->loopmode, inst->soundlength);
+        snd_playOscillatorB (inst->wavedutyOrPolynomialStep, note->freq, inst->loopmode,
+           inst->soundlength, inst->volumeRatio >> 4, output);
     } else {
         snd_playChannelBSample(
             inst->kitNumber, note->freq, inst->volumeRatio >> 4,

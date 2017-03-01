@@ -562,6 +562,30 @@ void snd_timerFunc_stopB (){
   }
 }
 
+void snd_fifoA_setOutput (u8 output){
+  // output
+  u8 mem = output >> 1;
+  if (mem){
+      REG_SOUNDCNT_H |= 1 << 0x8;
+  }else{
+      REG_SOUNDCNT_H &= ~(1 << 0x8);
+  }
+  mem = output & 0x1;
+  if (mem){
+      REG_SOUNDCNT_H |= 1 << 0x9;
+  } else {
+      REG_SOUNDCNT_H &= ~(1 << 0x9);
+  }
+}
+
+void snd_fifoA_setVolume (u8 volume){
+  if (!volume){
+      REG_SOUNDCNT_H &= ~(1 << 0x2);
+  } else {
+      REG_SOUNDCNT_H |= 1 << 0x2;
+  }
+}
+
 void snd_playChannelASample(u8 kitId, u8 sampleNumber,
         u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset, u8 output) {
     playSnAOsc = 0;
@@ -577,25 +601,8 @@ void snd_playChannelASample(u8 kitId, u8 sampleNumber,
             R_TIM1CNT=0;
             playSnASample = 0;
 
-            if (!volume){
-                REG_SOUNDCNT_H &= ~(1 << 0x2);
-            } else {
-                REG_SOUNDCNT_H |= 1 << 0x2;
-            }
-
-            // output
-            u8 mem = output >> 1;
-            if (mem){
-                REG_SOUNDCNT_H |= 1 << 0x8;
-            }else{
-                REG_SOUNDCNT_H &= ~(1 << 0x8);
-            }
-            mem = output & 0x1;
-            if (mem){
-                REG_SOUNDCNT_H |= 1 << 0x9;
-            } else {
-                REG_SOUNDCNT_H &= ~(1 << 0x9);
-            }
+            snd_fifoA_setVolume(volume);
+            snd_fifoA_setOutput(output);
 
             //snASpeed = speed;
             snALoop = looping;
@@ -625,6 +632,30 @@ void snd_playChannelASample(u8 kitId, u8 sampleNumber,
 
 }
 
+void snd_fifoB_setOutput (u8 output){
+  // output
+  u8 mem = output >> 1;
+  if (mem){
+      REG_SOUNDCNT_H |= 1 << 0xC;
+  }else{
+      REG_SOUNDCNT_H &= ~(1 << 0xC);
+  }
+  mem = output & 0x1;
+  if (mem){
+      REG_SOUNDCNT_H |= 1 << 0xD;
+  } else {
+      REG_SOUNDCNT_H &= ~(1 << 0xD);
+  }
+}
+
+void snd_fifoB_setVolume (u8 volume){
+  if (!volume){
+      REG_SOUNDCNT_H &= ~(1 << 0x3);
+  } else {
+      REG_SOUNDCNT_H |= 1 << 0x3;
+  }
+}
+
 void snd_playChannelBSample(u8 kitId, u8 sampleNumber,
         u8 volume, u8 speed, bool looping, bool timedMode, u8 length, u8 offset, u8 output) {
     playSnBOsc = 0;
@@ -639,25 +670,8 @@ void snd_playChannelBSample(u8 kitId, u8 sampleNumber,
             R_TIM2CNT=0;
             playSnBSample = 0;
 
-            if (!volume){
-                REG_SOUNDCNT_H &= ~(1 << 0x3);
-            } else {
-                REG_SOUNDCNT_H |= 1 << 0x3;
-            }
-
-            // output
-            u8 mem = output >> 1;
-            if (mem){
-                REG_SOUNDCNT_H |= 1 << 0xC;
-            }else{
-                REG_SOUNDCNT_H &= ~(1 << 0xC);
-            }
-            mem = output & 0x1;
-            if (mem){
-                REG_SOUNDCNT_H |= 1 << 0xD;
-            } else {
-                REG_SOUNDCNT_H &= ~(1 << 0xD);
-            }
+            snd_fifoB_setVolume(volume);
+            snd_fifoB_setOutput(output);
 
             //snBSpeed = speed;
             snBLoop = looping;

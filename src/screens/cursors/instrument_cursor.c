@@ -26,9 +26,9 @@ const u8 INST_NOISE_BLOCK_Y[SCREENINSTRUMENT_NOISE_NB_LINES_ON_SCREEN] = {31, 39
 /** \brief Positions des emplacements de paramètre dans l'écran WAVE. */
 const u8 INST_WAVE_BLOCK_Y[SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN] = {31, 55, 63, 71, 79, 87, 95, 119};
 /** \brief Positions des emplacements de paramètre dans l'écran SAMPLE. */
-const u8 INST_SAMPLE_BLOCK_Y[SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN] = {31, 55, 79, 87, 95, 103, 111, 119, 95};
+const u8 INST_SAMPLE_BLOCK_Y[SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN] = {31, 55, 79, 87, 95, 103, 111, 95};
 /** \brief Positions des emplacements de paramètre dans l'écran OSC. */
-const u8 INST_OSC_BLOCK_Y[SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN] = {31, 39, 63, 71, 95};
+const u8 INST_OSC_BLOCK_Y[SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN] = {31, 39, 63, 87, 95, 103, 95};
 
 /** \brief Position actuelle du cursor. */
 u8 FAT_screenInstrument_cursorX;
@@ -207,18 +207,15 @@ void FAT_screenInstrument_sample_commitCursorMove() {
                 FAT_cursors_moveCursor8 (48, FAT_screenInstrument_cursorY + 1);
                 break;
             case 1:
-            case 4:
+            case 3:
                 FAT_cursors_moveCursor1 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
                 break;
-
-            case 2:
             case 6:
-            case 7:
+            case 5:
                 FAT_cursors_moveCursor2 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
                 break;
-
-            case 3:
-            case 5:
+            case 2:
+            case 4:
                 FAT_cursors_moveCursor3 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
                 break;
         }
@@ -228,18 +225,21 @@ void FAT_screenInstrument_sample_commitCursorMove() {
 }
 
 void FAT_screenInstrument_osc_commitCursorMove () {
-    switch (FAT_screenInstruments_currentSelectedLine) {
-        case 0:
-        case 1:
-        case 3:
-            FAT_cursors_moveCursor2 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
-            break;
-        case 2:
-            FAT_cursors_moveCursor1 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
-            break;
-        case 4:
-            FAT_cursors_moveCursor3 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
-            break;
+    if (FAT_screenInstruments_currentSelectedColumn == 0){
+      switch (FAT_screenInstruments_currentSelectedLine) {
+          case 0:
+          case 1:
+          case 4:
+          case 5:
+              FAT_cursors_moveCursor2 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+              break;
+          case 2:
+          case 3:
+              FAT_cursors_moveCursor1 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+              break;
+      }
+    } else {
+        FAT_cursors_moveCursor3 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
     }
 }
 
@@ -401,22 +401,21 @@ void FAT_screenInstrument_sample_displayGoodCursor() {
                 FAT_cursors_hideCursor3();
                 break;
             case 1:
-            case 4:
+            case 3:
                 FAT_cursors_showCursor1();
                 FAT_cursors_hideCursor8();
                 FAT_cursors_hideCursor2();
                 FAT_cursors_hideCursor3();
                 break;
-            case 2:
+            case 5:
             case 6:
-            case 7:
                 FAT_cursors_showCursor2();
                 FAT_cursors_hideCursor8();
                 FAT_cursors_hideCursor1();
                 FAT_cursors_hideCursor3();
                 break;
-            case 3:
-            case 5:
+            case 2:
+            case 4:
                 FAT_cursors_showCursor3();
                 FAT_cursors_hideCursor1();
                 FAT_cursors_hideCursor2();
@@ -432,30 +431,33 @@ void FAT_screenInstrument_sample_displayGoodCursor() {
 }
 
 void FAT_screenInstrument_osc_displayGoodCursor() {
-    switch (FAT_screenInstruments_currentSelectedLine) {
-        case -1:
-            FAT_cursors_hideCursor1();
-            FAT_cursors_hideCursor2();
-            FAT_cursors_hideCursor3();
-            break;
-        case 0:
-        case 1:
-        case 3:
-            FAT_cursors_showCursor2();
-            FAT_cursors_hideCursor1();
-            FAT_cursors_hideCursor3();
-            break;
-        case 2:
-            FAT_cursors_showCursor1();
-            FAT_cursors_hideCursor2();
-            FAT_cursors_hideCursor3();
-            break;
-        case 4:
-            FAT_cursors_showCursor3();
-            FAT_cursors_hideCursor1();
-            FAT_cursors_hideCursor2();
-            break;
+    if (FAT_screenInstruments_currentSelectedColumn == 0){
+      switch (FAT_screenInstruments_currentSelectedLine) {
+          case -1:
+              FAT_cursors_hideCursor1();
+              FAT_cursors_hideCursor2();
+              FAT_cursors_hideCursor3();
+              break;
+          case 0:
+          case 1:
+          case 4:
+          case 5:
+              FAT_cursors_showCursor2();
+              FAT_cursors_hideCursor1();
+              FAT_cursors_hideCursor3();
+              break;
+          case 2:
+          case 3:
+              FAT_cursors_showCursor1();
+              FAT_cursors_hideCursor2();
+              FAT_cursors_hideCursor3();
+              break;
 
+      }
+    } else {
+      FAT_cursors_showCursor3();
+      FAT_cursors_hideCursor1();
+      FAT_cursors_hideCursor2();
     }
 }
 
@@ -715,13 +717,18 @@ void FAT_screenInstrument_moveCursorRight(u8 type) {
         case INSTRUMENT_TYPE_SAMPLEA:
         case INSTRUMENT_TYPE_SAMPLEB:
             FAT_screenInstruments_currentSelectedColumn = 1;
-            FAT_screenInstrument_cursorY = INST_SAMPLE_BLOCK_Y[8];
+            FAT_screenInstrument_cursorY = INST_SAMPLE_BLOCK_Y[7];
             FAT_screenInstrument_cursorX = 207;
 
             FAT_screenInstrument_displayGoodCursor(type);
             break;
         case INSTRUMENT_TYPE_OSCILLATORA:
         case INSTRUMENT_TYPE_OSCILLATORB:
+            FAT_screenInstruments_currentSelectedColumn = 1;
+            FAT_screenInstrument_cursorY = INST_OSC_BLOCK_Y[6];
+            FAT_screenInstrument_cursorX = 207;
+
+            FAT_screenInstrument_displayGoodCursor(type);
             break;
     }
 }
@@ -749,6 +756,12 @@ void FAT_screenInstrument_moveCursorLeft(u8 type) {
             break;
         case INSTRUMENT_TYPE_OSCILLATORA:
         case INSTRUMENT_TYPE_OSCILLATORB:
+            FAT_screenInstruments_currentSelectedColumn = 0;
+            FAT_screenInstrument_cursorY = INST_OSC_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
+            FAT_screenInstrument_cursorX = SCREENINSTRUMENTS_FIRST_BLOCK_X - 1;
+
+            FAT_screenInstrument_displayGoodCursor(type);
+
             break;
     }
 }
@@ -771,7 +784,7 @@ void FAT_screenInstrument_showSimulatorCursor (u8 type){
             break;
        case INSTRUMENT_TYPE_OSCILLATORA:
        case INSTRUMENT_TYPE_OSCILLATORB:
-            FAT_cursors_moveCursorSimulator (SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_OSC_BLOCK_Y[SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN - 1]);
+            FAT_cursors_moveCursorSimulator (207,INST_OSC_BLOCK_Y[SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN - 1]);
            break;
     }
 

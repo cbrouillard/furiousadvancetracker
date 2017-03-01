@@ -34,7 +34,7 @@ extern u8 loopmodeB;
 extern volatile bool playSnAOsc;
 extern volatile bool playSnBOsc;
 
-void snd_playOscillatorA (u8 shape, u8 freqN, u8 loopmode, u8 soundlength);
-void snd_playOscillatorB (u8 shape, u8 freqN, u8 loopmode, u8 soundlength);
+void snd_playOscillatorA (u8 shape, u8 freqN, u8 loopmode, u8 soundlength, u8 volume, u8 output);
+void snd_playOscillatorB (u8 shape, u8 freqN, u8 loopmode, u8 soundlength, u8 volume, u8 output);
 
 #endif
