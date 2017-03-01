@@ -259,7 +259,6 @@ void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voic
         REG_SOUND3CNT_L = SOUND3PLAY | SOUND3BANK32;
     } else { // DUAL MODE
         snd_loadWav(voice);
-        //REG_SOUND3CNT_L |= SOUND3BANK64;
     }
 
     if (bank == 1) {

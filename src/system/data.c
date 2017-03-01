@@ -1574,12 +1574,12 @@ void FAT_data_instrumentWave_changeVoice(u8 instrumentId, s8 value) {
 
             ) {
         voice += value;
-        FAT_tracker.allInstruments[instrumentId].voiceAndBank = bankMode | bank | voice;
     } else if (value < 0){
-        FAT_data_instrumentWave_changeVoice (instrumentId, -FAT_tracker.allInstruments[instrumentId].voiceAndBank);
+        voice = 0;
     } else if (value > 0){
-        FAT_data_instrumentWave_changeVoice (instrumentId, INSTRUMENT_WAVE_NB_VOICE-FAT_tracker.allInstruments[instrumentId].voiceAndBank-1);
+        voice = INSTRUMENT_WAVE_NB_VOICE - 1;
     }
+    FAT_tracker.allInstruments[instrumentId].voiceAndBank = bankMode | bank | voice;
 }
 
 /**
