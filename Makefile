@@ -35,8 +35,8 @@ OFILES += src/main.o \
 	src/screens/cursors/project_cursor.o src/screens/cursors/song_cursor.o \
 	src/dialogs/keyboard.o src/dialogs/yesno.o src/dialogs/popup.o \
 	src/gfx/ResourceData.o \
-	src/soundApi/soundApi.o \
-	src/soundApi/libgbfs.o
+	src/soundApi/soundApi.o src/soundApi/oscillator/oscillator.o \
+	src/soundApi/kits/libgbfs.o
 
 ######################################
 # Standard Makefile targets start here

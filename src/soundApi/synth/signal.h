@@ -1,6 +1,8 @@
 #ifndef _SYNTH_FM_
 #define _SYNTH_FM_
 
+#include "../luts/generic_sinlut.h"
+
 #define NB_SYNTH_FM_FUNCTIONS 3
 
 /** Fonction pour la synth FM **/

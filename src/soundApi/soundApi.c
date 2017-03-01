@@ -19,7 +19,7 @@ typedef unsigned int u32;
 #include <stdio.h>
 
 #include "soundApi.h"
-#include "luts/generic_sinlut.h"
+#include "synth/signal.h"
 
 #define NULL_VALUE 0xff
 
@@ -105,8 +105,6 @@ const vu32* snBSample;
 
 volatile bool playSnASample = 0;
 volatile bool playSnBSample = 0;
-
-#include "oscillator.h"
 
 void snd_timerFunc_stopA ();
 void snd_timerFunc_stopB ();
@@ -448,7 +446,7 @@ void snd_resetFIFOB() {
 }
 
 void snd_processSampleA() {
-    /*if (playSnASample) {
+    if (playSnASample) {
         REG_SOUNDCNT_H &= ~(1 << 0xB);
         if (!(snASampleOffset & 3)) {
             SND_REG_SGFIFOA = (*snd_modulation_applyModulation[0]) (snASample[snASampleOffset >> 2], 1, 130, snASampleOffset, 500, 0);
@@ -463,7 +461,7 @@ void snd_processSampleA() {
         }
 
 
-    }*/
+    }
 
 }
 
@@ -487,42 +485,18 @@ void snd_processSampleB() {
 }
 
 void snd_timerFunc_sample() {
-    snd_processOscillatorA ();
+  //snd_processSampleA();
+  //snd_processOscillatorA ();
 }
 
 void snd_timerFunc_sampleB(){
-  snd_processSampleB();
-  snd_processOscillatorB ();
-}
-
-void snd_playOscillatorA (u8 shape, u8 freqN, u8 loopmode, u8 soundlength){
-    playSnASample = 0;
-    playSnAOsc = 0;
-
-    oscTimeCounterA = 0;
-    oscSamplerCounterA = 0;
-    snd_oscA_length = loopmode ? soundlength << 4 : NULL_VALUE;
-    snd_oscA = (u32*) snd_oscShapes[shape][freqN];
-
-    // go
-    playSnAOsc = 1;
-}
-
-void snd_playOscillatorB (u8 shape, u8 freqN, u8 loopmode, u8 soundlength){
-    playSnBSample = 0;
-    playSnBOsc = 0;
-
-    oscTimeCounterB = 0;
-    oscSamplerCounterB = 0;
-    snd_oscB_length = loopmode ? soundlength << 4 : NULL_VALUE;
-    snd_oscB = (u32*) snd_oscShapes[shape][freqN];
-
-    // go
-    playSnBOsc = 1;
+  //snd_processSampleB();
+  //snd_processOscillatorB ();
 }
 
 void snd_timerFunc_stopA (){
   R_DMA1CNT=0; //stop DMA
+
   if (snALoop && playSnASample){
     // restart same
     R_TIM1CNT=0;
@@ -532,11 +506,21 @@ void snd_timerFunc_stopA (){
     R_TIM1CNT=0xC3; //enable timer1
   } else {
     playSnASample = 0;
+    if (playSnAOsc){
+      R_TIM1CNT=0;
+      R_DMA1SRC=(unsigned long) snd_oscShapes[shapeA][freqNA]; //dma1 source
+      //R_DMA1DST=0x040000a0; //write to FIFO A address
+      R_DMA1CNT=0xb600; //dma control: DMA enabled+ start on FIFO+32bit+repeat+increment source&dest
+
+      R_TIM1COUNT=0xffff - LUT_PRECISION - 1; //0xffff-the number of samples to play
+      R_TIM1CNT=0xC3; //enable timer1
+    }
   }
 }
 
 void snd_timerFunc_stopB (){
   R_DMA2CNT=0; //stop DMA
+
   if (snBLoop && playSnBSample){
     // restart same
     R_TIM2CNT=0;
@@ -546,6 +530,14 @@ void snd_timerFunc_stopB (){
     R_TIM2CNT=0xC3; //enable timer1
   } else {
     playSnBSample = 0;
+    if (playSnBOsc){
+      R_TIM2CNT=0;
+      R_DMA2SRC=(unsigned long) snd_oscShapes[shapeB][freqNB]; //dma1 source
+      R_DMA2CNT=0xb600; //dma control: DMA enabled+ start on FIFO+32bit+repeat+increment source&dest
+
+      R_TIM2COUNT=0xffff - LUT_PRECISION - 1; //0xffff-the number of samples to play
+      R_TIM2CNT=0xC3; //enable timer1
+    }
   }
 }
 
@@ -558,7 +550,8 @@ void snd_playChannelASample(u8 kitId, u8 sampleNumber,
         snASample = gbfs_get_nth_obj(kit, sampleNumber + 1, NULL, &snASmpSize);
 
         if (snASample) {
-            R_DMA1CNT = 0; // stop DMA1
+            // stop
+            R_DMA1CNT = 0;
             R_DMA1SRC = 0;
             R_TIM1CNT=0;
             playSnASample = 0;
@@ -583,7 +576,7 @@ void snd_playChannelASample(u8 kitId, u8 sampleNumber,
                 REG_SOUNDCNT_H &= ~(1 << 0x8);
             }
 
-            snASpeed = speed;
+            //snASpeed = speed;
             snALoop = looping;
             snASampleOffset = snASmpSize * offset / 100;
             if (timedMode){
@@ -591,10 +584,10 @@ void snd_playChannelASample(u8 kitId, u8 sampleNumber,
             }
 
             // WITH DMA !!
-            R_DMA1SRC=(unsigned long) (snASample + snASampleOffset); //dma1 source
+            R_DMA1SRC=(unsigned long) (snASample + (snASampleOffset/4)); //dma1 source
             R_DMA1DST=0x040000a0; //write to FIFO A address
             R_DMA1CNT=0xb600; //dma control: DMA enabled+ start on FIFO+32bit+repeat+increment source&dest
-            R_TIM1COUNT=0xffff - snASmpSize; //0xffff-the number of samples to play
+            R_TIM1COUNT=0xffff - (snASmpSize - snASampleOffset); //0xffff-the number of samples to play
             R_TIM1CNT=0xC3; //enable timer1
 
             // Timer playback pour les samples
@@ -645,7 +638,7 @@ void snd_playChannelBSample(u8 kitId, u8 sampleNumber,
                 REG_SOUNDCNT_H &= ~(1 << 0xC);
             }
 
-            snBSpeed = speed;
+            //snBSpeed = speed;
             snBLoop = looping;
             snBSampleOffset = snBSmpSize * offset / 100;
             if (timedMode){
@@ -653,10 +646,10 @@ void snd_playChannelBSample(u8 kitId, u8 sampleNumber,
             }
 
             // WITH DMA !!
-            R_DMA2SRC=(unsigned long) (snBSample + snBSampleOffset); //dma1 source
+            R_DMA2SRC=(unsigned long) (snBSample + (snBSampleOffset/4)); //dma1 source
             R_DMA2DST=0x040000a4; //write to FIFO B address
             R_DMA2CNT=0xb600; //dma control: DMA enabled+ start on FIFO+32bit+repeat+increment source&dest
-            R_TIM2COUNT=0xffff - snBSmpSize; //0xffff-the number of samples to play
+            R_TIM2COUNT=0xffff - (snBSmpSize - snBSampleOffset); //0xffff-the number of samples to play
             R_TIM2CNT=0xC3; //enable timer
 
             // Timer playback pour les samples

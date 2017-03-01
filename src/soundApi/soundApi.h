@@ -12,9 +12,9 @@
 /**
  * \file soundApi.h
  * \brief Définition des fonctions implémentées par la soundApi GBA.
- * 
+ *
  * Quelques règles à suivre :
- * 
+ *
  * - toutes les fonctions sont préfixées par "snd_" comme ca pas de risque de conflit.
  * - les fonctions non testées sont préfixées par "tmp_snd_", une fois testée -> on change en "snd_".
  * - un petit commentaire au dessus de la fonction pour documenter.
@@ -28,11 +28,18 @@
 #define EFFECT_SWEEP 3
 #define EFFECT_VOLUME 4
 
+#include "system/register.h"
+#include "kits/gbfs.h"
+#include "oscillator/oscillator.h"
 
-#include "register.h"
-#include "gbfs.h"
+#ifndef LUT_PRECISION
+#define LUT_PRECISION 128
+#endif
 
 typedef const GBFS_FILE kit;
+
+extern volatile bool playSnASample;
+extern volatile bool playSnBSample;
 
 /**
  * \brief Initialise le mode audio sur la Gameboy: active les 4 canaux.
@@ -45,9 +52,9 @@ void snd_init_soundApi();
 void snd_init_kits();
 
 /**
- * 
+ *
  * \brief Joue un son sur le channel 1.
- * 
+ *
  * \param sweeptime Temps de sweep de 0 à 7
  * \param sweepdir Direction du sweep 1 increase, 0 decrease
  * \param sweepshifts L'effet sweep de 0 à 7
@@ -68,22 +75,22 @@ void snd_playSoundOnChannel1(
 
 /**
  * \brief Joue un son sur le channel 1.
- * 
+ *
  * \param sweep Combinaison de tous les paramètres sweep (sweeptime, sweepdir, sweepshifts) de 0 à FF.
  * \param envelope Combinaison de tous les paramètres pour l'enveloppe (volume, envdir, envsteptime, waveduty) de 0 à FFFF
  * \param mode Timed 1, continuous 0
  * \param length Durée du son 0 à 3f (attention valeur inversée: 3f = court) ACTIF seulement si loopmode = 1
  * \param noteFreq Le numéro de fréquence de la note jouée. de 0 à 72 cf: const u8 freqs[NB_FREQUENCES]
  * \param transpose La valeur de transposition de 0 à FF.
- * 
- * Cette méthode est plus simple que snd_playSoundOnChannel1 mais produit le même résultat. 
+ *
+ * Cette méthode est plus simple que snd_playSoundOnChannel1 mais produit le même résultat.
  */
 void snd_simple_playSoundOnChannel1(u8 sweep, u16 envelope, u8 mode,
         u8 length, u16 noteFreq, u8 transpose);
 
 /**
- * \brief Joue un son sur le channel 2 
- * 
+ * \brief Joue un son sur le channel 2
+ *
  * @param volume de 0 à F
  * @param envdir direction de l'enveloppe 1 increase, 0 decrease
  * @param envsteptime pas de l'enveloppe de 0 à 7
@@ -100,7 +107,7 @@ void snd_playSoundOnChannel2(u16 volume,
 
 /**
  * \brief Méthode simplifiée pour jouer un son sur le channel 2. <b>NON IMPLEMENTE!</b>
- * 
+ *
  * @param envelope
  * @param mode
  * @param length
@@ -111,8 +118,8 @@ void snd_simple_playSoundOnChannel2(u16 envelope,
         u8 mode, u8 length, u8 noteFreq, u8 transpose);
 
 /**
- * \brief Joue un son sur le channel 3 
- * 
+ * \brief Joue un son sur le channel 3
+ *
  * @param volume 0 à 4
  * @param soundLength durée du son de 0 a FF (valeur inversée: FF = très court)
  * @param loopmode timed = 1, continuous = 0
@@ -133,7 +140,7 @@ void snd_simple_playSoundOnChannel3();
 
 /**
  * \brief Joue un son sur le channel 4
- *  
+ *
  * @param volume de 0 à F
  * @param envdir direction de l'enveloppe 1 increase, 0 decrease
  * @param envsteptime pas de l'enveloppe de 0 à 7
@@ -154,14 +161,14 @@ void snd_playSoundOnChannel4(u16 volume, u16 envdir, u16 envsteptime, u16 soundl
 void snd_simple_playSoundOnChannel4(u16 envelope, u8 mode, u8 length);
 
 /**
- * \brief Eteint tout les sons en cours de lecture. 
+ * \brief Eteint tout les sons en cours de lecture.
  */
 void snd_stopAllSounds();
 
 /**
  * \brief Cette fonction essaie d'appliquer en effet en dehors du contexte "note": la commande sera appliquée
  * sans jouer de note.
- * 
+ *
  * @param channelId le numéro de channel sur lequel appliquer l'effet
  * @param effectNumber le numéro d'effet à appliquer
  * @param effectValue la valeur de l'effet
@@ -179,7 +186,7 @@ kit* snd_loadKit(u8 numKit);
  * \brief Compte le nombre de kits inclus dans la cartouche. Cette fonction est "double".
  * Elle effectue le calcul la première fois qu'elle est appelée est place le résultat dans un cache.
  * Ce cache est simplement retourné lors des autres appels (le nombre de kits ne peut pas changer une fois
- * la GBA allumée). 
+ * la GBA allumée).
  */
 const u8 snd_countAvailableKits();
 
@@ -192,7 +199,7 @@ u8 snd_countSamplesInKit(kit* dat);
 
 /**
  * \brief Joue un sample sur le canal directsound A. Attention, il est nécessaire d'avoir
- * un contexte GBFS afin d'utiliser cette fonction. 
+ * un contexte GBFS afin d'utiliser cette fonction.
  * @param dat le contexte géré par GBFS
  * @param sampleNumber le numéro de sample à jouer dans le contexte GBFS
  */
@@ -201,11 +208,11 @@ void snd_playSampleOnChannelAById(u8 kitId, u8 sampleNumber);
 
 /**
  * \brief Joue un sample sur le canal A en appliquant quelques paramètres supplémentaires.
- * 
+ *
  * @param kitId le numéro de kit contenant le sample de 0 à MAX_KITS
  * @param sampleNumber le numéro de sample dans le kit de 0 à 255
  * @param volume le ratio de volume à appliquer 0 = 50% 1 = 100%
- * @param speed la vitesse d'execution du sample de 0 à F  1 = normal, 0 = 50%, F = très rapide (16x) 
+ * @param speed la vitesse d'execution du sample de 0 à F  1 = normal, 0 = 50%, F = très rapide (16x)
  * @param looping si looping est à 1, la lecture du sample sera répétée à l'infini
  * @param timedMode permet d'activer le mode timing 1 = actif 0 = inactif
  * @param length si timedMode = 1 alors ce paramètre permet de spécifier la longeur du sample 0 = 0% 64 = 100%
@@ -236,7 +243,7 @@ void snd_playOscillatorB (u8 shape, u8 freqN, u8 loopmode, u8 soundlength);
 
 /**
  * \brief Joue un sample sur le canal directsound B. Attention, il est nécessaire d'avoir
- * un contexte GBFS afin d'utiliser cette fonction. 
+ * un contexte GBFS afin d'utiliser cette fonction.
  * @param dat le contexte géré par GBFS
  * @param sampleNumber le numéro de sample à jouer dans le contexte GBFS
  */
@@ -245,11 +252,11 @@ void snd_playSampleOnChannelBById(u8 kitId, u8 sampleNumber);
 
 /**
  * \brief Joue un sample sur le canal B en appliquant quelques paramètres supplémentaires.
- * 
+ *
  * @param kitId le numéro de kit contenant le sample de 0 à MAX_KITS
  * @param sampleNumber le numéro de sample dans le kit de 0 à 255
  * @param volume le ratio de volume à appliquer 0 = 50% 1 = 100%
- * @param speed la vitesse d'execution du sample de 0 à F  1 = normal, 0 = 50%, F = très rapide (16x) 
+ * @param speed la vitesse d'execution du sample de 0 à F  1 = normal, 0 = 50%, F = très rapide (16x)
  * @param looping si looping est à 1, la lecture du sample sera répétée à l'infini
  * @param timedMode permet d'activer le mode timing 1 = actif 0 = inactif
  * @param length si timedMode = 1 alors ce paramètre permet de spécifier la longeur du sample 0 = 0% 64 = 100%

@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <math.h>
 
+// gcc gen.c -o generator -lm
+
 #define SAMPLERATE 16384
 #define LUT_SIZE  128
 #define MAX_AMPLITUDE 31
@@ -31,7 +33,7 @@ void generate_sinLuts (){
     int ii;
     int jj;
     FILE *fp= fopen("osc_sinluts.h", "w");
-
+    
     fprintf(fp, "#ifndef _SOUND_API_OSC_SINLUTS_\n");
     fprintf(fp, "#define _SOUND_API_OSC_SINLUTS_\n\n");
 
