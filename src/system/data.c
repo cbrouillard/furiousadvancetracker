@@ -820,13 +820,12 @@ void FAT_data_note_changeValue(u8 channel, u8 block, u8 noteLine, s8 addedValue)
                 FAT_tracker.allBlocks[block].notes[noteLine].freq += addedValue;
             }
         }
+
+        FAT_tracker.allBlocks[block].notes[noteLine].note = (noteName << 4) + noteOctave;
+
+        FAT_data_lastNoteWritten.freq = FAT_tracker.allBlocks[block].notes[noteLine].freq;
+        FAT_data_lastNoteWritten.note = FAT_tracker.allBlocks[block].notes[noteLine].note;
     }
-
-    FAT_tracker.allBlocks[block].notes[noteLine].note = (noteName << 4) + noteOctave;
-
-    FAT_data_lastNoteWritten.freq = FAT_tracker.allBlocks[block].notes[noteLine].freq;
-    FAT_data_lastNoteWritten.note = FAT_tracker.allBlocks[block].notes[noteLine].note;
-
 };
 
 /**

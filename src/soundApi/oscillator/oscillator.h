@@ -26,6 +26,11 @@ extern u8 shapeB;
 extern u8 freqNA;
 extern u8 freqNB;
 
+extern u8 oscLengthA;
+extern u8 loopmodeA;
+extern u8 oscLengthB;
+extern u8 loopmodeB;
+
 extern volatile bool playSnAOsc;
 extern volatile bool playSnBOsc;
 

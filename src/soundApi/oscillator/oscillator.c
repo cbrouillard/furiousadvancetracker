@@ -45,6 +45,9 @@ u32* snd_oscB;
 u8 shapeA, shapeB;
 u8 freqNA, freqNB;
 
+u8 oscLengthA, oscLengthB;
+u8 loopmodeA, loopmodeB;
+
 volatile bool playSnAOsc = 0;
 volatile bool playSnBOsc = 0;
 
@@ -56,8 +59,11 @@ void snd_playOscillatorA (u8 shape, u8 freqN, u8 loopmode, u8 soundlength){
   playSnASample = 0;
   playSnAOsc = 0;
 
+  // Controls variables
   shapeA = shape;
   freqNA = freqN;
+  loopmodeA = loopmode;
+  oscLengthA = loopmode ? soundlength : 0xff;
 
   // WITH DMA !!
   R_DMA1SRC=(unsigned long) snd_oscShapes[shape][freqN]; //dma1 source
@@ -87,6 +93,8 @@ void snd_playOscillatorB (u8 shape, u8 freqN, u8 loopmode, u8 soundlength){
 
   shapeB = shape;
   freqNB = freqN;
+  loopmodeB = loopmode;
+  oscLengthB = loopmode ? soundlength : 0xff;
 
   // WITH DMA !!
   R_DMA2SRC=(unsigned long) snd_oscShapes[shape][freqN]; //dma1 source

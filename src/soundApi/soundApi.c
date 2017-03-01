@@ -515,13 +515,19 @@ void snd_timerFunc_stopA (){
   } else {
     playSnASample = 0;
     if (playSnAOsc){
-      R_TIM1CNT=0;
-      R_DMA1SRC=(unsigned long) snd_oscShapes[shapeA][freqNA]; //dma1 source
-      //R_DMA1DST=0x040000a0; //write to FIFO A address
-      R_DMA1CNT=0xb600; //dma control: DMA enabled+ start on FIFO+32bit+repeat+increment source&dest
+      if (loopmodeA && oscLengthA){
+        oscLengthA --;
+      }
 
-      R_TIM1COUNT=0xffff - LUT_PRECISION - 1; //0xffff-the number of samples to play
-      R_TIM1CNT=0xC3; //enable timer1
+      if (oscLengthA){
+        R_TIM1CNT=0;
+        R_DMA1SRC=(unsigned long) snd_oscShapes[shapeA][freqNA]; //dma1 source
+        //R_DMA1DST=0x040000a0; //write to FIFO A address
+        R_DMA1CNT=0xb600; //dma control: DMA enabled+ start on FIFO+32bit+repeat+increment source&dest
+
+        R_TIM1COUNT=0xffff - LUT_PRECISION - 1; //0xffff-the number of samples to play
+        R_TIM1CNT=0xC3; //enable timer1
+      }
     }
   }
 }
@@ -539,12 +545,19 @@ void snd_timerFunc_stopB (){
   } else {
     playSnBSample = 0;
     if (playSnBOsc){
-      R_TIM2CNT=0;
-      R_DMA2SRC=(unsigned long) snd_oscShapes[shapeB][freqNB]; //dma1 source
-      R_DMA2CNT=0xb600; //dma control: DMA enabled+ start on FIFO+32bit+repeat+increment source&dest
 
-      R_TIM2COUNT=0xffff - LUT_PRECISION - 1; //0xffff-the number of samples to play
-      R_TIM2CNT=0xC3; //enable timer1
+      if (loopmodeB && oscLengthB){
+        oscLengthB --;
+      }
+
+      if (oscLengthB){
+        R_TIM2CNT=0;
+        R_DMA2SRC=(unsigned long) snd_oscShapes[shapeB][freqNB]; //dma1 source
+        R_DMA2CNT=0xb600; //dma control: DMA enabled+ start on FIFO+32bit+repeat+increment source&dest
+
+        R_TIM2COUNT=0xffff - LUT_PRECISION - 1; //0xffff-the number of samples to play
+        R_TIM2CNT=0xC3; //enable timer1
+      }
     }
   }
 }
