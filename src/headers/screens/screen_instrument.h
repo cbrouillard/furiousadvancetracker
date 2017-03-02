@@ -29,6 +29,7 @@ void FAT_screenInstrument_hideAllWavedutySprite();
 void FAT_screenInstrument_hideAllOscSprite();
 void FAT_screenInstrument_showEnvdir(u8 envdirValue, u8 spriteX, u8 spriteY);
 void FAT_screenInstrument_showOutput(u8 x, u8 y, u8 output);
+void FAT_screenInstrument_showCustomVoice (u8 x, u8 y, u8 customVoice);
 void FAT_screenInstrument_showWaveduty(u8 wavedutyValue, u8 spriteX, u8 spriteY);
 void FAT_screenInstrument_showOscForm(u8 oscFormValue, u8 spriteX, u8 spriteY);
 s8 FAT_screenInstrument_giveMeAddedValue();

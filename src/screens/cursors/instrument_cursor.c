@@ -24,7 +24,7 @@ const u8 INST_PULSE_BLOCK_Y[SCREENINSTRUMENT_PULSE_NB_LINES_ON_SCREEN] = {31, 39
 /** \brief Positions des emplacements de paramètre dans l'écran NOISE. */
 const u8 INST_NOISE_BLOCK_Y[SCREENINSTRUMENT_NOISE_NB_LINES_ON_SCREEN] = {31, 39, 47, 55, 79, 87, 95, 127};
 /** \brief Positions des emplacements de paramètre dans l'écran WAVE. */
-const u8 INST_WAVE_BLOCK_Y[SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN] = {31, 55, 63, 71, 79, 87, 95, 119};
+const u8 INST_WAVE_BLOCK_Y[SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN] = {31, 55, 63, 71, 79, 87, 95, 119, 95};
 /** \brief Positions des emplacements de paramètre dans l'écran SAMPLE. */
 const u8 INST_SAMPLE_BLOCK_Y[SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN] = {31, 55, 79, 87, 95, 103, 111, 95};
 /** \brief Positions des emplacements de paramètre dans l'écran OSC. */
@@ -154,22 +154,26 @@ void FAT_screenInstrument_pulse_commitCursorMove() {
  * \brief Validation du déplacement du curseur d'édition sur l'écran WAVE.
  */
 void FAT_screenInstrument_wave_commitCursorMove() {
-    switch (FAT_screenInstruments_currentSelectedLine) {
-        case 0:
-        case 1:
-        case 4:
-            FAT_cursors_moveCursor1 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
-            break;
+    if (FAT_screenInstruments_currentSelectedColumn == 0){
+      switch (FAT_screenInstruments_currentSelectedLine) {
+          case 0:
+          case 1:
+          case 4:
+          case 7:
+              FAT_cursors_moveCursor1 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+              break;
 
-        case 2:
-        case 3:
-        case 6:
-            FAT_cursors_moveCursor2 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
-            break;
-        case 5:
-        case 7:
-            FAT_cursors_moveCursor3 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
-            break;
+          case 2:
+          case 3:
+          case 6:
+              FAT_cursors_moveCursor2 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+              break;
+          case 5:
+              FAT_cursors_moveCursor3 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
+              break;
+      }
+    } else {
+        FAT_cursors_moveCursor3 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
     }
 }
 
@@ -351,33 +355,39 @@ void FAT_screenInstrument_noise_displayGoodCursor() {
  * \brief Affiche le bon curseur (taille) selon sa position sur l'écran WAVE.
  */
 void FAT_screenInstrument_wave_displayGoodCursor() {
-    switch (FAT_screenInstruments_currentSelectedLine) {
-        case -1:
-            FAT_cursors_hideCursor1();
-            FAT_cursors_hideCursor2();
-            FAT_cursors_hideCursor3();
-            break;
-        case 0:
-        case 1:
-        case 4:
-            FAT_cursors_showCursor1();
-            FAT_cursors_hideCursor2();
-            FAT_cursors_hideCursor3();
-            break;
+    if (FAT_screenInstruments_currentSelectedColumn == 0){
+      switch (FAT_screenInstruments_currentSelectedLine) {
+          case -1:
+              FAT_cursors_hideCursor1();
+              FAT_cursors_hideCursor2();
+              FAT_cursors_hideCursor3();
+              break;
+          case 0:
+          case 1:
+          case 4:
+          case 7:
+              FAT_cursors_showCursor1();
+              FAT_cursors_hideCursor2();
+              FAT_cursors_hideCursor3();
+              break;
 
-        case 2:
-        case 3:
-        case 6:
-            FAT_cursors_showCursor2();
-            FAT_cursors_hideCursor1();
-            FAT_cursors_hideCursor3();
-            break;
-        case 5:
-        case 7:
-            FAT_cursors_showCursor3();
-            FAT_cursors_hideCursor1();
-            FAT_cursors_hideCursor2();
-            break;
+          case 2:
+          case 3:
+          case 6:
+              FAT_cursors_showCursor2();
+              FAT_cursors_hideCursor1();
+              FAT_cursors_hideCursor3();
+              break;
+          case 5:
+              FAT_cursors_showCursor3();
+              FAT_cursors_hideCursor1();
+              FAT_cursors_hideCursor2();
+              break;
+      }
+    } else {
+      FAT_cursors_showCursor3();
+      FAT_cursors_hideCursor1();
+      FAT_cursors_hideCursor2();
     }
 }
 
@@ -534,15 +544,16 @@ void FAT_screenInstrument_moveCursorDown(u8 type) {
 
                 break;
             case INSTRUMENT_TYPE_WAVE:
-
-                if (FAT_screenInstruments_currentSelectedLine < SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN - 1) {
-                    if (!(FAT_screenInstrument_cursorY >= SCREENINSTRUMENTS_LAST_BLOCK_Y - 1)) {
-                        FAT_screenInstruments_currentSelectedLine++;
-                        FAT_screenInstrument_cursorY = INST_WAVE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
-                    }
-                } else {
-                    FAT_screenInstruments_currentSelectedLine = 0;
-                    FAT_screenInstrument_cursorY = INST_WAVE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
+                if (FAT_screenInstruments_currentSelectedColumn == 0){
+                  if (FAT_screenInstruments_currentSelectedLine < SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN - 2) {
+                      if (!(FAT_screenInstrument_cursorY >= SCREENINSTRUMENTS_LAST_BLOCK_Y - 1)) {
+                          FAT_screenInstruments_currentSelectedLine++;
+                          FAT_screenInstrument_cursorY = INST_WAVE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
+                      }
+                  } else {
+                      FAT_screenInstruments_currentSelectedLine = 0;
+                      FAT_screenInstrument_cursorY = INST_WAVE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
+                  }
                 }
 
                 FAT_screenInstrument_displayGoodCursor(type);
@@ -583,14 +594,16 @@ void FAT_screenInstrument_moveCursorDown(u8 type) {
 
             case INSTRUMENT_TYPE_OSCILLATORA:
             case INSTRUMENT_TYPE_OSCILLATORB:
-                if (FAT_screenInstruments_currentSelectedLine < SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN - 1) {
-                    if (!(FAT_screenInstrument_cursorY >= SCREENINSTRUMENTS_LAST_BLOCK_Y - 1)) {
-                        FAT_screenInstruments_currentSelectedLine++;
-                        FAT_screenInstrument_cursorY = INST_OSC_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
-                    }
-                } else {
-                    FAT_screenInstruments_currentSelectedLine = 0;
-                    FAT_screenInstrument_cursorY = INST_OSC_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
+                if (FAT_screenInstruments_currentSelectedColumn == 0){
+                  if (FAT_screenInstruments_currentSelectedLine < SCREENINSTRUMENT_OSC_NB_LINES_ON_SCREEN - 1) {
+                      if (!(FAT_screenInstrument_cursorY >= SCREENINSTRUMENTS_LAST_BLOCK_Y - 1)) {
+                          FAT_screenInstruments_currentSelectedLine++;
+                          FAT_screenInstrument_cursorY = INST_OSC_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
+                      }
+                  } else {
+                      FAT_screenInstruments_currentSelectedLine = 0;
+                      FAT_screenInstrument_cursorY = INST_OSC_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
+                  }
                 }
 
                 FAT_screenInstrument_displayGoodCursor(type);
@@ -634,15 +647,16 @@ void FAT_screenInstrument_moveCursorUp(u8 type) {
 
                 break;
             case INSTRUMENT_TYPE_WAVE:
-
-                if (FAT_screenInstruments_currentSelectedLine > 0) {
-                    if (!(FAT_screenInstrument_cursorY <= SCREENINSTRUMENTS_FIRST_BLOCK_Y - 1)) {
-                        FAT_screenInstruments_currentSelectedLine--;
+                if (FAT_screenInstruments_currentSelectedColumn == 0){
+                    if (FAT_screenInstruments_currentSelectedLine > 0) {
+                        if (!(FAT_screenInstrument_cursorY <= SCREENINSTRUMENTS_FIRST_BLOCK_Y - 1)) {
+                            FAT_screenInstruments_currentSelectedLine--;
+                            FAT_screenInstrument_cursorY = INST_WAVE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
+                        }
+                    } else {
+                        FAT_screenInstruments_currentSelectedLine = SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN -1;
                         FAT_screenInstrument_cursorY = INST_WAVE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
                     }
-                } else {
-                    FAT_screenInstruments_currentSelectedLine = SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN -1;
-                    FAT_screenInstrument_cursorY = INST_WAVE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
                 }
 
                 FAT_screenInstrument_displayGoodCursor(type);
@@ -667,14 +681,16 @@ void FAT_screenInstrument_moveCursorUp(u8 type) {
             case INSTRUMENT_TYPE_SAMPLEB:
 
                 if (FAT_screenInstruments_currentSelectedColumn == 0){
-                    if (FAT_screenInstruments_currentSelectedLine > 0) {
-                        if (!(FAT_screenInstrument_cursorY <= SCREENINSTRUMENTS_FIRST_BLOCK_Y - 1)) {
-                            FAT_screenInstruments_currentSelectedLine--;
+                    if (FAT_screenInstruments_currentSelectedColumn == 0){
+                        if (FAT_screenInstruments_currentSelectedLine > 0) {
+                            if (!(FAT_screenInstrument_cursorY <= SCREENINSTRUMENTS_FIRST_BLOCK_Y - 1)) {
+                                FAT_screenInstruments_currentSelectedLine--;
+                                FAT_screenInstrument_cursorY = INST_SAMPLE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
+                            }
+                        } else {
+                            FAT_screenInstruments_currentSelectedLine = SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN -2; // ignoring right col
                             FAT_screenInstrument_cursorY = INST_SAMPLE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
                         }
-                    } else {
-                        FAT_screenInstruments_currentSelectedLine = SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN -2; // ignoring right col
-                        FAT_screenInstrument_cursorY = INST_SAMPLE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
                     }
                 }
 
@@ -711,6 +727,11 @@ void FAT_screenInstrument_moveCursorRight(u8 type) {
         case INSTRUMENT_TYPE_PULSE2:
             break;
         case INSTRUMENT_TYPE_WAVE:
+            FAT_screenInstruments_currentSelectedColumn = 1;
+            FAT_screenInstrument_cursorY = INST_WAVE_BLOCK_Y[8];
+            FAT_screenInstrument_cursorX = 207;
+
+            FAT_screenInstrument_displayGoodCursor(type);
             break;
         case INSTRUMENT_TYPE_NOISE:
             break;
@@ -743,6 +764,11 @@ void FAT_screenInstrument_moveCursorLeft(u8 type) {
         case INSTRUMENT_TYPE_PULSE2:
             break;
         case INSTRUMENT_TYPE_WAVE:
+            FAT_screenInstruments_currentSelectedColumn = 0;
+            FAT_screenInstrument_cursorY = INST_WAVE_BLOCK_Y[FAT_screenInstruments_currentSelectedLine];
+            FAT_screenInstrument_cursorX = SCREENINSTRUMENTS_FIRST_BLOCK_X - 1;
+
+            FAT_screenInstrument_displayGoodCursor(type);
             break;
         case INSTRUMENT_TYPE_NOISE:
             break;
@@ -773,7 +799,7 @@ void FAT_screenInstrument_showSimulatorCursor (u8 type){
             FAT_cursors_moveCursorSimulator  (SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_PULSE_BLOCK_Y[SCREENINSTRUMENT_PULSE_NB_LINES_ON_SCREEN - 1]);
             break;
        case INSTRUMENT_TYPE_WAVE:
-            FAT_cursors_moveCursorSimulator  (SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_WAVE_BLOCK_Y[SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN - 1]);
+            FAT_cursors_moveCursorSimulator  (207,INST_WAVE_BLOCK_Y[SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN - 1]);
             break;
        case INSTRUMENT_TYPE_NOISE:
             FAT_cursors_moveCursorSimulator  (SCREENINSTRUMENTS_FIRST_BLOCK_X - 1,INST_NOISE_BLOCK_Y[SCREENINSTRUMENT_NOISE_NB_LINES_ON_SCREEN - 1]);
