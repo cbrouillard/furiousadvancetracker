@@ -28,7 +28,7 @@ OFILES += src/main.o \
  	src/screens/project.o src/screens/filesystem.o \
 	src/screens/blocks.o src/screens/composer.o src/screens/effects.o \
 	src/screens/help.o src/screens/instrument.o src/screens/live.o \
-	src/screens/song.o src/screens/notes.o \
+	src/screens/song.o src/screens/notes.o src/screens/weditor.o \
 	src/screens/cursors/blocks_cursor.o src/screens/cursors/composer_cursor.o  \
 	src/screens/cursors/filesystem_cursor.o src/screens/cursors/instrument_cursor.o \
 	src/screens/cursors/live_cursor.o src/screens/cursors/notes_cursor.o \

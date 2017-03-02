@@ -53,6 +53,7 @@ void FAT_popup_showCursors();
 void FAT_popup_checkButtons();
 void FAT_popup_moveSelectionCursorRight();
 void FAT_popup_moveSelectionCursorLeft();
+void FAT_popup_moveSelectionCursorUp();
 void FAT_popup_commitSelectionCursorMove();
 u8 FAT_popup_getSelectedIcon();
 void FAT_popup_setSelectedIcon (u8 value);

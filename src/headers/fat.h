@@ -55,6 +55,8 @@
 #define SCREEN_FILESYSTEM_ID 8
 /** \brief Id écran help. */
 #define SCREEN_HELP_ID 9
+/** \brief Ecran d'edition d'onde */
+#define SCREEN_WEDITOR_ID 10
 
 #define SCREEN_DIALOG_ANY 100
 
@@ -77,6 +79,7 @@ extern u8 FAT_live_nbChannelPlaying;
 
 void FAT_init();
 void FAT_showHelp(u8 screenId);
+void FAT_showWaveEditor ();
 void FAT_switchToScreen(u8 screenId, u8 fromId);
 void FAT_mainLoop();
 void FAT_allScreen_singleCheckButtons();
@@ -115,5 +118,6 @@ void FAT_setCurrentScreen (u8 screen);
 #include "screens/screen_instrument.h"
 #include "screens/screen_effects.h"
 #include "screens/screen_help.h"
+#include "screens/screen_weditor.h"
 
 #endif

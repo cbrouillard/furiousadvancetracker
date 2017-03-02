@@ -56,7 +56,7 @@
  * synthé dans LSDJ. */
 #define NB_MAX_VOICE 16
 /** \brief Définit le nombre de maximale de voix custom. */
-#define NB_MAX_CUSTOM_VOICE 5
+#define NB_MAX_CUSTOM_VOICE 3
 /** \brief Taille maximale pour le nom d'une chanson. */
 #define SONG_NAME_MAX_LETTERS 9
 /** \brief Type d'instrument PULSE 1 */

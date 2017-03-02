@@ -129,6 +129,7 @@ void FAT_init() {
     FAT_screenBlocks_initCursor();
     FAT_screenComposer_initCursor();
     FAT_screenFilesystem_initCursor();
+    FAT_screenWeditor_initWaveEditorSprites();
 
     // intialisation des données "tracker" stockées en RAM
     FAT_data_initData();
@@ -225,14 +226,12 @@ void FAT_reinitScreen() {
  */
 void FAT_forceClearTextLayer() {
     if (ham_bg[TEXT_LAYER].ti) {
-
         ham_DeInitTileSet(ham_bg[TEXT_LAYER].ti);
         ham_DeInitMapSet(ham_bg[TEXT_LAYER].mi);
 
         ham_bg[TEXT_LAYER].ti = ham_InitTileSet((void*) ResData(RES_TEXT_RAW), RES_TEXT_RAW_SIZE16, 1, 1);
         ham_bg[TEXT_LAYER].mi = ham_InitMapEmptySet((u8) 1024, 0);
     }
-
 }
 
 void FAT_allScreen_singleCheckButtons() {
@@ -266,7 +265,9 @@ void FAT_allScreen_singleCheckButtons() {
             break;
         case SCREEN_HELP_ID:
             FAT_screenHelp_checkButtons();
-
+            break;
+        case SCREEN_WEDITOR_ID:
+            FAT_screenWeditor_checkButtons ();
             break;
     }
 }
@@ -337,4 +338,9 @@ void FAT_switchToScreen(u8 screenId, u8 fromId) {
  */
 void FAT_showHelp(u8 screenId) {
     FAT_screenHelp_init(screenId);
+}
+
+void FAT_showWaveEditor (){
+    FAT_currentScreen = SCREEN_WEDITOR_ID;
+    FAT_screenWeditor_init();
 }

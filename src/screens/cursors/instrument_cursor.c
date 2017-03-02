@@ -24,7 +24,7 @@ const u8 INST_PULSE_BLOCK_Y[SCREENINSTRUMENT_PULSE_NB_LINES_ON_SCREEN] = {31, 39
 /** \brief Positions des emplacements de paramètre dans l'écran NOISE. */
 const u8 INST_NOISE_BLOCK_Y[SCREENINSTRUMENT_NOISE_NB_LINES_ON_SCREEN] = {31, 39, 47, 55, 79, 87, 95, 127};
 /** \brief Positions des emplacements de paramètre dans l'écran WAVE. */
-const u8 INST_WAVE_BLOCK_Y[SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN] = {31, 55, 63, 71, 79, 87, 95, 119, 95};
+const u8 INST_WAVE_BLOCK_Y[SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN] = {31, 55, 63, 71, 79, 87, 95, 119, 127, 95};
 /** \brief Positions des emplacements de paramètre dans l'écran SAMPLE. */
 const u8 INST_SAMPLE_BLOCK_Y[SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN] = {31, 55, 79, 87, 95, 103, 111, 95};
 /** \brief Positions des emplacements de paramètre dans l'écran OSC. */
@@ -169,6 +169,7 @@ void FAT_screenInstrument_wave_commitCursorMove() {
               FAT_cursors_moveCursor2 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
               break;
           case 5:
+          case 8:
               FAT_cursors_moveCursor3 (FAT_screenInstrument_cursorX, FAT_screenInstrument_cursorY);
               break;
       }
@@ -379,6 +380,7 @@ void FAT_screenInstrument_wave_displayGoodCursor() {
               FAT_cursors_hideCursor3();
               break;
           case 5:
+          case 8:
               FAT_cursors_showCursor3();
               FAT_cursors_hideCursor1();
               FAT_cursors_hideCursor2();
@@ -728,7 +730,7 @@ void FAT_screenInstrument_moveCursorRight(u8 type) {
             break;
         case INSTRUMENT_TYPE_WAVE:
             FAT_screenInstruments_currentSelectedColumn = 1;
-            FAT_screenInstrument_cursorY = INST_WAVE_BLOCK_Y[8];
+            FAT_screenInstrument_cursorY = INST_WAVE_BLOCK_Y[9];
             FAT_screenInstrument_cursorX = 207;
 
             FAT_screenInstrument_displayGoodCursor(type);

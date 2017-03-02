@@ -28,6 +28,9 @@ u8 FAT_screenInstrument_isTabulating = 0;
 // quel instrument est en cours d'édition ?
 /** \brief L'id de l'instrument en cours d'édition. */
 u8 FAT_screenInstrument_currentInstrumentId;
+u8 FAT_screenInstrument_getCurrentInstrumentId (){
+  return FAT_screenInstrument_currentInstrumentId;
+}
 
 // sprites utiles à l'affichage de certaines données
 /** \brief Sprite pour la direction de l'enveloppe: valeur 0. */
@@ -104,6 +107,7 @@ void FAT_screenInstrument_printAllText(u8 type) {
             }
             FAT_screenInstrument_showOutput(1, 12, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
             FAT_screenInstrument_showCustomVoice(1, 15, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].customVoice);
+            hel_BgTextPrint(TEXT_LAYER, 1, 16, 0, "Edit wave GO!");
 
             hel_BgTextPrintF(TEXT_LAYER, 16, 12, 0, "Test it!  %s%1x\0",
                     noteName[(FAT_data_simulator->note & 0xf0) >> 4], FAT_data_simulator->note & 0x0f);
@@ -839,6 +843,9 @@ void FAT_screenInstrument_wave_pressA() {
           case 7: // CUSTOM WAVE
               FAT_data_instrumentWave_changeCustomWave (FAT_screenInstrument_currentInstrumentId, addedValue);
               break;
+          case 8: // Go to editor
+              FAT_showWaveEditor();
+              return;
       }
     } else {
       FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);

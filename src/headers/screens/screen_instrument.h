@@ -18,6 +18,7 @@
 #define	_SCREEN_INSTRUMENT_H_
 
 void FAT_screenInstrument_printInstrumentNumber();
+u8 FAT_screenInstrument_getCurrentInstrumentId ();
 void FAT_screenInstrument_printAllText(u8 type);
 void FAT_screenInstrument_init();
 void FAT_screenInstrument_switchScreen(u8 type);
