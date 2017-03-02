@@ -91,6 +91,27 @@ void FAT_screenWeditor_init() {
   }
 
   FAT_screenWeditor_printAllText ();
+
+  FAT_screenWeditor_initCursor();
+  FAT_screenWeditor_commitCursorMove();
+  FAT_cursors_showCursor2();
+}
+
+void FAT_screenWeditor_pressOrHeldA() {
+
+  u8 nData = FAT_screenWeditor_getSelectedLine() / 4;
+  u8 part = FAT_screenWeditor_getSelectedLine() - (part * 4);
+
+  if (hel_PadQuery()->Pressed.Right) {
+      FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, nData, part, 1);
+  }
+
+  if (hel_PadQuery()->Pressed.Left) {
+      FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, nData, part, -1);
+  }
+
+  FAT_screenWeditor_printAllText ();
+  FAT_screenWeditor_setSpinnersPositions ();
 }
 
 void FAT_screenWeditor_checkButtons (){
@@ -115,13 +136,41 @@ void FAT_screenWeditor_checkButtons (){
 
       }
 
+      if (hel_PadQuery()->Held.A || hel_PadQuery()->Pressed.A) {
+          FAT_screenWeditor_pressOrHeldA();
+
+      } else {
+
+          if (hel_PadQuery()->Held.R) {
+
+          }else {
+
+              if (hel_PadQuery()->Pressed.Down) {
+                  if (hel_PadQuery()->Held.L) {
+                      FAT_screenWeditor_moveCursorAllDown();
+                  } else {
+                      FAT_screenWeditor_moveCursorDown();
+                  }
+              }
+
+              if (hel_PadQuery()->Pressed.Up) {
+                  if (hel_PadQuery()->Held.L) {
+                      FAT_screenWeditor_moveCursorAllUp();
+                  } else {
+                      FAT_screenWeditor_moveCursorUp();
+                  }
+              }
+
+              FAT_screenWeditor_commitCursorMove();
+          }
+      }
   }
 }
 
 void FAT_screenWeditor_initWaveEditorSprites (){
   u8 i;
   for (i = 0; i < 16; i++){
-    FAT_screenWeditor_spinner[i] = hel_ObjCreate(ResData(RES_CURSOR1_RAW), // Pointer to source graphic
+    FAT_screenWeditor_spinner[i] = hel_ObjCreate(ResData(RES_SPINNER_RAW), // Pointer to source graphic
                                                           OBJ_SHAPE_SQUARE,       // Obj Shape
                                                           1,                      // Obj Size, 1 means 16x16 pixels, if Shape is set to SQUARE
                                                           OBJ_MODE_SEMITRANSPARENT,        // Obj Mode

@@ -2090,3 +2090,19 @@ void FAT_data_wave_initIfNeeded (u8 customVoiceId, u8 instrumentId){
   }
 
 }
+
+void FAT_data_wave_changeValue (u8 customVoiceId, u8 dataNumber, u8 part, s8 addedValue) {
+    if (customVoiceId != NULL_VALUE){
+          wave* customVoice = &(FAT_tracker.customVoice[customVoiceId]);
+
+          u32 data = (customVoice->data[dataNumber] >> (8*part)) & 0x000000ff;
+          if (
+            (addedValue > 0 && data < 0xFF) ||
+            (addedValue < 0 && data > 0)
+          ) {
+              data += addedValue;
+          }
+
+          customVoice->data[dataNumber] = customVoice->data[dataNumber] | (data << (8*part));
+    }
+}

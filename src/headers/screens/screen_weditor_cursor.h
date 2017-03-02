@@ -7,20 +7,23 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- */
+*/
 
 /**
- * \file screen_weditor.h
- * \brief Fichier réservé pour la gestion de l'écran edition de wave.
+ * \file screen_weditor_cursor.h
+ * \brief Fichier de gestion du curseur pour l'écran d'dition voice.
  */
 
-#ifndef _SCREEN_WEDITOR_H_
-#define _SCREEN_WEDITOR_H_
+#ifndef _SCREEN_WEDITOR_CURSOR_H_
+#define	_SCREEN_WEDITOR_CURSOR_H_
 
-void FAT_screenWeditor_init();
-void FAT_screenWeditor_checkButtons ();
-void FAT_screenWeditor_initWaveEditorSprites ();
+void FAT_screenWeditor_initCursor();
+void FAT_screenWeditor_moveCursorDown();
+void FAT_screenWeditor_moveCursorUp();
+void FAT_screenWeditor_commitCursorMove();
+void FAT_screenWeditor_moveCursorAllUp ();
+void FAT_screenWeditor_moveCursorAllDown ();
 
-#include "screen_weditor_cursor.h"
+u8 FAT_screenWeditor_getSelectedLine();
 
 #endif

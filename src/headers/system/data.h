@@ -469,5 +469,6 @@ void FAT_data_composer_resetAffectedChannel(u8 line);
 void FAT_data_composer_changeAffectedChannelValue(u8 line, s8 addedValue);
 
 void FAT_data_wave_initIfNeeded (u8 customVoiceId, u8 instrumentId);
+void FAT_data_wave_changeValue (u8 customVoiceId, u8 dataNumber, u8 part, s8 addedValue);
 
 #endif	/* DATA_H */
