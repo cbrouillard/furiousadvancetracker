@@ -681,7 +681,11 @@ void FAT_screenInstrument_showOutput(u8 x, u8 y, u8 output) {
 }
 
 void FAT_screenInstrument_showCustomVoice (u8 x, u8 y, u8 customVoice) {
-    hel_BgTextPrintF(TEXT_LAYER, x, y, 0, "Wave      %.1x", customVoice & 0x0f);
+    if (customVoice == NULL_VALUE){
+      hel_BgTextPrintF(TEXT_LAYER, x, y, 0, "Wave      X");
+    }else {
+      hel_BgTextPrintF(TEXT_LAYER, x, y, 0, "Wave      %.1x", customVoice & 0x0f);
+    }
 }
 
 /**
@@ -833,8 +837,7 @@ void FAT_screenInstrument_wave_pressA() {
               FAT_data_instrumentWave_changeOutput(FAT_screenInstrument_currentInstrumentId, addedValue);
               break;
           case 7: // CUSTOM WAVE
-
-
+              FAT_data_instrumentWave_changeCustomWave (FAT_screenInstrument_currentInstrumentId, addedValue);
               break;
       }
     } else {

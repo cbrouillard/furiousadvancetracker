@@ -1582,6 +1582,32 @@ void FAT_data_instrumentWave_changeVoice(u8 instrumentId, s8 value) {
     FAT_tracker.allInstruments[instrumentId].voiceAndBank = bankMode | bank | voice;
 }
 
+void FAT_data_instrumentWave_changeCustomWave (u8 instrumentId, s8 value){
+  u8 customVoice = FAT_tracker.allInstruments[instrumentId].customVoice;
+  if (value < -1 || value > 1) {
+      customVoice = NULL_VALUE;
+  } else {
+
+    if (customVoice == NULL_VALUE && (value == -1 || value == 1)){
+      customVoice = 0;
+    } else {
+      if (
+          (value < 0 && customVoice > (-value - 1)) ||
+          (value > 0 && customVoice < NB_MAX_CUSTOM_VOICE - value)
+      ) {
+          customVoice += value;
+      } else if (value < 0){
+        customVoice = 0;
+      } else if (value > 0){
+        customVoice = NB_MAX_CUSTOM_VOICE - 1;
+      }
+    }
+  }
+
+  FAT_tracker.allInstruments[instrumentId].customVoice = customVoice;
+  FAT_data_wave_initIfNeeded (customVoice, instrumentId);
+}
+
 /**
  * \brief Change le paramètre "bank" (le numéro de la bank à jouer) pour un instrument de
  * type WAVE.
@@ -2040,4 +2066,27 @@ void FAT_data_project_changeBufferingInLive (s8 addedValue){
     } else if (addedValue > 0) {
         FAT_tracker.bufferChangeInLive = 1;
     }
+}
+
+void FAT_data_wave_initIfNeeded (u8 customVoiceId, u8 instrumentId){
+  if (customVoiceId != NULL_VALUE){
+    wave* customVoice = &(FAT_tracker.customVoice[customVoiceId]);
+    if (  customVoice->data[0] == 0xffffffff &&
+          customVoice->data[1] == 0xffffffff &&
+          customVoice->data[2] == 0xffffffff &&
+          customVoice->data[3] == 0xffffffff) {
+
+          u8 modelVoice = FAT_tracker.allInstruments[instrumentId].voiceAndBank & 0x1f;
+
+          customVoice->data[0] = voices [ (modelVoice >> 2) ];
+          customVoice->data[1] = voices [ (modelVoice >> 2) +1];
+          customVoice->data[2] = voices [ (modelVoice >> 2) +2];
+          customVoice->data[3] = voices [ (modelVoice >> 2) +3];
+
+          #ifdef DEBUG_ON
+          hel_BgTextPrintF(TEXT_LAYER, 0, 13, 0, "#%x %x %x %x", customVoice->data[0], customVoice->data[1], customVoice->data[2], customVoice->data[3]);
+          #endif
+    }
+  }
+
 }

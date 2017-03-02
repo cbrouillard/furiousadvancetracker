@@ -296,4 +296,6 @@ void snd_fifoB_setOutput (u8 output);
 void snd_fifoA_setVolume (u8 volume);
 void snd_fifoB_setVolume (u8 volume);
 
+extern const unsigned long voices[];
+
 #endif

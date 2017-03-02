@@ -315,7 +315,7 @@ typedef struct FAT {
     voice voices[NB_MAX_VOICE]; /*!< Les voix disponibles. Une voix = un synthé LSDJ. */
     table tables[NB_MAX_TABLES]; /*!< Tableau (physique) contenant toutes les tables. */
     livedata liveData;
-    wave editedVoice[NB_MAX_CUSTOM_VOICE];
+    wave customVoice[NB_MAX_CUSTOM_VOICE];
 } tracker;
 
 /**
@@ -445,6 +445,7 @@ void FAT_data_instrumentWave_changeBankmode(u8 instrumentId, s8 value);
 void FAT_data_instrumentSample_changeSpeed(u8 instrumentId, s8 value);
 void FAT_data_instrumentSample_changeLooping(u8 instrumentId, s8 value);
 void FAT_data_instrumentSample_changeOffset(u8 instrumentId, s8 value);
+void FAT_data_instrumentWave_changeCustomWave (u8 instrumentId, s8 value);
 
 void FAT_data_project_changeTempo(s8 addedValue);
 void FAT_data_project_changeTranspose(s8 addedValue);
@@ -466,5 +467,7 @@ void FAT_data_composer_changeTranspose(u8 composer, s8 value);
 void FAT_data_composer_changeKeyRepeat(u8 composer, s8 value);
 void FAT_data_composer_resetAffectedChannel(u8 line);
 void FAT_data_composer_changeAffectedChannelValue(u8 line, s8 addedValue);
+
+void FAT_data_wave_initIfNeeded (u8 customVoiceId, u8 instrumentId);
 
 #endif	/* DATA_H */
