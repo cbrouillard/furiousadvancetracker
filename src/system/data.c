@@ -2095,14 +2095,22 @@ void FAT_data_wave_changeValue (u8 customVoiceId, u8 dataNumber, u8 part, s8 add
     if (customVoiceId != NULL_VALUE){
           wave* customVoice = &(FAT_tracker.customVoice[customVoiceId]);
 
-          u32 data = (customVoice->data[dataNumber] >> (8*part)) & 0x000000ff;
+          int data = (customVoice->data[dataNumber] >> (8*part)) & 0x000000ff;
+
+
+
           if (
             (addedValue > 0 && data < 0xFF) ||
             (addedValue < 0 && data > 0)
           ) {
               data += addedValue;
+
           }
 
-          customVoice->data[dataNumber] = customVoice->data[dataNumber] | (data << (8*part));
+          customVoice->data[dataNumber] &= (0xffffff00 << (8*part)) + (0xff*part);
+          hel_BgTextPrintF(TEXT_LAYER, 16, 12, 0, "%x", customVoice->data[dataNumber]);
+          customVoice->data[dataNumber] |= (data << (8*part));
+
+
     }
 }

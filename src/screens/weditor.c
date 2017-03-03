@@ -100,18 +100,21 @@ void FAT_screenWeditor_init() {
 void FAT_screenWeditor_pressOrHeldA() {
 
   u8 nData = FAT_screenWeditor_getSelectedLine() / 4;
-  u8 part = FAT_screenWeditor_getSelectedLine() - (part * 4);
+  u8 part = FAT_screenWeditor_getSelectedLine() - (nData * 4);
 
   if (hel_PadQuery()->Pressed.Right) {
       FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, nData, part, 1);
+      FAT_screenWeditor_printAllText ();
+      FAT_screenWeditor_setSpinnersPositions ();
   }
 
   if (hel_PadQuery()->Pressed.Left) {
       FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, nData, part, -1);
+      FAT_screenWeditor_printAllText ();
+      FAT_screenWeditor_setSpinnersPositions ();
   }
 
-  FAT_screenWeditor_printAllText ();
-  FAT_screenWeditor_setSpinnersPositions ();
+
 }
 
 void FAT_screenWeditor_checkButtons (){
