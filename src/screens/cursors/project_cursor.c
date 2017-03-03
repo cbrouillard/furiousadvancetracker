@@ -22,7 +22,7 @@
 /**
  * \brief Tableau constant des positions des blocs de données sur l'écran.
  */
-const u8 PROJECT_PULSE_BLOCK_Y[SCREENPROJECT_NB_LINES_ON_SCREEN] = {31, 39, 63, 71, 79, 103, 111, 119, 63};
+const u8 PROJECT_PULSE_BLOCK_Y[SCREENPROJECT_NB_LINES_ON_SCREEN] = {31, 39, 47, 71, 79, 87, 111, 119, 127, 63};
 
 /** \brief Position actuelle du curseur de sélection. */
 u8 FAT_screenProject_cursorX;
@@ -45,18 +45,19 @@ u8 FAT_screenProject_getCurrentSelectedColumn(){
 void FAT_screenProject_commitCursorMove() {
     switch (FAT_screenProject_currentSelectedLine) {
         case 0:
-        case 3:
         case 4:
+        case 5:
             FAT_cursors_moveCursor3 (FAT_screenProject_cursorX, FAT_screenProject_cursorY);
             break;
-        case 8:
+        case 9:
             FAT_cursors_moveCursor3 ((SCREENPROJECT_FIRST_BLOCK_X-1) + 120, FAT_screenProject_cursorY);
             break;
         case 1:
         case 2:
-        case 5:
+        case 3:
         case 6:
         case 7:
+        case 8:
             FAT_cursors_moveCursor2 (FAT_screenProject_cursorX, FAT_screenProject_cursorY);
             break;
     }
@@ -68,17 +69,18 @@ void FAT_screenProject_commitCursorMove() {
 void FAT_screenProject_displayGoodCursor() {
     switch (FAT_screenProject_currentSelectedLine) {
         case 0:
-        case 3:
         case 4:
-        case 8:
+        case 5:
+        case 9:
             FAT_cursors_hideCursor2();
             FAT_cursors_showCursor3();
             break;
         case 1:
         case 2:
-        case 5:
+        case 3:
         case 6:
         case 7:
+        case 8:
             FAT_cursors_hideCursor3();
             FAT_cursors_showCursor2();
             break;
@@ -105,7 +107,7 @@ void FAT_screenProject_initCursor() {
  * \brief Déplace le curseur vers la droite.
  */
 void FAT_screenProject_moveCursorRight() {
-    FAT_screenProject_currentSelectedLine = 8;
+    FAT_screenProject_currentSelectedLine = 9;
     FAT_screenProject_cursorY = PROJECT_PULSE_BLOCK_Y[FAT_screenProject_currentSelectedLine];
     FAT_screenProject_displayGoodCursor();
 }
@@ -114,7 +116,7 @@ void FAT_screenProject_moveCursorRight() {
  * \brief Déplace le curseur vers la gauche.
  */
 void FAT_screenProject_moveCursorLeft() {
-    FAT_screenProject_currentSelectedLine = 2;
+    FAT_screenProject_currentSelectedLine = 3;
     FAT_screenProject_cursorY = PROJECT_PULSE_BLOCK_Y[FAT_screenProject_currentSelectedLine];
     FAT_screenProject_displayGoodCursor();
 }

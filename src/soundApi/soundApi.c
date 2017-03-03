@@ -111,7 +111,7 @@ void snd_timerFunc_stopB ();
 
 void snd_loadWav(u8 inst);
 
-void snd_init_soundApi() {
+void snd_init_soundApi(u8 sampleRate) {
 
     // activation de la puce sonore
     REG_SOUNDCNT_X = 0x80;
@@ -128,12 +128,22 @@ void snd_init_soundApi() {
     hel_IntrStartHandler(INT_TYPE_TIM1, (void*) &snd_timerFunc_stopA);
     hel_IntrStartHandler(INT_TYPE_TIM2, (void*) &snd_timerFunc_stopB);
 
+    snd_setSampleRate (sampleRate);
+
     playSnASample = 0;
     playSnBSample = 0;
     playSnAOsc = 0;
     playSnBOsc = 0;
 
     snd_synthFM_init();
+}
+
+void snd_setSampleRate (u8 sampleRate){
+  // Timer playback pour les samples
+  R_TIM0CNT = 0;
+  // 65536-round(2^24/16000)
+  R_TIM0COUNT = 65536-(16777216/(sampleRate*1000));
+  R_TIM0CNT = 0x0080; //enable timer0
 }
 
 u8 snd_calculateTransposedFrequency(u8 freq, u8 transpose) {
@@ -319,7 +329,17 @@ void snd_stopAllSounds() {
     playSnAOsc = 0;
     playSnBOsc = 0;
 
-    snd_init_soundApi();
+    //snd_init_soundApi(); // wtf.
+
+    // activation de la puce sonore
+    REG_SOUNDCNT_X = 0x80;
+
+    // volume à fond, activation stéréo des 4 canaux
+    // activation des directsound A et B en mode timer 0 et 1
+    REG_SOUNDCNT_L = 0xff77;
+    REG_SOUNDCNT_H = 0xbb0e;
+
+    REG_SOUND3CNT_L = SOUND3BANK32 | SOUND3SETBANK1;
 }
 
 void snd_effect_kill(u8 channelId, u8 value) {
@@ -637,12 +657,6 @@ void snd_playChannelASample(u8 kitId, u8 sampleNumber,
             R_TIM1COUNT=0xffff - (snASmpSize - snASampleOffset); //0xffff-the number of samples to play
             R_TIM1CNT=0xC3; //enable timer1
 
-            // Timer playback pour les samples
-            R_TIM0CNT = 0;
-            // 65536-round(2^24/16000)
-            R_TIM0COUNT = 0xFBE8; // + ((snBSpeed * 100) - 100); //16khz playback freq
-            R_TIM0CNT = 0x0080; //enable timer0
-
             playSnASample = 1;
 
         }
@@ -705,12 +719,6 @@ void snd_playChannelBSample(u8 kitId, u8 sampleNumber,
             R_DMA2CNT=0xb600; //dma control: DMA enabled+ start on FIFO+32bit+repeat+increment source&dest
             R_TIM2COUNT=0xffff - (snBSmpSize - snBSampleOffset); //0xffff-the number of samples to play
             R_TIM2CNT=0xC3; //enable timer
-
-            // Timer playback pour les samples
-            R_TIM0CNT = 0;
-            // 65536-round(2^24/16000)
-            R_TIM0COUNT = 0xFBE8;// + ((snBSpeed * 100) - 100); //16khz playback freq
-            R_TIM0CNT = 0x0080; //enable timer0
 
             playSnBSample = 1;
         }

@@ -25,7 +25,7 @@
 #define SCREENPROJECT_LAST_BLOCK_Y 136
 
 /** \brief Nombre de lignes affichées à l'écran. */
-#define SCREENPROJECT_NB_LINES_ON_SCREEN 9
+#define SCREENPROJECT_NB_LINES_ON_SCREEN 10
 
 void FAT_screenProject_commitCursorMove();
 void FAT_screenProject_displayGoodCursor();

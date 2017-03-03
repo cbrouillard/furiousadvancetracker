@@ -316,6 +316,7 @@ typedef struct FAT {
     table tables[NB_MAX_TABLES]; /*!< Tableau (physique) contenant toutes les tables. */
     livedata liveData;
     wave customVoice[NB_MAX_CUSTOM_VOICE];
+    u8 sampleRate; // Le taux d'échantillonage (/1000), 16 par défaut pour 16000Hz.
 } tracker;
 
 /**
@@ -453,6 +454,7 @@ void FAT_data_project_changeKeyRepeat(s8 addedValue);
 void FAT_data_project_changePreview(s8 addedValue);
 void FAT_data_project_changeGreedPlay (s8 addedValue);
 void FAT_data_project_changeBufferingInLive (s8 addedValue);
+void FAT_data_project_changeSampleRate (s8 addedValue);
 
 bool FAT_data_composer_isNoteEmpty(u8 line);
 void FAT_data_composer_previewNote(u8 line);

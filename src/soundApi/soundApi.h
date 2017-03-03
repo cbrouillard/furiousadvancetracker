@@ -44,7 +44,9 @@ extern volatile bool playSnBSample;
 /**
  * \brief Initialise le mode audio sur la Gameboy: active les 4 canaux.
  **/
-void snd_init_soundApi();
+void snd_init_soundApi(u8 sampleRate);
+
+void snd_setSampleRate (u8 sampleRate);
 
 /**
  * \brief Précharge les kits présents dans la cartouche.

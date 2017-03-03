@@ -33,12 +33,14 @@ bool FAT_screenProject_isPopuped = 0;
 void FAT_screenProject_printInfos() {
     hel_BgTextPrintF(TEXT_LAYER, 1, 4, 0, "Tempo     %3d", FAT_tracker.tempo);
     hel_BgTextPrintF(TEXT_LAYER, 1, 5, 0, "Transpose %.2x", FAT_tracker.transpose);
-    hel_BgTextPrintF(TEXT_LAYER, 1, 8, 0, "KeyRepeat %.2x   Buffering %.3s", FAT_tracker.keyRepeat, yesOrNo[FAT_tracker.bufferChangeInLive != 0]);
-    hel_BgTextPrintF(TEXT_LAYER, 1, 9, 0, "Preview   %.3s", yesOrNo[FAT_tracker.previewEnable != 0]);
-    hel_BgTextPrintF(TEXT_LAYER, 1, 10, 0, "GreedPlay %.3s", yesOrNo[FAT_tracker.greedPlay != 0]);
-    hel_BgTextPrintF(TEXT_LAYER, 1, 13, 0, "New  Prj  OK");
-    hel_BgTextPrintF(TEXT_LAYER, 1, 14, 0, "Save Prj  OK");
-    hel_BgTextPrintF(TEXT_LAYER, 1, 15, 0, "Load Prj  OK");
+    hel_BgTextPrintF(TEXT_LAYER, 1, 6, 0, "SamplRate %.2x", FAT_tracker.sampleRate);
+    hel_BgTextPrintF(TEXT_LAYER, 16, 8, 0, "Buffering %.3s", yesOrNo[FAT_tracker.bufferChangeInLive != 0]);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 9, 0, "KeyRepeat %.2x", FAT_tracker.keyRepeat);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 10, 0, "Preview   %.3s", yesOrNo[FAT_tracker.previewEnable != 0]);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 11, 0, "GreedPlay %.3s", yesOrNo[FAT_tracker.greedPlay != 0]);
+    hel_BgTextPrintF(TEXT_LAYER, 1, 14, 0, "New  Prj  OK");
+    hel_BgTextPrintF(TEXT_LAYER, 1, 15, 0, "Save Prj  OK");
+    hel_BgTextPrintF(TEXT_LAYER, 1, 16, 0, "Load Prj  OK");
 
     hel_BgTextPrintF(TEXT_LAYER, 1, 1, 0, "FAT project v%s", FAT_VERSION);
 }
@@ -173,38 +175,40 @@ void FAT_screenProject_pressOrHeldA() {
             FAT_screenProject_printInfos();
             break;
         case 2:
-            FAT_data_project_changeKeyRepeat(addedValue);
+            FAT_data_project_changeSampleRate (addedValue);
             FAT_screenProject_printInfos();
             break;
         case 3:
-            FAT_data_project_changePreview(addedValue);
+            FAT_data_project_changeKeyRepeat(addedValue);
             FAT_screenProject_printInfos();
             break;
         case 4:
-            FAT_data_project_changeGreedPlay(addedValue);
+            FAT_data_project_changePreview(addedValue);
             FAT_screenProject_printInfos();
             break;
         case 5:
-            FAT_yesno_show(DIALOG_NEW);
+            FAT_data_project_changeGreedPlay(addedValue);
+            FAT_screenProject_printInfos();
             break;
         case 6:
+            FAT_yesno_show(DIALOG_NEW);
+            break;
+        case 7:
             FAT_cursors_hideCursor3();
             FAT_cursors_hideCursor2();
             FAT_screenFilesystem_setMode(FILESYSTEM_MODE_SAVE);
             FAT_switchToScreen(SCREEN_FILESYSTEM_ID, SCREEN_PROJECT_ID);
             break;
-        case 7:
+        case 8:
             FAT_cursors_hideCursor3();
             FAT_cursors_hideCursor2();
             FAT_screenFilesystem_setMode(FILESYSTEM_MODE_LOAD);
             FAT_switchToScreen(SCREEN_FILESYSTEM_ID, SCREEN_PROJECT_ID);
             break;
-        case 8:
+        case 9:
             FAT_data_project_changeBufferingInLive(addedValue);
             FAT_screenProject_printInfos();
             break;
-
-
     }
 
 }

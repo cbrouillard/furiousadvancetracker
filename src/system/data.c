@@ -152,6 +152,7 @@ void FAT_data_initData() {
         memset(&(FAT_tracker.allSequences[i].transpose), 0, sizeof (u8)*NB_BLOCKS_IN_SEQUENCE);
     }
 
+    FAT_tracker.sampleRate = 16;
 }
 
 /**
@@ -2037,6 +2038,25 @@ void FAT_data_project_changeKeyRepeat(s8 addedValue) {
     } else if (addedValue > 0){
         FAT_data_project_changeKeyRepeat (MAX_KEYREPEAT - FAT_tracker.keyRepeat - 1);
     }
+}
+
+void FAT_data_project_changeSampleRate (s8 addedValue){
+  if(
+    (addedValue > 0 && FAT_tracker.sampleRate < (0xFF - addedValue)) ||
+    (addedValue < 0 && FAT_tracker.sampleRate > (-addedValue -1))
+  ) {
+    FAT_tracker.sampleRate += addedValue;
+  } else {
+    if (addedValue > 0){
+      FAT_tracker.sampleRate = 0xFF;
+    } else if(addedValue < 0) {
+      FAT_tracker.sampleRate = 0;
+    }
+  }
+
+  if (addedValue != 0){
+    snd_setSampleRate (FAT_tracker.sampleRate);
+  }
 }
 
 /**

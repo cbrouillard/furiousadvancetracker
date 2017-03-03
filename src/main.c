@@ -51,7 +51,7 @@ int main() {
     FAT_init();
 
     snd_init_kits();
-    snd_init_soundApi();
+    snd_init_soundApi(FAT_tracker.sampleRate);
 
     FAT_showIntro();
 
