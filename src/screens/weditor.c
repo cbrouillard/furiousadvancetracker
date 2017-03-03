@@ -114,6 +114,17 @@ void FAT_screenWeditor_pressOrHeldA() {
       FAT_screenWeditor_setSpinnersPositions ();
   }
 
+  if (hel_PadQuery()->Pressed.Up) {
+    FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, nData, part, 16);
+    FAT_screenWeditor_printAllText ();
+    FAT_screenWeditor_setSpinnersPositions ();
+  }
+
+  if (hel_PadQuery()->Pressed.Down) {
+    FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, nData, part, -16);
+    FAT_screenWeditor_printAllText ();
+    FAT_screenWeditor_setSpinnersPositions ();
+  }
 
 }
 
@@ -134,7 +145,7 @@ void FAT_screenWeditor_checkButtons (){
       if (FAT_screenWeditor_isPopuped) {
           FAT_popup_hide();
           FAT_screenWeditor_isPopuped = 0;
-
+          FAT_screenWeditor_hideAllEditorSprites ();
           FAT_switchToScreen(FAT_popup_getSelectedIcon(), SCREEN_WEDITOR_ID);
 
       }
@@ -188,6 +199,13 @@ void FAT_screenWeditor_initWaveEditorSprites (){
                                                           0                      // Destination vertical screen coordinate in pixels
                                                           );
 
+    hel_ObjSetVisible(FAT_screenWeditor_spinner[i], 0);
+  }
+}
+
+void FAT_screenWeditor_hideAllEditorSprites (){
+  u8 i;
+  for (i = 0; i < 16; i++){
     hel_ObjSetVisible(FAT_screenWeditor_spinner[i], 0);
   }
 }

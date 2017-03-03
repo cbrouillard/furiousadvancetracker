@@ -2100,17 +2100,19 @@ void FAT_data_wave_changeValue (u8 customVoiceId, u8 dataNumber, u8 part, s8 add
 
 
           if (
-            (addedValue > 0 && data < 0xFF) ||
-            (addedValue < 0 && data > 0)
+            (addedValue > 0 && data < (0xFF - addedValue + 1)) ||
+            (addedValue < 0 && data > (0 - (addedValue + 1)))
           ) {
               data += addedValue;
-
+          } else {
+            if (addedValue > 0){
+              data = 0xff;
+            } else if (addedValue < 0){
+              data = 0;
+            }
           }
 
-          customVoice->data[dataNumber] &= (0xffffff00 << (8*part)) + (0xff*part);
-          hel_BgTextPrintF(TEXT_LAYER, 16, 12, 0, "%x", customVoice->data[dataNumber]);
+          customVoice->data[dataNumber] &= ~(0x000000ff << (8*part));
           customVoice->data[dataNumber] |= (data << (8*part));
-
-
     }
 }

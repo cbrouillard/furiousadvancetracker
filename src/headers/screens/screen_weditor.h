@@ -20,6 +20,7 @@
 void FAT_screenWeditor_init();
 void FAT_screenWeditor_checkButtons ();
 void FAT_screenWeditor_initWaveEditorSprites ();
+void FAT_screenWeditor_hideAllEditorSprites ();
 
 #include "screen_weditor_cursor.h"
 
