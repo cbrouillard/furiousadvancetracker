@@ -236,7 +236,22 @@ void snd_loadWav(u8 inst) {
     REG_SOUND3CNT_L ^= 0x0040;
 };
 
-void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voice,
+/**
+* Implement this method in your own way to get customVoice data.
+*/
+/*u32* snd_getCustomVoice(u8 customVoiceId){
+  return &(FAT_data_getTraker()->customVoice[customVoiceId].data[0]);
+}*/
+
+void snd_loadCustomWav(u32* customVoice) {
+    REG_DMA3SAD = (u32) customVoice;
+    REG_DMA3DAD = (u32) & REG_WAVE_RAM0;
+    REG_DMA3CNT_L = 4;
+    REG_DMA3CNT_H = 0x8400;
+    REG_SOUND3CNT_L ^= 0x0040;
+};
+
+void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voice,  u32* customVoice,
         u16 bank, u16 bankMode, u8 output, u8 freq, u8 transpose) {
 
     snd_changeChannelOutput(2, output);
@@ -250,15 +265,20 @@ void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voic
     }
 
     REG_SOUND3CNT_H = soundLength;
-    //REG_SOUNDCNT_L|=0x4400;
-    if (bankMode == 0) { // SINGLE MODE
-        REG_SOUND3CNT_L &= ~SOUND3PLAY; //stop sound
-        snd_loadWav(voice);
-        snd_loadWav(voice + 2);
 
-        REG_SOUND3CNT_L = SOUND3PLAY | SOUND3BANK32;
-    } else { // DUAL MODE
-        snd_loadWav(voice);
+
+    if (customVoice){
+      snd_loadCustomWav(customVoice);
+    } else {
+        if (bankMode == 0) { // SINGLE MODE
+            REG_SOUND3CNT_L &= ~SOUND3PLAY; //stop sound
+            snd_loadWav(voice);
+            snd_loadWav(voice + 2);
+
+            REG_SOUND3CNT_L = SOUND3PLAY | SOUND3BANK32;
+        } else { // DUAL MODE
+            snd_loadWav(voice);
+        }
     }
 
     if (bank == 1) {

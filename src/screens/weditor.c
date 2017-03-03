@@ -45,6 +45,8 @@ void FAT_screenWeditor_setOneSpinnerPosition (u8 n, u8 value){
   u8 ratioX = value * 0.44;
   hel_ObjSetXY(FAT_screenWeditor_spinner[n], 40 + ratioX, 15 + (8*n));
   hel_ObjSetVisible(FAT_screenWeditor_spinner[n], 1);
+
+
 }
 
 void FAT_screenWeditor_setSpinnersPositions (){
@@ -56,14 +58,22 @@ void FAT_screenWeditor_setSpinnersPositions (){
     FAT_screenWeditor_setOneSpinnerPosition (i++, ((customVoice->data[j] & 0x0000ff00) >> 8));
     FAT_screenWeditor_setOneSpinnerPosition (i++, ((customVoice->data[j] & 0x00ff0000) >> 16));
     FAT_screenWeditor_setOneSpinnerPosition (i, ((customVoice->data[j] & 0xff000000) >> 24));
+
+    hel_BgTextPrintF(TEXT_LAYER, 21, 6 + j, 0, "%0.8x", customVoice->data[j]);
+
     j++;
   }
 
 }
 
 void FAT_screenWeditor_printAllText (){
+    note* FAT_data_simulator = FAT_data_getSimulator();
+
     hel_BgTextPrintF(TEXT_LAYER, 21, 3, 0, "Inst  %.2x", FAT_screenInstrument_getCurrentInstrumentId ());
     hel_BgTextPrintF(TEXT_LAYER, 21, 4, 0, "Wave   %1.x", FAT_screenWeditor_currentVoice);
+
+    hel_BgTextPrintF(TEXT_LAYER, 21, 12, 0, "Test %s%1x\0",
+            noteName[(FAT_data_simulator->note & 0xf0) >> 4], FAT_data_simulator->note & 0x0f);
 
     FAT_screenWeditor_printCurrentVoiceData ();
     FAT_screenWeditor_setSpinnersPositions ();
@@ -99,29 +109,55 @@ void FAT_screenWeditor_init() {
 
 void FAT_screenWeditor_pressOrHeldA() {
 
+  u8 i;
   u8 nData = FAT_screenWeditor_getSelectedLine() / 4;
   u8 part = FAT_screenWeditor_getSelectedLine() - (nData * 4);
 
   if (hel_PadQuery()->Pressed.Right) {
-      FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, nData, part, 1);
+      if (hel_PadQuery()->Held.R){
+          for (i=0;i<16;i++){
+              FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, i / 4, i - (i/4)*4, 1);
+          }
+      }else {
+          FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, nData, part, 1);
+      }
+
       FAT_screenWeditor_printAllText ();
       FAT_screenWeditor_setSpinnersPositions ();
   }
 
   if (hel_PadQuery()->Pressed.Left) {
-      FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, nData, part, -1);
+      if (hel_PadQuery()->Held.R){
+          for (i=0;i<16;i++){
+              FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, i / 4, i - (i/4)*4, -1);
+          }
+      }else {
+        FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, nData, part, -1);
+      }
       FAT_screenWeditor_printAllText ();
       FAT_screenWeditor_setSpinnersPositions ();
   }
 
   if (hel_PadQuery()->Pressed.Up) {
-    FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, nData, part, 16);
+    if (hel_PadQuery()->Held.R){
+        for (i=0;i<16;i++){
+            FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, i / 4, i - (i/4)*4, 16);
+        }
+    }else {
+      FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, nData, part, 16);
+    }
     FAT_screenWeditor_printAllText ();
     FAT_screenWeditor_setSpinnersPositions ();
   }
 
   if (hel_PadQuery()->Pressed.Down) {
-    FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, nData, part, -16);
+    if (hel_PadQuery()->Held.R){
+        for (i=0;i<16;i++){
+            FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, i / 4, i - (i/4)*4, -16);
+        }
+    }else {
+      FAT_data_wave_changeValue (FAT_screenWeditor_currentVoice, nData, part, -16);
+    }
     FAT_screenWeditor_printAllText ();
     FAT_screenWeditor_setSpinnersPositions ();
   }
@@ -130,6 +166,21 @@ void FAT_screenWeditor_pressOrHeldA() {
 
 void FAT_screenWeditor_checkButtons (){
   hel_PadCapture();
+
+  if ( FAT_data_isCurrentlySimulating() == TRUE && !FAT_getIsCurrentlyPlaying() && (
+                  hel_PadQuery()->Pressed.Start ||
+                  hel_PadQuery()->Pressed.Select ||
+                  hel_PadQuery()->Pressed.A ||
+                  hel_PadQuery()->Pressed.Up ||
+                  hel_PadQuery()->Pressed.Down ||
+                  hel_PadQuery()->Pressed.Right ||
+                  hel_PadQuery()->Pressed.Left ||
+                  hel_PadQuery()->Pressed.R ||
+                  hel_PadQuery()->Pressed.L)
+                  ) {
+      FAT_player_stopPlayer();
+      FAT_data_instrument_setCurrentlySimulating (FALSE);
+  }
 
   if (hel_PadQuery()->Held.Select) {
       if (!FAT_screenWeditor_isPopuped) {
@@ -147,7 +198,6 @@ void FAT_screenWeditor_checkButtons (){
           FAT_screenWeditor_isPopuped = 0;
           FAT_screenWeditor_hideAllEditorSprites ();
           FAT_switchToScreen(FAT_popup_getSelectedIcon(), SCREEN_WEDITOR_ID);
-
       }
 
       if (hel_PadQuery()->Held.A || hel_PadQuery()->Pressed.A) {
@@ -155,9 +205,25 @@ void FAT_screenWeditor_checkButtons (){
 
       } else {
 
-          if (hel_PadQuery()->Held.R) {
+          if (hel_PadQuery()->Pressed.Start) {
+              if (!FAT_getIsCurrentlyPlaying()) {
+                  FAT_player_startPlayerFromNotes(FAT_screenNotes_getCurrentBlockId(),
+                          0, FAT_screenSong_getCurrentSelectedColumn());
+              } else {
+                  FAT_player_stopPlayer();
+              }
+          }
 
-          }else {
+          if (hel_PadQuery()->Pressed.B) {
+              FAT_data_instrument_playSimulator(FAT_screenInstrument_getCurrentInstrumentId ());
+          }
+          if (hel_PadQuery()->Held.B) {
+              FAT_screenInstrument_showSimulatorCursor (INSTRUMENT_TYPE_WAVE);
+              s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
+              FAT_data_instrument_changeSimulator(FAT_screenInstrument_getCurrentInstrumentId(), addedValue);
+              FAT_screenWeditor_printAllText();
+          } else {
+              FAT_screenInstrument_hideSimulatorCursor ();
 
               if (hel_PadQuery()->Pressed.Down) {
                   if (hel_PadQuery()->Held.L) {
@@ -176,9 +242,9 @@ void FAT_screenWeditor_checkButtons (){
               }
 
               FAT_screenWeditor_commitCursorMove();
-          }
-      }
-  }
+            }
+        }
+    }
 }
 
 void FAT_screenWeditor_initWaveEditorSprites (){
