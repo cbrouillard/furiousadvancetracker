@@ -140,7 +140,7 @@ void FAT_popup_checkButtons() {
     }
 
     if (hel_PadQuery()->Pressed.Up){
-        FAT_showHelp(FAT_popup_selectedIcon);
+        FAT_popup_moveSelectionCursorUp();
     }
 
     FAT_popup_commitSelectionCursorMove();
@@ -204,6 +204,10 @@ void FAT_popup_moveSelectionCursorLeft() {
         FAT_popup_cursorSelectionX -= POPUP_ICON_SIZE_X + POPUP_ICON_WHITE_SPACE;
         FAT_popup_selectedIcon--;
     }
+}
+
+void FAT_popup_moveSelectionCursorUp() {
+    FAT_showHelp(FAT_popup_selectedIcon);
 }
 
 /**

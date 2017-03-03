@@ -214,6 +214,7 @@ void FAT_player_playNoteWithCustomParams_chan3(note* note, u8 channel, u8 transp
 
     snd_playSoundOnChannel3(
         volume != 0xff ? volume : inst->volumeRatio & 0x0f, inst->soundlength, inst->loopmode, inst->voiceAndBank & 0x1f,
+        inst->customVoice != NULL_VALUE ? FAT_tracker.customVoice[inst->customVoice].data : 0,
         (inst->voiceAndBank & 0x20) >> 5, (inst->voiceAndBank & 0x40) >> 6,
         output, note->freq, transpose + FAT_tracker.transpose);
 

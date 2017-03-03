@@ -28,6 +28,9 @@ u8 FAT_screenInstrument_isTabulating = 0;
 // quel instrument est en cours d'édition ?
 /** \brief L'id de l'instrument en cours d'édition. */
 u8 FAT_screenInstrument_currentInstrumentId;
+u8 FAT_screenInstrument_getCurrentInstrumentId (){
+  return FAT_screenInstrument_currentInstrumentId;
+}
 
 // sprites utiles à l'affichage de certaines données
 /** \brief Sprite pour la direction de l'enveloppe: valeur 0. */
@@ -103,7 +106,10 @@ void FAT_screenInstrument_printAllText(u8 type) {
                 hel_BgTextPrintF(TEXT_LAYER, 1, 11, 0, "Bankmode  DUA");
             }
             FAT_screenInstrument_showOutput(1, 12, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].output);
-            hel_BgTextPrintF(TEXT_LAYER, 1, 15, 0, "Test it!  %s%1x\0",
+            FAT_screenInstrument_showCustomVoice(1, 15, FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].customVoice);
+            hel_BgTextPrint(TEXT_LAYER, 1, 16, 0, "Edit wave GO!");
+
+            hel_BgTextPrintF(TEXT_LAYER, 16, 12, 0, "Test it!  %s%1x\0",
                     noteName[(FAT_data_simulator->note & 0xf0) >> 4], FAT_data_simulator->note & 0x0f);
             break;
         case INSTRUMENT_TYPE_NOISE:
@@ -678,6 +684,14 @@ void FAT_screenInstrument_showOutput(u8 x, u8 y, u8 output) {
     hel_BgTextPrintF(TEXT_LAYER, x, y, 0, "Output    %.2s", outputText[output]);
 }
 
+void FAT_screenInstrument_showCustomVoice (u8 x, u8 y, u8 customVoice) {
+    if (customVoice == NULL_VALUE){
+      hel_BgTextPrintF(TEXT_LAYER, x, y, 0, "Wave      X");
+    }else {
+      hel_BgTextPrintF(TEXT_LAYER, x, y, 0, "Wave      %.1x", customVoice & 0x0f);
+    }
+}
+
 /**
  * \brief Affiche le bon sprite pour la valeur du waveduty.
  *
@@ -803,35 +817,41 @@ void FAT_screenInstrument_pulse_pressA() {
 void FAT_screenInstrument_wave_pressA() {
     s8 addedValue = FAT_screenInstrument_giveMeAddedValue();
 
-    switch (FAT_screenInstruments_getCurrentSelectedLine()) {
-        case 0: // VOLUME RATIO
-            FAT_data_instrumentWave_changeVolume(FAT_screenInstrument_currentInstrumentId, addedValue);
-            break;
-        case 1: // TIMED
-            FAT_data_instrumentWave_changeLoopmode(FAT_screenInstrument_currentInstrumentId, addedValue);
-            break;
-        case 2: // LENGTH
-            FAT_data_instrumentWave_changeSoundLength(FAT_screenInstrument_currentInstrumentId, addedValue);
-            break;
-        case 3: // VOICE
-            FAT_data_instrumentWave_changeVoice(FAT_screenInstrument_currentInstrumentId, addedValue);
-            break;
-        case 4: // BANK
-            FAT_data_instrumentWave_changeBank(FAT_screenInstrument_currentInstrumentId, addedValue);
-            break;
-        case 5: // BANKMODE
-            FAT_data_instrumentWave_changeBankmode(FAT_screenInstrument_currentInstrumentId, addedValue);
-            break;
-        case 6: // OUTPUT
-            FAT_data_instrumentWave_changeOutput(FAT_screenInstrument_currentInstrumentId, addedValue);
-            break;
-        case 7: // SIMULATOR
-            FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);
-            if (hel_PadQuery()->Pressed.A){
-                FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
-            }
-
-            break;
+    if (FAT_screenInstruments_getCurrentSelectedColumn() == 0){
+      switch (FAT_screenInstruments_getCurrentSelectedLine()) {
+          case 0: // VOLUME RATIO
+              FAT_data_instrumentWave_changeVolume(FAT_screenInstrument_currentInstrumentId, addedValue);
+              break;
+          case 1: // TIMED
+              FAT_data_instrumentWave_changeLoopmode(FAT_screenInstrument_currentInstrumentId, addedValue);
+              break;
+          case 2: // LENGTH
+              FAT_data_instrumentWave_changeSoundLength(FAT_screenInstrument_currentInstrumentId, addedValue);
+              break;
+          case 3: // VOICE
+              FAT_data_instrumentWave_changeVoice(FAT_screenInstrument_currentInstrumentId, addedValue);
+              break;
+          case 4: // BANK
+              FAT_data_instrumentWave_changeBank(FAT_screenInstrument_currentInstrumentId, addedValue);
+              break;
+          case 5: // BANKMODE
+              FAT_data_instrumentWave_changeBankmode(FAT_screenInstrument_currentInstrumentId, addedValue);
+              break;
+          case 6: // OUTPUT
+              FAT_data_instrumentWave_changeOutput(FAT_screenInstrument_currentInstrumentId, addedValue);
+              break;
+          case 7: // CUSTOM WAVE
+              FAT_data_instrumentWave_changeCustomWave (FAT_screenInstrument_currentInstrumentId, addedValue);
+              break;
+          case 8: // Go to editor
+              FAT_showWaveEditor();
+              return;
+      }
+    } else {
+      FAT_data_instrument_changeSimulator(FAT_screenInstrument_currentInstrumentId, addedValue);
+      if (hel_PadQuery()->Pressed.A){
+          FAT_data_instrument_playSimulator(FAT_screenInstrument_currentInstrumentId);
+      }
     }
 
     FAT_screenInstrument_printAllText(FAT_tracker.allInstruments[FAT_screenInstrument_currentInstrumentId].type);

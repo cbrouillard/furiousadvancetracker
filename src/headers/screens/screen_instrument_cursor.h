@@ -37,13 +37,13 @@
 /** \brief Position du premier emplacement dans l'écran instrument (ne tient pas compte du type). */
 #define SCREENINSTRUMENTS_FIRST_BLOCK_Y 32
 /** \brief Position du dernier emplacement dans l'écran instrument (ne tient pas compte du type). */
-#define SCREENINSTRUMENTS_LAST_BLOCK_Y 120
+#define SCREENINSTRUMENTS_LAST_BLOCK_Y 128
 /** \brief Nombre de lignes sur l'écran PULSE. */
 #define SCREENINSTRUMENT_PULSE_NB_LINES_ON_SCREEN 9
 /** \brief Nombre de lignes sur l'écran NOISE. */
 #define SCREENINSTRUMENT_NOISE_NB_LINES_ON_SCREEN 8
 /** \brief Nombre de lignes sur l'écran WAVE. */
-#define SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN 8
+#define SCREENINSTRUMENT_WAVE_NB_LINES_ON_SCREEN 10
 /** \brief Nombre de lignes sur l'écran SAMPLE. */
 #define SCREENINSTRUMENT_SAMPLE_NB_LINES_ON_SCREEN 8
 /** \brief Nombre de lignes sur l'écran OSC. */

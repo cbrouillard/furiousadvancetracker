@@ -124,13 +124,14 @@ void snd_simple_playSoundOnChannel2(u16 envelope,
  * @param soundLength durée du son de 0 a FF (valeur inversée: FF = très court)
  * @param loopmode timed = 1, continuous = 0
  * @param voice numéro de la voix à jouer
+ * @param customVoice données de la voix custom à jouer. S'applique si !=0 et prend le pas sur voice.
  * @param bank numéro de la bank à jouer 0 ou 1 (appliqué seulement si bankMode = 1)
  * @param bankMode single 0, dual 1
  * \param output sortie du son 0 PAS DE SON / 1 GAUCHE / 2 DROITE / 3 GAUCHE ET DROITE
  * @param freq le numéro de fréquence de la note jouée. de 0 à 72 cf: const u16 freqs[NB_FREQUENCES]
  * @param transpose le paramètre de transposition
  */
-void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voice,
+void snd_playSoundOnChannel3(u16 volume, u16 soundLength, u16 loopmode, u16 voice, u32* customVoice,
         u16 bank, u16 bankMode, u8 output, u8 freq, u8 transpose);
 
 /**
@@ -295,5 +296,7 @@ void snd_fifoA_setOutput (u8 output);
 void snd_fifoB_setOutput (u8 output);
 void snd_fifoA_setVolume (u8 volume);
 void snd_fifoB_setVolume (u8 volume);
+
+extern const unsigned long voices[];
 
 #endif

@@ -55,6 +55,8 @@
 /** \brief Définit le nombre maximal de voix disponibles. Les voix sont l'équivalent des
  * synthé dans LSDJ. */
 #define NB_MAX_VOICE 16
+/** \brief Définit le nombre de maximale de voix custom. */
+#define NB_MAX_CUSTOM_VOICE 3
 /** \brief Taille maximale pour le nom d'une chanson. */
 #define SONG_NAME_MAX_LETTERS 9
 /** \brief Type d'instrument PULSE 1 */
@@ -129,6 +131,15 @@ extern const char* blockEffectName[NB_BLOCK_EFFECT];
  * Voir <a href="http://jeanjacques.dialo.free.fr/frequenc.htm">http://jeanjacques.dialo.free.fr/frequenc.htm</a>
  */
 #define NB_FREQUENCES 72
+
+/**
+* \struct WAVE
+* \brief Définit une voice éditée dans l'editor de voix.
+*/
+typedef struct WAVE {
+  /*!< Données de l'onde. */
+  u32 data [4];
+} wave;
 
 /**
  * \struct EFFECT
@@ -268,6 +279,7 @@ typedef struct INSTRUMENT {
     u8 speedOrLooping; /*!< Contient les valeurs pour la vitesse et le mode looping d'un sample. */
 
     u8 voice; /*!< Lien vers une voix pour un instrument de type WAVE. de 0 a MAX_VOICE. NULL_VALUE = pas de lien.*/
+    u8 customVoice; /*!< Voix éditées par l'utilisateur. Max = NB_MAX_CUSTOM_VOICE - 1*/
 } instrument;
 
 /**
@@ -303,6 +315,7 @@ typedef struct FAT {
     voice voices[NB_MAX_VOICE]; /*!< Les voix disponibles. Une voix = un synthé LSDJ. */
     table tables[NB_MAX_TABLES]; /*!< Tableau (physique) contenant toutes les tables. */
     livedata liveData;
+    wave customVoice[NB_MAX_CUSTOM_VOICE];
 } tracker;
 
 /**
@@ -432,6 +445,7 @@ void FAT_data_instrumentWave_changeBankmode(u8 instrumentId, s8 value);
 void FAT_data_instrumentSample_changeSpeed(u8 instrumentId, s8 value);
 void FAT_data_instrumentSample_changeLooping(u8 instrumentId, s8 value);
 void FAT_data_instrumentSample_changeOffset(u8 instrumentId, s8 value);
+void FAT_data_instrumentWave_changeCustomWave (u8 instrumentId, s8 value);
 
 void FAT_data_project_changeTempo(s8 addedValue);
 void FAT_data_project_changeTranspose(s8 addedValue);
@@ -453,5 +467,8 @@ void FAT_data_composer_changeTranspose(u8 composer, s8 value);
 void FAT_data_composer_changeKeyRepeat(u8 composer, s8 value);
 void FAT_data_composer_resetAffectedChannel(u8 line);
 void FAT_data_composer_changeAffectedChannelValue(u8 line, s8 addedValue);
+
+void FAT_data_wave_initIfNeeded (u8 customVoiceId, u8 instrumentId);
+void FAT_data_wave_changeValue (u8 customVoiceId, u8 dataNumber, u8 part, s8 addedValue);
 
 #endif	/* DATA_H */
