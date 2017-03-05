@@ -19,6 +19,9 @@
 
 #include "../headers/fat.h"
 
+#define INITIAL_TICKCOUNTER (60000 / 100) / 8
+#define INITIAL_TEMPOREACH(t) (60000 / t) / 4
+
 /*
  * Toutes ces variables sont des repères pour le player. Afin de savoir quelle séquence/block/note jouer.
  * Attention. Les valeurs dans les tableaux représentent des NUMEROS DE LIGNES.
@@ -63,12 +66,12 @@ u8 firstAvailableSequenceForChannel[6];
  * est réinitialisé ensuite.
  * Dans le cas contraire, on attend sans jouer de note.
  */
-volatile int tempoReach = (60000 / 128) / 4;
+volatile int tempoReach = INITIAL_TEMPOREACH(128);
 
 /**
  * /brief Compteur de tick. Utile pour gérer les effets qui se joue dans le temps.
 */
-volatile int tickCounter = (60000 / 100) / 4;
+volatile int tickCounter = INITIAL_TICKCOUNTER;
 
 /**
  * /brief Pour savoir de quelle endroit l'utilisateur a lancé le son.
@@ -82,6 +85,8 @@ u8 FAT_live_waitForOtherChannel[6];
 u8 FAT_player_live_getWaitForOtherChannel (u8 n){
   return FAT_live_waitForOtherChannel[n];
 }
+
+bool FAT_player_effect_isRunningLongEffect; // TODO: FAT_player_effect_isRunningLongEffect[6];
 
 /**
 * \brief Pointeurs vers les fonctions de jeu de note.
@@ -115,6 +120,8 @@ void FAT_player_firstInit (){
 
     FAT_player_initCursors();
     FAT_resetTempo();
+
+    FAT_player_effect_isRunningLongEffect = 0;
 }
 
 void FAT_player_runTimer (){
@@ -125,17 +132,6 @@ void FAT_player_runTimer (){
   M_TIM3CNT_SPEED_SELECT_SET(3)
   M_TIM3CNT_IRQ_ENABLE
   M_TIM3CNT_TIMER_START
-
-  /** EXTRAITS DE CODE SAMPLE HELL
-  ham_StartIntHandler(INT_TYPE_TIM3,(void*)&ham_prof_timer3_int);
-  M_TIM3COUNT_SET(65536-4399)
-  M_TIM3CNT_SPEED_SELECT_SET(1)
-  M_TIM3CNT_IRQ_ENABLE
-  M_TIM3CNT_TIMER_START
-
-  M_TIM3CNT_TIMER_STOP \
-  M_TIM3CNT_IRQ_DISABLE \
-  */
 }
 
 void FAT_player_stopTimer (){
@@ -820,7 +816,8 @@ void FAT_player_playFromBlocks() {
 }
 
 
-
+note FAT_lastNotePlayed;
+u8 effectCounter = 0;
 // DEJA DOCUMENTEE
 void FAT_player_playFromNotes() {
     #ifdef DEBUG_ON
@@ -857,9 +854,13 @@ void FAT_player_playFromNotes() {
                         // get back to 0
                         actualNotesForChannel[FAT_currentPlayedChannel] = effect->value;
                         break;
+                    case EFFECT_CHORD:
+                        FAT_player_effect_isRunningLongEffect = 1;
+                        break;
                 }
             }
 
+            FAT_lastNotePlayed = block->notes[actualNotesForChannel[FAT_currentPlayedChannel]];
             FAT_player_playNoteWithCustomParams(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]),
                     FAT_currentPlayedChannel, 0, volume, sweep, output);
 
@@ -876,6 +877,22 @@ void FAT_player_playFromNotes() {
     if (tickCounter < 0){
         tickCounter = 0;
         hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
+        if (FAT_player_effect_isRunningLongEffect){
+
+          if (effectCounter > 1){
+            effectCounter = 0;
+            FAT_lastNotePlayed.freq -= 2;
+          } else {
+            FAT_lastNotePlayed.freq += 1;
+          }
+
+          FAT_player_playNoteWithCustomParams(&FAT_lastNotePlayed,
+                  0, 0, volume, sweep, output);
+
+          effectCounter ++;
+
+        }
+
         FAT_resetTickCounter ();
     } else {
         hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");
@@ -958,12 +975,13 @@ void FAT_player_stopPlayer() {
     for (i=0;i<6;i++){
         FAT_player_buffer[i].volume = NULL_VALUE;
     }
+    FAT_player_effect_isRunningLongEffect = 0;
 }
 
 void FAT_resetTempo (){
-    tempoReach = (60000 / FAT_tracker.tempo) / 4;
+    tempoReach = INITIAL_TEMPOREACH(FAT_tracker.tempo);
 }
 
 void FAT_resetTickCounter (){
-    tickCounter = (60000 / 100) / 4;
+    tickCounter = INITIAL_TICKCOUNTER;
 }

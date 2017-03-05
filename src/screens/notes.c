@@ -88,6 +88,7 @@ void FAT_screenNotes_printEffect(u8 line) {
         u8 effectName = (effect->name & 0xfe) >> 1;
         switch (effectName){
             case EFFECT_KILL:
+                // pas de value
                 hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
                                                 "%.2s--\0", noteEffectName[effectName]);
                 break;
@@ -96,21 +97,19 @@ void FAT_screenNotes_printEffect(u8 line) {
                 hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
                                                 "%.2s%s\0", noteEffectName[effectName], outputText[effect->value]);
                 break;
-            case EFFECT_SWEEP:
-                hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
-                                "%.2s%.2x\0", noteEffectName[effectName], effect->value);
-                break;
             case EFFECT_VOLUME:
                 // de 0 à F, FF = INST DEFINED.
                 hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
                                 "%.2s%.2x\0", noteEffectName[effectName], effect->value);
                 break;
             case EFFECT_HOP:
-                // pas de value.
+            case EFFECT_CHORD:
+            case EFFECT_SWEEP:
+                // cas générique
                 hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
                                                 "%.2s%.2x\0", noteEffectName[effectName], effect->value);
                 break;
-        }
+            }
 
     } else {
         hel_BgTextPrint(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
