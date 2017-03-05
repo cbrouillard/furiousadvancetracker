@@ -76,12 +76,6 @@ void snd_playOscillatorA (u8 shape, u8 freqN, u8 loopmode, u8 soundlength, u8 vo
   R_TIM1COUNT=0xffff - LUT_PRECISION - 1; //0xffff-the number of samples to play
   R_TIM1CNT=0xC3; //enable timer1
 
-  // Timer playback pour les samples
-  R_TIM0CNT = 0;
-  // 65536-round(2^24/16000)
-  R_TIM0COUNT = 0xFBE8; // + ((snBSpeed * 100) - 100); //16khz playback freq
-  R_TIM0CNT = 0x0080; //enable timer0
-
   // go
   playSnAOsc = 1;
 }
@@ -109,12 +103,6 @@ void snd_playOscillatorB (u8 shape, u8 freqN, u8 loopmode, u8 soundlength, u8 vo
 
   R_TIM2COUNT=0xffff - LUT_PRECISION - 1; //0xffff-the number of samples to play
   R_TIM2CNT=0xC3; //enable timer1
-
-  // Timer playback pour les samples
-  R_TIM0CNT = 0;
-  // 65536-round(2^24/16000)
-  R_TIM0COUNT = 0xFBE8; // + ((snBSpeed * 100) - 100); //16khz playback freq
-  R_TIM0CNT = 0x0080; //enable timer0
 
   // go
   playSnBOsc = 1;

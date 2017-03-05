@@ -63,12 +63,12 @@ u8 firstAvailableSequenceForChannel[6];
  * est réinitialisé ensuite.
  * Dans le cas contraire, on attend sans jouer de note.
  */
-volatile int tempoReach = (60000 / 128) * 4;
+volatile int tempoReach = (60000 / 128) / 4;
 
 /**
  * /brief Compteur de tick. Utile pour gérer les effets qui se joue dans le temps.
 */
-volatile int tickCounter = (60000 / 100) * 4;
+volatile int tickCounter = (60000 / 100) / 4;
 
 /**
  * /brief Pour savoir de quelle endroit l'utilisateur a lancé le son.
@@ -438,10 +438,11 @@ int FAT_player_debug_getTempoReach(){
 
 void ATTR_FASTFUNC FAT_player_timerFunc() {
     if (tempoReach >= 0) {
-        tempoReach--;
+      tempoReach--;
     }
-    tickCounter--;
-    //hel_IntrAcknowledge(INT_TYPE_TIM3);
+    if (tickCounter >= 0) {
+      tickCounter--;
+    }
 }
 
 void FAT_player_progressInSong(u8 channel, sequence* seq){
@@ -582,7 +583,10 @@ void FAT_player_playFromSequences() {
             }
         }
         FAT_resetTempo ();
-    }else {hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");}
+    }
+    #ifdef DEBUG_ON
+    else {hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");}
+    #endif
 }
 
 void FAT_player_liveSynchro(){
@@ -741,7 +745,10 @@ void FAT_player_playFromLive(){
         }
 
         FAT_resetTempo ();
-    }else {hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");}
+    }
+    #ifdef DEBUG_ON
+    else {hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");}
+    #endif
 }
 
 // DEJA DOCUMENTEE
@@ -806,8 +813,10 @@ void FAT_player_playFromBlocks() {
         }
 
         FAT_resetTempo ();
-    }else {hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");}
-
+    }
+    #ifdef DEBUG_ON
+    else {hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");}
+    #endif
 }
 
 
@@ -859,7 +868,18 @@ void FAT_player_playFromNotes() {
 
         FAT_resetTempo ();
 
-    }else {hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");}
+    }
+    #ifdef DEBUG_ON
+    else {hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");}
+    #endif
+
+    if (tickCounter < 0){
+        tickCounter = 0;
+        hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
+        FAT_resetTickCounter ();
+    } else {
+        hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");
+    }
 
 }
 
@@ -942,4 +962,8 @@ void FAT_player_stopPlayer() {
 
 void FAT_resetTempo (){
     tempoReach = (60000 / FAT_tracker.tempo) / 4;
+}
+
+void FAT_resetTickCounter (){
+    tickCounter = (60000 / 100) / 4;
 }

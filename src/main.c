@@ -34,6 +34,15 @@
  */
 
 /**
+* TODO :
+* - implement effects (see: soundApi.h)
+* - implement "Clear song data" and "Clear instr data" (as LSDJ)
+* - implement this $$$ synth FM/AM
+* - rework the CustomWave editor screen (move accross the sliders)
+*/
+
+
+/**
  * \file main.c
  * \brief Fichier code source principal avec la fonction main et l'inclusion de fat.h.
  */

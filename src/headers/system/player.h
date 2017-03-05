@@ -54,6 +54,7 @@ void FAT_player_playNoteWithCustomParams_chan6(note* note, u8 channel, u8 transp
 
 void FAT_player_timerFunc();
 void FAT_resetTempo ();
+void FAT_resetTickCounter();
 void FAT_player_firstInit ();
 
 bool FAT_getIsCurrentlyPlaying();

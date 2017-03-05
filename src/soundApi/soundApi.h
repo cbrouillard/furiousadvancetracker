@@ -27,6 +27,15 @@
 #define EFFECT_OUTPUT 2
 #define EFFECT_SWEEP 3
 #define EFFECT_VOLUME 4
+// to implement
+#define EFFECT_CHORD 5
+#define EFFECT_ENVELOPE 6
+#define EFFECT_RETRIG 7
+#define EFFECT_TEMPO 8
+#define EFFECT_SAMPLERATE 9
+#define EFFECT_VIBRATO 10
+#define EFFECT_CUSTOMVOICE 11
+#define EFFECT_SLIDE 12
 
 #include "system/register.h"
 #include "kits/gbfs.h"
