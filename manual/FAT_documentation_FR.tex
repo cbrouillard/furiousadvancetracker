@@ -122,11 +122,14 @@
   
   Merci à {\bf \textcolor{vert}{Joan Dolç}} pour la traduction de ce document en anglais. \medskip
 
-  {\bf >= 1.0.0} \medskip
+  {\bf 1.0.0} \medskip
 
   Reprise en main du code 4 ans après la création du projet. Il s'en est passé des choses ! \\
   Un second merci à {\bf \textcolor{vert}{Guillaume Dualé}} pour son enthousiasme. Ça aide beaucoup de voir qu'une personne kiffe votre travail. Thanks bro. \\
 
+  {\bf 1.2.0} \medskip
+
+  Gros refactoring du code et stabilisation générale des fonctionnalités. 
 
   \end{center}
   
@@ -145,7 +148,7 @@
     \subsection{Présentation et avertissement}
     \FAT est un logiciel musical conçu pour la Gameboy Advance.
     Avec \FAT, vous pouvez composer de la musique directement sur votre console de jeu en utilisant ses capacités techniques.
-    \FAT se veut le plus simple possible mais un apprentissage de son mode de fonctionnement reste néanmoins nécessaire avant de pouvoir en exploiter toutes les possibilités.\medskip
+    \FAT se veut le plus simple possible mais un apprentissage de son mode de fonctionnement reste néanmoins nécessaire avant de pouvoir en exploiter les possibilités.\medskip
     
     Attention ! La \fatversion (celle qui est actuellement disponible) est une version bêta.
     Même si je me suis attaché à éliminer un nombre maximal de problèmes en tout genre, le logiciel est encore très probablement buggé et/ou non finalisé.
@@ -155,9 +158,11 @@
     Le rapport ne vous prendra pas plus de 5 minutes et cela m'aidera pour faire avancer le logiciel !
     D'avance merci ! (et un bisou aussi !)
     \medskip
+
+    Notez que cette version (la \fatversion) est la version la plus stable produite à ce jour (plus de plantages bizarres dans l'émulateur). La lecture des samples est stable, l'utilisation processeur est raisonnable lors de la lecture d'une track.\medskip
     
     Ceux qui ont déjà un pied dans la composition de musique chiptune ne tarderont pas à se rendre compte que l'interface de \FAT ressemble énormément à celle d'LSDJ (LittleSoundDJ).
-    J'ai en effet considéré LSDJ comme LE modèle mais en y ajoutant ma touche personnelle.
+    J'ai en effet considéré LSDJ comme {\bf LE} modèle mais en y ajoutant ma touche personnelle.
     Quelques fonctionnalités sont aussi complétement originales, d'autres ont été revues et d'autres encore ont disparues.
     \medskip
     
@@ -198,7 +203,7 @@
         \item{le premier numéro est le numéro de version majeur. Un changement de numéro implique qu'il y a des incompatibilités avec les versions précédentes.
                     Actuellement, la version est la "1"}
         \item{le numéro du milieu est le numéro de version mineur.
-                    Ce chiffre donne une idée de la progression des features tout en assurant la compatibilité avec les précédentes versions.}
+                    Ce chiffre donne une idée de la progression des features. La compatibilité peut être conservée (mais pas forcément).}
         \item{le dernier numéro est le numéro de version des bugfixes. Il augmentera à chaque correction de bug.}
     \end{itemize}
     \medskip
@@ -207,7 +212,7 @@
     
     \subsection{Comment utiliser \FAT ?}
 
-    \FAT est livré sous la forme d'un fichier gba.
+    \FAT est livré sous la forme d'un fichier gba (rom).
     Ce fichier est directement utilisable sur votre ordinateur avec l'aide d'un émulateur (VisualBoyAdvance par exemple).
     \medskip
     
@@ -215,7 +220,7 @@
     D'autant plus qu'un son émulé n'égalera jamais l'original.
     Pour exécuter \FAT sur une vraie Gameboy Advance, il vous faudra:
     \begin{itemize}
-        \item{une vraie Gameboy Advance(scoop!) ou une Gameboy Micro. Personnellement je préfère l'écran de cette dernière mais certains le trouvent trop petit. Au pire la SP est pas mal.}
+        \item{une vraie Gameboy Advance(scoop!) ou une Gameboy Micro. Personnellement je préfère l'écran de cette dernière mais certains le trouvent trop petit. Au pire la GBA SP est pas mal.}
         \item{une cartouche EZ-Flash, SuperCardToSD, ou autre ... Il faut un peu chercher sur le web ...}
         \item{une carte SD qui va bien avec la cartouche (si vous optez pour une cartouche basée sur SD)} 
     \end{itemize}\medskip
@@ -223,7 +228,7 @@
     Après avoir investi dans tout ce petit matériel, il suffira de copier le fichier fat.gba {\bf (à l'aide du logiciel fourni avec votre cartouche)} sur la carte SD: direction la GBA !
     Attention ! Veillez à bien suivre les instructions fournis par le constructeur de la cartouche : sans cela, \FAT risque de ne pas fonctionner correctement.
     
-    \ColoredAnnotation{Attention ! Cette version de \FAT est relativement expérimentale.
+    \ColoredAnnotation{Attention ! Bien que stable, cette version de \FAT est relativement expérimentale.
     Il est, je pense, inutile d'investir trop d'argent dans le but de tester sur GBA. C'est vous qui voyez !}
     
     Si vous tenez à acheter votre propre cartouche, alors référez vous au tableau ci-dessous, il devrait vous aider à faire votre choix.
@@ -333,13 +338,10 @@
     
     Liste des changements pour cette version de \FAT: \medskip
     \begin{itemize}
-        \item{la gestion des samples a été implémentée : il est possible de les lancer depuis les channels SNA et SNB}
-        \item{la gestion des kits fait ses premier pas: branchez à chaud vos samples dans la ROM ! Faites le manuellement ou utilisez le site web dédié.}
-        \item{apparition et implémentation de l'écran LIVE : jouez vos tracks sur scène !}
-	    \item{la sauvegarde des tracks se fait maintenant de manière compressée (enfin. RLE. Ce qui n'est pas une compression optimale.)}
-	    \item{la gestion du tempo a été corrigée}
-        \item{refonte complète de la gestion des touches : c'est plus "smooth".}
-  	    \item{de gros chantiers techniques ont été menés pour : limiter l'utilisation mémoire, revoir les palettes, nettoyer un peu tout le bazar qu'était devenu le code}
+        \item{stabilisation générale (réécriture/réorganisation de tout le code)}
+        \item{réécriture de la lecture des samples et oscillator}
+        \item{ajout d'un editeur de courbe pour le channel WAVE}
+        \item{ajout d'un paramètre pour gérer la vitesse d'échantillonage des samples/oscillator}        
     \end{itemize}
     
     \subsection{Roadmap pour la version suivante}
@@ -347,8 +349,7 @@
     La version suivante sera la \fatnextversion. \medskip    
     \begin{itemize}
         \item{ajout de commandes diverses}
-        \item{stabilisation générale}
-        \item{gestion de courbes détaillées dans le channel WAV}
+        \item{refonte de l'écran de gestion de courbes dans le channel WAV}
         \item{recherche de documentation pour implémenter la synthèse FM (si vous en avez je suis preneur) afin de moduler les samples et les faire sonner différemment.
                     L'objectif serait de se rapprocher du son de Nanoloop.}
     \end{itemize}
