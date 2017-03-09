@@ -116,22 +116,18 @@
 
   {\bf code et design: Cyril Brouillard} \medskip
 
-  {\bf pour la 0.3.0} \medskip
-
-  Merci à {\bf \textcolor{vert}{Guillaume Dualé}} et {\bf \textcolor{vert}{Aline Bouquillon}} pour leur patience et leurs encouragements.\medskip
-
-  Merci à {\bf \textcolor{vert}{Joan Dolç}} pour la traduction de ce document en anglais. \medskip
-
-  {\bf 1.0.0} \medskip
-
-  Reprise en main du code 4 ans après la création du projet. Il s'en est passé des choses ! \\
-  Un second merci à {\bf \textcolor{vert}{Guillaume Dualé}} pour son enthousiasme. Ça aide beaucoup de voir qu'une personne kiffe votre travail. Thanks bro. \\
-
-  {\bf 1.2.0} \medskip
-
-  Gros refactoring du code et stabilisation générale des fonctionnalités.
-
   \end{center}
+
+  {\bf pour la 0.3.0} \medskip
+  Merci à {\bf \textcolor{vert}{Guillaume Dualé}} et {\bf \textcolor{vert}{Aline Bouquillon}} pour leur patience et leurs encouragements.
+  Merci à {\bf \textcolor{vert}{Joan Dolç}} pour la traduction de la documentation 0.3.0 en anglais. \medskip
+
+  {\bf 1.0.x, 1.1.x} \medskip
+  Reprise en main du code 4 ans après la création du projet. Il s'en est passé des choses !
+  Un second merci à {\bf \textcolor{vert}{Guillaume Dualé}} pour son enthousiasme. Ça aide beaucoup de voir qu'une personne kiffe votre travail. Thanks bro.
+
+  {\bf 1.2.x} \medskip
+  Gros refactoring du code et stabilisation générale des fonctionnalités.
 
   % Pas de style ni de numéro pour cette page
   \thispagestyle{empty}
@@ -213,10 +209,10 @@
     \subsection{Comment utiliser \FAT ?}
 
     \FAT est livré sous la forme d'un fichier gba (rom).
-    Ce fichier est directement utilisable sur votre ordinateur avec l'aide d'un émulateur (VisualBoyAdvance par exemple).
+    Ce fichier est directement utilisable sur votre ordinateur ou smartphone avec l'aide d'un émulateur (VisualBoyAdvance par exemple).
     \medskip
 
-    Mais l'avantage d'une Gameboy, c'est la mobilité !
+    Mais l'avantage d'une Gameboy, c'est la mobilité ! (en plus d'avoir la classe)
     D'autant plus qu'un son émulé n'égalera jamais l'original.
     Pour exécuter \FAT sur une vraie Gameboy Advance, il vous faudra:
     \begin{itemize}
@@ -394,7 +390,7 @@
     \end{itemize}
     \medskip
 
-    La façon d'organiser une chanson ressemble un peu au principe de "poupées russes".
+    La façon d'organiser une chanson ressemble un peu au principe des "poupées russes".
     Les séquences contiennent des blocks qui eux même embarquent les notes.
     Quand \FAT lit une séquence, il passe d'un block à l'autre et lit toutes les notes une par une.
     \medskip
@@ -591,7 +587,7 @@
 
     \subsection{L'écran NOTES}
 
-    C'est dans cet écran que vous allez écrire ... vos notes ! (scooooop !).
+    C'est dans cet écran que vous allez écrire ... vos notes !
     Vous ne pouvez écrire qu'une seule note par ligne.
     Un block possède 16 lignes, vous pouvez donc y insérer 16 notes.
     \medskip
@@ -793,7 +789,7 @@
 
     \subsubsection{Instrument de type WAVE}
 
-    \Image{images/screen_instrument_wave}{1.0}{Type WAVE}
+    \Image{images/screen_instrument_wave}{0.5}{Type WAVE}
 
     \paragraph{Enveloppe : Volume} de 0 à 4.
     Cette valeur permet de régler le volume des notes attachées à cet instrument.
@@ -840,6 +836,8 @@
         \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
         \item{VIDE: le son ne sort plus (muet)}
     \end{itemize}
+
+    \paragraph{Custom wave} TODO
 
     \paragraph{Simulator} Changez la note inscrite dans cet espace:
         celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.
@@ -903,14 +901,13 @@
 
     \subsubsection{Instrument de type SAMPLE}
 
-    \Image{images/screen_instrument_sample}{1.0}{Type SAMPLE/KIT}
+    TODO texte
+
+    \Image{images/screen_instrument_sample}{0.5}{Type SAMPLE/KIT}
 
     \paragraph{Kit collection : "Name"} Le nom de la collection de sample dans laquelle piocher.
 
     \paragraph{Enveloppe : "Volume"} Volume affecté au sample : 50\% (0) ou 100\% (1).
-
-    \paragraph{Paramètre : "Speed"} Vitesse de lecture du sample.
-                                    Ne peut être qu'augmenté pour le moment.
 
     \paragraph{Paramètre : "Loop"} Le sample est t-il joué en boucle ?
                                     Si "YES", alors la lecture du sample est répétée.
@@ -935,11 +932,19 @@
     \paragraph{Simulator} Changez la note inscrite dans cet espace:
             celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.
 
+    \subsubsection{Instrument de type OSCILLATOR}
+
+    TODO texte
+
+    \Image{images/screen_instrument_oscillator}{0.5}{Type OSCILLATOR}
+
+    TODO commandes
+
     \subsection{L'écran PROJECT}
 
     L'écran PROJECT fait office de gestionnaire de propriétés pour votre morceau.
 
-    \Image{images/screen_project}{1.0}{L'écran PROJECT}
+    \Image{images/screen_project}{0.5}{L'écran PROJECT}
 
     \subsubsection{Paramètres}
 
@@ -947,6 +952,8 @@
             Depuis la version 1.0.0, il est correctement calculé et donc utilisable !
 
     \paragraph{Propriétés : "Transpose"} Réglez la transposition de tout le projet.
+
+    \paragraph{Propriétés : "Sample rate"} TODO
 
     \paragraph{Interface : "Keyrepeat"} Ce paramètre permet de régler le temps d'attente entre chaque appui d'une touche.
                                         Plus cette valeur est grande, plus l'interface est lente.
