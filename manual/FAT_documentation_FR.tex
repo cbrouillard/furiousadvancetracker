@@ -6,7 +6,7 @@
 \include{epsf}
 
 % Gestion de la portabilité du document (PDF ou pas)
-\usepackage{ifpdf} 
+\usepackage{ifpdf}
 
 \ifpdf
   \usepackage[pdftex,pdfstartview=FitH,pdfhighlight =/O]{hyperref}
@@ -110,16 +110,16 @@
   \newpage
 
   \begin{center}
-  
+
   % Page Copyright et remerciements
   {\bf \FAT FuriousAdvanceTracker} \medskip
-  
+
   {\bf code et design: Cyril Brouillard} \medskip
 
   {\bf pour la 0.3.0} \medskip
-  
+
   Merci à {\bf \textcolor{vert}{Guillaume Dualé}} et {\bf \textcolor{vert}{Aline Bouquillon}} pour leur patience et leurs encouragements.\medskip
-  
+
   Merci à {\bf \textcolor{vert}{Joan Dolç}} pour la traduction de ce document en anglais. \medskip
 
   {\bf 1.0.0} \medskip
@@ -129,27 +129,27 @@
 
   {\bf 1.2.0} \medskip
 
-  Gros refactoring du code et stabilisation générale des fonctionnalités. 
+  Gros refactoring du code et stabilisation générale des fonctionnalités.
 
   \end{center}
-  
+
   % Pas de style ni de numéro pour cette page
   \thispagestyle{empty}
   \setcounter{page}{0}
   \ClearShipoutPicture
   \newpage
-  
+
   % Table des matières
   \tableofcontents{}
   \newpage
-  
+
   % C'est parti !!
   \section{Présentation}
     \subsection{Présentation et avertissement}
     \FAT est un logiciel musical conçu pour la Gameboy Advance.
     Avec \FAT, vous pouvez composer de la musique directement sur votre console de jeu en utilisant ses capacités techniques.
     \FAT se veut le plus simple possible mais un apprentissage de son mode de fonctionnement reste néanmoins nécessaire avant de pouvoir en exploiter les possibilités.\medskip
-    
+
     Attention ! La \fatversion (celle qui est actuellement disponible) est une version bêta.
     Même si je me suis attaché à éliminer un nombre maximal de problèmes en tout genre, le logiciel est encore très probablement buggé et/ou non finalisé.
     Paris ne s'est pas construit en un jour: \FAT va continuer d'évoluer tant que le coeur m'en dit.
@@ -160,37 +160,37 @@
     \medskip
 
     Notez que cette version (la \fatversion) est la version la plus stable produite à ce jour (plus de plantages bizarres dans l'émulateur). La lecture des samples est stable, l'utilisation processeur est raisonnable lors de la lecture d'une track.\medskip
-    
+
     Ceux qui ont déjà un pied dans la composition de musique chiptune ne tarderont pas à se rendre compte que l'interface de \FAT ressemble énormément à celle d'LSDJ (LittleSoundDJ).
     J'ai en effet considéré LSDJ comme {\bf LE} modèle mais en y ajoutant ma touche personnelle.
     Quelques fonctionnalités sont aussi complétement originales, d'autres ont été revues et d'autres encore ont disparues.
     \medskip
-    
+
     Je n'ai évidemment pas la prétention d'affirmer que \FAT joue dans la même cour qu'LSDJ.
     Néanmoins, j'espère qu'un jour, \FAT deviendra une référence pour la composition de musique chiptune sur GBA.\medskip
-    
+
     Et donc ... un grand merci à toi qui lit ce manuel probablement pour essayer \FAT. J'espère qu'il te plaira !
-  
+
     \subsection{Pourquoi \FAT ?}
     A l'époque de la création du projet, début 2011, il existe déjà quelques solutions pour composer de la musique sur une Gameboy Advance:
     \medskip
-    
+
     \begin{itemize}
         \item{Nanoloop 2.3/2.5}
         \item{M4G tracker}
         \item{et probablement d'autres que je n'ai su trouver...}
     \end{itemize}\medskip
-    
+
     Toutes ces solutions ne me satisfont pas (quoiqu'elles soient toutes parfaitement fonctionnelles!).
     \medskip
-    
+
     \begin{itemize}
         \item{Nanoloop 2.3/2.5 est un excellent logiciel ! mais sa disponibilité quasi nulle (et donc par effet de "marché", son prix rédhibitoire) en fait une solution finalement pas si simple d'accès.}
         \item{M4G tracker est aussi un excellent logiciel: mais son développement parait être abondonné, tout comme l'était \FAT à une époque cela dit ...}
         \item{On peut faire tourner LSDJ sur une GBA mais l'intérêt est relativement limité.}
         \item{quand aux possibles autres solutions, je ne les ai pas trouvées...}
     \end{itemize}\medskip
-    
+
     Et puis, finalement, programmer son propre tracker c'est quand même super fun !
     \medskip
 
@@ -209,32 +209,32 @@
     \medskip
 
     La version actuelle est "\fatversion".
-    
+
     \subsection{Comment utiliser \FAT ?}
 
     \FAT est livré sous la forme d'un fichier gba (rom).
     Ce fichier est directement utilisable sur votre ordinateur avec l'aide d'un émulateur (VisualBoyAdvance par exemple).
     \medskip
-    
+
     Mais l'avantage d'une Gameboy, c'est la mobilité !
     D'autant plus qu'un son émulé n'égalera jamais l'original.
     Pour exécuter \FAT sur une vraie Gameboy Advance, il vous faudra:
     \begin{itemize}
         \item{une vraie Gameboy Advance(scoop!) ou une Gameboy Micro. Personnellement je préfère l'écran de cette dernière mais certains le trouvent trop petit. Au pire la GBA SP est pas mal.}
         \item{une cartouche EZ-Flash, SuperCardToSD, ou autre ... Il faut un peu chercher sur le web ...}
-        \item{une carte SD qui va bien avec la cartouche (si vous optez pour une cartouche basée sur SD)} 
+        \item{une carte SD qui va bien avec la cartouche (si vous optez pour une cartouche basée sur SD)}
     \end{itemize}\medskip
-    
+
     Après avoir investi dans tout ce petit matériel, il suffira de copier le fichier fat.gba {\bf (à l'aide du logiciel fourni avec votre cartouche)} sur la carte SD: direction la GBA !
     Attention ! Veillez à bien suivre les instructions fournis par le constructeur de la cartouche : sans cela, \FAT risque de ne pas fonctionner correctement.
-    
+
     \ColoredAnnotation{Attention ! Bien que stable, cette version de \FAT est relativement expérimentale.
     Il est, je pense, inutile d'investir trop d'argent dans le but de tester sur GBA. C'est vous qui voyez !}
-    
+
     Si vous tenez à acheter votre propre cartouche, alors référez vous au tableau ci-dessous, il devrait vous aider à faire votre choix.
-    
+
     \subsection{Tableau de comparatif des cartouches pour GameboyAdvance}
-    
+
     Il existe un certain nombres de cartouches permettant d'exécuter des programmes dits "homebrew" (amateur) ... comme \FAT !
     Voici les quelques cartouches déjà testées avec \FAT :
     \medskip
@@ -248,8 +248,8 @@
         \hline
             \begin{minipage}[c]{3cm}
             \vspace{0.5cm}
-            \SimpleImage{images/supercardsd_djangofeet_sd}{0.2} 
-            \end{minipage} & 
+            \SimpleImage{images/supercardsd_djangofeet_sd}{0.2}
+            \end{minipage} &
             \begin{minipage}{3cm}
             Utilisez le logiciel officiel
             \end{minipage} &
@@ -262,22 +262,22 @@
         \hline
             \begin{minipage}[c]{3cm}
             \vspace{0.5cm}
-            \SimpleImage{images/supercardminisd_djangofeet_sd}{0.2} 
-            \end{minipage} & 
+            \SimpleImage{images/supercardminisd_djangofeet_sd}{0.2}
+            \end{minipage} &
             \begin{minipage}{3cm}
-            Utilisez le logiciel officiel 
+            Utilisez le logiciel officiel
             \end{minipage} &
             \begin{minipage}{2cm}
             \textcolor{bleu}{NON TESTE}
             \end{minipage} &
             \begin{minipage}{7cm}
             Non testé
-            \end{minipage} \\    
+            \end{minipage} \\
         \hline
             \begin{minipage}[c]{3cm}
             \vspace{0.5cm}
-            \SimpleImage{images/ezflash1}{0.2} 
-            \end{minipage} & 
+            \SimpleImage{images/ezflash1}{0.2}
+            \end{minipage} &
             \begin{minipage}{3cm}
             Utilisez le logiciel officiel (et son linker USB)
             \end{minipage} &
@@ -290,11 +290,11 @@
         \hline
             \begin{minipage}[c]{3cm}
             \vspace{0.5cm}
-            \SimpleImage{images/ultraflash2advance}{0.2} 
-            \end{minipage} & 
+            \SimpleImage{images/ultraflash2advance}{0.2}
+            \end{minipage} &
             \begin{minipage}{3cm}
             Utilisez les drivers officiels (la GBA fait office de linker)
-            \end{minipage} & 
+            \end{minipage} &
             \begin{minipage}{2cm}
             \textcolor{vert}{OK}
             \end{minipage} &
@@ -304,11 +304,11 @@
         \hline
             \begin{minipage}[c]{3cm}
             \vspace{0.5cm}
-            \SimpleImage{images/supercardsd_sd}{0.2} 
-            \end{minipage} & 
+            \SimpleImage{images/supercardsd_sd}{0.2}
+            \end{minipage} &
             \begin{minipage}{3cm}
             ???
-            \end{minipage} & 
+            \end{minipage} &
             \begin{minipage}{2cm}
             \textcolor{rouge}{KO}
             \end{minipage} &
@@ -318,71 +318,71 @@
         \hline
             \begin{minipage}[c]{3cm}
             \vspace{0.5cm}
-            \SimpleImage{images/ezflash4}{0.2} 
-            \end{minipage} & 
+            \SimpleImage{images/ezflash4}{0.2}
+            \end{minipage} &
             \begin{minipage}{3cm}
             \FAT démarre et est utilisable. Attention ! Il est {\bf nécessaire} d'utiliser le logiciel fourni !
-            \end{minipage} & 
+            \end{minipage} &
             \begin{minipage}{2cm}
             \textcolor{vert}{OK}
             \end{minipage} &
             \begin{minipage}{7cm}
             La sauvegarde ne fonctionne pas ! Utilisez celle livrée avec la cartouche (la save cheat)
-            \end{minipage} \\    
+            \end{minipage} \\
     \hline
     \end{supertabular}
 
     \medskip Le meilleur choix reste l'ezflash1. A chercher sur la toile.
 
     \subsection{Changements pour la \fatversion}
-    
+
     Liste des changements pour cette version de \FAT: \medskip
     \begin{itemize}
         \item{stabilisation générale (réécriture/réorganisation de tout le code)}
         \item{réécriture de la lecture des samples et oscillator}
         \item{ajout d'un editeur de courbe pour le channel WAVE}
-        \item{ajout d'un paramètre pour gérer la vitesse d'échantillonage des samples/oscillator}        
+        \item{ajout d'un paramètre pour gérer la vitesse d'échantillonage des samples/oscillator}
     \end{itemize}
-    
+
     \subsection{Roadmap pour la version suivante}
-    
-    La version suivante sera la \fatnextversion. \medskip    
+
+    La version suivante sera la \fatnextversion. \medskip
     \begin{itemize}
         \item{ajout de commandes diverses}
         \item{refonte de l'écran de gestion de courbes dans le channel WAV}
         \item{recherche de documentation pour implémenter la synthèse FM (si vous en avez je suis preneur) afin de moduler les samples et les faire sonner différemment.
                     L'objectif serait de se rapprocher du son de Nanoloop.}
     \end{itemize}
-    
+
     \subsection{Premier son}
 
     Commençons simple ! Nous allons poser notre premier son dans \FAT.\medskip
-    
+
     Lorsque \FAT démarre, c'est l'écran SONG qui apparaît en premier.
     Ne bougez pas le curseur, appuyez simplement une première fois sur A.
     Un "00" apparait en haut à gauche du tableau: c'est une {\bf séquence}.
-    
+
     \Image{images/screen_song}{1.0}{L'écran SONG}
-    
+
     Pressez ensuite SELECT (laissez la touche enfoncée) et appuyez sur la croix directionnelle vers la droite: l'interface change.
-    
+
     \Image{images/screen_popup}{1.0}{L'écran POPUP}
-    
+
     Sans bouger le curseur, appuyez une fois sur A: un nouveau "00" apparait.
     Cette fois-ci il s'agit d'un {\bf block}. La séquence "00" contient donc maintenant un seul block nommé "00".
-    
+
     \Image{images/screen_blocks}{1.0}{L'écran BLOCKS}
-        
+
     Pressez à nouveau SELECT (restez appuyé) et déplacez vous encore d'un cran vers la droite.
     L'interface a encore changé !
     Appuyez une dernière fois sur A : un "C 3" apparait.
     C'est votre première {\bf note} !
     Appuyez sur START : vous avez joué votre premier son avec \FAT sur une Gameboy Advance !
-    
-    \Image{images/screen_notes}{1.0}{L'écran NOTES - appuyez sur START !}    
-    
+
+    \Image{images/screen_notes}{1.0}{L'écran NOTES - appuyez sur START !}
+
     \subsection{Structure des données}
-    
+
     Nous avons abordé les notions de "séquences", "blocks" et de "notes".
     \FAT est globalement organisé de la même façon qu'LSDJ:
     \medskip
@@ -393,28 +393,28 @@
         \item{dans chaque block, les notes ! (16 maximum)}
     \end{itemize}
     \medskip
-    
+
     La façon d'organiser une chanson ressemble un peu au principe de "poupées russes".
     Les séquences contiennent des blocks qui eux même embarquent les notes.
     Quand \FAT lit une séquence, il passe d'un block à l'autre et lit toutes les notes une par une.
     \medskip
-    
+
     Pour éviter que chaque note sonne de la même façon, on leur assigne un {\bf instrument}.
     Chaque instrument contient un certain nombre de paramètres.
     Si vous changez les valeurs de ces paramètres, alors la note sonnera différemment.
     Il faut également savoir qu'il existe plusieurs types d'instruments : les canaux sonores de la GBA permettent de faire des choses différentes sur chacun d'eux.
-    
+
     \subsection{Données techniques de la Gameboy Advance}
-    
+
     La GameboyAdvance fournit 4 canaux "analogiques" pour la génération de sons et de bruits.
     Ces canaux sont sensiblement les mêmes que ceux présents dans la Gameboy première du nom.
     La GBA propose en plus 2 canaux "numériques": ils peuvent être utilisés afin de jouer des sons plus compliqués.
     Attention, la Gameboy ne "génère" plus le son en passant par ces 2 derniers canaux: on s'éloigne ainsi de l'esprit "chiptunes".
-    
+
     La GBA ne possède qu'un haut-parleur mono.
     Si vous souhaitez profiter des possibilités stéréo de \FAT, il vous faudra brancher un casque sur la sortie prévue à cet effet.
     La GBA ne sort du stéréo que via cette prise.
-    
+
     \paragraph{Canal 1 : PU1} Le canal permet de jouer des mélodies et/ou d'appliquer un effet SWEEP sur les notes. Attention, seul le canal 1 en est capable !
 
     \ColoredAnnotation{Vous pouvez utiliser ce canal pour générer un kick avec le sweep, ou comme basse principale}
@@ -459,19 +459,19 @@
 
     \newpage
     \section{Les écrans}
-  
+
     Pour organiser toutes les données d'une chanson, \FAT est divisé en plusieurs écrans.
     Chaque écran possède ses caractéristiques et son utilité.
     Vous pouvez accéder à l'aide pour la plupart des écrans en pressant R+L.
-  
+
     \subsection{La popup de déplacement}
-    
-    La popup de déplacement (accessible à tout moment en pressant sur SELECT) permet de changer l'écran actuellement actif. 
-    
+
+    La popup de déplacement (accessible à tout moment en pressant sur SELECT) permet de changer l'écran actuellement actif.
+
     \Image{images/popup_alone}{1.0}{L'écran POPUP (isolé sur la photo)}
-    
+
     Imaginez simplement cette popup comme une "barre de tâches" : changez d'écran en vous déplacant vers la droite ou la gauche puis relachez SELECT pour valider.
-    
+
     \subsubsection{Commandes}
 
     % Configuration du tableau
@@ -487,18 +487,18 @@
         {\bf DROITE/GAUCHE} & Déplacer le curseur de pointage \\
     \hline
     \end{supertabular}
-  
+
     \subsection{L'écran SONG}
-    
+
     Cet écran fait office de "séquenceur".
     C'est ici que vous allez organiser l'agencement de toutes vos séquences.
     Lorsque la lecture de l'ensemble est lancée, \FAT lit toutes les séquences ligne par ligne.
     Lorsque un emplacement est vide \FAT essaie de remonter à la première séquence disponible.
-    
+
     \Image{images/screen_song_complete}{1.0}{L'écran SONG se présente comme un gros tableau}
-    
+
         \subsubsection{Commandes}
-        
+
         % Configuration du tableau
         \tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
         \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
@@ -536,7 +536,7 @@
             {\bf L+B} & SI CASE NON VIDE | Changer le numéro de la séquence en copiant son contenu \\
         \hline
         \end{supertabular}
-        
+
     \subsection{L'écran BLOCKS}
 
     Dans cet écran, vous pouvez éditer le contenu d'une séquence : chaque séquence peut contenir de 0 à 16 blocks.
@@ -544,11 +544,11 @@
     Si \FAT rencontre un emplacement vide lors de la lecture alors il remonte au premier emplacement.
     Si aucun block n'est présent dans la séquence en cours, alors \FAT ne la jouera pas (elle sera sautée).
     \medskip
-    
+
     Pour faire simple, considérez cet écran comme une liste de blocks contenue dans une séquence (dont le numéro est affiché à droite de l'écran).
-    
+
     \Image{images/screen_blocks_complete}{1.0}{L'écran BLOCKS}
-    
+
     \subsubsection{Commandes}
     % Configuration du tableau
     \tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
@@ -587,20 +587,20 @@
         {\bf R+HAUT/BAS} & Sauter à la séquence précédente/suivante dans le séquenceur \\
     \hline
     \end{supertabular}
-        
-    
+
+
     \subsection{L'écran NOTES}
-    
+
     C'est dans cet écran que vous allez écrire ... vos notes ! (scooooop !).
     Vous ne pouvez écrire qu'une seule note par ligne.
     Un block possède 16 lignes, vous pouvez donc y insérer 16 notes.
     \medskip
-    
+
     La notation anglo-saxonne est utilisée pour l'affichage des notes.
     Ainsi, le "DO" s'écrit "C" chez nos amis anglais.
     Voici un tableau de correspondance :
     \medskip
-    
+
     \begin{center}
     % Configuration du tableau
         \tablehead{\hline \rowcolor{headertab} {\bf FR} & {\bf EN} \\ \hline}
@@ -625,13 +625,13 @@
         \end{supertabular}
     \end{center}
 
-    
+
     Chaque note est reliée à un instrument (la colonne INST).
     Chaque instrument possède un certains nombres de paramètres permettant de faire sonner une note différemment.
     Nous verrons dans la section suivante comment paramétrer ces instruments.
-    
+
     \Image{images/screen_notes_complete}{1.0}{L'écran NOTES}
-    
+
     \subsubsection{Commandes}
     % Configuration du tableau
     \tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
@@ -674,31 +674,31 @@
         {\bf B} & SI CASE VIDE | Coller la note préalablement coupée \\
     \hline
     \end{tabular}
-    
+
     \subsection{L'écran INSTRUMENT}
-    
+
     Cet écran se subdivise en 4: il existe autant de types d'instrument dans \FAT.
     \medskip
-    
+
     \begin{itemize}
         \item{le type PULSE}
         \item{le type WAVE}
         \item{le type NOISE}
         \item{le type KIT/SAMPLE}
     \end{itemize}\medskip
-    
+
      Chaque instrument est spécialisé dans la lecture de notes {\bf sur un certain canal}.
      Rappelez-vous, l'écran SONG est composé de 6 colonnes.
      Ces 6 colonnes représentent en fait chacun des 6 canaux de la GBA. Ainsi,
      \medskip
-     
+
      \begin{itemize}
         \item{les instruments PULSE sont spécialistes du canal 1 et 2: le PU1 et PU2}
         \item{les instruments WAVE sont utiles pour le canal 3 uniquement : le canal WAV}
         \item{les instrument NOISE sont, eux, prévus pour le canal 4: le canal NOI}
         \item{enfin, les instruments de type KIT/SAMPLE officient sur le canal 5 et 6: le SNA et SNB}
      \end{itemize}\medskip
-     
+
      Mais \FAT est suffisamment souple pour permettre l'utilisation d'un instrument dans un canal qui ne lui est pas dédié:
      le comportement peut cependant être surprenant (voire carrément "hallucinant").
      A vous de voir ce que vous souhaitez produire comme sonorités.
@@ -730,7 +730,7 @@
     \end{supertabular}
 
     \subsubsection{Instrument de type PULSE}
-        
+
     \Image{images/screen_instrument_pulse}{1.0}{Type PULSE}
 
     \paragraph{Enveloppe: "Volume"} de 0 à F.
@@ -934,11 +934,11 @@
 
     \paragraph{Simulator} Changez la note inscrite dans cet espace:
             celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.
-    
+
     \subsection{L'écran PROJECT}
-    
+
     L'écran PROJECT fait office de gestionnaire de propriétés pour votre morceau.
-    
+
     \Image{images/screen_project}{1.0}{L'écran PROJECT}
 
     \subsubsection{Paramètres}
@@ -994,13 +994,13 @@
         {\bf START} & Lancer/stopper la lecture depuis le séquenceur \\
     \hline
     \end{supertabular}
-    
+
     \subsection{L'écran FILESYSTEM}\label{filesystem}
-    
+
     L'écran FILESYSTEM permet de sauvegarder et de charger les tracks sauvegardées sur la cartouche.
     Notez que cet écran dispose de deux modes : SAVE ou LOAD.
     Les deux modes sont visuellement très proches: les actions possibles sont néanmoins différentes.
-    
+
     \subsubsection{Mode SAVE}
     \Image{images/screen_filesystem_save}{1.0}{L'écran FILESYSTEM en mode SAVE}
 
@@ -1013,7 +1013,7 @@
 	Une ultime boite de dialogue demande confirmation avant d'effectuer la sauvegarde: appuyez sur R pour confi{\bf R}mer, L pour annu{\bf L}er.
 
 	\Image{images/confirmation_save}{1.0}{Confirmation}
-        
+
     \ColoredAnnotation{\bf \textcolor{red}{Utilisateur de SuperCardSD ! N'oubliez pas "valider" votre sauvegarde ! Une fois la procédure gérée par \FAT complétée, appuyez sur R+L+A+START. Cela aura pour effet d'écrire le fichier .sav sur votre carte SD. Si vous n'effectuez pas cette manipulation, votre sauvegarde ne sera pas effective et vous risquez de perdre votre travail.} }
 
     \subsubsection{Commandes}
@@ -1058,9 +1058,9 @@
         Pour cela, utilisez le site web dédié : \url{www.furiousadvancetracker.com}}
 
     \subsection{L'écran EFFECTS}
-    
+
     \ColoredAnnotation{Cet écran n'est pas encore programmé. Pour ceux qui connaissent LSDJ, il s'agira de l'équivalent des TABLES}
-    
+
     \subsection{L'écran LIVE}
 
     Ici, vous allez pouvoir jouer votre chanson comme vous le voulez.
@@ -1131,39 +1131,39 @@
     \ColoredAnnotation{transpose du projet + transpose sur le block + transpose sur le live = transpose}
 
     \subsection{L'écran COMPOSER}
-    
+
     Imaginez cet écran comme un mini-piano ou un sampler: le COMPOSER va transformer votre Gameboy Advance en machine a improviser des sons !
-    
+
     \Image{images/screen_composer}{1.0}{L'écran COMPOSER}
-    
+
     Le principe est simple.
     L'écran vous présente 8 emplacements de notes.
     Chacune de ses notes est affectée à un bouton (seuls les boutons SELECT et START ne sont pas utilisables).
     Si vous regardez en bas de l'écran, le mot "UNLOCKED" est écrit:
         il signifie que vous êtes en mode "édition" et que vous pouvez écrire des notes comme vous le feriez dans un BLOCK (avec A).
     \medskip
-    
+
     Une fois que vous avez écrit toutes vos notes (qui peuvent chacune avoir un instrument différent), appuyez sur START.
     Le mode passe à "LOCKED". Vous êtes maintenant en mode "joueur".
     \medskip
-    
+
     Appuyez sur une touche: la note assignée est jouée en temps réel.
     Changez de touche pour jouer une autre note. Simple n'est ce pas ?
     \medskip
-    
+
     Notez aussi que ces données seront enregistrées dans chacune de vos chansons.
     Vous pourrez préparer votre set de note à la maison et improviser en live sans forcer !
     \medskip
-    
+
     Essayez ! composez quelques séquences puis essayez de jouer avec le COMPOSER en même temps !
     \medskip
-    
+
     \subsubsection{Paramétrage}
-    
+
     Le composer peut également être paramétré:
-    
+
     \Image{images/parameters_composer}{1.0}{Les paramètres de l'écran COMPOSER}
-    
+
     \paragraph{Transpose} de 0 à FF.
     Ajoute une valeur de transpose.
     Cette valeur s'ajoutera à celle configurée pour le projet dans sa globalité.
@@ -1196,7 +1196,7 @@
 
     \newpage
     \section{Effets et commandes}
-  
+
     \ColoredAnnotation{\FAT n'est pas encore très riche d'effets en tout genre pour le moment: il va falloir s'en contenter pour l'heure.
     Plusieurs commandes sont aux programme et débarqueront dans les versions suivantes. Patience !}
 

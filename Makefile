@@ -98,8 +98,8 @@ release: clear gfx all
 run: release
 	vba $(PROGNAME).$(EXT)
 
-doc: makefile
+manual: makefile
 	manual/buildPDF.sh
 
-doxygen: doc
+doxygen: manual
 		doxygen Doxyfile
