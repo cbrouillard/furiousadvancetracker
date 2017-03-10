@@ -119,14 +119,18 @@
   \end{center}
 
   {\bf pour la 0.3.0} \medskip
+
   Merci à {\bf \textcolor{vert}{Guillaume Dualé}} et {\bf \textcolor{vert}{Aline Bouquillon}} pour leur patience et leurs encouragements.
   Merci à {\bf \textcolor{vert}{Joan Dolç}} pour la traduction de la documentation 0.3.0 en anglais. \medskip
 
   {\bf 1.0.x, 1.1.x} \medskip
+
   Reprise en main du code 4 ans après la création du projet. Il s'en est passé des choses !
-  Un second merci à {\bf \textcolor{vert}{Guillaume Dualé}} pour son enthousiasme. Ça aide beaucoup de voir qu'une personne kiffe votre travail. Thanks bro.
+  Un second merci à {\bf \textcolor{vert}{Guillaume Dualé}} pour son enthousiasme. Ça aide beaucoup de voir qu'une personne kiffe votre travail. Thanks bro. \medskip
+
 
   {\bf 1.2.x} \medskip
+
   Gros refactoring du code et stabilisation générale des fonctionnalités.
 
   % Pas de style ni de numéro pour cette page
@@ -146,7 +150,7 @@
     Avec \FAT, vous pouvez composer de la musique directement sur votre console de jeu en utilisant ses capacités techniques.
     \FAT se veut le plus simple possible mais un apprentissage de son mode de fonctionnement reste néanmoins nécessaire avant de pouvoir en exploiter les possibilités.\medskip
 
-    Attention ! La \fatversion (celle qui est actuellement disponible) est une version bêta.
+    La \fatversion (celle qui est actuellement disponible) est une version stable.
     Même si je me suis attaché à éliminer un nombre maximal de problèmes en tout genre, le logiciel est encore très probablement buggé et/ou non finalisé.
     Paris ne s'est pas construit en un jour: \FAT va continuer d'évoluer tant que le coeur m'en dit.
     Dans le cas où vous détecteriez un bug ou un comportement "bizarre", n'hésitez pas !
@@ -154,8 +158,6 @@
     Le rapport ne vous prendra pas plus de 5 minutes et cela m'aidera pour faire avancer le logiciel !
     D'avance merci ! (et un bisou aussi !)
     \medskip
-
-    Notez que cette version (la \fatversion) est la version la plus stable produite à ce jour (plus de plantages bizarres dans l'émulateur). La lecture des samples est stable, l'utilisation processeur est raisonnable lors de la lecture d'une track.\medskip
 
     Ceux qui ont déjà un pied dans la composition de musique chiptune ne tarderont pas à se rendre compte que l'interface de \FAT ressemble énormément à celle d'LSDJ (LittleSoundDJ).
     J'ai en effet considéré LSDJ comme {\bf LE} modèle mais en y ajoutant ma touche personnelle.
@@ -190,13 +192,13 @@
     Et puis, finalement, programmer son propre tracker c'est quand même super fun !
     \medskip
 
-    Notez que nous sommes en 2015 et la situation n'a pas bougée. Peut-être que tout le monde s'en tamponne de la GBA ? :P \medskip
+    Notez que nous sommes en 2017 et la situation n'a pas bougée. Peut-être que tout le monde s'en tamponne de la GBA ? :P \medskip
 
     \subsection{La version de \FAT}
 
     \FAT est versionné avec 3 numéros.
     \begin{itemize}
-        \item{le premier numéro est le numéro de version majeur. Un changement de numéro implique qu'il y a des incompatibilités avec les versions précédentes.
+        \item{le premier numéro est le numéro de version majeur. Un changement de numéro implique qu'il y a de grosses incompatibilités avec les versions précédentes.
                     Actuellement, la version est la "1"}
         \item{le numéro du milieu est le numéro de version mineur.
                     Ce chiffre donne une idée de la progression des features. La compatibilité peut être conservée (mais pas forcément).}
@@ -224,7 +226,7 @@
     Après avoir investi dans tout ce petit matériel, il suffira de copier le fichier fat.gba {\bf (à l'aide du logiciel fourni avec votre cartouche)} sur la carte SD: direction la GBA !
     Attention ! Veillez à bien suivre les instructions fournis par le constructeur de la cartouche : sans cela, \FAT risque de ne pas fonctionner correctement.
 
-    \ColoredAnnotation{Attention ! Bien que stable, cette version de \FAT est relativement expérimentale.
+    \ColoredAnnotation{Attention ! Bien que stable, cette version de \FAT reste relativement expérimentale.
     Il est, je pense, inutile d'investir trop d'argent dans le but de tester sur GBA. C'est vous qui voyez !}
 
     Si vous tenez à acheter votre propre cartouche, alors référez vous au tableau ci-dessous, il devrait vous aider à faire votre choix.
@@ -579,8 +581,8 @@
         {\bf L+B} & SI CASE VIDE | Coller le block précédemment coupé en changeant son numéro \\
         \hline
         {\bf R+DROITE/GAUCHE} & Changer le numéro de séquence en cours d'édition \\
-        \hline
-        {\bf R+HAUT/BAS} & Sauter à la séquence précédente/suivante dans le séquenceur \\
+        %\hline
+        % {\bf R+HAUT/BAS} & Sauter à la séquence précédente/suivante dans le séquenceur \\
     \hline
     \end{supertabular}
 
@@ -663,8 +665,8 @@
         %\hline
         {\bf R+DROITE/GAUCHE} & Modifier le numéro de block en cours d'édition \\
         \hline
-        {\bf R+HAUT/BAS} & Sauter au block précédent/suivant dans la séquence en cours d'édition \\
-        \hline
+        %{\bf R+HAUT/BAS} & Sauter au block précédent/suivant dans la séquence en cours d'édition \\
+        %\hline
         {\bf B} & SI CASE NON VIDE | Couper la note \\
         \hline
         {\bf B} & SI CASE VIDE | Coller la note préalablement coupée \\
@@ -673,7 +675,7 @@
 
     \subsection{L'écran INSTRUMENT}
 
-    Cet écran se subdivise en 4: il existe autant de types d'instrument dans \FAT.
+    Cet écran se subdivise en 5: il existe autant de types d'instrument dans \FAT.
     \medskip
 
     \begin{itemize}
@@ -681,6 +683,7 @@
         \item{le type WAVE}
         \item{le type NOISE}
         \item{le type KIT/SAMPLE}
+        \item{le type OSCILLATOR}
     \end{itemize}\medskip
 
      Chaque instrument est spécialisé dans la lecture de notes {\bf sur un certain canal}.
@@ -692,11 +695,12 @@
         \item{les instruments PULSE sont spécialistes du canal 1 et 2: le PU1 et PU2}
         \item{les instruments WAVE sont utiles pour le canal 3 uniquement : le canal WAV}
         \item{les instrument NOISE sont, eux, prévus pour le canal 4: le canal NOI}
-        \item{enfin, les instruments de type KIT/SAMPLE officient sur le canal 5 et 6: le SNA et SNB}
+        \item{les instruments de type KIT/SAMPLE officient sur le canal 5 et 6: le SNA et SNB}
+        \item{enfin, les OSCILLATOR génèrent logiciellement un son basique (sinusoidal, carré, triangulaire ou en dent de scie)}
      \end{itemize}\medskip
 
      Mais \FAT est suffisamment souple pour permettre l'utilisation d'un instrument dans un canal qui ne lui est pas dédié:
-     le comportement peut cependant être surprenant (voire carrément "hallucinant").
+     le comportement peut cependant être surprenant ... ou inaudible.
      A vous de voir ce que vous souhaitez produire comme sonorités.
 
     \subsubsection{Commandes}
@@ -783,6 +787,7 @@
 
     \paragraph{Paramètre : "Sweep"} de 0 à 7F.
     Ajoute un effet particulier sur la note (le mieux est encore de tester).
+    N'oubliez pas que ce paramètre ne s'applique sur sur le channel PU1.
 
     \paragraph{Simulator} Changez la note inscrite dans cet espace:
             celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.
@@ -813,10 +818,8 @@
         \end{itemize}
 
     \paragraph{Paramètre : "Voice"} de 0 à 17.
-    \FAT inclut 23 types d'instruments WAV (en héxadécimal, 17 = 23).
-    Pour le moment, ces voix ne sont pas customisables.
-    Elles le seront dans les prochaines versions.
-    Il sera même possible de rajouter vos propres voix.
+    \FAT inclut 23 types d'instruments WAV (en héxadécimal, 17h = 23).
+    Depuis la version 1.2.0, il est possible de customiser et d'utiliser ses propres voix.
 
     \paragraph{Paramètre : "Bank"} 0 ou 1.
     Le canal WAV de la GBA est capable de charger 2 banks dans sa mémoire.
@@ -837,7 +840,28 @@
         \item{VIDE: le son ne sort plus (muet)}
     \end{itemize}
 
-    \paragraph{Custom wave} TODO
+    \paragraph{Custom wave} \FAT vous permet de stocker et d'utiliser 3 voix customisées.
+    Pour plus d'informations, référez vous à la section \hyperref[subsec:customwave]{"L'écran CUSTOM WAVE"}.
+    \medskip
+
+    \begin{itemize}
+      \item{un 'X' signifie que l'instrument n'utilise pas de voix customisée. La voix définit par \FAT est donc utilisée.}
+      \item{changez ce 'X' pour une valeur comprise entre 0 et 2 pour utiliser la voix correspondante}
+      \item{cette voix sélectionnée peut être éditée en appuyant sur "Go" (juste en dessous). \FAT vous affiche alors l'écran d'édition pour la voix sélectionnée.}
+      \item{si une voix n'a jamais été éditée auparavant, elle est initialisée avec les données de la voix courante de l'instrument.}
+    \end{itemize}\medskip
+
+    \tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+    \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+    \tablelasttail{\hline}
+    \begin{supertabular}{|l|p{11cm}|}
+        \hline
+        {\bf A+DROITE/GAUCHE} & Changer le numéro de voix custom sélectionnée \\
+        \hline
+        {\bf A+HAUT/BAS} & Annuler la customisation sur l'instrument (reset à 'X') \\
+    \hline
+    \end{supertabular}
+    \medskip
 
     \paragraph{Simulator} Changez la note inscrite dans cet espace:
         celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.
@@ -939,6 +963,9 @@
     \Image{images/screen_instrument_oscillator}{0.5}{Type OSCILLATOR}
 
     TODO commandes
+
+    \subsection{L'écran CUSTOM WAVE}
+    \label{subsec:customwave}
 
     \subsection{L'écran PROJECT}
 
@@ -1209,7 +1236,7 @@
 
     Voici les commandes actuellements utilisables.
 
-    \subsection{H (Hop!)}
+    \subsection{HO (Hop!)}
 
     Cette commande permet de sauter directement au block suivant.
     Elle peut permettre de créer des décalages de temps entre les blocks.
@@ -1223,7 +1250,7 @@
 
     \subsection{OU (OUtput)}
 
-    Dirige le son vers la droite (R), gauche (L), les deux (LR) ou aucun des deux ('  ')
+    Dirige le son vers la droite (\_R), gauche (L\_), les deux (LR) ou aucun des deux (\_\_)
 
     \subsection{SW (SWeep)}
 
