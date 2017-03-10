@@ -154,14 +154,14 @@
     \FAT is trying to be the simplest as possible but you'll probably have to learn how to use it in order to exploit all the features it provides.
     \medskip
 
-    Warning ! The \fatversion (which is currently available) is a beta version.
+    The current version, \fatversion, is the first really stable.
     I tried to make it the safest and bugfree as possible but this software is probably a little bit buggy or not finalized.
-    I'm currently working on \FAT (well ... while I'm motivated, I'll continue to develop it) so if you found a bug or an unusual case, please report me the issue.
+    I'm currently working on \FAT (well ... while I get motivation, I'll continue to develop it) so if you found a bug or an unusual case, please report me the issue.
     It's really important to make the software continue to grow. You can report any issue on \url{http://wwww.furiousadvancetracker.com}.
     Many thanks to you ! (and a kiss. But not a french one :D)
     \medskip
 
-    The \FAT's IHM really looks like LSDJ. Actually, I considered LSDJ as my model when designing \FAT while adding my personals touch and ideas.
+    The \FAT's GUI really looks like LSDJ. Actually, I considered LSDJ as my model when designing \FAT while adding my personals touch and ideas.
     Some features are completely originals when others has disapeared.
     \medskip
 
@@ -189,7 +189,7 @@
         \item{I didn't find any other solutions...}
     \end{itemize}\medskip
 
-    Finally you know what ? Coding my own tracker was really fun !
+    Finally you know what ? Coding my own tracker has proven to be really fun !
     \medskip
 
     \subsection{How to use \FAT ?}
@@ -197,13 +197,12 @@
     \FAT is a gba file. This file is directly usable on your computer or smarphone with a GameboyAdvance emulator (such as VisualBoyAdvance).
     \medskip
 
-    But the true advantage of a real Gameboy is : mobility !
     Anyway, an emulated sound can never be equal than the true one.
     To execute \FAT on a real GBA, you'll need :
     \medskip
 
     \begin{itemize}
-        \item{a true GBA ou or a Gameboy Micro. I personaly prefer the second one but some says the screen is too small.}
+        \item{a true GBA or a Gameboy Micro. I personaly prefer the second one but some says the screen is too small.}
         \item{an EZ-Flash, SuperCardToSD, or other cartridge ... You'll have to search the web in order to find one}
         \item{a SD card in the case your cartridge use one.}
     \end{itemize}\medskip
@@ -211,13 +210,13 @@
     When you have bought all this cool stuff, all you have to do is to paste the \FAT gba file {\bf (with the provided cartridge's software)}.
     It's really important to follow all the cartridge's constructor's instructions : \FAT could not work correctly if you don't.
 
-    \ColoredAnnotation{Warning ! This \FAT's version is really experimental. I thinks you don't have to waste money in order to try \FAT but it's your choice !}
+    \ColoredAnnotation{Warning ! Although this version has been considered as stable, it remains experimental. I thinks you don't have to waste money in order to try \FAT but it's your choice !}
 
     If you really want to buy you own cartridge, the following sheet can help you.
 
     \subsection{GameboyAdvance cartridge comparison sheet}
 
-    There's a lot of GBA cartridges. These cartridges allow you to execute "homebrew" program. And this is so cool because \FAT is a homebrew.
+    There's a lot of GBA cartridges. These cartridges allow you to execute "homebrew" program like \FAT.
     Here are some cartridges tested with \FAT.
 
     % Configuration du tableau
@@ -319,9 +318,9 @@
     Changelog for this \FAT's version: \medskip
     \begin{itemize}
       \item{general stability improvements (all the code has been reworked)}
-      \item{the samples and oscillator playback had been recoded}
+      \item{the samples and oscillator playback had been recoded (now it's stable)}
       \item{added a new screen : custom wave editor}
-      \item{added a new project parameter : the sample rate determines the playback speed for samples and/or oscillators}
+      \item{added a new project parameter : the sample rate determines the playback speed for samples and oscillators}
     \end{itemize}
 
     \subsection{Next version roadmap}
@@ -330,7 +329,7 @@
     \begin{itemize}
         \item{new commands}
         \item{total rework of custom wave screen}
-        \item{seeking some help for synth FM}
+        \item{seeking some help/documentation for synth FM}
     \end{itemize}
 
     \subsection{First sound}
@@ -342,7 +341,7 @@
 
     \Image{images/screen_song}{1.0}{SONG screen}
 
-    Press the SELECT button (hold it) et move to the right only once : the interface change.
+    Press the SELECT button (hold it) et move to the right only once : the interface has changed.
 
     \Image{images/screen_popup}{1.0}{POPUP screen}
 
@@ -383,112 +382,100 @@
 
     \paragraph{Channel 1 : PU1} This channel allow you to play melody and/or apply SWEEP effect on notes. Beware that the channel 1 is the only channel able to make SWEEP.
 
-    \ColoredAnnotation{For example, you can use this channel to generate a kick with this SWEEP param.}
+    \ColoredAnnotation{For example, you can use this channel to generate a kick with this SWEEP param or play bassy bass.}
 
     \paragraph{Channel 2 : PU2} This is exactly the same as the PU1 but without the SWEEP capability.
 
-    \ColoredAnnotation{You can use this channel to play a bass or melody.}
+    \ColoredAnnotation{You can use this channel to play another bass or a melody.}
 
-        \paragraph{Channel 3 : WAVE} Le canal 3 est capable de lire des minis-samples répartis dans 2 banques.
+    \paragraph{Channel 3 : WAVE} Channel 3 is able to play wave sound. It offers some cool capacities.
 
-        \ColoredAnnotation{Ce canal peut servir de soutien à la basse, ou faire office de "guitare electrique" et ajouter un coté saturé à votre morceau.}
+    \ColoredAnnotation{Make this channel a way to get more bass on your song or play some catchy satured sound, like a cool electric guitar or so.}
 
-        \paragraph{Channel 4 : NOISE} Ce canal est spécialisé dans la génération de bruits blancs.
+    \paragraph{Channel 4 : NOISE} Channel 4's purpose is to make some noise.
 
-        \ColoredAnnotation{Utilisez ce canal comme soutien au kick, ou pour des effets spéciaux (comme le son d'une plage en été par exemple, ...)}
+    \ColoredAnnotation{Use it to make some snare. You can also program some cool special effects such as beach wave sound for example.}
 
-        \paragraph{Channel 5 : SOUNDA} Ce canal sait jouer des samples et du son plus proches des machines actuelles que du "vrai" chiptunes.
+    \paragraph{Channel 5 : SOUNDA} Play samples and loops with this channel.
 
-        \ColoredAnnotation{Ce canal fait ses premiers pas dans cette version de \FAT. Certains de ses paramètres ne sont pas encore appliqués.}
+    \paragraph{Channel 6 : SOUNDB} Play samples and loops with this channel.
 
-        \paragraph{Channel 6 : SOUNDB} Ce canal sait jouer des samples et du son plus proches des machines actuelles que du "vrai" chiptunes.
+    \ColoredAnnotation{These two channels are perfect to add some human voices or better kick and snare. It's fully possible to add your own samples and use it within \FAT.}
 
-        \ColoredAnnotation{Ce canal fait ses premiers pas dans cette version de \FAT. Certains de ses paramètres ne sont pas encore appliqués.}
+  \newpage
+  \section{Screens}
 
-        \subsubsection{Les différences avec la Gameboy}
+    In order to let you to compose your track in the best condition, \FAT had been divided into several screens.
+    Each screen has its own purpose. For most of them you can access to an help screen by pressing R+L.
 
-        Le contrôleur audio de la GBA est essentiellement le même que celui de la Gameboy monochrome/couleur. Voici les quelques changements opérés:
+    \subsection{The switch popup}
 
-            \paragraph{SNA et SNB} Deux canaux sonores ont été ajoutés qui peuvent être utilisés pour jouer du son numérique. Le débit de données de l'échantillon et l'échantillon lui-même doit être fourni et géré à l'aide d'une minuterie et/ou un canal DMA.
+    The switch popup, always accessible by pressing SELECT, allows you to switch accross all the screens at anytime.
 
-            \paragraph{Registres} Le registre SOUNDCNT\_H contrôle les nouveaux canaux DMA - ainsi que le mélange avec les quatre anciens canaux. Le registre SOUNDBIAS contrôle la sortie finale du son.
+    \Image{images/popup_alone}{1.0}{The switch popup (alone)}
 
-            \paragraph{Amélioration du canal WAV} La longueur de la RAM Wave est doublé : 2 banques de 32 chiffres chacun. Il est possible de jouer les 2 banques (l'une après l'autre) ou de n'en sélectionner qu'une.
+    You can imagine this popup as a taskbar : change active screen by moving the cursor on the right or left then release the SELECT button to validate the change.
 
-            \medskip
-  Si vous souhaitez en savoir plus sur les spécifications techniques de la Gameboy Advance, vous pouvez consulter \href{http://www.portabledev.com/media/GBA/tutoriels/gbatek.htm}{www.portabledev.com}. Le site \href{http://belogic.com/gba/}{belogic.com/gba/} est également une mine de renseignements !
+    \subsubsection{Commandes}
+    % Configuration du tableau
+    \tablehead{\hline \rowcolor{headertab} {\bf Key(s)} & {\bf Effect} \\ \hline}
+    \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+    \tablelasttail{\hline}
+    \begin{supertabular}{|l|l|}
+    \hline
+        {\bf SELECT} (hold) & Display the popup \\
+        \hline
+        {\bf SELECT} (on release) & Validate the screen change order \\
+        \hline
+        {\bf LEFT/RIGHT} & Move the cursor \\
+    \hline
+    \end{supertabular}
 
-  \section{Les écrans}
+    \subsection{SONG screen}
 
-    Pour organiser toutes les données d'une chanson, \FAT est divisé en plusieurs écrans. Chaque écran possède ses caractéristiques et son utilité. Vous pouvez accéder à l'aide pour la plupart des écrans en pressant R+L.
+    This screen is the sequencer. Right here, you'll can organize your track's sequences order.
+    When you'll want to play your song, \FAT will read all the sequences line by line.
+    When an empty spot had been detected, \FAT will try to start from the first in the list.
 
-    \subsection{La popup de déplacement}
-
-    La popup de déplacement (accessible à tout moment en pressant sur SELECT) permet de changer l'écran actuellement actif.
-
-    \Image{images/popup_alone}{1.0}{L'écran POPUP (isolé sur la photo)}
-
-    Imaginez simplement cette popup comme une "barre de tâches" : changez d'écran en vous déplacant vers la droite ou la gauche puis relachez SELECT pour valider.
+    \Image{images/screen_song_complete}{1.0}{The SONG screen is like a big table.}
 
         \subsubsection{Commandes}
 
         % Configuration du tableau
-        \tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
-        \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
-        \tablelasttail{\hline}
-        \begin{supertabular}{|l|l|}
-        \hline
-            {\bf SELECT} (enfoncé) & Afficher la popup \\
-            \hline
-            {\bf SELECT} (relâché) & Valider le changement d'écran \\
-            \hline
-            {\bf DROITE/GAUCHE} & Déplacer le curseur de pointage \\
-        \hline
-        \end{supertabular}
-
-    \subsection{L'écran SONG}
-
-    Cet écran fait office de "séquenceur". C'est ici que vous allez organiser l'agencement de toutes vos séquences. Lorsque la lecture de l'ensemble est lancée, \FAT lit toutes les séquences ligne par ligne. Lorsque un emplacement est vide \FAT essaie de remonter à la première de la liste.
-
-    \Image{images/screen_song_complete}{1.0}{L'écran SONG se présente comme un gros tableau}
-
-        \subsubsection{Commandes}
-
-        % Configuration du tableau
-        \tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+        \tablehead{\hline \rowcolor{headertab} {\bf Key(s)} & {\bf Effect} \\ \hline}
         \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
         \tablelasttail{\hline}
         \begin{supertabular}{|l|p{11cm}|}
         \hline
-            {\bf SELECT} & Passer en mode popup \\
+            {\bf SELECT} & Show the switch popup \\
             \hline
-            {\bf START} & Lancer/stopper la lecture depuis le séquenceur \\
+            {\bf START} & Start/stop song playback from the sequencer \\
             \hline
-            {\bf R+L} & Afficher l'écran d'aide \\
+            {\bf R+L} & Show help screen \\
             \hline
-            {\bf L+HAUT} & Déplacer le curseur tout en haut \\
+            {\bf L+UP} & Move the cursor to top \\
             \hline
-            {\bf L+BAS} & Déplacer le curseur tout en bas \\
+            {\bf L+DOWN} & Move the cursor to down \\
             \hline
-            {\bf R+HAUT} & Déplacer le curseur d'une page vers le haut \\
+            {\bf R+UP} & Move the cursor to one page up \\
             \hline
-            {\bf R+BAS} & Déplacer le curseur d'une page vers le bas \\
+            {\bf R+DOWN} & Move the cursor to one page down \\
             \hline
-            {\bf A} & Inscrire le dernier numéro de séquence dans la case sous le curseur (par défaut "00") \\
+            {\bf A} & Write last known sequence's number on the spot designated by cursor (default is "00") \\
             \hline
-            {\bf A+DIRECTION} & Modifier la valeur de la séquence dans la case sous le curseur \\
+            {\bf A+DIRECTION} & Modify value \\
             \hline
-            {\bf L+A} & Trouver une nouvelle séquence disponible puis l'inscrire dans la case sous le curseur \\
+            {\bf L+A} & Find a new available number and set the value on spot \\
             \hline
-            {\bf R+A} & Non utilisé pour le moment \\
+            {\bf R+A} & Not used \\
             \hline
-            {\bf B} & SI CASE NON VIDE | Couper la séquence \\
+            {\bf B} & IF NOT EMPTY SPOT | Cut sequence \\
             \hline
-            {\bf B} & SI CASE VIDE | Coller une séquence préalablement coupée \\
+            {\bf B} & IF EMPTY SPOT | Paste sequence \\
             \hline
-            {\bf L+B} & SI CASE VIDE | Coller une séquence préalablement coupée en changeant le numéro \\
+            {\bf L+B} & IF EMPTY SPOT | Paste sequence but changing number \\
             \hline
-            {\bf L+B} & SI CASE NON VIDE | Changer le numéro de la séquence en copiant son contenu \\
+            {\bf L+B} & IF NOT EMPTY SPOT | Change number of sequence while copying its content \\
         \hline
         \end{supertabular}
 
