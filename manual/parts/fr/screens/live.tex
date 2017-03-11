@@ -1,0 +1,66 @@
+Ici, vous allez pouvoir jouer votre chanson comme vous le voulez.
+C'est ce mode qui est à priviligier si vous voulez mouiller le maillot sur scène.
+Si vous préférez simplement appuyer sur START dans l'écran SONG et danser avec le public, libre à vous !
+Sachez cependant que le mode LIVE est là pour vous permettre de modifier la mécanique de vos morceaux.
+
+\Image{images/screen_live}{1.0}{L'écran LIVE se présente comme l'écran SONG}
+
+Le séquenceur est à nouveau affiché mais cette fois il n'est pas question d'éditer les séquences sur le tableau.
+Par contre vous allez pouvoir démarrer chacun des channels dans l'ordre qui vous chante.
+Une fois un channel démarré, il est possible d'effectuer plusieurs actions :
+\medskip
+
+\begin{itemize}
+    \item{modifier le volume du channel}
+    \item{changer la transposition sur le channel}
+    \item{stopper sa lecture}
+\end{itemize}
+\medskip
+
+Notez que l'écran LIVE propose deux modes : le mode MANUAL (MAN) et le mode AUTO (AUT).
+En mode MANUAL, FAT n'avance PAS dans le séquenceur. La même séquence sur le channel est rejouée à l'infini: c'est à vous de faire progresser le morceau.
+A l'inverse, en mode AUTO, FAT se comporte comme dans l'écran SONG : tous les channels en cours de lecture progressent normalement.
+\newpage % hack pourri
+\subsubsection{Commandes}
+\begin{supertabular}{|l|p{10cm}|}
+    \hline
+    {\bf SELECT} & Passer en mode popup \\
+    \hline
+    {\bf R+L} & Afficher l'écran d'aide \\
+    \hline
+    {\bf START} & Lance/arrête la lecture du channel sous le curseur \\
+    \hline
+    {\bf R+START} & Lance/arrête la lecture de tous les channels \\
+    \hline
+    {\bf R+BAS} & Passer dans la partie configuration de l'écran (modification du volume, tsp, tempo et mode) \\
+    \hline
+    {\bf R+HAUT} & Passer dans la partie séquenceur de l'écran \\
+    \hline
+    {\bf A+DIRECTION} & DANS LA PARTIE CONFIGURATION - Modifie la valeur du paramètre sous le curseur \\
+    \hline
+    {\bf A+L+DIRECTION} & DANS LA PARTIE CONFIGURATION - Modifie la valeur du paramètre pour tous les channels \\
+    \hline
+\end{supertabular}
+
+\subsubsection{Précisions sur l'application du volume}
+
+Lorsque vous changez le volume sur le channel, \FAT calcul un nouveau volume à appliquer sur chaque note.
+\medskip
+
+\begin{itemize}
+    \item{si la valeur est "df" dans l'écran LIVE, alors le volume de l'instrument ou celui d'une éventuelle commande est appliqué. "df" = "defined"}
+    \item{si la valeur est autre que "df", alors le volume est une moyenne calculée entre la valeur écrite dans l'instrument (ou dans une commande) et celle demandée dans le LIVE}
+\end{itemize}
+\medskip
+
+Un volume de 00 n'éteint donc pas forcément le channel ! Il le divise par 2.
+Il n'y a pour le moment pas de mode MUTE.
+
+\ColoredAnnotation{Cette méthode d'application du volume sera peut-être ammené à changer. Si vous avez un avis, faites le moi savoir.}
+
+\subsubsection{Précisions sur l'application du transpose}
+
+Comme pour le volume, \FAT calcul la valeur de transpose à appliquer en fonction d'autres paramètres.
+La valeur de transpose à prendre en considération se calcule très simplement comme suit :
+
+\ColoredAnnotation{transpose du projet + transpose sur le block + transpose sur le live = transpose}

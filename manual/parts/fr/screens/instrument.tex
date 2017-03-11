@@ -1,0 +1,344 @@
+Cet écran se subdivise en 5: il existe autant de types d'instrument dans \FAT.
+\medskip
+
+\begin{itemize}
+    \item{le type PULSE}
+    \item{le type WAVE}
+    \item{le type NOISE}
+    \item{le type KIT/SAMPLE}
+    \item{le type OSCILLATOR}
+\end{itemize}\medskip
+
+ Chaque instrument est spécialisé dans la lecture de notes {\bf sur un certain canal}.
+ Rappelez-vous, l'écran SONG est composé de 6 colonnes.
+ Ces 6 colonnes représentent en fait chacun des 6 canaux de la GBA. Ainsi,
+ \medskip
+
+ \begin{itemize}
+    \item{les instruments PULSE sont spécialistes du canal 1 et 2: le PU1 et PU2}
+    \item{les instruments WAVE sont utiles pour le canal 3 uniquement : le canal WAV}
+    \item{les instrument NOISE sont, eux, prévus pour le canal 4: le canal NOI}
+    \item{les instruments de type KIT/SAMPLE officient sur le canal 5 et 6: le SNA et SNB}
+    \item{enfin, les OSCILLATOR génèrent logiciellement un son basique (sinusoidal, carré, triangulaire ou en dent de scie)}
+ \end{itemize}\medskip
+
+ Mais \FAT est suffisamment souple pour permettre l'utilisation d'un instrument dans un canal qui ne lui est pas dédié:
+ le comportement peut cependant être surprenant ... ou inaudible.
+ A vous de voir ce que vous souhaitez produire comme sonorités.
+
+\subsubsection{Commandes}
+
+% Configuration du tableau
+\tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+\tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+\tablelasttail{\hline}
+\begin{supertabular}{|l|p{11cm}|}
+\hline
+    {\bf SELECT} & Passer en mode popup \\
+    \hline
+    {\bf R+L} & Afficher l'écran d'aide \\
+    \hline
+    {\bf START} & Lancer/stopper la lecture des notes du block actuellement en cours d'édition \\
+    \hline
+    {\bf B} & Jouer la note dans le simulateur \\
+    \hline
+    {\bf B+DIRECTION} & Modifier la valeur du simulateur \\
+    \hline
+    {\bf A+DIRECTION} & Modifier la valeur sous le curseur \\
+    \hline
+    {\bf R+DROITE/GAUCHE} & Changer le numéro d'instrument en cours d'édition \\
+    \hline
+    {\bf L+DROITE/GAUCHE} & Changer le type d'instrument \\
+\hline
+\end{supertabular}
+
+\subsubsection{Instrument de type PULSE}
+
+\Image{images/screen_instrument_pulse}{1.0}{Type PULSE}
+
+\subsubsection{Paramètres}
+
+\paragraph{Enveloppe: "Volume"} de 0 à F.
+Cette valeur permet de régler le volume des notes attachées à cet instrument.
+\medskip
+
+\begin{itemize}
+    \item{0: muet}
+    \item{F: à fond !}
+\end{itemize}
+
+\paragraph{Enveloppe: "Direction"} \SimpleImage{images/envelope_direction_down}{1.0} ou \SimpleImage{images/envelope_direction_up}{1.0}.
+Indique si le son monte ou descend.
+
+\paragraph{Enveloppe : "Steptime"} de 0 à 7.
+Agit sur la longueur du pas de l'onde (en gros).
+\medskip
+
+\begin{itemize}
+    \item{0: paramètre non pris en compte}
+    \item{1: assez court}
+    \item{7: très court}
+\end{itemize}
+
+\paragraph{Enveloppe : "Wave"} \SimpleImage{images/envelope_waveduty_0}{1.0} ou \SimpleImage{images/envelope_waveduty_1}{1.0} ou \SimpleImage{images/envelope_waveduty_2}{1.0} ou \SimpleImage{images/envelope_waveduty_3}{1.0}.
+Modifie la forme de l'onde jouée par la GameboyAdvance.
+
+\paragraph{Paramètre : "Timed"} 0 ou 1.
+\medskip
+
+\begin{itemize}
+    \item{0: le son n'est pas temporisé}
+    \item{1: le son est temporisé, réglez la durée avec le paramètre "Soundlength"}
+\end{itemize}
+
+\paragraph{Paramètre : "Soundlength"} de 0 à 3F.
+Ce paramètre n'est accessible que si "Timed" à été positionné sur 1.
+\medskip
+
+\begin{itemize}
+    \item{0: le son est "infini"}
+    \item{3f: le son est très (très... voire trop) court}
+\end{itemize}
+
+\paragraph{Paramètre : "Output"} Choisissez le mode de sortie du son.
+\medskip
+
+\begin{itemize}
+    \item{L: le son sort à gauche (LEFT)}
+    \item{R: le son sort à droite (RIGHT)}
+    \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
+    \item{VIDE: le son ne sort plus (muet)}
+\end{itemize}
+
+\paragraph{Paramètre : "Sweep"} de 0 à 7F.
+Ajoute un effet particulier sur la note (le mieux est encore de tester).
+N'oubliez pas que ce paramètre ne s'applique sur sur le channel PU1.
+
+\paragraph{Simulator} Changez la note inscrite dans cet espace:
+        celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.
+
+\subsubsection{Instrument de type WAVE}
+
+\Image{images/screen_instrument_wave}{0.5}{Type WAVE}
+
+\subsubsection{Paramètres}
+
+\paragraph{Enveloppe : Volume} de 0 à 4.
+Cette valeur permet de régler le volume des notes attachées à cet instrument.
+
+\paragraph{Paramètre : "Timed"} 0 ou 1.
+\medskip
+
+\begin{itemize}
+        \item{0: le son n'est pas temporisé}
+        \item{1: le son est temporisé, réglez la durée avec le paramètre "Soundlength"}
+    \end{itemize}
+
+\paragraph{Paramètre : "Length"} de 0 à FF.
+Ce paramètre n'est accessible que si "Timed" a été positionné sur 1.
+\medskip
+
+\begin{itemize}
+        \item{00: le son est "infini"}
+        \item{eb: le son commence à être court}
+        \item{ff: le son est très (très très) court}
+    \end{itemize}
+
+\paragraph{Paramètre : "Voice"} de 0 à 17.
+\FAT inclut 23 types d'instruments WAV (en héxadécimal, 17h = 23).
+Depuis la version 1.2.0, il est possible de customiser et d'utiliser ses propres voix.
+
+\paragraph{Paramètre : "Bank"} 0 ou 1.
+Le canal WAV de la GBA est capable de charger 2 banks dans sa mémoire.
+Vous pouvez décider quelle bank sera jouée,
+sachant que la bank est directement chargée depuis le paramètre "Voice" juste au dessus (chaque "Voice" possède 2 banks).
+
+\paragraph{Paramètre : "Bankmode"} "SIN" ou "DUA".
+Le canal WAV est capable de faire une synthèse des 2 banks chargées en mémoire (le mode DUA = Dual) ou bien de n'en jouer qu'une seule (le mode SIN = Single).
+Notez que si vous réglez ce paramètre avec SIN, \FAT jouera la bank sélectionnée avec le paramètre "Bank".
+
+\paragraph{Paramètre : "Output"} Choisissez le mode de sortie du son.
+\medskip
+
+\begin{itemize}
+    \item{L: le son sort à gauche (LEFT)}
+    \item{R: le son sort à droite (RIGHT)}
+    \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
+    \item{VIDE: le son ne sort plus (muet)}
+\end{itemize}
+
+\paragraph{Custom wave} \FAT vous permet de stocker et d'utiliser 3 voix customisées.
+Pour plus d'informations, référez vous à la section \hyperref[subsec:customwave]{"L'écran CUSTOM WAVE"}.
+\medskip
+
+\begin{itemize}
+  \item{un 'X' signifie que l'instrument n'utilise pas de voix customisée. La voix définit par \FAT est donc utilisée.}
+  \item{changez ce 'X' pour une valeur comprise entre 0 et 2 pour utiliser la voix correspondante}
+  \item{cette voix sélectionnée peut être éditée en appuyant sur "Go" (juste en dessous). \FAT vous affiche alors l'écran d'édition pour la voix sélectionnée.}
+  \item{si une voix n'a jamais été éditée auparavant, elle est initialisée avec les données de la voix courante de l'instrument.}
+\end{itemize}\medskip
+
+\tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+\tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+\tablelasttail{\hline}
+\begin{supertabular}{|l|p{11cm}|}
+    \hline
+    {\bf A+DROITE/GAUCHE} & Changer le numéro de voix custom sélectionnée \\
+    \hline
+    {\bf A+HAUT/BAS} & Annuler la customisation sur l'instrument (reset à 'X') \\
+\hline
+\end{supertabular}
+\medskip
+
+\paragraph{Simulator} Changez la note inscrite dans cet espace:
+    celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.
+
+\subsubsection{Instrument de type NOISE}
+
+\Image{images/screen_instrument_noise}{1.0}{Type NOISE}
+
+\subsubsection{Paramètres}
+
+\paragraph{Enveloppe : "Volume"} de 0 à F.
+Cette valeur permet de régler le volume des notes attachées à cet instrument.
+\medskip
+
+\begin{itemize}
+    \item{0: muet}
+    \item{F: à fond !}
+\end{itemize}
+
+\paragraph{Enveloppe : "Direction"} \SimpleImage{images/envelope_direction_down}{1.0} ou \SimpleImage{images/envelope_direction_up}{1.0}.
+    Indique si le son monte ou descend.
+
+\paragraph{Enveloppe : "Steptime"} de 0 à 7.
+Agit sur la longueur du pas de l'onde (en gros).
+
+\paragraph{Enveloppe : "Polystep"} 0 ou 1.
+Modifie la facon dont le générateur de bruit fonctionne.
+\medskip
+
+\begin{itemize}
+    \item{0: bruit simple}
+    \item{1: bruit qui grince}
+\end{itemize}
+
+\paragraph{Paramètre : "Timed"} 0 ou 1.
+\medskip
+
+\begin{itemize}
+        \item{0: le son n'est pas temporisé}
+        \item{1: le son est temporisé, réglez la durée avec le paramètre "Length"}
+    \end{itemize}
+
+\paragraph{Paramètre : "Length"} de 0 à 3F.
+Ce paramètre n'est accessible que si "Timed" à été positionné sur 1.
+\medskip
+
+\begin{itemize}
+    \item{0: le son est "infini"}
+    \item{3f: le son est très (très... voire trop) court}
+\end{itemize}
+
+\paragraph{Paramètre : "Output"} Choisissez le mode de sortie du son.
+\medskip
+\begin{itemize}
+    \item{L: le son sort à gauche (LEFT)}
+    \item{R: le son sort à droite (RIGHT)}
+    \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
+    \item{VIDE: le son ne sort plus (muet)}
+\end{itemize}
+
+\paragraph{Simulator} Changez la note inscrite dans cet espace:
+            celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.
+
+\subsubsection{Instrument de type SAMPLE}
+
+\FAT est capable de lire des samples sur les canaux SNA et SNB.
+Un sample est un morceau sonore de courte durée inclus dans une collection.
+Une série de collection est incluse par défaut dans \FAT :\medskip
+
+\begin{itemize}
+    \item {DEV-MESS : quelques samples de test pour le développement}
+    \item {LS-MGDRV : des samples Megadrive fournis par Nullsleep (\href{http://little-scale.blogspot.fr/2008/08/sega-mega-drive-sample-pack.html}{Site de Nullsleep})}
+    \item {C64DRUMS : drums et snares en provenance du Commodore64}
+    \item {YM-DRUMS : drums et snares en provenance de l'Atari ST}
+    \item {BATTERY : des kicks, drums et snares d'une batterie "classique"}
+    \item {RHYTHMS : quelques ryhtmes complets (mais encore non exploitable car mal samplé)}
+    \item {TR-606-7 : sample de cette machine mythique}
+\end{itemize} \medskip
+
+Il est assez facile de rajouter votre propre collection de samples. Pour plus d'informations, consultez la section \hyperref[sec:addsamples]{"Manipulation de la ROM pour l'ajout de vos collections de samples"}.
+
+\Image{images/screen_instrument_sample}{0.5}{Type SAMPLE/KIT}
+
+\subsubsection{Paramètres}
+
+\paragraph{Kit collection : "Name"} Le nom de la collection de sample dans laquelle piocher.
+
+\paragraph{Enveloppe : "Volume"} Volume affecté au sample : 50\% (0) ou 100\% (1).
+
+\paragraph{Paramètre : "Loop"} Le sample est t-il joué en boucle ?
+                                Si "YES", alors la lecture du sample est répétée.
+
+\paragraph{Paramètre : "Timed"} Définit si le sample sera coupé ou non.
+
+\paragraph{Paramètre : "Length"} Si "Timed" est à 1, cette valeur définit la coupure en pourcentage de la durée totale du sample.
+
+\paragraph{Paramètre : "Offset"} Offset de départ pour la lecture du sample.
+                                En pourcentage de la durée totale du sample.
+
+\paragraph{Paramètre : "Output"} Choisissez le mode de sortie du son.
+\medskip
+
+\begin{itemize}
+    \item{L: le son sort à gauche (LEFT)}
+    \item{R: le son sort à droite (RIGHT)}
+    \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
+    \item{VIDE: le son ne sort plus (muet)}
+\end{itemize}
+
+\paragraph{Simulator} Changez la note inscrite dans cet espace:
+        celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.
+
+\subsubsection{Instrument de type OSCILLATOR}
+
+\FAT est capable de générer le son simple d'un oscillateur. Ces instruments seront surement utilisés un jour
+pour la synthèse FM. En attendant, ils restent utilisables en tant que tel dans les canaux SNA et SNB.
+
+\ColoredAnnotation {Vous remarquerez assez rapidement que les oscillateurs de type sinusoidal n'ont pas un son "parfait".
+Cela est dû à 2 choses. La première étant que le processeur de la GBA ne gère pas le calcul flottant (nombres avec virgules).
+Le calcul d'une onde sinusoidale demande une certaine précision que l'on ne peut donc pas obtenir nativement et facilement.
+La seconde chose : il reste néanmoins possible de faire du calcul flottant, mais de manière logicielle. Ce genre de calcul n'est cependant pas
+encore utilisé dans \FAT. Il y a donc encore une marge de progression possible pour ce sujet.}
+
+\Image{images/screen_instrument_oscillator}{0.5}{Type OSCILLATOR}
+
+\subsubsection{Paramètres}
+
+\paragraph{Oscillator : "OSC Shape"} La forme d'onde à générer. \FAT gère 4 types d'ondes :\medskip
+
+\begin{itemize}
+    \item{\SimpleImage{images/osc_shape_sinus}{1.0} sinus}
+    \item{\SimpleImage{images/osc_shape_square}{1.0} carré}
+    \item{\SimpleImage{images/osc_shape_triangle}{1.0} triangle}
+    \item{\SimpleImage{images/osc_shape_sawtooth}{1.0} dents de scie}
+\end{itemize}\medskip
+
+\paragraph{Oscillator : "Amplitude"} Ce paramètre n'est pas encore disponible à l'utilisation.
+
+\paragraph{Enveloppe : "Volume"} Volume affecté au sample : 50\% (0) ou 100\% (1).
+
+\paragraph{Paramètre : "Timed"} Définit si le son sera coupé ou non.
+
+\paragraph{Paramètre : "Length"} Si "Timed" est à 1, cette valeur définit la coupure en pourcentage de la durée totale du son.
+
+\paragraph{Paramètre : "Output"} Choisissez le mode de sortie du son.
+\medskip
+
+\begin{itemize}
+    \item{L: le son sort à gauche (LEFT)}
+    \item{R: le son sort à droite (RIGHT)}
+    \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
+    \item{VIDE: le son ne sort plus (muet)}
+\end{itemize}

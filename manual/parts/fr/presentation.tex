@@ -1,0 +1,309 @@
+\subsection{Présentation et avertissement}
+\FAT est un logiciel musical conçu pour la Gameboy Advance.
+Avec \FAT, vous pouvez composer de la musique directement sur votre console de jeu en utilisant ses capacités techniques.
+\FAT se veut le plus simple possible mais un apprentissage de son mode de fonctionnement reste néanmoins nécessaire avant de pouvoir en exploiter les possibilités.\medskip
+
+La \fatversion (celle qui est actuellement disponible) est une version stable.
+Même si je me suis attaché à éliminer un nombre maximal de problèmes en tout genre, le logiciel est encore très probablement buggé et/ou non finalisé.
+Paris ne s'est pas construit en un jour: \FAT va continuer d'évoluer tant que le coeur m'en dit.
+Dans le cas où vous détecteriez un bug ou un comportement "bizarre", n'hésitez pas !
+Faites un rapport de bug sur \url{http://wwww.furiousadvancetracker.com}.
+Le rapport ne vous prendra pas plus de 5 minutes et cela m'aidera pour faire avancer le logiciel !
+D'avance merci ! (et un bisou aussi !)
+\medskip
+
+Ceux qui ont déjà un pied dans la composition de musique chiptune ne tarderont pas à se rendre compte que l'interface de \FAT ressemble énormément à celle d'LSDJ (LittleSoundDJ).
+J'ai en effet considéré LSDJ comme {\bf LE} modèle mais en y ajoutant ma touche personnelle.
+Quelques fonctionnalités sont aussi complétement originales, d'autres ont été revues et d'autres encore ont disparues.
+\medskip
+
+Je n'ai évidemment pas la prétention d'affirmer que \FAT joue dans la même cour qu'LSDJ.
+Néanmoins, j'espère qu'un jour, \FAT deviendra une référence pour la composition de musique chiptune sur GBA.\medskip
+
+Et donc ... un grand merci à toi qui lit ce manuel probablement pour essayer \FAT. J'espère qu'il te plaira !
+
+\subsection{Pourquoi \FAT ?}
+A l'époque de la création du projet, début 2011, il existe déjà quelques solutions pour composer de la musique sur une Gameboy Advance:
+\medskip
+
+\begin{itemize}
+  \item{Nanoloop 2.3/2.5}
+  \item{M4G tracker}
+  \item{et probablement d'autres que je n'ai su trouver...}
+\end{itemize}\medskip
+
+Toutes ces solutions ne me satisfont pas (quoiqu'elles soient toutes parfaitement fonctionnelles!).
+\medskip
+
+\begin{itemize}
+  \item{Nanoloop 2.3/2.5 est un excellent logiciel ! mais sa disponibilité quasi nulle (et donc par effet de "marché", son prix rédhibitoire) en fait une solution finalement pas si simple d'accès.}
+  \item{M4G tracker est aussi un excellent logiciel: mais son développement parait être abondonné, tout comme l'était \FAT à une époque cela dit ...}
+  \item{On peut faire tourner LSDJ sur une GBA mais l'intérêt est relativement limité.}
+  \item{quand aux possibles autres solutions, je ne les ai pas trouvées...}
+\end{itemize}\medskip
+
+Et puis, finalement, programmer son propre tracker c'est quand même super fun !
+\medskip
+
+Notez que nous sommes en 2017 et la situation n'a pas bougée. Peut-être que tout le monde s'en tamponne de la GBA ? :P \medskip
+
+\subsection{La version de \FAT}
+
+\FAT est versionné avec 3 numéros.
+\begin{itemize}
+  \item{le premier numéro est le numéro de version majeur. Un changement de numéro implique qu'il y a de grosses incompatibilités avec les versions précédentes.
+              Actuellement, la version est la "1"}
+  \item{le numéro du milieu est le numéro de version mineur.
+              Ce chiffre donne une idée de la progression des features. La compatibilité peut être conservée (mais pas forcément).}
+  \item{le dernier numéro est le numéro de version des bugfixes. Il augmentera à chaque correction de bug.}
+\end{itemize}
+\medskip
+
+La version actuelle est "\fatversion".
+
+\subsection{Comment utiliser \FAT ?}
+
+\FAT est livré sous la forme d'un fichier gba (rom).
+Ce fichier est directement utilisable sur votre ordinateur ou smartphone avec l'aide d'un émulateur (VisualBoyAdvance par exemple).
+\medskip
+
+Mais l'avantage d'une Gameboy, c'est la mobilité ! (en plus d'avoir la classe)
+D'autant plus qu'un son émulé n'égalera jamais l'original.
+Pour exécuter \FAT sur une vraie Gameboy Advance, il vous faudra:
+\begin{itemize}
+  \item{une vraie Gameboy Advance(scoop!) ou une Gameboy Micro. Personnellement je préfère l'écran de cette dernière mais certains le trouvent trop petit. Au pire la GBA SP est pas mal.}
+  \item{une cartouche EZ-Flash, SuperCardToSD, ou autre ... Il faut un peu chercher sur le web ...}
+  \item{une carte SD qui va bien avec la cartouche (si vous optez pour une cartouche basée sur SD)}
+\end{itemize}\medskip
+
+Après avoir investi dans tout ce petit matériel, il suffira de copier le fichier fat.gba {\bf (à l'aide du logiciel fourni avec votre cartouche)} sur la carte SD: direction la GBA !
+Attention ! Veillez à bien suivre les instructions fournis par le constructeur de la cartouche : sans cela, \FAT risque de ne pas fonctionner correctement.
+
+\ColoredAnnotation{Attention ! Bien que stable, cette version de \FAT reste relativement expérimentale.
+Il est, je pense, inutile d'investir trop d'argent dans le but de tester sur GBA. C'est vous qui voyez !}
+
+Si vous tenez à acheter votre propre cartouche, alors référez vous au tableau ci-dessous, il devrait vous aider à faire votre choix.
+
+\subsection{Tableau de comparatif des cartouches pour GameboyAdvance}
+
+Il existe un certain nombres de cartouches permettant d'exécuter des programmes dits "homebrew" (amateur) ... comme \FAT !
+Voici les quelques cartouches déjà testées avec \FAT :
+\medskip
+
+% Configuration du tableau
+%\tablefirsthead{\hline \rowcolor{blue} {\bf Cartouche} & {\bf "Gravure"} & {\bf Démarrage} & {\bf Sauvegarde} \\ \hline}
+\tablehead{\hline \rowcolor{headertab} {\bf Cartouche} & {\bf "Gravure"} & {\bf Démarrage} & {\bf Sauvegarde} \\ \hline}
+\tabletail{\hline \multicolumn{4}{|l|} {\small ...} \\ \hline}
+\tablelasttail{\hline}
+\begin{supertabular}{|p{3.5cm}|l|l|l|}
+  \hline
+      \begin{minipage}[c]{3cm}
+      \vspace{0.5cm}
+      \SimpleImage{images/supercardsd_djangofeet_sd}{0.2}
+      \end{minipage} &
+      \begin{minipage}{3cm}
+      Utilisez le logiciel officiel
+      \end{minipage} &
+      \begin{minipage}{2cm}
+      \textcolor{vert}{OK}
+      \end{minipage} &
+      \begin{minipage}{7cm}
+      La sauvegarde fonctionne mais il faut faire une manipulation supplémentaire: après avoir sauvegardé {\bf pressez R+L+A+START et validez}
+      \end{minipage} \\
+  \hline
+      \begin{minipage}[c]{3cm}
+      \vspace{0.5cm}
+      \SimpleImage{images/supercardminisd_djangofeet_sd}{0.2}
+      \end{minipage} &
+      \begin{minipage}{3cm}
+      Utilisez le logiciel officiel
+      \end{minipage} &
+      \begin{minipage}{2cm}
+      \textcolor{bleu}{NON TESTE}
+      \end{minipage} &
+      \begin{minipage}{7cm}
+      Non testé
+      \end{minipage} \\
+  \hline
+      \begin{minipage}[c]{3cm}
+      \vspace{0.5cm}
+      \SimpleImage{images/ezflash1}{0.2}
+      \end{minipage} &
+      \begin{minipage}{3cm}
+      Utilisez le logiciel officiel (et son linker USB)
+      \end{minipage} &
+      \begin{minipage}{2cm}
+      \textcolor{vert}{OK}
+      \end{minipage} &
+      \begin{minipage}{7cm}
+      Rien à signaler. Tout fonctionne ! C'est le meilleur choix.
+      \end{minipage} \\
+  \hline
+      \begin{minipage}[c]{3cm}
+      \vspace{0.5cm}
+      \SimpleImage{images/ultraflash2advance}{0.2}
+      \end{minipage} &
+      \begin{minipage}{3cm}
+      Utilisez les drivers officiels (la GBA fait office de linker)
+      \end{minipage} &
+      \begin{minipage}{2cm}
+      \textcolor{vert}{OK}
+      \end{minipage} &
+      \begin{minipage}{7cm}
+      La sauvegarde fonctionne.
+      \end{minipage} \\
+  \hline
+      \begin{minipage}[c]{3cm}
+      \vspace{0.5cm}
+      \SimpleImage{images/supercardsd_sd}{0.2}
+      \end{minipage} &
+      \begin{minipage}{3cm}
+      ???
+      \end{minipage} &
+      \begin{minipage}{2cm}
+      \textcolor{rouge}{KO}
+      \end{minipage} &
+      \begin{minipage}{7cm}
+      Non testé. Certaines personnes rapportent que cette cartouche ne permet pas de faire tourner \FAT :(
+      \end{minipage} \\
+  \hline
+      \begin{minipage}[c]{3cm}
+      \vspace{0.5cm}
+      \SimpleImage{images/ezflash4}{0.2}
+      \end{minipage} &
+      \begin{minipage}{3cm}
+      \FAT démarre et est utilisable. Attention ! Il est {\bf nécessaire} d'utiliser le logiciel fourni !
+      \end{minipage} &
+      \begin{minipage}{2cm}
+      \textcolor{vert}{OK}
+      \end{minipage} &
+      \begin{minipage}{7cm}
+      La sauvegarde ne fonctionne pas ! Utilisez celle livrée avec la cartouche (la save cheat)
+      \end{minipage} \\
+\hline
+\end{supertabular}
+
+\medskip Le meilleur choix reste l'ezflash1. A chercher sur la toile.
+
+\subsection{Changements pour la \fatversion}
+
+Liste des changements pour cette version de \FAT: \medskip
+\begin{itemize}
+  \item{stabilisation générale (réécriture/réorganisation de tout le code)}
+  \item{réécriture de la lecture des samples et oscillator}
+  \item{ajout d'un editeur de courbe pour le channel WAVE}
+  \item{ajout d'un paramètre pour gérer la vitesse d'échantillonage des samples/oscillator}
+\end{itemize}
+
+\subsection{Roadmap pour la version suivante}
+
+La version suivante sera la \fatnextversion. \medskip
+\begin{itemize}
+  \item{ajout de commandes diverses}
+  \item{refonte de l'écran de gestion de courbes dans le channel WAV}
+  \item{recherche de documentation pour implémenter la synthèse FM (si vous en avez je suis preneur) afin de moduler les samples et les faire sonner différemment.
+              L'objectif serait de se rapprocher du son de Nanoloop.}
+\end{itemize}
+
+\subsection{Premier son}
+
+Commençons simple ! Nous allons poser notre premier son dans \FAT.\medskip
+
+Lorsque \FAT démarre, c'est l'écran SONG qui apparaît en premier.
+Ne bougez pas le curseur, appuyez simplement une première fois sur A.
+Un "00" apparait en haut à gauche du tableau: c'est une {\bf séquence}.
+
+\Image{images/screen_song}{1.0}{L'écran SONG}
+
+Pressez ensuite SELECT (laissez la touche enfoncée) et appuyez sur la croix directionnelle vers la droite: l'interface change.
+
+\Image{images/screen_popup}{1.0}{L'écran POPUP}
+
+Sans bouger le curseur, appuyez une fois sur A: un nouveau "00" apparait.
+Cette fois-ci il s'agit d'un {\bf block}. La séquence "00" contient donc maintenant un seul block nommé "00".
+
+\Image{images/screen_blocks}{1.0}{L'écran BLOCKS}
+
+Pressez à nouveau SELECT (restez appuyé) et déplacez vous encore d'un cran vers la droite.
+L'interface a encore changé !
+Appuyez une dernière fois sur A : un "C 3" apparait.
+C'est votre première {\bf note} !
+Appuyez sur START : vous avez joué votre premier son avec \FAT sur une Gameboy Advance !
+
+\Image{images/screen_notes}{1.0}{L'écran NOTES - appuyez sur START !}
+
+\subsection{Structure des données}
+
+Nous avons abordé les notions de "séquences", "blocks" et de "notes".
+\FAT est globalement organisé de la même façon qu'LSDJ:
+\medskip
+
+\begin{itemize}
+  \item{un tableau de séquences sur 6 colonnes: la GBA sait jouer 6 sons en même temps.}
+  \item{dans chaque séquence, un nombre défini de blocks (16 maximum)}
+  \item{dans chaque block, les notes ! (16 maximum)}
+\end{itemize}
+\medskip
+
+La façon d'organiser une chanson ressemble un peu au principe des "poupées russes".
+Les séquences contiennent des blocks qui eux même embarquent les notes.
+Quand \FAT lit une séquence, il passe d'un block à l'autre et lit toutes les notes une par une.
+\medskip
+
+Pour éviter que chaque note sonne de la même façon, on leur assigne un {\bf instrument}.
+Chaque instrument contient un certain nombre de paramètres.
+Si vous changez les valeurs de ces paramètres, alors la note sonnera différemment.
+Il faut également savoir qu'il existe plusieurs types d'instruments : les canaux sonores de la GBA permettent de faire des choses différentes sur chacun d'eux.
+
+\subsection{Données techniques de la Gameboy Advance}
+
+La GameboyAdvance fournit 4 canaux "analogiques" pour la génération de sons et de bruits.
+Ces canaux sont sensiblement les mêmes que ceux présents dans la Gameboy première du nom.
+La GBA propose en plus 2 canaux "numériques": ils peuvent être utilisés afin de jouer des sons plus compliqués.
+Attention, la Gameboy ne "génère" plus le son en passant par ces 2 derniers canaux: on s'éloigne ainsi de l'esprit "chiptunes".
+
+La GBA ne possède qu'un haut-parleur mono.
+Si vous souhaitez profiter des possibilités stéréo de \FAT, il vous faudra brancher un casque sur la sortie prévue à cet effet.
+La GBA ne sort du stéréo que via cette prise.
+
+\paragraph{Canal 1 : PU1} Le canal permet de jouer des mélodies et/ou d'appliquer un effet SWEEP sur les notes. Attention, seul le canal 1 en est capable !
+
+\ColoredAnnotation{Vous pouvez utiliser ce canal pour générer un kick avec le sweep, ou comme basse principale}
+
+\paragraph{Canal 2 : PU2} Le canal 2 est exactement le même que le 1 à la différence qu'il n'est pas capable de gérer un sweep.
+
+\ColoredAnnotation{Vous pouvez utiliser ce canal pour jouer une mélodie.}
+
+\paragraph{Canal 3 : WAVE} Le canal 3 est capable de lire des minis-samples répartis dans 2 banques.
+
+\ColoredAnnotation{Ce canal peut servir de soutien à la basse, ou faire office de "guitare electrique" et ajouter un coté saturé à votre morceau.}
+
+\paragraph{Canal 4 : NOISE} Ce canal est spécialisé dans la génération de bruits blancs.
+
+\ColoredAnnotation{Utilisez ce canal comme soutien au kick, ou pour des effets spéciaux (comme le son d'une plage en été par exemple, ...)}
+
+\paragraph{Canal 5 : SOUNDA} Ce canal sait jouer des samples et du son plus proches des machines actuelles que du "vrai" chiptunes.
+
+\paragraph{Canal 6 : SOUNDB} Ce canal sait jouer des samples et du son plus proches des machines actuelles que du "vrai" chiptunes.
+
+\ColoredAnnotation{Ces deux canaux sont parfaits pour ajouter de la voix à vos tracks ou des kicks plus puissants/ronds/travaillés.
+                  Vous verrez qu'il est possible d'insérer {\bf vos} samples dans la rom pour utilisation directe dans \FAT.}
+
+\subsubsection{Les différences avec la Gameboy}
+
+Le contrôleur audio de la GBA est essentiellement le même que celui de la Gameboy monochrome/couleur.
+Voici les quelques changements opérés:
+
+\paragraph{SNA et SNB} Deux canaux sonores ont été ajoutés qui peuvent être utilisés pour jouer du son numérique.
+                      Le débit de données de l'échantillon et l'échantillon lui-même doit être fourni et géré à l'aide d'une minuterie et/ou un canal DMA.
+
+\paragraph{Registres} Le registre SOUNDCNT\_H contrôle les nouveaux canaux DMA - ainsi que le mélange avec les quatre anciens canaux.
+                      Le registre SOUNDBIAS contrôle la sortie finale du son.
+
+\paragraph{Amélioration du canal WAV} La longueur de la RAM Wave est doublée : 2 banques de 32 chiffres chacune.
+                      Il est possible de jouer les 2 banques (l'une après l'autre) ou de n'en sélectionner qu'une.
+
+\medskip
+Si vous souhaitez en savoir plus sur les spécifications techniques de la Gameboy Advance,
+vous pouvez consulter \href{http://www.portabledev.com/media/GBA/tutoriels/gbatek.htm}{www.portabledev.com}.
+Le site \href{http://belogic.com/gba/}{belogic.com/gba/} est également une sacrée mine de renseignements !

@@ -1,0 +1,48 @@
+Dans cet écran, vous pouvez éditer le contenu d'une séquence : chaque séquence peut contenir de 0 à 16 blocks.
+Lorsque \FAT jouera la séquence, elle commencera par lire le premier block pour descendre jusqu'au dernier emplacement vide.
+Si \FAT rencontre un emplacement vide lors de la lecture alors il remonte au premier emplacement.
+Si aucun block n'est présent dans la séquence en cours, alors \FAT ne la jouera pas (elle sera sautée).
+\medskip
+
+Pour faire simple, considérez cet écran comme une liste de blocks contenue dans une séquence (dont le numéro est affiché à droite de l'écran).
+
+\Image{images/screen_blocks_complete}{1.0}{L'écran BLOCKS}
+
+\subsubsection{Commandes}
+% Configuration du tableau
+\tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+\tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+\tablelasttail{\hline}
+\begin{supertabular}{|l|p{11cm}|}
+\hline
+    {\bf SELECT} & Passer en mode popup \\
+    \hline
+    {\bf R+L} & Afficher l'écran d'aide \\
+    \hline
+    {\bf START} & Lancer/stopper la lecture des blocks dans la séquence en cours d'édition \\
+    \hline
+    {\bf L+HAUT} & Déplacer le curseur tout en haut \\
+    \hline
+    {\bf L+BAS} & Déplacer le curseur tout en bas \\
+    \hline
+    {\bf A} & Inscrire le dernier numéro de block dans la case désignée \\
+    \hline
+    {\bf A+DIRECTION} & Modifier le numéro de block dans la case désignée \\
+    \hline
+    {\bf L+A} & Trouver un nouveau numéro de block disponible et l'inscrire \\
+    \hline
+    %{\bf R+A} & Non utilisé pour le moment \\
+    %\hline
+    {\bf B} & SI CASE NON VIDE | Couper le block \\
+    \hline
+    {\bf B} & SI CASE VIDE | Coller le block précédemment coupé \\
+    \hline
+    {\bf L+B} & SI CASE NON VIDE | Changer le numéro de block en copiant le contenu \\
+    \hline
+    {\bf L+B} & SI CASE VIDE | Coller le block précédemment coupé en changeant son numéro \\
+    \hline
+    {\bf R+DROITE/GAUCHE} & Changer le numéro de séquence en cours d'édition \\
+    %\hline
+    % {\bf R+HAUT/BAS} & Sauter à la séquence précédente/suivante dans le séquenceur \\
+\hline
+\end{supertabular}

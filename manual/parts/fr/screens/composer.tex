@@ -1,0 +1,61 @@
+Imaginez cet écran comme un mini-piano ou un sampler: le COMPOSER va transformer votre Gameboy Advance en machine a improviser des sons !
+
+\Image{images/screen_composer}{1.0}{L'écran COMPOSER}
+
+Le principe est simple.
+L'écran vous présente 8 emplacements de notes.
+Chacune de ses notes est affectée à un bouton (seuls les boutons SELECT et START ne sont pas utilisables).
+Si vous regardez en bas de l'écran, le mot "UNLOCKED" est écrit:
+    il signifie que vous êtes en mode "édition" et que vous pouvez écrire des notes comme vous le feriez dans un BLOCK (avec A).
+\medskip
+
+Une fois que vous avez écrit toutes vos notes (qui peuvent chacune avoir un instrument différent), appuyez sur START.
+Le mode passe à "LOCKED". Vous êtes maintenant en mode "joueur".
+\medskip
+
+Appuyez sur une touche: la note assignée est jouée en temps réel.
+Changez de touche pour jouer une autre note. Simple n'est ce pas ?
+\medskip
+
+Notez aussi que ces données seront enregistrées dans chacune de vos chansons.
+Vous pourrez préparer votre set de note à la maison et improviser en live sans forcer !
+\medskip
+
+Essayez ! composez quelques séquences puis essayez de jouer avec le COMPOSER en même temps !
+\medskip
+
+\subsubsection{Paramétrage}
+
+Le composer peut également être paramétré:
+
+\Image{images/parameters_composer}{1.0}{Les paramètres de l'écran COMPOSER}
+
+\paragraph{Transpose} de 0 à FF.
+Ajoute une valeur de transpose.
+Cette valeur s'ajoutera à celle configurée pour le projet dans sa globalité.
+Notez que toutes les notes du composer seront transposées avec cette valeur.
+
+\paragraph{Key repeat} de 0 à FF.
+Règle le temps d'attente entre chaque lecture d'une note du composer.
+Plus cette valeur est élevée, plus le temps d'attente entre l'appui de deux touches sera grand.
+Laissez cette valeur à zéro pour désactiver le temps d'attente.
+
+\subsubsection{Commandes}
+
+% Configuration du tableau
+\tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+\tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+\tablelasttail{\hline}
+\begin{supertabular}{|l|p{11cm}|}
+\hline
+    {\bf SELECT} & Passer en mode popup \\
+    \hline
+    {\bf R+L} & Afficher l'écran d'aide \\
+    \hline
+    {\bf START} & Changer le mode (UNLOCKED/LOCKED) \\
+    \hline
+    {\bf TOUCHES} & LOCKED | Jouer la note correspondante \\
+    \hline
+    {\bf A+DIRECTION} & UNLOCKED | Changer la valeur de la note/instrument \\
+\hline
+\end{supertabular}

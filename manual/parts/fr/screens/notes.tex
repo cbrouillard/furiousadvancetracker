@@ -1,0 +1,83 @@
+C'est dans cet écran que vous allez écrire ... vos notes !
+Vous ne pouvez écrire qu'une seule note par ligne.
+Un block possède 16 lignes, vous pouvez donc y insérer 16 notes.
+\medskip
+
+La notation anglo-saxonne est utilisée pour l'affichage des notes.
+Ainsi, le "DO" s'écrit "C" chez nos amis anglais.
+Voici un tableau de correspondance :
+\medskip
+
+\begin{center}
+% Configuration du tableau
+    \tablehead{\hline \rowcolor{headertab} {\bf FR} & {\bf EN} \\ \hline}
+    \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+    \tablelasttail{\hline}
+    \begin{supertabular}{|l|l|}
+    \hline
+        {\bf DO} & C \\
+        \hline
+        {\bf RE} & D \\
+        \hline
+        {\bf MI} & E \\
+        \hline
+        {\bf FA} & F \\
+        \hline
+        {\bf SOL} & G \\
+        \hline
+        {\bf LA} & A \\
+        \hline
+        {\bf SI} & B \\
+    \hline
+    \end{supertabular}
+\end{center}
+
+
+Chaque note est reliée à un instrument (la colonne INST).
+Chaque instrument possède un certains nombres de paramètres permettant de faire sonner une note différemment.
+Nous verrons dans la section suivante comment paramétrer ces instruments.
+
+\Image{images/screen_notes_complete}{1.0}{L'écran NOTES}
+
+\subsubsection{Commandes}
+% Configuration du tableau
+\tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+\tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+\tablelasttail{\hline}
+\begin{tabular}{|l|p{11cm}|}
+\hline
+    \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\
+    \hline
+    {\bf SELECT} & Passer en mode popup \\
+    \hline
+    {\bf R+L} & Afficher l'écran d'aide \\
+    \hline
+    {\bf START} & Lancer/stopper la lecture des notes \\
+    \hline
+    {\bf L+HAUT} & Déplacer le curseur tout en haut \\
+    \hline
+    {\bf L+BAS} & Déplacer le curseur tout en bas \\
+    \hline
+    {\bf A} & Inscrire une note (par défaut "C 3") \\
+    \hline
+    {\bf A+HAUT/BAS} & COLONNE NOTE | Modifier l'octave de la note désignée par le curseur \\
+    \hline
+    {\bf A+DROITE/GAUCHE} & COLONNE NOTE | Modifier la tonalitée de la note désignée \\
+    \hline
+    {\bf A+DIRECTION} & COLONNE INSTRUMENT | Modifier le numéro d'instrument utilisée pour la note désignée \\
+    \hline
+    {\bf A+DIRECTION} & COLONNE CMD | Modifier les valeurs de commandes \\
+    \hline
+    {\bf L+A} & COLONNE INSTRUMENT | Trouver un nouveau numéro d'instrument et l'inscrire \\
+    \hline
+    %{\bf R+A} & Non utilisé pour le moment \\
+    %\hline
+    {\bf R+DROITE/GAUCHE} & Modifier le numéro de block en cours d'édition \\
+    \hline
+    %{\bf R+HAUT/BAS} & Sauter au block précédent/suivant dans la séquence en cours d'édition \\
+    %\hline
+    {\bf B} & SI CASE NON VIDE | Couper la note \\
+    \hline
+    {\bf B} & SI CASE VIDE | Coller la note préalablement coupée \\
+\hline
+\end{tabular}

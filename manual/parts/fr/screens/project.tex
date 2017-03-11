@@ -1,0 +1,59 @@
+L'écran PROJECT fait office de gestionnaire de propriétés pour votre morceau.
+
+\Image{images/screen_project}{0.5}{L'écran PROJECT}
+
+\subsubsection{Commandes}
+% Configuration du tableau
+\tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+\tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+\tablelasttail{\hline}
+\begin{supertabular}{|l|p{11cm}|}
+\hline
+    {\bf SELECT} & Passer en mode popup \\
+    \hline
+    {\bf R+L} & Afficher l'écran d'aide \\
+    \hline
+    {\bf A+DIRECTION} & Modifier la valeur sous le curseur \\
+    \hline
+    {\bf START} & Lancer/stopper la lecture depuis le séquenceur \\
+\hline
+\end{supertabular}
+
+\subsubsection{Paramètres}
+
+\paragraph{Propriétés : "Tempo"} Le tempo du projet.
+        Depuis la version 1.0.0, il est correctement calculé et donc utilisable !
+
+\paragraph{Propriétés : "Transpose"} Réglez la transposition de tout le projet.
+
+\paragraph{Propriétés : "Sample rate"} TODO
+
+\paragraph{Interface : "Keyrepeat"} Ce paramètre permet de régler le temps d'attente entre chaque appui d'une touche.
+                                    Plus cette valeur est grande, plus l'interface est lente.
+
+\paragraph{Interface : "Preview"} Réglez ce paramètre à YES pour demander à \FAT de jouer la note dès qu'elle est écrite.
+
+\paragraph{Interface : "GreedPlay"} Si activé, le GreedPlay force \FAT à toujours chercher à jouer la première séquence
+                                    disponible dans un ensemble et ce peu importe la ligne sur laquelle vous vous trouvez.
+                                    Ex : posez plusieurs séquences (avec des notes à lire) à la suite, de la ligne 0 à 5, puis positionnez vous sur la ligne 3.
+                                    Pressez START. Si le greedPlay est activé, la lecture ne commencera pas depuis la ligne 3 mais depuis la 0.
+
+\paragraph{Gestion : "New Prj"} Crée un nouveau projet.
+                                Attention, les données non enregistrées seront impitoyablement effacées, écrasées, broyées, massacrées, mutilées.
+
+\paragraph{Gestion : "Save PRJ" (sauvegarder)}  Affiche l'écran de sauvegarde (cf \ref{filesystem}).
+                                                Cette version de \FAT reste expérimentale en terme de gestion de la sauvegarde.
+
+\paragraph{Gestion : "Load PRJ" (charger)} Affiche l'écran de chargement (cf \ref{filesystem}).
+                            Cette version de \FAT reste expérimentale en terme de gestion de la sauvegarde.
+
+\paragraph{Live : "Buffering"}
+Permet d'activer ou non la bufferisation dans l'écran LIVE.
+\medskip
+
+\begin{itemize}
+    \item{activé, la modification des données "volume", "transpose" et "tempo" ne s'applique que lorsque vous relachez le bouton A}
+    \item{désactivé, ces modifications sont immédiatement prises en compte}
+\end{itemize}
+\medskip
+Si vous ne souhaitez pas avoir un effet escalier sur l'écran LIVE, laissez le buffering activé.

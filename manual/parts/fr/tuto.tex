@@ -1,0 +1,46 @@
+Cette section va tenter de vous donner quelques premières valeurs de paramètres afin de créer des instruments "intéressants"
+et de vous lancer plus rapidement dans la composition de morceaux.
+Pour chaque exemple, je vous donnerai la marche à suivre la plus complète possible.
+
+\subsection{Kick "Boom"}
+
+Le kick "boom" se programme sur le canal 1 exclusivement. Il s'agit d'une façon d'obtenir un kick.
+\medskip
+
+\begin{itemize}
+\item{Dans l'écran SONG, placez le curseur sur le canal 1 (PU1).}
+\item{Appuyez sur L+A afin de poser un nouveau numéro de séquence.}
+\item{Pressez SELECT, restez appuyer et sélectionnez l'écran BLOCKS.}
+\item{Une fois dans l'écran BLOCKS, appuyez de nouveau sur L+A afin de faire apparaitre un numéro de block disponible.}
+\item{Pressez SELECT, restez appuyer et séléctionnez l'écran NOTES.}
+\item{Dans l'écran NOTES, appuyez sur A, laissez enfoncé et séléctionnez la note "C 6" (ou "C 7", "C 8") avec le curseur.}
+\item{Editez les paramètres de l'instrument. Appuyez sur SELECT, laissez enfoncé et sélectionnez l'écran INSTRUMENTS.}
+\item{L'instrument doit être de type PULSE. Si ca n'est pas le cas, changez le type en pressant L et en allant vers la gauche avec le curseur.}
+\item{Boostez le volume à fond : F.}
+\item{Le waveduty doit être positionné sur la valeur 2.}
+\item{Positionnez la valeur du sweep sur 41.}
+\item{Appuyez sur START !}
+\end{itemize}\medskip
+
+Alternatives:
+\medskip
+
+\begin{itemize}
+\item{en "timant" l'instrument, le kick sera plus sec: "Timed = 1". Modifiez ensuite la valeur du "SoundLength".}
+\item{essayez de changer le sweep avec la valeur 31 ou 51. Une valeur de 32 ou 52 donne encore des résultats différents.}
+\item{l'octave de la note est également important ! Essayez de descendre à l'octave 5 et le kick sera moins puissant. A l'inverse, l'octave 8 permet de le faire claquer plus fort.}
+\end{itemize}\medskip
+
+Screenshot instrument:
+\Image{images/kickboom}{1.0}{Instrument - Kickboom}
+
+\subsection{Le sample stéréo}
+
+Par défaut un sample est mono. Mais il est cependant possible de diriger la lecture d'un son vers la droite ou la gauche avec \FAT.
+Supposons que vous souhaitiez créer un sample stéréo.
+Il suffit pour cela d'ajouter 2 samples dans la ROM (un pour la partie droite et l'autre pour la gauche) puis de configurer 2 instruments
+avec le paramètre OUTPUT réglé de façon judicieuse
+ (ou d'utiliser la commande OU, ce qui vous économise un instrument).
+Le channel SNA s'occupe de lire celui à gauche avec un OUtput 'Left'.
+Le SNB s'occupe de lire celui de droite avec un OUtput 'Right'. L'inverse est également possible. Peu importe.
+Le tour est joué ! Vous avez un sample stéréo.
