@@ -1,0 +1,39 @@
+\FAT est capable de générer le son simple d'un oscillateur. Ces instruments seront surement utilisés un jour
+pour la synthèse FM. En attendant, ils restent utilisables en tant que tel dans les canaux SNA et SNB.
+
+\ColoredAnnotation {Vous remarquerez assez rapidement que les oscillateurs de type sinusoidal n'ont pas un son "parfait".
+Cela est dû à 2 choses. La première étant que le processeur de la GBA ne gère pas le calcul flottant (nombres avec virgules).
+Le calcul d'une onde sinusoidale demande une certaine précision que l'on ne peut donc pas obtenir nativement et facilement.
+La seconde chose : il reste néanmoins possible de faire du calcul flottant, mais de manière logicielle. Ce genre de calcul n'est cependant pas
+encore utilisé dans \FAT. Il y a donc encore une marge de progression possible pour ce sujet.}
+
+\Image{images/screen_instrument_oscillator}{0.5}{Type OSCILLATOR}
+
+\subsubsection{Paramètres}
+
+\paragraph{Oscillator : "OSC Shape"} La forme d'onde à générer. \FAT gère 4 types d'ondes :\medskip
+
+\begin{itemize}
+    \item{\SimpleImage{images/osc_shape_sinus}{1.0} sinus}
+    \item{\SimpleImage{images/osc_shape_square}{1.0} carré}
+    \item{\SimpleImage{images/osc_shape_triangle}{1.0} triangle}
+    \item{\SimpleImage{images/osc_shape_sawtooth}{1.0} dents de scie}
+\end{itemize}\medskip
+
+\paragraph{Oscillator : "Amplitude"} Ce paramètre n'est pas encore disponible à l'utilisation.
+
+\paragraph{Enveloppe : "Volume"} Volume affecté au sample : 50\% (0) ou 100\% (1).
+
+\paragraph{Paramètre : "Timed"} Définit si le son sera coupé ou non.
+
+\paragraph{Paramètre : "Length"} Si "Timed" est à 1, cette valeur définit la coupure en pourcentage de la durée totale du son.
+
+\paragraph{Paramètre : "Output"} Choisissez le mode de sortie du son.
+\medskip
+
+\begin{itemize}
+    \item{L: le son sort à gauche (LEFT)}
+    \item{R: le son sort à droite (RIGHT)}
+    \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
+    \item{VIDE: le son ne sort plus (muet)}
+\end{itemize}

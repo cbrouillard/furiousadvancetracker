@@ -1,0 +1,46 @@
+\FAT est capable de lire des samples sur les canaux SNA et SNB.
+Un sample est un morceau sonore de courte durée inclus dans une collection.
+Une série de collection est incluse par défaut dans \FAT :\medskip
+
+\begin{itemize}
+    \item {DEV-MESS : quelques samples de test pour le développement}
+    \item {LS-MGDRV : des samples Megadrive fournis par Nullsleep (\href{http://little-scale.blogspot.fr/2008/08/sega-mega-drive-sample-pack.html}{Site de Nullsleep})}
+    \item {C64DRUMS : drums et snares en provenance du Commodore64}
+    \item {YM-DRUMS : drums et snares en provenance de l'Atari ST}
+    \item {BATTERY : des kicks, drums et snares d'une batterie "classique"}
+    \item {RHYTHMS : quelques ryhtmes complets (mais encore non exploitable car mal samplé)}
+    \item {TR-606-7 : sample de cette machine mythique}
+\end{itemize} \medskip
+
+Il est assez facile de rajouter votre propre collection de samples. Pour plus d'informations, consultez la section \hyperref[sec:addsamples]{"Manipulation de la ROM pour l'ajout de vos collections de samples"}.
+
+\Image{images/screen_instrument_sample}{0.5}{Type SAMPLE/KIT}
+
+\subsubsection{Paramètres}
+
+\paragraph{Kit collection : "Name"} Le nom de la collection de sample dans laquelle piocher.
+
+\paragraph{Enveloppe : "Volume"} Volume affecté au sample : 50\% (0) ou 100\% (1).
+
+\paragraph{Paramètre : "Loop"} Le sample est t-il joué en boucle ?
+                                Si "YES", alors la lecture du sample est répétée.
+
+\paragraph{Paramètre : "Timed"} Définit si le sample sera coupé ou non.
+
+\paragraph{Paramètre : "Length"} Si "Timed" est à 1, cette valeur définit la coupure en pourcentage de la durée totale du sample.
+
+\paragraph{Paramètre : "Offset"} Offset de départ pour la lecture du sample.
+                                En pourcentage de la durée totale du sample.
+
+\paragraph{Paramètre : "Output"} Choisissez le mode de sortie du son.
+\medskip
+
+\begin{itemize}
+    \item{L: le son sort à gauche (LEFT)}
+    \item{R: le son sort à droite (RIGHT)}
+    \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
+    \item{VIDE: le son ne sort plus (muet)}
+\end{itemize}
+
+\paragraph{Simulator} Changez la note inscrite dans cet espace:
+        celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.

@@ -1,0 +1,56 @@
+\Image{images/screen_instrument_noise}{0.5}{Type NOISE}
+
+\subsubsection{Paramètres}
+
+\paragraph{Enveloppe : "Volume"} de 0 à F.
+Cette valeur permet de régler le volume des notes attachées à cet instrument.
+\medskip
+
+\begin{itemize}
+    \item{0: muet}
+    \item{F: à fond !}
+\end{itemize}
+
+\paragraph{Enveloppe : "Direction"} \SimpleImage{images/envelope_direction_down}{1.0} ou \SimpleImage{images/envelope_direction_up}{1.0}.
+    Indique si le son monte ou descend.
+
+\paragraph{Enveloppe : "Steptime"} de 0 à 7.
+Agit sur la longueur du pas de l'onde (en gros).
+
+\paragraph{Enveloppe : "Polystep"} 0 ou 1.
+Modifie la facon dont le générateur de bruit fonctionne.
+\medskip
+
+\begin{itemize}
+    \item{0: bruit simple}
+    \item{1: bruit qui grince}
+\end{itemize}
+
+\paragraph{Paramètre : "Timed"} 0 ou 1.
+\medskip
+
+\begin{itemize}
+        \item{0: le son n'est pas temporisé}
+        \item{1: le son est temporisé, réglez la durée avec le paramètre "Length"}
+    \end{itemize}
+
+\paragraph{Paramètre : "Length"} de 0 à 3F.
+Ce paramètre n'est accessible que si "Timed" à été positionné sur 1.
+\medskip
+
+\begin{itemize}
+    \item{0: le son est "infini"}
+    \item{3f: le son est très (très... voire trop) court}
+\end{itemize}
+
+\paragraph{Paramètre : "Output"} Choisissez le mode de sortie du son.
+\medskip
+\begin{itemize}
+    \item{L: le son sort à gauche (LEFT)}
+    \item{R: le son sort à droite (RIGHT)}
+    \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
+    \item{VIDE: le son ne sort plus (muet)}
+\end{itemize}
+
+\paragraph{Simulator} Changez la note inscrite dans cet espace:
+            celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.
