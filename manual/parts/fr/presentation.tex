@@ -67,11 +67,10 @@ La version actuelle est "\fatversion".
 Ce fichier est directement utilisable sur votre ordinateur ou smartphone avec l'aide d'un émulateur (VisualBoyAdvance par exemple).
 \medskip
 
-Mais l'avantage d'une Gameboy, c'est la mobilité ! (en plus d'avoir la classe)
-D'autant plus qu'un son émulé n'égalera jamais l'original.
+Mais un son émulé n'égalera jamais l'original.
 Pour exécuter \FAT sur une vraie Gameboy Advance, il vous faudra:
 \begin{itemize}
-  \item{une vraie Gameboy Advance(scoop!) ou une Gameboy Micro. Personnellement je préfère l'écran de cette dernière mais certains le trouvent trop petit. Au pire la GBA SP est pas mal.}
+  \item{le meilleur choix reste la Gameboy Micro. L'écran de cette dernière est de meilleure qualité bien que certains le trouvent trop petit. Au pire, la GBA SP est pas mal. Je déconseille le modèle GBA classique (à cause de la position inconfortable du bouton SELECT).}
   \item{une cartouche EZ-Flash, SuperCardToSD, ou autre ... Il faut un peu chercher sur le web ...}
   \item{une carte SD qui va bien avec la cartouche (si vous optez pour une cartouche basée sur SD)}
 \end{itemize}\medskip
@@ -180,7 +179,22 @@ Voici les quelques cartouches déjà testées avec \FAT :
       \begin{minipage}{7cm}
       La sauvegarde ne fonctionne pas ! Utilisez celle livrée avec la cartouche (la save cheat)
       \end{minipage} \\
-\hline
+  \hline
+      \begin{minipage}[c]{3cm}
+      \vspace{0.5cm}
+      Sur smartphone
+      \SimpleImage{images/smartphone}{0.5}
+      \end{minipage} &
+      \begin{minipage}{3cm}
+      \FAT démarre et est utilisable.
+      \end{minipage} &
+      \begin{minipage}{2cm}
+      \textcolor{vert}{OK}
+      \end{minipage} &
+      \begin{minipage}{7cm}
+      Consultez votre store pour trouver un émulateur fonctionnel.
+      \end{minipage} \\
+
 \end{supertabular}
 
 \medskip Le meilleur choix reste l'ezflash1. A chercher sur la toile.
@@ -191,8 +205,8 @@ Liste des changements pour cette version de \FAT: \medskip
 \begin{itemize}
   \item{stabilisation générale (réécriture/réorganisation de tout le code)}
   \item{réécriture de la lecture des samples et oscillator}
-  \item{ajout d'un editeur de courbe pour le channel WAVE}
-  \item{ajout d'un paramètre pour gérer la vitesse d'échantillonage des samples/oscillator}
+  \item{ajout d'un editeur de courbe pour les instruments de type WAVE}
+  \item{ajout d'un paramètre pour gérer la vitesse d'échantillonage des samples/oscillators}
 \end{itemize}
 
 \subsection{Roadmap pour la version suivante}
@@ -260,7 +274,7 @@ Il faut également savoir qu'il existe plusieurs types d'instruments : les canau
 La GameboyAdvance fournit 4 canaux "analogiques" pour la génération de sons et de bruits.
 Ces canaux sont sensiblement les mêmes que ceux présents dans la Gameboy première du nom.
 La GBA propose en plus 2 canaux "numériques": ils peuvent être utilisés afin de jouer des sons plus compliqués.
-Attention, la Gameboy ne "génère" plus le son en passant par ces 2 derniers canaux: on s'éloigne ainsi de l'esprit "chiptunes".
+Attention, la Gameboy ne "génère" plus le son en passant par ces 2 derniers canaux: on s'éloigne ainsi de l'esprit "chiptune".
 
 La GBA ne possède qu'un haut-parleur mono.
 Si vous souhaitez profiter des possibilités stéréo de \FAT, il vous faudra brancher un casque sur la sortie prévue à cet effet.
@@ -282,9 +296,9 @@ La GBA ne sort du stéréo que via cette prise.
 
 \ColoredAnnotation{Utilisez ce canal comme soutien au kick, ou pour des effets spéciaux (comme le son d'une plage en été par exemple, ...)}
 
-\paragraph{Canal 5 : SOUNDA} Ce canal sait jouer des samples et du son plus proches des machines actuelles que du "vrai" chiptunes.
+\paragraph{Canal 5 : SOUNDA} Ce canal sait jouer des samples et du son plus proche des machines actuelles que du "vrai" chiptune.
 
-\paragraph{Canal 6 : SOUNDB} Ce canal sait jouer des samples et du son plus proches des machines actuelles que du "vrai" chiptunes.
+\paragraph{Canal 6 : SOUNDB} Ce canal sait jouer des samples et du son plus proche des machines actuelles que du "vrai" chiptune.
 
 \ColoredAnnotation{Ces deux canaux sont parfaits pour ajouter de la voix à vos tracks ou des kicks plus puissants/ronds/travaillés.
                   Vous verrez qu'il est possible d'insérer {\bf vos} samples dans la rom pour utilisation directe dans \FAT.}
