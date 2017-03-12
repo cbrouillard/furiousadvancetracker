@@ -1,0 +1,46 @@
+Cet écran fait office de "séquenceur".
+C'est ici que vous allez organiser l'agencement de toutes vos séquences.
+Lorsque la lecture de l'ensemble est lancée, \FAT lit toutes les séquences ligne par ligne.
+Lorsque un emplacement est vide \FAT essaie de remonter à la première séquence disponible.
+
+\Image{images/screen_song_complete}{1.0}{L'écran SONG se présente comme un gros tableau}
+
+\subsubsection{Commandes}
+
+% Configuration du tableau
+\tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+\tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+\tablelasttail{\hline}
+\begin{supertabular}{|l|p{11cm}|}
+\hline
+    {\bf SELECT} & Passer en mode popup \\
+    \hline
+    {\bf R+L} & Afficher l'écran d'aide \\
+    \hline
+    {\bf START} & Lancer/stopper la lecture depuis le séquenceur \\
+    \hline
+    {\bf L+HAUT} & Déplacer le curseur tout en haut \\
+    \hline
+    {\bf L+BAS} & Déplacer le curseur tout en bas \\
+    \hline
+    {\bf R+HAUT} & Déplacer le curseur d'une page vers le haut \\
+    \hline
+    {\bf R+BAS} & Déplacer le curseur d'une page vers le bas \\
+    \hline
+    {\bf A} & Inscrire le dernier numéro de séquence dans la case sous le curseur (par défaut "00") \\
+    \hline
+    {\bf A+DIRECTION} & Modifier la valeur de la séquence dans la case sous le curseur \\
+    \hline
+    {\bf L+A} & Trouver une nouvelle séquence disponible puis l'inscrire dans la case sous le curseur \\
+    \hline
+    %{\bf R+A} & Non utilisé pour le moment \\
+    %\hline
+    {\bf B} & SI CASE NON VIDE | Couper la séquence \\
+    \hline
+    {\bf B} & SI CASE VIDE | Coller une séquence préalablement coupée \\
+    \hline
+    {\bf L+B} & SI CASE VIDE | Coller une séquence préalablement coupée en changeant le numéro \\
+    \hline
+    {\bf L+B} & SI CASE NON VIDE | Changer le numéro de la séquence en copiant son contenu \\
+\hline
+\end{supertabular}

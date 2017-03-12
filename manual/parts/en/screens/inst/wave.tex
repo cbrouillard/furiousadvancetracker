@@ -1,0 +1,73 @@
+\Image{images/screen_instrument_wave}{0.5}{Type WAVE}
+
+\subsubsection{Paramètres}
+
+\paragraph{Enveloppe : Volume} de 0 à 4.
+Cette valeur permet de régler le volume des notes attachées à cet instrument.
+
+\paragraph{Paramètre : "Timed"} 0 ou 1.
+\medskip
+
+\begin{itemize}
+        \item{0: le son n'est pas temporisé}
+        \item{1: le son est temporisé, réglez la durée avec le paramètre "Soundlength"}
+    \end{itemize}
+
+\paragraph{Paramètre : "Length"} de 0 à FF.
+Ce paramètre n'est accessible que si "Timed" a été positionné sur 1.
+\medskip
+
+\begin{itemize}
+        \item{00: le son est "infini"}
+        \item{eb: le son commence à être court}
+        \item{ff: le son est très (très très) court}
+    \end{itemize}
+
+\paragraph{Paramètre : "Voice"} de 0 à 17.
+\FAT inclut 23 types d'instruments WAV (en héxadécimal, 17h = 23).
+Depuis la version 1.2.0, il est possible de customiser et d'utiliser ses propres voix.
+
+\paragraph{Paramètre : "Bank"} 0 ou 1.
+Le canal WAV de la GBA est capable de charger 2 banks dans sa mémoire.
+Vous pouvez décider quelle bank sera jouée,
+sachant que la bank est directement chargée depuis le paramètre "Voice" juste au dessus (chaque "Voice" possède 2 banks).
+
+\paragraph{Paramètre : "Bankmode"} "SIN" ou "DUA".
+Le canal WAV est capable de faire une synthèse des 2 banks chargées en mémoire (le mode DUA = Dual) ou bien de n'en jouer qu'une seule (le mode SIN = Single).
+Notez que si vous réglez ce paramètre avec SIN, \FAT jouera la bank sélectionnée avec le paramètre "Bank".
+
+\paragraph{Paramètre : "Output"} Choisissez le mode de sortie du son.
+\medskip
+
+\begin{itemize}
+    \item{L: le son sort à gauche (LEFT)}
+    \item{R: le son sort à droite (RIGHT)}
+    \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
+    \item{VIDE: le son ne sort plus (muet)}
+\end{itemize}
+
+\paragraph{Custom wave} \FAT vous permet de stocker et d'utiliser 3 voix customisées.
+Pour plus d'informations, référez vous à la section \hyperref[subsec:customwave]{"L'écran CUSTOM WAVE"}.
+\medskip
+
+\begin{itemize}
+  \item{un 'X' signifie que l'instrument n'utilise pas de voix customisée. La voix définit par \FAT est donc utilisée.}
+  \item{changez ce 'X' pour une valeur comprise entre 0 et 2 pour utiliser la voix correspondante}
+  \item{cette voix sélectionnée peut être éditée en appuyant sur "Go" (juste en dessous). \FAT vous affiche alors l'écran d'édition pour la voix sélectionnée.}
+  \item{si une voix n'a jamais été éditée auparavant, elle est initialisée avec les données de la voix courante de l'instrument.}
+\end{itemize}\medskip
+
+\tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+\tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+\tablelasttail{\hline}
+\begin{supertabular}{|l|p{11cm}|}
+    \hline
+    {\bf A+DROITE/GAUCHE} & Changer le numéro de voix custom sélectionnée \\
+    \hline
+    {\bf A+HAUT/BAS} & Annuler la customisation sur l'instrument (reset à 'X') \\
+\hline
+\end{supertabular}
+\medskip
+
+\paragraph{Simulator} Changez la note inscrite dans cet espace:
+    celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.

@@ -1,0 +1,253 @@
+\subsection{Presentation and disclaimer}
+\FAT is a musical software conceived for the Gameboy Adance.
+With \FAT, you'll be able to make music directly on your console using its technical capacities.
+\FAT is trying to be the simplest as possible but you'll probably have to learn how to use it in order to exploit all the features it provides.
+\medskip
+
+The current version, \fatversion, is the first really stable.
+I tried to make it the safest and bugfree as possible but this software is probably a little bit buggy or not finalized.
+I'm currently working on \FAT (well ... while I get motivation, I'll continue to develop it) so if you found a bug or an unusual case, please report me the issue.
+It's really important to make the software continue to grow. You can report any issue on \url{http://wwww.furiousadvancetracker.com}.
+Many thanks to you ! (and a kiss. But not a french one :D)
+\medskip
+
+The \FAT's GUI really looks like LSDJ. Actually, I considered LSDJ as my model when designing \FAT while adding my personals touch and ideas.
+Some features are completely originals when others has disapeared.
+\medskip
+
+Of course I'm not pretending \FAT is as performant as LSDJ. I'm working hard to make this possible one day and I hope \FAT will be an important software for the GBA chiptune's community.
+\medskip
+
+So ... a great thanks to you, who are reading this manual. Thanks for trying \FAT, hope you'll love it !
+
+\subsection{Why \FAT ?}
+When I started this project, in 2011, severals solutions already exist allowing you to compose music stuff on your GBA.
+\medskip
+
+\begin{itemize}
+    \item{Nanoloop 2.3/2.5}
+    \item{M4G tracker}
+    \item{and problably many others...}
+\end{itemize}\medskip
+
+In my opinion, all of these seems to be incomplete although all of them are reasonnably usable.
+\medskip
+
+\begin{itemize}
+    \item{Nanoloop 2.3/2.5 is an excellent software ! but it's quite difficult to get your hands on. It's also quite expensive (due to rarity probably).}
+    \item{M4G tracker is also a good software: but it's development seems to be stopped. Well, like \FAT a little while ago.}
+    \item{I didn't find any other solutions...}
+\end{itemize}\medskip
+
+Finally you know what ? Coding my own tracker has proven to be really fun !
+\medskip
+
+\subsection{How to use \FAT ?}
+
+\FAT is a gba file. This file is directly usable on your computer or smarphone with a GameboyAdvance emulator (such as VisualBoyAdvance).
+\medskip
+
+Anyway, an emulated sound can never be equal than the true one.
+To execute \FAT on a real GBA, you'll need :
+\medskip
+
+\begin{itemize}
+    \item{a true GBA or a Gameboy Micro. I personaly prefer the second one but some says the screen is too small.}
+    \item{an EZ-Flash, SuperCardToSD, or other cartridge ... You'll have to search the web in order to find one}
+    \item{a SD card in the case your cartridge use one.}
+\end{itemize}\medskip
+
+When you have bought all this cool stuff, all you have to do is to paste the \FAT gba file {\bf (with the provided cartridge's software)}.
+It's really important to follow all the cartridge's constructor's instructions : \FAT could not work correctly if you don't.
+
+\ColoredAnnotation{Warning ! Although this version has been considered as stable, it remains experimental. I thinks you don't have to waste money in order to try \FAT but it's your choice !}
+
+If you really want to buy you own cartridge, the following sheet can help you.
+
+\subsection{GameboyAdvance cartridge comparison sheet}
+
+There's a lot of GBA cartridges. These cartridges allow you to execute "homebrew" program like \FAT.
+Here are some cartridges tested with \FAT.
+
+% Configuration du tableau
+\tablehead{\hline \rowcolor{headertab} {\bf Cartridge} & {\bf Burning} & {\bf Starting} & {\bf Saving} \\ \hline}
+\tabletail{\hline \multicolumn{4}{|l|} {\small ...} \\ \hline}
+\tablelasttail{\hline}
+\begin{supertabular}{|p{3.5cm}|l|l|l|}
+    \hline
+        \begin{minipage}[c]{3cm}
+        \vspace{0.5cm}
+        \SimpleImage{images/supercardsd_djangofeet_sd}{0.2}
+        \end{minipage} &
+        \begin{minipage}{3cm}
+        Use the official software
+        \end{minipage} &
+        \begin{minipage}{2cm}
+        \textcolor{vert}{OK}
+        \end{minipage} &
+        \begin{minipage}{7cm}
+        The save features is working but you'll have to press R+L+A+START after each save.
+        \end{minipage} \\
+    \hline
+        \begin{minipage}[c]{3cm}
+        \vspace{0.5cm}
+        \SimpleImage{images/supercardminisd_djangofeet_sd}{0.2}
+        \end{minipage} &
+        \begin{minipage}{3cm}
+        Use the official software
+        \end{minipage} &
+        \begin{minipage}{2cm}
+        \textcolor{bleu}{NOT TESTED}
+        \end{minipage} &
+        \begin{minipage}{7cm}
+        Not tested but should be similar with the SuperCardSD above.
+        \end{minipage} \\
+    \hline
+        \begin{minipage}[c]{3cm}
+        \vspace{0.5cm}
+        \SimpleImage{images/ezflash1}{0.2}
+        \end{minipage} &
+        \begin{minipage}{3cm}
+        Use the official software and his USB linker
+        \end{minipage} &
+        \begin{minipage}{2cm}
+        \textcolor{vert}{OK}
+        \end{minipage} &
+        \begin{minipage}{7cm}
+        Nothing to report, all is working ! This is far the better choice.
+        \end{minipage} \\
+    \hline
+        \begin{minipage}[c]{3cm}
+        \vspace{0.5cm}
+        \SimpleImage{images/ultraflash2advance}{0.2}
+        \end{minipage} &
+        \begin{minipage}{3cm}
+        Use the official software, GBA will be your linker
+        \end{minipage} &
+        \begin{minipage}{2cm}
+        \textcolor{vert}{OK}
+        \end{minipage} &
+        \begin{minipage}{7cm}
+        Save feature is working.
+        \end{minipage} \\
+    \hline
+        \begin{minipage}[c]{3cm}
+        \vspace{0.5cm}
+        \SimpleImage{images/supercardsd_sd}{0.2}
+        \end{minipage} &
+        \begin{minipage}{3cm}
+        ???
+        \end{minipage} &
+        \begin{minipage}{2cm}
+        \textcolor{rouge}{KO}
+        \end{minipage} &
+        \begin{minipage}{7cm}
+        Not tested. Some users already reported this cartridge is not working with \FAT :(
+        \end{minipage} \\
+    \hline
+        \begin{minipage}[c]{3cm}
+        \vspace{0.5cm}
+        \SimpleImage{images/ezflash4}{0.2}
+        \end{minipage} &
+        \begin{minipage}{3cm}
+        \FAT is starting and is usable. Use the provided software to burn the ROM.
+        \end{minipage} &
+        \begin{minipage}{2cm}
+        \textcolor{vert}{OK}
+        \end{minipage} &
+        \begin{minipage}{7cm}
+        Save doesn't work ! Please use the instant save provided by the cartridge.
+        \end{minipage} \\
+\hline
+\end{supertabular}
+
+\medskip The better choice is the ezflashI.
+
+\subsection{Changelog for \fatversion}
+
+Changelog for this \FAT's version: \medskip
+\begin{itemize}
+  \item{general stability improvements (all the code has been reworked)}
+  \item{the samples and oscillator playback had been recoded (now it's stable)}
+  \item{added a new screen : custom wave editor}
+  \item{added a new project parameter : the sample rate determines the playback speed for samples and oscillators}
+\end{itemize}
+
+\subsection{Next version roadmap}
+
+The next version should be \fatnextversion. \medskip
+\begin{itemize}
+    \item{new commands}
+    \item{total rework of custom wave screen}
+    \item{seeking some help/documentation for synth FM}
+\end{itemize}
+
+\subsection{First sound}
+
+Let's start easy ! We gonna play our first sound with \FAT.\medskip
+
+When \FAT starts, the SONG screen appears first. Don't move the curser, simply press on 'A' button.
+A "00" magically appears: this is a {\bf sequence}.
+
+\Image{images/screen_song}{1.0}{SONG screen}
+
+Press the SELECT button (hold it) et move to the right only once : the interface has changed.
+
+\Image{images/screen_popup}{1.0}{POPUP screen}
+
+Now, without to move the cursor, press again on the 'A' button. A new "00" appears but this time, it's a {\bf block}.
+
+\Image{images/screen_blocks}{1.0}{BLOCKS screen}
+
+Press SELECT (hold it) and move to the right. Welcome to a new screen !
+Press 'A' another time : here is your first {\bf note} !
+Let's hear it : simply press START. \FAT is currently playing your first track on a GBA. Enjoy.
+
+\Image{images/screen_notes}{1.0}{NOTES screen - press START !}
+
+\subsection{Data structure}
+
+Ok, we have the "sequences", "blocks" and "notes" notions in mind. \FAT is globally organized the same as LSDJ :
+\begin{itemize}
+    \item{a sequences table on 6 columns : GBA can natively play 6 sounds at the same time.}
+    \item{for each sequence, we have 16 blocks.}
+    \item{for each block, we have 16 notes.}
+\end{itemize}\medskip
+
+The way to organize all the data is like "russians dolls". Sequences contains blocks which themselves contains notes.
+When \FAT is playing a sequence, it's running all blocks in it one after others.
+
+In order to avoid each notes ring like others, we "plug" an "instrument" on it.
+Each instrument provides you some parameters.
+If you change instrument's parameters, then your notes will ring differently.
+You also have to know that \FAT provides you several types of instruments ! allowing you to make differents things on the GBA's channels.
+
+\subsection{Technical data}
+
+The GameboyAdvance provide us 4 "analogic" channels in order to generate sounds and noises.
+These channels are almost the same as on the first Gameboy (the greybrick).
+In addition, GBA has 2 "numeric" channels : use them to play some elaborate sounds.
+
+GBA's speaker is mono ! You'll have to plug your earphones to enjoy \FAT's stereo capacities.
+
+\paragraph{Channel 1 : PU1} This channel allow you to play melody and/or apply SWEEP effect on notes. Beware that the channel 1 is the only channel able to make SWEEP.
+
+\ColoredAnnotation{For example, you can use this channel to generate a kick with this SWEEP param or play bassy bass.}
+
+\paragraph{Channel 2 : PU2} This is exactly the same as the PU1 but without the SWEEP capability.
+
+\ColoredAnnotation{You can use this channel to play another bass or a melody.}
+
+\paragraph{Channel 3 : WAVE} Channel 3 is able to play wave sound. It offers some cool capacities.
+
+\ColoredAnnotation{Make this channel a way to get more bass on your song or play some catchy satured sound, like a cool electric guitar or so.}
+
+\paragraph{Channel 4 : NOISE} Channel 4's purpose is to make some noise.
+
+\ColoredAnnotation{Use it to make some snare. You can also program some cool special effects such as beach wave sound for example.}
+
+\paragraph{Channel 5 : SOUNDA} Play samples and loops with this channel.
+
+\paragraph{Channel 6 : SOUNDB} Play samples and loops with this channel.
+
+\ColoredAnnotation{These two channels are perfect to add some human voices or better kick and snare. It's fully possible to add your own samples and use it within \FAT.}

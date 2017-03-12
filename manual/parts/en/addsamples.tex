@@ -1,0 +1,60 @@
+\label{sec:addsamples}
+
+A partir de la version 1.0.0, il est possible d'ajouter vos propres samples à \FAT.
+Cette manipulation (technique) est possible sur le site web (et beaucoup plus simple, le programme sur le site se charge de tout)
+mais possibité vous est offerte de le faire vous même sur votre poste si le coeur vous en dit. Et que vous n'avez rien de mieux à faire.
+Voyons la marche à suivre.
+\medskip
+
+\begin{itemize}
+  \item{réunissez vos samples dans un dossier quelconque}
+  \item{créez un fichier 0infos et saisissez le nom de votre collection : "my-first" par exemple (8 caractères obligatoires !) }
+  \item{transformez vos fichiers samples dans le bon format}
+  \item{créez le fichier GBFS qui sera intégré à la ROM. Répétez l'opération pour chaque kit.}
+  \item{dans un autre dossier, créez le fichier 00nbkit qui compte le nombre de kits dans la ROM finale (le nombre de gbfs donc)}
+  \item{intégrez les fichiers GBFS dans la ROM "défault"}
+\end{itemize}\medskip
+
+Pas d'inquiétudes ! Je vais tout expliquer !
+Commencez par télécharger la ROM "défault" sur le site dédié.
+
+\paragraph{Format} La première chose à savoir est le format audio cible : {\bf pcm\_s8, 16000Hz, mono}.
+Ce format est très important ! Si vous ne le respectez pas, vos samples ne sonneront pas correctement.
+Au mieux vous aurez du bruit, au pire vous planterez sytématiquement votre GBA.
+
+\paragraph{Fichier de description} Une collection de samples est décrite par un fichier toujours nommé {\bf 0infos}.
+Le contenu de ce fichier texte est très simple : les 8 premières lettres sur la première ligne sont le nom de votre collection.
+Le reste est ignoré. Assurez vous de respecter ces 8 lettres (quitte à mettre des '-').
+
+\paragraph{Convertir les fichiers audio} Libre à vous d'utiliser l'outil que vous souhaitez.
+Pour ma part, j'utilise "ffmpeg" qui a le mérite de se lancer en ligne de commande et est donc scriptable.
+Voici le script que j'utilise pour transformer une collection complète de MP3 dans le bon format :
+\Annotation{find . -name "*.mp3" -exec ffmpeg -i {} -ac 1 -ar 16000 -f s8 -acodec pcm\_s8 \{\}.snd \textbackslash;}
+Audacity ou tout autre logiciel de traitement audio est également approprié.
+L'important est que le format soit respecté.
+Par convenance, nommez vos samples formatés avec l'extension ".snd".
+
+\paragraph{Le fichier GBFS} Ce fichier est le conteneur qui va embarquer le fichier description suivi de tous vos fichier ".snd".
+Pour le créer, il faut utiliser l'utilitaire "gbfs.exe".
+Vous pouvez télécharger ce fichier sur le Github de \FAT (\href{https://github.com/cbrouillard/furiousadvancetracker/blob/master/gbfs.exe?raw=true}{Github - gbfs.exe})
+\Annotation{gbfs.exe monfichier\_sample.gbfs samples/0infos samples/*.snd}
+Le fichier "monfichier\_sample.gbfs" sera créé.
+L'ordre de cette commande est important : le fichier 0infos DOIT être le premier.
+{\bf Cet utilitaire fonctionne sous Linux avec Wine}.
+
+\paragraph{Le fichier 00nbkit} Lorsque vous avez terminé de créer vos fichiers GBFS pour chaque kit de sample, un fichier 00nbkit doit être créé.
+Une seule donnée à l'intérieur de ce fichier : le nombre de kits que vous allez intégrer dans la ROM.
+Si vous n'avez qu'un seul kit à intégrer :
+\Annotation{echo 1 \textgreater  00nbkit}
+Une fois ce fichier créé, il faut aussi le tranformer en GBFS.
+\Annotation{gbfs.exe 00nbkit.gbfs 00nbkit}
+
+\paragraph{Intégration dans la ROM} Maintenant que vos fichier GBFS et 00nbkit.gbfs sont créés, il suffit de les ajouter à la ROM.
+Et c'est aussi simple que cette commande :
+\Annotation{cat FAT\_default.gba 00nbkit.gbfs monfichier\_sample.gbfs \textgreater FAT\_v1.0.0\_withsample.gba}
+Oui. Un simple "cat".
+Attention cependant, le fichier 00nbkit.gbfs {\bf DOIT} être le premier.
+(\FAT se sert de la donnée écrite dans le fichier 00nbkit pour connaitre à l'avance le nombre de kit)
+\medskip
+
+Après toutes ces manipulations, votre ROM est prête : vos samples sont accessibles sur les channels SNA et SNB avec des instruments de type SAMPLE. Enjoy !

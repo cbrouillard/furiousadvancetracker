@@ -1,0 +1,68 @@
+Cet écran se subdivise en 5: il existe autant de types d'instruments dans \FAT.
+\medskip
+
+\begin{itemize}
+    \item{le type PULSE}
+    \item{le type WAVE}
+    \item{le type NOISE}
+    \item{le type KIT/SAMPLE}
+    \item{le type OSCILLATOR}
+\end{itemize}\medskip
+
+ Chaque instrument est spécialisé dans la lecture de notes {\bf sur un certain canal}.
+ Rappelez-vous, l'écran SONG est composé de 6 colonnes.
+ Ces 6 colonnes représentent en fait chacun des 6 canaux de la GBA. Ainsi,
+ \medskip
+
+ \begin{itemize}
+    \item{les instruments PULSE sont spécialistes du canal 1 et 2: le PU1 et PU2}
+    \item{les instruments WAVE sont utiles pour le canal 3 uniquement : le canal WAV}
+    \item{les instrument NOISE sont, eux, prévus pour le canal 4: le canal NOI}
+    \item{les instruments de type KIT/SAMPLE officient sur le canal 5 et 6: le SNA et SNB}
+    \item{enfin, les OSCILLATOR génèrent logiciellement un son basique (sinusoidal, carré, triangulaire ou en dent de scie)}
+ \end{itemize}\medskip
+
+ Mais \FAT est suffisamment souple pour permettre l'utilisation d'un instrument dans un canal qui ne lui est pas dédié:
+ le comportement peut cependant être surprenant ... ou inaudible.
+ A vous de voir ce que vous souhaitez produire comme sonorités.
+
+\subsubsection{Commandes}
+
+% Configuration du tableau
+\tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+\tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+\tablelasttail{\hline}
+\begin{supertabular}{|l|p{11cm}|}
+\hline
+    {\bf SELECT} & Passer en mode popup \\
+    \hline
+    {\bf R+L} & Afficher l'écran d'aide \\
+    \hline
+    {\bf START} & Lancer/stopper la lecture des notes du block actuellement en cours d'édition \\
+    \hline
+    {\bf B} & Jouer la note dans le simulateur \\
+    \hline
+    {\bf B+DIRECTION} & Modifier la valeur du simulateur \\
+    \hline
+    {\bf A+DIRECTION} & Modifier la valeur sous le curseur \\
+    \hline
+    {\bf R+DROITE/GAUCHE} & Changer le numéro d'instrument en cours d'édition \\
+    \hline
+    {\bf L+DROITE/GAUCHE} & Changer le type d'instrument \\
+\hline
+\end{supertabular}
+
+\subsubsection{Instrument de type PULSE}
+\input{parts/fr/screens/inst/pulse.tex}
+
+\subsubsection{Instrument de type WAVE}
+\input{parts/fr/screens/inst/wave.tex}
+
+\subsubsection{Instrument de type NOISE}
+\input{parts/fr/screens/inst/noise.tex}
+
+\subsubsection{Instrument de type SAMPLE}
+\input{parts/fr/screens/inst/sample.tex}
+
+\subsubsection{Instrument de type OSCILLATOR}
+\input{parts/fr/screens/inst/oscillator.tex}
