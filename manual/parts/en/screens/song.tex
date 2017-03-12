@@ -1,46 +1,44 @@
-Cet écran fait office de "séquenceur".
-C'est ici que vous allez organiser l'agencement de toutes vos séquences.
-Lorsque la lecture de l'ensemble est lancée, \FAT lit toutes les séquences ligne par ligne.
-Lorsque un emplacement est vide \FAT essaie de remonter à la première séquence disponible.
+This screen is the sequencer. Right here, you'll be able to organize your track's sequences order.
+When you'll want to play your song, \FAT will read all the sequences line by line.
+When an empty spot has been detected, \FAT will try to start from the first in the list.
 
-\Image{images/screen_song_complete}{1.0}{L'écran SONG se présente comme un gros tableau}
+\Image{images/screen_song_complete}{1.0}{The SONG screen is like a big table.}
 
-\subsubsection{Commandes}
+\subsubsection{Commands}
 
 % Configuration du tableau
-\tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+\tablehead{\hline \rowcolor{headertab} {\bf Key(s)} & {\bf Effect} \\ \hline}
 \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
 \tablelasttail{\hline}
 \begin{supertabular}{|l|p{11cm}|}
 \hline
-    {\bf SELECT} & Passer en mode popup \\
+    {\bf SELECT} & Show the switch popup \\
     \hline
-    {\bf R+L} & Afficher l'écran d'aide \\
+    {\bf START} & Start/stop song playback from the sequencer \\
     \hline
-    {\bf START} & Lancer/stopper la lecture depuis le séquenceur \\
+    {\bf R+L} & Show help screen \\
     \hline
-    {\bf L+HAUT} & Déplacer le curseur tout en haut \\
+    {\bf L+UP} & Move the cursor to top \\
     \hline
-    {\bf L+BAS} & Déplacer le curseur tout en bas \\
+    {\bf L+DOWN} & Move the cursor to bottom \\
     \hline
-    {\bf R+HAUT} & Déplacer le curseur d'une page vers le haut \\
+    {\bf R+UP} & Move the cursor to one page up \\
     \hline
-    {\bf R+BAS} & Déplacer le curseur d'une page vers le bas \\
+    {\bf R+DOWN} & Move the cursor to one page down \\
     \hline
-    {\bf A} & Inscrire le dernier numéro de séquence dans la case sous le curseur (par défaut "00") \\
+    {\bf A} & Write last known sequence's number on the spot designated by cursor (default is "00") \\
     \hline
-    {\bf A+DIRECTION} & Modifier la valeur de la séquence dans la case sous le curseur \\
+    {\bf A+DIRECTION} & Modify value \\
     \hline
-    {\bf L+A} & Trouver une nouvelle séquence disponible puis l'inscrire dans la case sous le curseur \\
+    {\bf L+A} & Find a new available number and set the value on spot \\
     \hline
-    %{\bf R+A} & Non utilisé pour le moment \\
-    %\hline
-    {\bf B} & SI CASE NON VIDE | Couper la séquence \\
+    {\bf R+A} & Not used \\
     \hline
-    {\bf B} & SI CASE VIDE | Coller une séquence préalablement coupée \\
+    {\bf B} & IF NOT EMPTY SPOT | Cut sequence \\
     \hline
-    {\bf L+B} & SI CASE VIDE | Coller une séquence préalablement coupée en changeant le numéro \\
+    {\bf B} & IF EMPTY SPOT | Paste sequence \\
     \hline
-    {\bf L+B} & SI CASE NON VIDE | Changer le numéro de la séquence en copiant son contenu \\
-\hline
+    {\bf L+B} & IF EMPTY SPOT | Paste sequence but changing number \\
+    \hline
+    {\bf L+B} & IF NOT EMPTY SPOT | Change number of sequence while copying its content \\
 \end{supertabular}

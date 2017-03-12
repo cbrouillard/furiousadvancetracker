@@ -6,42 +6,42 @@ Si aucun block n'est présent dans la séquence en cours, alors \FAT ne la jouer
 
 Pour faire simple, considérez cet écran comme une liste de blocks contenue dans une séquence (dont le numéro est affiché à droite de l'écran).
 
-\Image{images/screen_blocks_complete}{1.0}{L'écran BLOCKS}
+\Image{images/screen_blocks_complete}{1.0}{BLOCKS screen}
 
-\subsubsection{Commandes}
+\subsubsection{Commands}
 % Configuration du tableau
-\tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
+\tablehead{\hline \rowcolor{headertab} {\bf Key(s)} & {\bf Effect} \\ \hline}
 \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
 \tablelasttail{\hline}
 \begin{supertabular}{|l|p{11cm}|}
 \hline
-    {\bf SELECT} & Passer en mode popup \\
+    {\bf SELECT} & Show the switch popup \\
     \hline
-    {\bf R+L} & Afficher l'écran d'aide \\
+    {\bf R+L} & Show the help screen \\
     \hline
-    {\bf START} & Lancer/stopper la lecture des blocks dans la séquence en cours d'édition \\
+    {\bf START} & Start/stop blocks playback from currently edited sequence \\
     \hline
-    {\bf L+HAUT} & Déplacer le curseur tout en haut \\
+    {\bf L+HAUT} & Move the cursor to top \\
     \hline
-    {\bf L+BAS} & Déplacer le curseur tout en bas \\
+    {\bf L+BAS} & Move the cursor to bottom \\
     \hline
-    {\bf A} & Inscrire le dernier numéro de block dans la case désignée \\
+    {\bf A} & Write last known block's number on the spot designated by cursor (default is "00") \\
     \hline
-    {\bf A+DIRECTION} & Modifier le numéro de block dans la case désignée \\
+    {\bf A+DIRECTION} & Modify value \\
     \hline
-    {\bf L+A} & Trouver un nouveau numéro de block disponible et l'inscrire \\
+    {\bf L+A} & Find a new available number and set the value on spot \\
     \hline
     %{\bf R+A} & Non utilisé pour le moment \\
     %\hline
-    {\bf B} & SI CASE NON VIDE | Couper le block \\
+    {\bf B} & IF NOT EMPTY SPOT | Cut block \\
     \hline
-    {\bf B} & SI CASE VIDE | Coller le block précédemment coupé \\
+    {\bf B} & IF EMPTY SPOT | Paste block \\
     \hline
-    {\bf L+B} & SI CASE NON VIDE | Changer le numéro de block en copiant le contenu \\
+    {\bf L+B} & IF NOT EMPTY SPOT | Change number of block while copying its content \\
     \hline
-    {\bf L+B} & SI CASE VIDE | Coller le block précédemment coupé en changeant son numéro \\
+    {\bf L+B} & IF EMPTY SPOT | Paste block but changing number \\
     \hline
-    {\bf R+DROITE/GAUCHE} & Changer le numéro de séquence en cours d'édition \\
+    {\bf R+DROITE/GAUCHE} & Change the currently edited sequence number \\
     %\hline
     % {\bf R+HAUT/BAS} & Sauter à la séquence précédente/suivante dans le séquenceur \\
 \hline
