@@ -1,3 +1,3 @@
 Packages to install in order to compile manual :
 --------------------------------------------------
-texlive-extra texlive-fonts-extra texlive-lang-french
+texlive texlive-fonts-extra texlive-lang-french latex2html
