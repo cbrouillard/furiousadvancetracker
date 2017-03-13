@@ -1,10 +1,10 @@
-Dans cet écran, vous pouvez éditer le contenu d'une séquence : chaque séquence peut contenir de 0 à 16 blocks.
-Lorsque \FAT jouera la séquence, elle commencera par lire le premier block pour descendre jusqu'au dernier emplacement vide.
-Si \FAT rencontre un emplacement vide lors de la lecture alors il remonte au premier emplacement.
-Si aucun block n'est présent dans la séquence en cours, alors \FAT ne la jouera pas (elle sera sautée).
+This screen lets you edit sequence's content : each sequence can contain up to 16 blocks.
+When \FAT is going to play this sequence, it will begin by reading the first block and continue to bottom.
+When an empty spot has been reached, \FAT will start again at the first line.
+In the case of there isn't any blocks in the current sequence, then \FAT will never play it.
 \medskip
 
-Pour faire simple, considérez cet écran comme une liste de blocks contenue dans une séquence (dont le numéro est affiché à droite de l'écran).
+To make it simple, you can consider this screen a block list contained by a sequence (the sequence's number is displayed on the right top of screen).
 
 \Image{images/screen_blocks_complete}{1.0}{BLOCKS screen}
 
