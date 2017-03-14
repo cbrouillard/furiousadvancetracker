@@ -13,25 +13,43 @@ Once you have written all your notes (each notes can have different instrument),
 Mode's value change to "LOCKED" : you are now in "player" mode.
 \medskip
 
-Appuyez sur une touche: la note assignée est jouée en temps réel.
-Changez de touche pour jouer une autre note. Simple n'est ce pas ?
+Press any key : \FAT play assigned note in realtime.
+Press another key to play another note ! Easy isn't it ?
 \medskip
 
-Notez aussi que ces données seront enregistrées dans chacune de vos chansons.
-Vous pourrez préparer votre set de note à la maison et improviser en live sans forcer !
+Take note that all data stored in the composer will be saved in your tracks.
+That's why you can setup your note's collection at home and then rocks your improvisation on the stage without effort !
 \medskip
 
-Essayez ! composez quelques séquences puis essayez de jouer avec le COMPOSER en même temps !
+Try it ! Compose some cool stuff then try to play with the composer while \FAT is playing your track.
 \medskip
 
-\subsubsection{Paramétrage}
+\subsubsection{Commands}
 
-Le composer peut également être paramétré:
+% Configuration du tableau
+\tablehead{\hline \rowcolor{headertab} {\bf Key(s)} & {\bf Effect} \\ \hline}
+\tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
+\tablelasttail{\hline}
+\begin{supertabular}{|l|p{11cm}|}
+    {\bf SELECT} & Show the switch popup \\
+    \hline
+    {\bf R+L} & Show the help screen \\
+    \hline
+    {\bf START} & Change composer mode (UNLOCKED/LOCKED) \\
+    \hline
+    {\bf KEYS} & LOCKED | Play assigned note \\
+    \hline
+    {\bf A+DIRECTION} & UNLOCKED | Change value \\
+\end{supertabular}
 
-\Image{images/parameters_composer}{1.0}{Les paramètres de l'écran COMPOSER}
+\subsubsection{Parameters}
 
-\paragraph{Transpose} de 0 à FF.
-Ajoute une valeur de transpose.
+There are some parameters you can set on the composer screen :
+
+\Image{images/parameters_composer}{1.0}{COMPOSER screen's parameters}
+
+\paragraph{Transpose} from 0 to FF.
+Add a transpose value.
 Cette valeur s'ajoutera à celle configurée pour le projet dans sa globalité.
 Notez que toutes les notes du composer seront transposées avec cette valeur.
 
@@ -39,23 +57,3 @@ Notez que toutes les notes du composer seront transposées avec cette valeur.
 Règle le temps d'attente entre chaque lecture d'une note du composer.
 Plus cette valeur est élevée, plus le temps d'attente entre l'appui de deux touches sera grand.
 Laissez cette valeur à zéro pour désactiver le temps d'attente.
-
-\subsubsection{Commandes}
-
-% Configuration du tableau
-\tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
-\tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
-\tablelasttail{\hline}
-\begin{supertabular}{|l|p{11cm}|}
-\hline
-    {\bf SELECT} & Passer en mode popup \\
-    \hline
-    {\bf R+L} & Afficher l'écran d'aide \\
-    \hline
-    {\bf START} & Changer le mode (UNLOCKED/LOCKED) \\
-    \hline
-    {\bf TOUCHES} & LOCKED | Jouer la note correspondante \\
-    \hline
-    {\bf A+DIRECTION} & UNLOCKED | Changer la valeur de la note/instrument \\
-\hline
-\end{supertabular}
