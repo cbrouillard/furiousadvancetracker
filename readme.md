@@ -1,4 +1,4 @@
-# ![furiousadvancetracker](src/gfx/img/promo.png)
+# ![furiousadvancetracker](src/gfx/img/promo3.png)
 
 FAT is a Gameboy Advance tracker.
 This software has been coded with C langage.
