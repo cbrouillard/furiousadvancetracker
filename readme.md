@@ -5,14 +5,14 @@ This software has been coded with C langage.
 If you wish to compile FAT by yourself, then follow the below steps.
 These instructions are only available for a Linux machine : but I assume you use windows because you are expert with it. You should be able to translate all the informations below :)
 
-## 1. Download package
+## 1. Before starting
 
 Before any operations, you have to download all the stuff :
 http://brouillard.me/shared/howto_FAT_install.zip
 
-## 2. Then follow this procedure.
+You'll also have to install Wine on your system.
 
-PRE : Install Wine on your system. 
+## 2. Then follow this procedure.
 
 0. Unzip the "howto_FAT_install.zip"
 ```
