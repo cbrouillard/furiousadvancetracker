@@ -1,8 +1,10 @@
-FAT est un tracker pour la Gameboy Advance.
+# ![furiousadvancetracker](src/gfx/img/promo.png)
 
-Ce logiciel est programmé en C (qui n'est peut-être pas de toute dernière qualité)
+FAT is a Gameboy Advance tracker.
 
-Pour compiler tout ce bazar, suivez les instructions ci-dessous :
+This software has been coded with C langage.
+
+If you wish to compile FAT by yourself, then follow the below steps :
 
 These are instructions to make FAT compilable on your PC.
 ------------------------------------------------------------------
