@@ -1,3 +1,4 @@
+# ![furiousadvancetracker](src/gfx/img/logo.png)
 # ![furiousadvancetracker](src/gfx/img/promo3.png)
 
 FAT is a Gameboy Advance tracker.
