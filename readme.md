@@ -2,7 +2,11 @@
 
 FAT is a Gameboy Advance tracker.
 This software has been coded with C langage.
-If you wish to compile FAT by yourself, then follow the below steps.
+If you wish to compile FAT by yourself, you can follow the below steps or use the install script like this :
+```
+  curl -s https://raw.githubusercontent.com/cbrouillard/furiousadvancetracker/master/doc/install.sh | bash
+```
+
 These instructions are only available for a Linux machine : but I assume you use windows because you are expert with it. You should be able to translate all the informations below :)
 
 ## 1. Before starting
