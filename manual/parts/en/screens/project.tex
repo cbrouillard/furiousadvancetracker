@@ -1,58 +1,57 @@
-L'écran PROJECT fait office de gestionnaire de propriétés pour votre morceau.
+The PROJECT screen acts as a property manager for your song.
 
-\Image{images/screen_project}{0.5}{L'écran PROJECT}
+\Image{images/screen_project}{0.5}{PROJECT screen}
 
-\subsubsection{Commandes}
+\subsubsection{Commands}
 % Configuration du tableau
 \tablehead{\hline \rowcolor{headertab} {\bf Touche(s)} & {\bf Effet} \\ \hline}
 \tabletail{\hline \multicolumn{2}{|l|} {\small ...} \\ \hline}
 \tablelasttail{\hline}
 \begin{supertabular}{|l|p{11cm}|}
 \hline
-    {\bf SELECT} & Passer en mode popup \\
+    {\bf SELECT} & Show the switch popup \\
     \hline
-    {\bf R+L} & Afficher l'écran d'aide \\
+    {\bf R+L} & Show the help screen \\
     \hline
-    {\bf A+DIRECTION} & Modifier la valeur sous le curseur \\
+    {\bf A+DIRECTION} & Change value \\
     \hline
-    {\bf START} & Lancer/stopper la lecture depuis le séquenceur \\
+    {\bf START} & Start/stop song playback from the sequencer \\
 \end{supertabular}
 
-\subsubsection{Paramètres}
+\subsubsection{Parameters}
 
-\paragraph{Propriétés : "Tempo"} Le tempo du projet.
-        Depuis la version 1.0.0, il est correctement calculé et donc utilisable !
+\paragraph{Properties : "Tempo"} Project tempo.
 
-\paragraph{Propriétés : "Transpose"} Réglez la transposition de tout le projet.
+\paragraph{Properties : "Transpose"} Set up all project's transposition.
 
-\paragraph{Propriétés : "Sample rate"} Règle la vitesse d'échantillonage pour les samples et les oscillateurs.
+\paragraph{Properties : "Sample rate"} Sets the sampling speed for samples and oscillators.
 
-\paragraph{Interface : "Keyrepeat"} Ce paramètre permet de régler le temps d'attente entre chaque appui d'une touche.
-                                    Plus cette valeur est grande, plus l'interface est lente.
+\paragraph{Interface : "Keyrepeat"} This parameter is used to set the waiting time between each press of a key.
+                                     The larger the value, the slower the interface.
 
-\paragraph{Interface : "Preview"} Réglez ce paramètre à YES pour demander à \FAT de jouer la note dès qu'elle est écrite.
+\paragraph{Interface : "Preview"} Set this to YES to instruct \FAT to play the note as it is written.
 
-\paragraph{Interface : "GreedPlay"} Si activé, le GreedPlay force \FAT à toujours chercher à jouer la première séquence
-                                    disponible dans un ensemble et ce peu importe la ligne sur laquelle vous vous trouvez.
-                                    Ex : posez plusieurs séquences (avec des notes à lire) à la suite, de la ligne 0 à 5, puis positionnez vous sur la ligne 3.
-                                    Pressez START. Si le greedPlay est activé, la lecture ne commencera pas depuis la ligne 3 mais depuis la 0.
+\paragraph{Interface : "GreedPlay"} If enabled, the GreedPlay forces \FAT to always seek to play the first sequence
+                                     available in a set regardless of the line you are on.
+                                     Ex: put several sequences (with notes to read) in succession, from line 0 to 5, then position on line 3.
+                                     Press START. If greedPlay is enabled, playback will not start from line 3 but from 0.
 
-\paragraph{Gestion : "New Prj"} Crée un nouveau projet.
-                                Attention, les données non enregistrées seront impitoyablement effacées, écrasées, broyées, massacrées, mutilées.
+\paragraph{Management : "New Prj"} Creates a new project.
+                                 Beware, unregistered data will be mercilessly erased, crushed, crushed, massacred, mutilated.
 
-\paragraph{Gestion : "Save PRJ" (sauvegarder)}  Affiche l'écran de sauvegarde (cf \hyperref[sec:filesystem]{"L'écran FILESYSTEM"}).
-                                                Cette version de \FAT reste expérimentale en terme de gestion de la sauvegarde.
+\paragraph{Management : "Save PRJ" (sauvegarder)}  Displays the backup screen (cf \hyperref [sec: filesystem] {"FILESYSTEM screen"}).
+                                                 This version of \FAT remains experimental in terms of backup management.
 
-\paragraph{Gestion : "Load PRJ" (charger)} Affiche l'écran de chargement (cf \hyperref[sec:filesystem]{"L'écran FILESYSTEM"}).
-                            Cette version de \FAT reste expérimentale en terme de gestion de la sauvegarde.
+\paragraph{Management : "Load PRJ" (charger)} Displays the loading screen (cf \hyperref [sec: filesystem] {"FILESYSTEM screen"}).
+                                                 This version of \FAT remains experimental in terms of backup management.
 
 \paragraph{Live : "Buffering"}
-Permet d'activer ou non la bufferisation dans l'écran LIVE.
+Enables or disables buffering in the LIVE screen.
 \medskip
 
 \begin{itemize}
-    \item{activé, la modification des données "volume", "transpose" et "tempo" ne s'applique que lorsque vous relachez le bouton A}
-    \item{désactivé, ces modifications sont immédiatement prises en compte}
+    \item{actived, modification of the "volume", "transpose" and "tempo" data only applies when you release button A}
+    \item{disabled, these changes are immediately taken into account}
 \end{itemize}
 \medskip
-Si vous ne souhaitez pas avoir un effet escalier sur l'écran LIVE, laissez le buffering activé.
+If you do not want to have a stair effect on the LIVE screen, leave the buffering enabled.
