@@ -816,7 +816,7 @@ void FAT_player_playFromBlocks() {
 }
 
 
-note FAT_lastNotePlayed;
+note* FAT_lastNotePlayed;
 u8 effectCounter = 0;
 // DEJA DOCUMENTEE
 void FAT_player_playFromNotes() {
@@ -860,7 +860,9 @@ void FAT_player_playFromNotes() {
                 }
             }
 
-            FAT_lastNotePlayed = block->notes[actualNotesForChannel[FAT_currentPlayedChannel]];
+            if ((block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]).freq != NULL_VALUE){
+              FAT_lastNotePlayed = & (block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]);
+            }
             FAT_player_playNoteWithCustomParams(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]),
                     FAT_currentPlayedChannel, 0, volume, sweep, output);
 
@@ -879,17 +881,16 @@ void FAT_player_playFromNotes() {
         hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
         if (FAT_player_effect_isRunningLongEffect){
 
-          if (effectCounter > 1){
+          if (effectCounter >= 5){
             effectCounter = 0;
-            FAT_lastNotePlayed.freq -= 2;
+            FAT_lastNotePlayed->freq -= 5;
           } else {
-            FAT_lastNotePlayed.freq += 1;
+            FAT_lastNotePlayed->freq += 1;
+            effectCounter ++;
           }
 
-          FAT_player_playNoteWithCustomParams(&FAT_lastNotePlayed,
-                  0, 0, volume, sweep, output);
-
-          effectCounter ++;
+          FAT_player_playNoteWithCustomParams(FAT_lastNotePlayed,
+                  FAT_currentPlayedChannel, 0, volume, sweep, output);
 
         }
 
@@ -975,6 +976,7 @@ void FAT_player_stopPlayer() {
     for (i=0;i<6;i++){
         FAT_player_buffer[i].volume = NULL_VALUE;
     }
+
     FAT_player_effect_isRunningLongEffect = 0;
 }
 
