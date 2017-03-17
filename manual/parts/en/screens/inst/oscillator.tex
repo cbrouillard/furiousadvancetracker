@@ -1,39 +1,39 @@
-\FAT est capable de générer le son simple d'un oscillateur. Ces instruments seront surement utilisés un jour
-pour la synthèse FM. En attendant, ils restent utilisables en tant que tel dans les canaux SNA et SNB.
+\FAT is able to generate the simple sound of an oscillator. These instruments will surely be used one day
+For the FM synthesis. In the meantime, they remain usable as such in the SNA and SNB channels.
 
-\ColoredAnnotation {Vous remarquerez assez rapidement que les oscillateurs de type sinusoidal n'ont pas un son "parfait".
-Cela est dû à 2 choses. La première étant que le processeur de la GBA ne gère pas le calcul flottant (nombres avec virgules).
-Le calcul d'une onde sinusoidale demande une certaine précision que l'on ne peut donc pas obtenir nativement et facilement.
-La seconde chose : il reste néanmoins possible de faire du calcul flottant, mais de manière logicielle. Ce genre de calcul n'est cependant pas
-encore utilisé dans \FAT. Il y a donc encore une marge de progression possible pour ce sujet.}
+\ColoredAnnotation {You will soon notice that sinusoidal oscillators do not have a "perfect" sound.
+This is due to 2 things. The first one is that the GBA processor does not support floating calculation (numbers with commas).
+The calculation of a sinusoidal wave requires a certain precision which can not therefore be obtained natively and easily.
+The second thing: it is nevertheless possible to do floating calculation, but in a software way. This kind of calculation is not, however,
+still used in \FAT. There is therefore still room for progress on this subject.}
 
-\Image{images/screen_instrument_oscillator}{0.5}{Type OSCILLATOR}
+\Image{images/screen_instrument_oscillator}{0.5}{OSCILLATOR type}
 
-\subsubsection{Paramètres}
+\subsubsection{Parameters}
 
-\paragraph{Oscillator : "OSC Shape"} La forme d'onde à générer. \FAT gère 4 types d'ondes :\medskip
+\paragraph{Oscillator : "OSC Shape"} The waveform to generate. \FAT supports 4 types of waves :\medskip
 
 \begin{itemize}
     \item{\SimpleImage{images/osc_shape_sinus}{1.0} sinus}
-    \item{\SimpleImage{images/osc_shape_square}{1.0} carré}
+    \item{\SimpleImage{images/osc_shape_square}{1.0} square}
     \item{\SimpleImage{images/osc_shape_triangle}{1.0} triangle}
-    \item{\SimpleImage{images/osc_shape_sawtooth}{1.0} dents de scie}
+    \item{\SimpleImage{images/osc_shape_sawtooth}{1.0} sawtooth}
 \end{itemize}\medskip
 
-\paragraph{Oscillator : "Amplitude"} Ce paramètre n'est pas encore disponible à l'utilisation.
+\paragraph{Oscillator : "Amplitude"} This parameter is not yet available for use.
 
-\paragraph{Enveloppe : "Volume"} Volume affecté au sample : 50\% (0) ou 100\% (1).
+\paragraph{Enveloppe : "Volume"} Volume assigned to the sample: 50\% (0) or 100\% (1).
 
-\paragraph{Paramètre : "Timed"} Définit si le son sera coupé ou non.
+\paragraph{Parameter : "Timed"} Sets whether the sample will be cut or not.
 
-\paragraph{Paramètre : "Length"} Si "Timed" est à 1, cette valeur définit la coupure en pourcentage de la durée totale du son.
+\paragraph{Parameter : "Length"} If "Timed" is set to 1, this value sets the percentage cut-off of the total sample time.
 
-\paragraph{Paramètre : "Output"} Choisissez le mode de sortie du son.
+\paragraph{Parameter : "Output"} Select the sound output mode.
 \medskip
 
 \begin{itemize}
-    \item{L: le son sort à gauche (LEFT)}
-    \item{R: le son sort à droite (RIGHT)}
-    \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
-    \item{VIDE: le son ne sort plus (muet)}
+    \item{L: the sound goes out to the left (LEFT)}
+    \item{R: the sound goes out to the right (RIGHT)}
+    \item{RL: the sound goes out to the left and right (LEFT/RIGHT)}
+    \item{VIDE: sound does no go out anymore}
 \end{itemize}

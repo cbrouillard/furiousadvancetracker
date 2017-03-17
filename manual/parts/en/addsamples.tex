@@ -1,60 +1,60 @@
 \label{sec:addsamples}
 
-A partir de la version 1.0.0, il est possible d'ajouter vos propres samples à \FAT.
-Cette manipulation (technique) est possible sur le site web (et beaucoup plus simple, le programme sur le site se charge de tout)
-mais possibité vous est offerte de le faire vous même sur votre poste si le coeur vous en dit. Et que vous n'avez rien de mieux à faire.
-Voyons la marche à suivre.
+As of version 1.0.0, it is possible to add your own samples to \FAT.
+This (technical) manipulation is possible on the website (and much simpler, the program on the site takes care of everything)
+but you are offered to do it yourself on your own computer if the heart tells you. And that you have nothing better to do.
+Let's see how to.
 \medskip
 
 \begin{itemize}
-  \item{réunissez vos samples dans un dossier quelconque}
-  \item{créez un fichier 0infos et saisissez le nom de votre collection : "my-first" par exemple (8 caractères obligatoires !) }
-  \item{transformez vos fichiers samples dans le bon format}
-  \item{créez le fichier GBFS qui sera intégré à la ROM. Répétez l'opération pour chaque kit.}
-  \item{dans un autre dossier, créez le fichier 00nbkit qui compte le nombre de kits dans la ROM finale (le nombre de gbfs donc)}
-  \item{intégrez les fichiers GBFS dans la ROM "défault"}
+  \item{collect your samples in any directory of your choice}
+  \item{create a 0infos file and enter the name of your collection: "my-first" for example (8 characters required!) }
+  \item{transform your sample files into the right format}
+  \item{create the GBFS file that will be embedded in the ROM. Repeat for each kit.}
+  \item{in another folder, create the file 00nbkit which counts the number of kits in the final ROM (the number of gbfs therefore)}
+  \item{integrate the GBFS files into the "default" ROM}
 \end{itemize}\medskip
 
-Pas d'inquiétudes ! Je vais tout expliquer !
-Commencez par télécharger la ROM "défault" sur le site dédié.
+No worries ! I'll explain everything!
+Start by downloading the "default" ROM on the dedicated site.
 
-\paragraph{Format} La première chose à savoir est le format audio cible : {\bf pcm\_s8, 16000Hz, mono}.
-Ce format est très important ! Si vous ne le respectez pas, vos samples ne sonneront pas correctement.
-Au mieux vous aurez du bruit, au pire vous planterez sytématiquement votre GBA.
+\paragraph{Format} The first thing to know is the target audio format: {\bf pcm\_s8, 16000Hz, mono}.
+This format is very important! If you do not respect it, your samples will not sound properly.
+At best you will have noise, at worst you will systematically plant your GBA.
 
-\paragraph{Fichier de description} Une collection de samples est décrite par un fichier toujours nommé {\bf 0infos}.
-Le contenu de ce fichier texte est très simple : les 8 premières lettres sur la première ligne sont le nom de votre collection.
-Le reste est ignoré. Assurez vous de respecter ces 8 lettres (quitte à mettre des '-').
+\paragraph{Description file} A collection of samples is described by a file always named {\bf 0infos}.
+The content of this text file is very simple: the first 8 letters on the first line are the name of your collection.
+The rest is ignored. Make sure to respect these 8 letters (leaving to put '-').
 
-\paragraph{Convertir les fichiers audio} Libre à vous d'utiliser l'outil que vous souhaitez.
-Pour ma part, j'utilise "ffmpeg" qui a le mérite de se lancer en ligne de commande et est donc scriptable.
-Voici le script que j'utilise pour transformer une collection complète de MP3 dans le bon format :
+\paragraph{Convert audio files} You are free to use the tool you want.
+For my part, I use "ffmpeg" which has the merit to run in command line and is therefore scriptable.
+Here is the script I use to transform a complete MP3 collection into the right format:
 \Annotation{find . -name "*.mp3" -exec ffmpeg -i {} -ac 1 -ar 16000 -f s8 -acodec pcm\_s8 \{\}.snd \textbackslash;}
-Audacity ou tout autre logiciel de traitement audio est également approprié.
-L'important est que le format soit respecté.
-Par convenance, nommez vos samples formatés avec l'extension ".snd".
+Audacity or any other audio processing software is also appropriate.
+The important thing is that the format is respected.
+For convenience, name your formatted samples with the extension ".snd".
 
-\paragraph{Le fichier GBFS} Ce fichier est le conteneur qui va embarquer le fichier description suivi de tous vos fichier ".snd".
-Pour le créer, il faut utiliser l'utilitaire "gbfs.exe".
-Vous pouvez télécharger ce fichier sur le Github de \FAT (\href{https://github.com/cbrouillard/furiousadvancetracker/blob/master/gbfs.exe?raw=true}{Github - gbfs.exe})
+\paragraph{GBFS file} This file is the container that will embed the description file followed by all your .snd file.
+To create it, use the utility "gbfs.exe".
+You can download this tool on \FAT Github (\href{https://github.com/cbrouillard/furiousadvancetracker/blob/master/gbfs.exe?raw=true}{Github - gbfs.exe})
 \Annotation{gbfs.exe monfichier\_sample.gbfs samples/0infos samples/*.snd}
-Le fichier "monfichier\_sample.gbfs" sera créé.
-L'ordre de cette commande est important : le fichier 0infos DOIT être le premier.
-{\bf Cet utilitaire fonctionne sous Linux avec Wine}.
+The file "myfile\_sample.gbfs" will be created.
+The order of this command is important: the 0infos file MUST be the first.
+{\bf This utility works under Linux with Wine}.
 
-\paragraph{Le fichier 00nbkit} Lorsque vous avez terminé de créer vos fichiers GBFS pour chaque kit de sample, un fichier 00nbkit doit être créé.
-Une seule donnée à l'intérieur de ce fichier : le nombre de kits que vous allez intégrer dans la ROM.
-Si vous n'avez qu'un seul kit à intégrer :
+\paragraph{00nbkit file} When you have finished creating your GBFS files for each sample kit, a 00nbkit file must be created.
+Only one data inside this file: the number of kits that you will integrate into the ROM.
+If you have only one kit to integrate:
 \Annotation{echo 1 \textgreater  00nbkit}
-Une fois ce fichier créé, il faut aussi le tranformer en GBFS.
+Once this file is created, it must also be transformed into GBFS.
 \Annotation{gbfs.exe 00nbkit.gbfs 00nbkit}
 
-\paragraph{Intégration dans la ROM} Maintenant que vos fichier GBFS et 00nbkit.gbfs sont créés, il suffit de les ajouter à la ROM.
-Et c'est aussi simple que cette commande :
+\paragraph{Final ROM integration} Now that your GBFS and 00nbkit.gbfs files are created, just add them to the ROM.
+And it's as simple as this command:
 \Annotation{cat FAT\_default.gba 00nbkit.gbfs monfichier\_sample.gbfs \textgreater FAT\_v1.0.0\_withsample.gba}
-Oui. Un simple "cat".
-Attention cependant, le fichier 00nbkit.gbfs {\bf DOIT} être le premier.
-(\FAT se sert de la donnée écrite dans le fichier 00nbkit pour connaitre à l'avance le nombre de kit)
+Yes. A simple "cat".
+Be careful however, the file 00nbkit.gbfs {\bf MUST} be the first.
+(\FAT uses the data written in the file 00nbkit to know the number of kits in advance)
 \medskip
 
-Après toutes ces manipulations, votre ROM est prête : vos samples sont accessibles sur les channels SNA et SNB avec des instruments de type SAMPLE. Enjoy !
+After all these manipulations, your ROM is ready: your samples are accessible on SNA and SNB channels with SAMPLE type instruments. Enjoy!

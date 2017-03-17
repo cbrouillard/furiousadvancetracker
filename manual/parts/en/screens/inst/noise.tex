@@ -1,56 +1,58 @@
-\Image{images/screen_instrument_noise}{0.5}{Type NOISE}
+\Image{images/screen_instrument_noise}{0.5}{NOISE type}
 
-\subsubsection{Paramètres}
+\subsubsection{Parameters}
 
-\paragraph{Enveloppe : "Volume"} de 0 à F.
-Cette valeur permet de régler le volume des notes attachées à cet instrument.
+\paragraph{Enveloppe: "Volume"} from 0 to F.
+This value adjusts the volume of notes attached to this instrument.
 \medskip
 
 \begin{itemize}
-    \item{0: muet}
-    \item{F: à fond !}
+    \item{0: muted}
+    \item{F: maximum}
 \end{itemize}
 
-\paragraph{Enveloppe : "Direction"} \SimpleImage{images/envelope_direction_down}{1.0} ou \SimpleImage{images/envelope_direction_up}{1.0}.
-    Indique si le son monte ou descend.
+\paragraph{Enveloppe: "Direction"} \SimpleImage{images/envelope_direction_down}{1.0} or \SimpleImage{images/envelope_direction_up}{1.0}.
+Indicates whether the sound goes up or down.
 
-\paragraph{Enveloppe : "Steptime"} de 0 à 7.
-Agit sur la longueur du pas de l'onde (en gros).
+\paragraph{Enveloppe : "Steptime"} from 0 to 7.
+Acts on the length of the wave pitch.
+\medskip
 
-\paragraph{Enveloppe : "Polystep"} 0 ou 1.
-Modifie la facon dont le générateur de bruit fonctionne.
+\paragraph{Enveloppe : "Polystep"} 0 or 1.
+Changes the way the noise generator works.
 \medskip
 
 \begin{itemize}
-    \item{0: bruit simple}
-    \item{1: bruit qui grince}
+    \item{0: simple noise}
+    \item{1: squeaking noise}
 \end{itemize}
 
-\paragraph{Paramètre : "Timed"} 0 ou 1.
+\paragraph{Parameter : "Timed"} 0 or 1.
 \medskip
 
 \begin{itemize}
-        \item{0: le son n'est pas temporisé}
-        \item{1: le son est temporisé, réglez la durée avec le paramètre "Length"}
-    \end{itemize}
-
-\paragraph{Paramètre : "Length"} de 0 à 3F.
-Ce paramètre n'est accessible que si "Timed" à été positionné sur 1.
-\medskip
-
-\begin{itemize}
-    \item{0: le son est "infini"}
-    \item{3f: le son est très (très... voire trop) court}
+    \item{0: the sound is not timed}
+    \item{1: the sound is timed, set the duration with the parameter "Soundlength"}
 \end{itemize}
 
-\paragraph{Paramètre : "Output"} Choisissez le mode de sortie du son.
+\paragraph{Parameter : "Soundlength"} from 0 to 3F.
+This parameter can only be accessed if "Timed" has been set to 1.
 \medskip
+
 \begin{itemize}
-    \item{L: le son sort à gauche (LEFT)}
-    \item{R: le son sort à droite (RIGHT)}
-    \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
-    \item{VIDE: le son ne sort plus (muet)}
+    \item{0: sound is "infinite"}
+    \item{3f: sound is really, really short}
 \end{itemize}
 
-\paragraph{Simulator} Changez la note inscrite dans cet espace:
-            celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.
+\paragraph{Parameter : "Output"} Select the sound output mode.
+\medskip
+
+\begin{itemize}
+    \item{L: the sound goes out to the left (LEFT)}
+    \item{R: the sound goes out to the right (RIGHT)}
+    \item{RL: the sound goes out to the left and right (LEFT/RIGHT)}
+    \item{VIDE: sound does no go out anymore}
+\end{itemize}
+
+\paragraph{Simulator} Change the note written in this space:
+         it will be played with the parameters of the instrument you are editing.

@@ -1,46 +1,46 @@
-\FAT est capable de lire des samples sur les canaux SNA et SNB.
-Un sample est un morceau sonore de courte durée inclus dans une collection.
-Une série de collection est incluse par défaut dans \FAT :\medskip
+\FAT is able to play samples on the SNA and SNB channels.
+A sample is a short-lived soundtrack included in a collection.
+A collection series is included by default in \FAT : \medskip
 
 \begin{itemize}
-    \item {DEV-MESS : quelques samples de test pour le développement}
-    \item {LS-MGDRV : des samples Megadrive fournis par Little-scale (\href{http://little-scale.blogspot.fr/2008/08/sega-mega-drive-sample-pack.html}{Site de Little-scale})}
-    \item {C64DRUMS : drums et snares en provenance du Commodore64}
-    \item {YM-DRUMS : drums et snares en provenance de l'Atari ST}
-    \item {BATTERY : des kicks, drums et snares d'une batterie "classique"}
-    \item {RHYTHMS : quelques rythmes complets (mais encore non exploitables car mal samplés)}
-    \item {TR-606-7 : samples de cette machine mythique}
+    \item {DEV-MESS : some test samples for development}
+    \item {LS-MGDRV : Megadrive samples provided by Little-Scale (\href{http://little-scale.blogspot.fr/2008/08/sega-mega-drive-sample-pack.html}{Little-Scale website})}
+    \item {C64DRUMS : drums and snares from Commodore64}
+    \item {YM-DRUMS : drums and snares from Atari ST}
+    \item {BATTERY : kicks, drums and snares from a "classical" battery}
+    \item {RHYTHMS : some complet rhytms (but not exploitable because badly sampled)}
+    \item {TR-606-7 : samples of this mythical machine}
 \end{itemize} \medskip
 
-Il est assez facile de rajouter votre propre collection de samples. Pour plus d'informations, consultez la section \hyperref[sec:addsamples]{"Manipulation de la ROM pour l'ajout de vos collections de samples"}.
+It's easy enough to add your own collection of samples. For more informations, please consult \hyperref[sec:addsamples]{"How to manipulate ROM in order to add your own samples kit"} section.
 
-\Image{images/screen_instrument_sample}{0.5}{Type SAMPLE/KIT}
+\Image{images/screen_instrument_sample}{0.5}{SAMPLE/KIT type}
 
-\subsubsection{Paramètres}
+\subsubsection{Parameters}
 
-\paragraph{Kit collection : "Name"} Le nom de la collection de samples dans laquelle piocher.
+\paragraph{Kit collection : "Name"} The name of the collection of samples in which to draw.
 
-\paragraph{Enveloppe : "Volume"} Volume affecté au sample : 50\% (0) ou 100\% (1).
+\paragraph{Enveloppe : "Volume"} Volume assigned to the sample: 50\% (0) or 100\% (1).
 
-\paragraph{Paramètre : "Loop"} Le sample est t-il joué en boucle ?
-                                Si "YES", alors la lecture du sample est répétée.
+\paragraph{Parameter : "Loop"} Is the sample played looped?
+                                 If "YES", then the sample playback is repeated.
 
-\paragraph{Paramètre : "Timed"} Définit si le sample sera coupé ou non.
+\paragraph{Parameter : "Timed"} Sets whether the sample will be cut or not.
 
-\paragraph{Paramètre : "Length"} Si "Timed" est à 1, cette valeur définit la coupure en pourcentage de la durée totale du sample.
+\paragraph{Parameter : "Length"} If "Timed" is set to 1, this value sets the percentage cut-off of the total sample time.
 
-\paragraph{Paramètre : "Offset"} Offset de départ pour la lecture du sample.
-                                En pourcentage de la durée totale du sample.
+\paragraph{Parameter : "Offset"} Start offset for sample playback.
+                                 As a percentage of the total duration of the sample.
 
-\paragraph{Paramètre : "Output"} Choisissez le mode de sortie du son.
+\paragraph{Parameter : "Output"} Select the sound output mode.
 \medskip
 
 \begin{itemize}
-    \item{L: le son sort à gauche (LEFT)}
-    \item{R: le son sort à droite (RIGHT)}
-    \item{RL: le son sort à droite et à gauche (LEFT/RIGHT)}
-    \item{VIDE: le son ne sort plus (muet)}
+    \item{L: the sound goes out to the left (LEFT)}
+    \item{R: the sound goes out to the right (RIGHT)}
+    \item{RL: the sound goes out to the left and right (LEFT/RIGHT)}
+    \item{VIDE: sound does no go out anymore}
 \end{itemize}
 
-\paragraph{Simulator} Changez la note inscrite dans cet espace:
-        celle-ci sera jouée avec les paramètres de l'instrument que vous êtes en train d'éditer.
+\paragraph{Simulator} Change the note written in this space:
+         it will be played with the parameters of the instrument you are editing.
