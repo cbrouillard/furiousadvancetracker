@@ -45,6 +45,7 @@ void FAT_screenNotes_printLineColumns() {
  * séléctionné).
  */
 void FAT_screenNotes_printInfos() {
+    hel_BgTextPrintF(TEXT_LAYER, 18, 3, 0, "Channel  %.2x", FAT_screenSong_getCurrentSelectedColumn()+1);
     hel_BgTextPrintF(TEXT_LAYER, 18, 4, 0, "Line     %.2x", FAT_screenNotes_getCurrentSelectedLine());
     //ham_DrawText(21, 4, "CHAN %2x", FAT_screenSong_getCurrentSelectedColumn()+1);
 }
@@ -132,7 +133,7 @@ void FAT_screenNotes_printAllNotes() {
  * \brief Affiche le numéro de block actuellement en cours d'édition.
  */
 void FAT_screenNotes_printBlockNumber() {
-    hel_BgTextPrintF(TEXT_LAYER, 18, 3, 0, "Block    %.2x", FAT_screenNotes_currentBlockId);
+    hel_BgTextPrintF(TEXT_LAYER, 18, 5, 0, "Block    %.2x", FAT_screenNotes_currentBlockId);
 }
 
 /**
