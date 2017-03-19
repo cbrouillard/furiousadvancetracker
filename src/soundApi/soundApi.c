@@ -198,6 +198,30 @@ void snd_playSoundOnChannel1(
     REG_SOUND1CNT_X = (REG_SOUND1CNT_X & 0xf800) | (loopmode << 14) | freqs[sfreq];
 }
 
+void snd_applyFrequencyOn (u8 channel, u8 sfreq){
+    bool isLooping = 0;
+    switch (channel) {
+      case 0:
+        isLooping = (REG_SOUND1CNT_X & 0x4000) >> 14;
+        REG_SOUND1CNT_X = (REG_SOUND1CNT_X & 0x7800) + freqs[sfreq];
+        if (!isLooping){ // Continuous = 0
+          // Frequency can always be changed without resetting the sound.
+          // However, when in continuous mode, alway set the sound lenght to zero after changing the frequency.
+          // Otherwise, the sound may stop.
+          REG_SOUND1CNT_H = (REG_SOUND1CNT_H & 0xFFC0);
+        }
+        break;
+      case 1:
+        isLooping = (REG_SOUND2CNT_H & 0x4000) >> 14;
+        REG_SOUND2CNT_H = (REG_SOUND2CNT_H & 0x7800) + freqs[sfreq];
+        if (!isLooping){
+            REG_SOUND2CNT_L = (REG_SOUND2CNT_L & 0xFFC0);
+        }
+    }
+
+
+}
+
 void snd_playSoundOnChannel2(u16 volume,
         u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
         u16 loopmode, u8 output, u8 sfreq, u8 transpose) {

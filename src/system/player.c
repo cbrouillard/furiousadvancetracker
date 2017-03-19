@@ -19,6 +19,15 @@
 
 #include "../headers/fat.h"
 
+#define INITIAL_TICKCOUNTER (60000 / 100) / 32
+#define INITIAL_TEMPOREACH(t) (60000 / t) / 4
+
+void FAT_player_effect_chord (u8 channel);
+void FAT_player_effect_checkAndApplyForLongEffect (u8 channel);
+
+void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* block);
+void FAT_player_processNote_inSequence (u8 channel, sequence* sequence);
+
 /*
  * Toutes ces variables sont des repères pour le player. Afin de savoir quelle séquence/block/note jouer.
  * Attention. Les valeurs dans les tableaux représentent des NUMEROS DE LIGNES.
@@ -31,6 +40,8 @@ u8 actualSequencesForChannel[6];
 u8 actualBlocksForChannel[6];
 /** \brief Repères pour le player: les valeurs dans les tableaux représentent des numéros de lignes (notes). */
 u8 actualNotesForChannel[6];
+
+bool willHaveToSyncAfterNote;
 
 /** \brief Id de la séquence en cours de lecture. */
 u8 FAT_currentPlayedSequence = NULL_VALUE;
@@ -63,12 +74,15 @@ u8 firstAvailableSequenceForChannel[6];
  * est réinitialisé ensuite.
  * Dans le cas contraire, on attend sans jouer de note.
  */
-volatile int tempoReach = (60000 / 128) / 4;
+volatile int tempoReach = INITIAL_TEMPOREACH(128);
+int FAT_player_debug_getTempoReach(){
+  return tempoReach;
+}
 
 /**
  * /brief Compteur de tick. Utile pour gérer les effets qui se joue dans le temps.
 */
-volatile int tickCounter = (60000 / 100) / 4;
+volatile int tickCounter = INITIAL_TICKCOUNTER;
 
 /**
  * /brief Pour savoir de quelle endroit l'utilisateur a lancé le son.
@@ -84,6 +98,14 @@ u8 FAT_player_live_getWaitForOtherChannel (u8 n){
 }
 
 /**
+ * Stocke des booleens pour savoir si un effet longue durée est en cours sur le channel correspondant.
+ */
+bool FAT_player_effect_isRunningLongEffect[6];
+u8 FAT_player_effect_longEffectValue[6];
+note* FAT_lastNotePlayed[6];
+u8 effectCounter = 0;
+
+/**
 * \brief Pointeurs vers les fonctions de jeu de note.
 */
 void (*FAT_player_playNoteWithCustomParams_chanX[6]) (note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output);
@@ -96,7 +118,7 @@ void FAT_player_firstInit (){
     memset(actualBlocksForChannel, 0, sizeof (u8)*6);
     memset(actualNotesForChannel, 0, sizeof (u8)*6);
     memset(firstAvailableSequenceForChannel, 0, sizeof (u8)*6);
-    memset(FAT_live_waitForOtherChannel, 0, sizeof (u8)*6);
+    memset(FAT_live_waitForOtherChannel, 1, sizeof (u8)*6);
     memset(FAT_player_buffer, 0, sizeof(bufferPlayer)*6);
     for (i=0;i<6;i++){
         FAT_player_buffer[i].volume = NULL_VALUE;
@@ -115,6 +137,9 @@ void FAT_player_firstInit (){
 
     FAT_player_initCursors();
     FAT_resetTempo();
+
+    memset (FAT_player_effect_isRunningLongEffect, 0, sizeof(bool)*6);
+    effectCounter = 0;
 }
 
 void FAT_player_runTimer (){
@@ -125,17 +150,6 @@ void FAT_player_runTimer (){
   M_TIM3CNT_SPEED_SELECT_SET(3)
   M_TIM3CNT_IRQ_ENABLE
   M_TIM3CNT_TIMER_START
-
-  /** EXTRAITS DE CODE SAMPLE HELL
-  ham_StartIntHandler(INT_TYPE_TIM3,(void*)&ham_prof_timer3_int);
-  M_TIM3COUNT_SET(65536-4399)
-  M_TIM3CNT_SPEED_SELECT_SET(1)
-  M_TIM3CNT_IRQ_ENABLE
-  M_TIM3CNT_TIMER_START
-
-  M_TIM3CNT_TIMER_STOP \
-  M_TIM3CNT_IRQ_DISABLE \
-  */
 }
 
 void FAT_player_stopTimer (){
@@ -333,9 +347,12 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
     memset(firstAvailableSequenceForChannel, 0, sizeof (u8)*6);
 
     FAT_resetTempo ();
+    FAT_resetTickCounter();
     FAT_isCurrentlyPlaying = 1;
     FAT_live_nbChannelPlaying = 0;
     FAT_player_isPlayingFrom = SCREEN_SONG_ID;
+    memset (FAT_player_effect_isRunningLongEffect, 0, sizeof(bool)*6);
+    effectCounter = 0;
 
     // détermine pour chaque channel, quelle est la premiere sequence jouable.
     u8 i;
@@ -353,17 +370,22 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
 
 void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
     // initialisation seulement si d'autres colonnes n'ont pas déjà été lancées !
+    FAT_live_waitForOtherChannel[channel] = 1;
+
     if (!FAT_isCurrentlyPlaying){
         memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
         memset(actualBlocksForChannel, 0, sizeof (u8)*6);
         memset(actualNotesForChannel, 0, sizeof (u8)*6);
         memset(firstAvailableSequenceForChannel, 0, sizeof (u8)*6);
+        memset (FAT_player_effect_isRunningLongEffect, 0, sizeof(bool)*6);
+        effectCounter = 0;
 
         // les autres channels vont devoir attendre celui la !
         memset (FAT_live_waitForOtherChannel, 1, sizeof(u8)*6);
         FAT_live_waitForOtherChannel[channel] = 0;
 
         FAT_resetTempo ();
+        FAT_resetTickCounter();
 
         FAT_isCurrentlyPlaying = 1;
         FAT_live_nbChannelPlaying = 0;
@@ -376,6 +398,8 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
     actualSequencesForChannel[channel] = firstAvailableSequenceForChannel[channel];
     actualBlocksForChannel[channel] = 0;
     actualNotesForChannel[channel] = 0;
+    FAT_player_effect_isRunningLongEffect[channel] = 0;
+    effectCounter = 0;
     FAT_live_nbChannelPlaying ++;
 
     if (FAT_live_waitForOtherChannel[channel] == 0){
@@ -401,7 +425,11 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
     FAT_currentPlayedSequence = sequenceId;
     FAT_currentPlayedChannel = channel;
 
+    memset (FAT_player_effect_isRunningLongEffect, 0, sizeof(bool)*6);
+    effectCounter = 0;
+
     FAT_resetTempo ();
+    FAT_resetTickCounter();
     FAT_isCurrentlyPlaying = 1;
     FAT_player_isPlayingFrom = SCREEN_BLOCKS_ID;
 
@@ -424,16 +452,15 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
     actualNotesForChannel[channel] = startLine;
     FAT_currentPlayedBlock = blockId;
     FAT_currentPlayedChannel = channel;
+    memset (FAT_player_effect_isRunningLongEffect, 0, sizeof(bool)*6);
+    effectCounter = 0;
 
     FAT_resetTempo ();
+    FAT_resetTickCounter();
     FAT_isCurrentlyPlaying = 1;
     FAT_player_isPlayingFrom = SCREEN_NOTES_ID;
 
     FAT_player_runTimer ();
-}
-
-int FAT_player_debug_getTempoReach(){
-  return tempoReach;
 }
 
 void ATTR_FASTFUNC FAT_player_timerFunc() {
@@ -465,6 +492,30 @@ void FAT_player_progressInSong(u8 channel, sequence* seq){
     }
 }
 
+void FAT_player_progressInLive (u8 channel, sequence* seq) {
+  actualNotesForChannel[channel]++;
+  if (actualNotesForChannel[channel] >= NB_NOTES_IN_ONE_BLOCK) {
+      actualNotesForChannel[channel] = 0;
+      actualBlocksForChannel[channel]++;
+      if (actualBlocksForChannel[channel] >= NB_BLOCKS_IN_SEQUENCE
+              || seq->blocks[actualBlocksForChannel[channel]] == NULL_VALUE) {
+          actualBlocksForChannel[channel] = 0;
+
+          if (!FAT_tracker.liveData.liveMode){ // mode auto?
+              actualSequencesForChannel[channel]++;
+              if (actualSequencesForChannel[channel] > NB_MAX_SEQUENCES
+                      || FAT_tracker.channels[channel].sequences[actualSequencesForChannel[channel]] == NULL_VALUE
+                      || FAT_data_isSequenceEmpty(FAT_tracker.channels[channel].sequences[actualSequencesForChannel[channel]])) {
+
+                  actualSequencesForChannel[channel] = firstAvailableSequenceForChannel[channel];
+                  // si pas de séquences dispo -> NULL_VALUE
+              }
+          }
+          willHaveToSyncAfterNote = 1;
+      }
+  }
+}
+
 void FAT_player_progressInSequence (sequence* seq){
     actualNotesForChannel[FAT_currentPlayedChannel]++;
     if (actualNotesForChannel[FAT_currentPlayedChannel] >= NB_NOTES_IN_ONE_BLOCK) {
@@ -487,89 +538,38 @@ void FAT_player_progressInBlock (){
 
 // DEJA DOCUMENTEE
 void FAT_player_playFromSequences() {
-    #ifdef DEBUG_ON
-    hel_BgTextPrintF(TEXT_LAYER, 22, 15, 0, "%.d", tempoReach);
-    #endif
+    u8 i;
+
     if (tempoReach < 0) {
         tempoReach = 0;
-        #ifdef DEBUG_ON
-        hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
-        #endif
-        u8 i;
         for (i = 0; i < 6; i++) {
+
             FAT_player_buffer[i].haveToPlay = 0;
-            FAT_player_buffer[i].volume = NULL_VALUE;
-            FAT_player_buffer[i].sweep = NULL_VALUE;
-            FAT_player_buffer[i].output = NULL_VALUE;
+
             if (FAT_isChannelCurrentlyPlaying(i) && actualSequencesForChannel[i] < NB_MAX_SEQUENCES){
                 FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
-                if (FAT_currentPlayedSequence != NULL_VALUE) {
+
+                if (FAT_currentPlayedSequence == NULL_VALUE) {
+                  actualBlocksForChannel[i] = 0;
+                  actualSequencesForChannel[i]++;
+                  if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES) {
+                      actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+                  }
+
+                  FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
+                }
+
+                if (FAT_currentPlayedSequence != NULL_VALUE){
                     // lire la séquence actuelle
                     sequence* seq = &(FAT_tracker.allSequences[FAT_currentPlayedSequence]);
-
-                    FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
-                    if (FAT_currentPlayedBlock != NULL_VALUE) {
-                        block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
-
-                        effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[i]);
-                        if (effect){
-                            switch (((effect->name & 0xfe) >> 1)){
-                                case EFFECT_VOLUME:
-                                    FAT_player_buffer[i].volume = effect->value;
-                                    break;
-                                case EFFECT_SWEEP:
-                                    FAT_player_buffer[i].sweep = effect->value;
-                                    break;
-                                case EFFECT_OUTPUT:
-                                    FAT_player_buffer[i].output = effect->value;
-                                    break;
-                                case EFFECT_HOP:
-                                    // determine new block
-                                    actualNotesForChannel[i] = effect->value;
-                                    actualBlocksForChannel[i]++;
-                                    if (actualBlocksForChannel[i] >= NB_BLOCKS_IN_SEQUENCE
-                                            || seq->blocks[actualBlocksForChannel[i]] == NULL_VALUE) {
-                                        actualBlocksForChannel[i] = 0;
-
-                                        actualSequencesForChannel[i]++;
-                                        if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES
-                                                || FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
-                                                || FAT_data_isSequenceEmpty(FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]])) {
-
-                                            actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
-                                        }
-                                    }
-
-                                    FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
-                                    block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
-                                    break;
-                            }
-                        }
-
-                        FAT_player_buffer[i].note = &(block->notes[actualNotesForChannel[i]]);
-                        FAT_player_buffer[i].transpose =  seq->transpose[actualBlocksForChannel[i]];
-                        FAT_player_buffer[i].haveToPlay = 1;
-
-                        FAT_player_progressInSong (i, seq);
-
-                        // Déplacement des curseurs de lecture
-                        FAT_player_moveOrHideCursor(i);
-
-                    } else {
-                        actualBlocksForChannel[i] = 0;
-                        actualSequencesForChannel[i]++;
-                        if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES) {
-                            actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
-                        }
-                        FAT_player_moveOrHideCursor(i);
-                    }
+                    FAT_player_processNote_inSequence (i, seq);
+                    FAT_player_progressInSong (i, seq);
 
                 } else {
-                    actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
-                    FAT_player_moveOrHideCursor(i);
-                }
+                  actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+                  FAT_player_moveOrHideCursor(i);
+              }
             }
-
         }
 
         for (i = 0; i < 6; i++) {
@@ -580,13 +580,22 @@ void FAT_player_playFromSequences() {
                    FAT_player_buffer[i].volume,
                    FAT_player_buffer[i].sweep,
                    FAT_player_buffer[i].output);
+
             }
         }
+
         FAT_resetTempo ();
     }
-    #ifdef DEBUG_ON
-    else {hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");}
-    #endif
+
+    if (tickCounter < 0){
+        tickCounter = 0;
+        for (i = 0; i < 6; i++) {
+
+          FAT_player_effect_checkAndApplyForLongEffect (i);
+
+        }
+        FAT_resetTickCounter ();
+    }
 }
 
 void FAT_player_liveSynchro(){
@@ -594,293 +603,242 @@ void FAT_player_liveSynchro(){
     for (j=0;j<6;j++){
         if(FAT_isChannelCurrentlyPlaying(j)){
             FAT_live_waitForOtherChannel[j] = 0;
-            FAT_player_moveOrHideCursor(j);
+            //FAT_player_moveOrHideCursor(j);
         }
     }
 }
 
 void FAT_player_playFromLive(){
-    #ifdef DEBUG_ON
-    hel_BgTextPrintF(TEXT_LAYER, 22, 15, 0, "%.d", tempoReach);
-    #endif
-    if (tempoReach < 0) {
-        tempoReach = 0;
-        #ifdef DEBUG_ON
-        hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
-        #endif
-        bool willHaveToSyncAfterNote = 0;
-        u8 i;
-        for (i = 0; i < 6; i++) {
-            FAT_player_buffer[i].haveToPlay = 0;
-            FAT_player_buffer[i].volume = NULL_VALUE;
-            FAT_player_buffer[i].sweep = NULL_VALUE;
-            FAT_player_buffer[i].output = NULL_VALUE;
-            if (FAT_isChannelCurrentlyPlaying(i) && actualSequencesForChannel[i] < NB_MAX_SEQUENCES && FAT_live_waitForOtherChannel[i] == 0){
+    u8 i;
 
-                FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
+    if (tempoReach < 0){
+      tempoReach = 0;
+      willHaveToSyncAfterNote = 0;
 
-                if (FAT_currentPlayedSequence != NULL_VALUE) {
-                    // lire la séquence actuelle
-                    sequence* seq = &(FAT_tracker.allSequences[FAT_currentPlayedSequence]);
+      for (i = 0; i < 6; i++) {
 
-                    FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
-                    if (FAT_currentPlayedBlock != NULL_VALUE) {
-                        block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
+          FAT_player_buffer[i].haveToPlay = 0;
 
-                        effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[i]);
-                        if (effect){
-                            switch (((effect->name & 0xfe) >> 1)){
-                                case EFFECT_VOLUME:
-                                    FAT_player_buffer[i].volume = effect->value;
-                                    break;
-                                case EFFECT_SWEEP:
-                                    FAT_player_buffer[i].sweep = effect->value;
-                                    break;
-                                case EFFECT_OUTPUT:
-                                    FAT_player_buffer[i].output = effect->value;
-                                    break;
-                                case EFFECT_HOP:
-                                    // determine new block
-                                    actualNotesForChannel[i] = effect->value;
-                                    actualBlocksForChannel[i]++;
-                                    if (actualBlocksForChannel[i] >= NB_BLOCKS_IN_SEQUENCE
-                                            || seq->blocks[actualBlocksForChannel[i]] == NULL_VALUE) {
-                                        actualBlocksForChannel[i] = 0;
+          if (FAT_isChannelCurrentlyPlaying(i) && actualSequencesForChannel[i] < NB_MAX_SEQUENCES && FAT_live_waitForOtherChannel[i] == 0){
 
-                                        if (!FAT_tracker.liveData.liveMode){ // mode auto?
-                                            actualSequencesForChannel[i]++;
-                                            if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES
-                                                    || FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
-                                                    || FAT_data_isSequenceEmpty(FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]])) {
+              FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
 
-                                                actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
-                                                // si pas de séquences dispo -> NULL_VALUE
-                                            }
-                                        }
-                                        willHaveToSyncAfterNote = 1;
-                                        // Déplacement des curseurs de lecture
-                                        FAT_player_moveOrHideCursor(i);
-                                    }
+              if (FAT_currentPlayedSequence == NULL_VALUE) {
+                  if (!FAT_tracker.liveData.liveMode){ // mode auto?
+                      actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
+                      willHaveToSyncAfterNote = 1;
+                  }
 
-                                    FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[i]];
-                                    block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
-                                    break;
-                            }
-                        }
+                  FAT_currentPlayedSequence = FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]];
+              }
 
-                        FAT_player_buffer[i].note = &(block->notes[actualNotesForChannel[i]]);
-                        FAT_player_buffer[i].transpose =  seq->transpose[actualBlocksForChannel[i]];
-                        FAT_player_buffer[i].haveToPlay = 1;
+              if (FAT_currentPlayedSequence != NULL_VALUE) {
 
-                        actualNotesForChannel[i]++;
-                        if (actualNotesForChannel[i] >= NB_NOTES_IN_ONE_BLOCK) {
-                            actualNotesForChannel[i] = 0;
-                            actualBlocksForChannel[i]++;
-                            if (actualBlocksForChannel[i] >= NB_BLOCKS_IN_SEQUENCE
-                                    || seq->blocks[actualBlocksForChannel[i]] == NULL_VALUE) {
-                                actualBlocksForChannel[i] = 0;
+                  sequence* seq = &(FAT_tracker.allSequences[FAT_currentPlayedSequence]);
+                  FAT_player_processNote_inSequence (i, seq);
+                  FAT_player_progressInLive (i, seq);
 
-                                if (!FAT_tracker.liveData.liveMode){ // mode auto?
-                                    actualSequencesForChannel[i]++;
-                                    if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES
-                                            || FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]] == NULL_VALUE
-                                            || FAT_data_isSequenceEmpty(FAT_tracker.channels[i].sequences[actualSequencesForChannel[i]])) {
+              }
+          }
 
-                                        actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
-                                        // si pas de séquences dispo -> NULL_VALUE
-                                    }
-                                }
-                                willHaveToSyncAfterNote = 1;
-                                // Déplacement des curseurs de lecture
-                                FAT_player_moveOrHideCursor(i);
-                            }
-                        }
-                    } else {
-                        actualBlocksForChannel[i] = 0;
+          FAT_player_live_showOrHideCursorWait (i);
 
-                        if (!FAT_tracker.liveData.liveMode){ // mode auto?
-                            actualSequencesForChannel[i]++;
-                            if (actualSequencesForChannel[i] > NB_MAX_SEQUENCES) {
-                                actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
-                            }
-                            FAT_player_moveOrHideCursor(i);
-                        }
+      }
 
-                        willHaveToSyncAfterNote = 1;
-                    }
+      u8 volume;
+      for (i = 0; i < 6; i++) {
+          if (FAT_player_buffer[i].haveToPlay){
 
-                } else if (!FAT_tracker.liveData.liveMode){ // mode auto?
-                    actualSequencesForChannel[i] = firstAvailableSequenceForChannel[i];
-                    willHaveToSyncAfterNote = 1;
-                    FAT_player_moveOrHideCursor(i);
-                }
-            }
+              // calcul du volume
+              if (FAT_tracker.liveData.volume[i] == NULL_VALUE){
+                  volume = FAT_player_buffer[i].volume;
+              } else if (FAT_player_buffer[i].volume == NULL_VALUE){
+                  volume = FAT_tracker.liveData.volume[i];
+              } else {
+                  volume = (FAT_player_buffer[i].volume + FAT_tracker.liveData.volume[i])/2;
+              }
 
-            FAT_player_live_showOrHideCursorWait (i);
+              FAT_player_buffer[i].transpose = FAT_player_buffer[i].transpose + FAT_tracker.liveData.transpose[i];
 
-        }
+              FAT_player_playNoteWithCustomParams(
+                 FAT_player_buffer[i].note , i,
+                 FAT_player_buffer[i].transpose,
+                 volume, FAT_player_buffer[i].sweep, FAT_player_buffer[i].output);
+          }
+      }
 
-        u8 volume = NULL_VALUE;
-        for (i = 0; i < 6; i++) {
-            if (FAT_player_buffer[i].haveToPlay){
+      if (willHaveToSyncAfterNote){
+          FAT_player_liveSynchro();
+      }
 
-                // calcul du volume
-                if (FAT_tracker.liveData.volume[i] == NULL_VALUE){
-                    volume = FAT_player_buffer[i].volume;
-                } else if (FAT_player_buffer[i].volume == NULL_VALUE){
-                    volume = FAT_tracker.liveData.volume[i];
-                } else {
-                    volume = (FAT_player_buffer[i].volume + FAT_tracker.liveData.volume[i])/2;
-                }
+      FAT_resetTempo ();
 
-                FAT_player_playNoteWithCustomParams(
-                   FAT_player_buffer[i].note , i,
-                   FAT_player_buffer[i].transpose + FAT_tracker.liveData.transpose[i],
-                   volume, FAT_player_buffer[i].sweep, FAT_player_buffer[i].output);
-            }
-        }
-
-        if (willHaveToSyncAfterNote){
-            FAT_player_liveSynchro();
-        }
-
-        FAT_resetTempo ();
     }
-    #ifdef DEBUG_ON
-    else {hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");}
-    #endif
+
+    if (tickCounter < 0){
+        tickCounter = 0;
+        for (i = 0; i < 6; i++) {
+
+          FAT_player_effect_checkAndApplyForLongEffect (i);
+
+        }
+        FAT_resetTickCounter ();
+    }
 }
 
-// DEJA DOCUMENTEE
+void FAT_player_processNote_inSequence (u8 channel, sequence* sequence) {
+    FAT_currentPlayedBlock = sequence->blocks[actualBlocksForChannel[channel]];
+
+    if (FAT_currentPlayedBlock == NULL_VALUE) {
+      actualBlocksForChannel[channel] = 0; // TODO pas forcément 0 mais premier disponible.
+      willHaveToSyncAfterNote = 1;
+    } else {
+        block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
+        FAT_player_processNote_inBlock (channel, sequence, block);
+    }
+}
+
 void FAT_player_playFromBlocks() {
-    #ifdef DEBUG_ON
-    hel_BgTextPrintF(TEXT_LAYER, 22, 15, 0, "%.d", tempoReach);
-    #endif
-    u8 volume=NULL_VALUE;
-    u8 sweep = NULL_VALUE;
-    u8 output = NULL_VALUE;
     if (tempoReach < 0) {
         tempoReach = 0;
-        #ifdef DEBUG_ON
-        hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
-        #endif
+
         if (FAT_currentPlayedSequence != NULL_VALUE) {
             // lire la séquence actuelle
             sequence* seq = &(FAT_tracker.allSequences[FAT_currentPlayedSequence]);
+            FAT_player_processNote_inSequence (FAT_currentPlayedChannel, seq);
 
-            FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[FAT_currentPlayedChannel]];
-            if (FAT_currentPlayedBlock != NULL_VALUE) {
-                block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
+            FAT_player_playNoteWithCustomParams(
+               FAT_player_buffer[FAT_currentPlayedChannel].note , FAT_currentPlayedChannel,
+               FAT_player_buffer[FAT_currentPlayedChannel].transpose,
+               FAT_player_buffer[FAT_currentPlayedChannel].volume,
+               FAT_player_buffer[FAT_currentPlayedChannel].sweep,
+               FAT_player_buffer[FAT_currentPlayedChannel].output);
 
-                // Déplacement des curseurs de lecture
-                FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);
-
-                effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[FAT_currentPlayedChannel]);
-                volume = NULL_VALUE; sweep = NULL_VALUE; output = NULL_VALUE;
-                if (effect){
-                    switch (((effect->name & 0xfe) >> 1)){
-                        case EFFECT_VOLUME:
-                            volume = effect->value;
-                            break;
-                        case EFFECT_SWEEP:
-                            sweep = effect->value;
-                            break;
-                        case EFFECT_OUTPUT:
-                            output = effect->value;
-                            break;
-                        case EFFECT_HOP:
-                            // determine new block
-                            actualNotesForChannel[FAT_currentPlayedChannel] = effect->value;
-                            actualBlocksForChannel[FAT_currentPlayedChannel]++;
-                            if (actualBlocksForChannel[FAT_currentPlayedChannel] >= NB_BLOCKS_IN_SEQUENCE
-                                    || seq->blocks[actualBlocksForChannel[FAT_currentPlayedChannel]] == NULL_VALUE) {
-                                actualBlocksForChannel[FAT_currentPlayedChannel] = 0;
-                            }
-                            FAT_currentPlayedBlock = seq->blocks[actualBlocksForChannel[FAT_currentPlayedChannel]];
-                            block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
-                            break;
-                    }
-                }
-
-                FAT_player_playNoteWithCustomParams(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]), FAT_currentPlayedChannel,
-                        seq->transpose[actualBlocksForChannel[FAT_currentPlayedChannel]], volume, sweep, output);
-
-                FAT_player_progressInSequence (seq);
-            } else {
-                actualBlocksForChannel[FAT_currentPlayedChannel] = 0;
-            }
-
+            FAT_player_progressInSequence (seq);
         }
 
         FAT_resetTempo ();
     }
-    #ifdef DEBUG_ON
-    else {hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");}
-    #endif
+
+    if (tickCounter < 0){
+        tickCounter = 0;
+        FAT_player_effect_checkAndApplyForLongEffect (FAT_currentPlayedChannel);
+        FAT_resetTickCounter ();
+    }
 }
 
+void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* block) {
+    FAT_player_buffer[channel].haveToPlay = 0; // TODO utile ?
 
+    // Déplacement des curseurs de lecture
+    FAT_player_moveOrHideCursor(channel);
 
-// DEJA DOCUMENTEE
+    if ((block->notes[actualNotesForChannel[channel]]).freq != NULL_VALUE){
+      FAT_lastNotePlayed[channel] = & (block->notes[actualNotesForChannel[channel]]);
+      FAT_player_effect_isRunningLongEffect[channel] = 0;
+      effectCounter = 0;
+      FAT_resetTickCounter ();
+    }
+
+    effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[channel]);
+    FAT_player_buffer[channel].volume = NULL_VALUE; FAT_player_buffer[channel].sweep = NULL_VALUE; FAT_player_buffer[channel].output = NULL_VALUE;
+    if (effect){
+        switch (((effect->name & 0xfe) >> 1)){
+            case EFFECT_VOLUME:
+                FAT_player_buffer[channel].volume = effect->value;
+                break;
+            case EFFECT_SWEEP:
+                FAT_player_buffer[channel].sweep = effect->value;
+                break;
+            case EFFECT_OUTPUT:
+                FAT_player_buffer[channel].output = effect->value;
+                break;
+            case EFFECT_HOP:
+                // get back to x
+                actualNotesForChannel[channel] = effect->value;
+                if ( ( FAT_player_isPlayingFrom == SCREEN_BLOCKS_ID ||
+                       FAT_player_isPlayingFrom == SCREEN_SONG_ID ||
+                       FAT_player_isPlayingFrom == SCREEN_LIVE_ID) && sequence) {
+                  actualBlocksForChannel[channel]++;
+                  if (actualBlocksForChannel[channel] >= NB_BLOCKS_IN_SEQUENCE
+                          || sequence->blocks[actualBlocksForChannel[channel]] == NULL_VALUE) {
+                      actualBlocksForChannel[channel] = 0;
+
+		                  if (FAT_player_isPlayingFrom == SCREEN_SONG_ID ||
+                            (FAT_player_isPlayingFrom == SCREEN_LIVE_ID && !FAT_tracker.liveData.liveMode)) {
+				                    actualSequencesForChannel[channel]++;
+                            if (actualSequencesForChannel[channel] > NB_MAX_SEQUENCES
+                                    || FAT_tracker.channels[channel].sequences[actualSequencesForChannel[channel]] == NULL_VALUE
+                                    || FAT_data_isSequenceEmpty(FAT_tracker.channels[channel].sequences[actualSequencesForChannel[channel]])) {
+
+                                actualSequencesForChannel[channel] = firstAvailableSequenceForChannel[channel];
+                            }
+			                }
+                      willHaveToSyncAfterNote = 1;
+                  }
+                  FAT_currentPlayedBlock = sequence->blocks[actualBlocksForChannel[channel]];
+                  block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
+                }
+                break;
+            case EFFECT_CHORD:
+                FAT_player_effect_isRunningLongEffect[channel] = 1;
+                FAT_player_effect_longEffectValue[channel] = effect->value;
+                break;
+        }
+    }
+
+    FAT_player_buffer[channel].note = &(block->notes[actualNotesForChannel[channel]]);
+    FAT_player_buffer[channel].transpose =  sequence ? sequence->transpose[actualBlocksForChannel[channel]] :  0;
+    FAT_player_buffer[channel].haveToPlay = 1;
+}
+
 void FAT_player_playFromNotes() {
-    #ifdef DEBUG_ON
-    hel_BgTextPrintF(TEXT_LAYER, 22, 15, 0, "%.d", tempoReach);
-    #endif
-    u8 volume=NULL_VALUE;
-    u8 sweep = NULL_VALUE;
-    u8 output = NULL_VALUE;
     if (tempoReach < 0) {
         tempoReach = 0;
-        #ifdef DEBUG_ON
-        hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
-        #endif
+
         if (FAT_currentPlayedBlock != NULL_VALUE) {
             block* block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
 
-            // Déplacement des curseurs de lecture
-            FAT_player_moveOrHideCursor(FAT_currentPlayedChannel);
+            FAT_player_processNote_inBlock (FAT_currentPlayedChannel, NULL, block);
 
-            effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[FAT_currentPlayedChannel]);
-            volume = NULL_VALUE; sweep = NULL_VALUE; output = NULL_VALUE;
-            if (effect){
-                switch (((effect->name & 0xfe) >> 1)){
-                    case EFFECT_VOLUME:
-                        volume = effect->value;
-                        break;
-                    case EFFECT_SWEEP:
-                        sweep = effect->value;
-                        break;
-                    case EFFECT_OUTPUT:
-                        output = effect->value;
-                        break;
-                    case EFFECT_HOP:
-                        // get back to 0
-                        actualNotesForChannel[FAT_currentPlayedChannel] = effect->value;
-                        break;
-                }
-            }
-
-            FAT_player_playNoteWithCustomParams(&(block->notes[actualNotesForChannel[FAT_currentPlayedChannel]]),
-                    FAT_currentPlayedChannel, 0, volume, sweep, output);
+            FAT_player_playNoteWithCustomParams(
+               FAT_player_buffer[FAT_currentPlayedChannel].note , FAT_currentPlayedChannel,
+               FAT_player_buffer[FAT_currentPlayedChannel].transpose,
+               FAT_player_buffer[FAT_currentPlayedChannel].volume,
+               FAT_player_buffer[FAT_currentPlayedChannel].sweep,
+               FAT_player_buffer[FAT_currentPlayedChannel].output);
 
             FAT_player_progressInBlock ();
         }
 
         FAT_resetTempo ();
-
     }
-    #ifdef DEBUG_ON
-    else {hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");}
-    #endif
 
     if (tickCounter < 0){
         tickCounter = 0;
-        hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "TICK");
+        FAT_player_effect_checkAndApplyForLongEffect (FAT_currentPlayedChannel);
         FAT_resetTickCounter ();
-    } else {
-        hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");
     }
+}
 
+void FAT_player_effect_checkAndApplyForLongEffect (u8 channel){
+    if (FAT_player_effect_isRunningLongEffect[channel]){
+        FAT_player_effect_chord (channel);
+    }
+}
+
+void FAT_player_effect_chord (u8 channel){
+  if (effectCounter > 2){
+    effectCounter = 0;
+    snd_applyFrequencyOn (channel, FAT_lastNotePlayed[channel]->freq);
+  } else {
+    if (effectCounter == 1) {
+        snd_applyFrequencyOn (channel, FAT_lastNotePlayed[channel]->freq + ((FAT_player_effect_longEffectValue[channel] & 0xf0) >> 4));
+    } else {
+        snd_applyFrequencyOn (channel, FAT_lastNotePlayed[channel]->freq + (FAT_player_effect_longEffectValue[channel] & 0x0f));
+    }
+  }
+  effectCounter ++;
 }
 
 void FAT_player_continueToPlay() {
@@ -949,7 +907,7 @@ void FAT_player_stopPlayer() {
 
     // réinit propre.
     memset(actualSequencesForChannel, NULL_VALUE, sizeof (u8)*6);
-    memset (FAT_live_waitForOtherChannel, 0, sizeof(u8)*6);
+    memset (FAT_live_waitForOtherChannel, 1, sizeof(u8)*6);
     memset(FAT_player_buffer, 0, sizeof(bufferPlayer)*6);
 
     hel_BgTextPrintF(TEXT_LAYER, 26, 16, 0, "    ");
@@ -958,12 +916,14 @@ void FAT_player_stopPlayer() {
     for (i=0;i<6;i++){
         FAT_player_buffer[i].volume = NULL_VALUE;
     }
+
+    memset (FAT_player_effect_isRunningLongEffect, 0, sizeof(bool)*6);
 }
 
 void FAT_resetTempo (){
-    tempoReach = (60000 / FAT_tracker.tempo) / 4;
+    tempoReach = INITIAL_TEMPOREACH(FAT_tracker.tempo);
 }
 
 void FAT_resetTickCounter (){
-    tickCounter = (60000 / 100) / 4;
+    tickCounter = INITIAL_TICKCOUNTER;
 }

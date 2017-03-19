@@ -84,6 +84,8 @@ void snd_playSoundOnChannel1(
         u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
         u16 loopmode, u8 output, u8 sfreq, u8 transpose);
 
+void snd_applyFrequencyOn (u8 channel, u8 sfreq);
+
 /**
  * \brief Joue un son sur le channel 1.
  *

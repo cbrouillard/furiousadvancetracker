@@ -22,10 +22,10 @@
 /** \brief Tableau constant contenant toutes les notes sous formes de chaînes de caractères. */
 const char* noteName[NB_NOTE] = {"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ", "G#", "A ", "A#", "B "};
 /** \brief Tableau constant contenant tous les noms d'effets disponibles pour les notes. */
-const char* noteEffectName[NB_NOTE_EFFECT] = {"HO", "KL", "OU", "SW", "VO"};
+const char* noteEffectName[NB_NOTE_EFFECT] = {"HO", "KL", "OU", "SW", "VO", "CH"};
 /** \brief Mapping entre le nom de l'effet et son numéro dans la soundApi. Si le mapping
  * a pour valeur NULL_VALUE, alors l'effet n'est pas géré par la soundAPI. */
-const u8 noteEffectNum[NB_NOTE_EFFECT] = {EFFECT_HOP, EFFECT_KILL, EFFECT_OUTPUT, EFFECT_SWEEP, EFFECT_VOLUME};
+const u8 noteEffectNum[NB_NOTE_EFFECT] = {EFFECT_HOP, EFFECT_KILL, EFFECT_OUTPUT, EFFECT_SWEEP, EFFECT_VOLUME, EFFECT_CHORD};
 /** \brief Tableau constant contenant tous les noms d'effets disponibles pour les blocks. */
 const char* blockEffectName[NB_BLOCK_EFFECT] = {"K "};
 
@@ -901,6 +901,8 @@ void FAT_data_note_filterEffectValue (effect* effect) {
             }
             break;
         case EFFECT_SWEEP:
+        case EFFECT_CHORD:
+        case EFFECT_HOP:
             // 0xff max. On ne touche pas.
             break;
         case EFFECT_VOLUME:
@@ -909,9 +911,6 @@ void FAT_data_note_filterEffectValue (effect* effect) {
                 effect->value = 0xF;
                 FAT_data_lastEffectWritten.value = effect->value;
             }
-            break;
-        case EFFECT_HOP:
-            // pas de value.
             break;
     }
 }
@@ -989,6 +988,7 @@ void FAT_data_note_changeEffectValue(u8 block, u8 line, s8 addedValue) {
             FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, 3);
             break;
         case EFFECT_SWEEP:
+        case EFFECT_CHORD:
             FAT_data_note_changeEffectValue_generic (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue);
             break;
         case EFFECT_VOLUME:
