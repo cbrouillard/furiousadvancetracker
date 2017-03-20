@@ -63,7 +63,7 @@
 /** \brief Position par défaut du curseur de changement d'onglet (partie instrument).*/
 #define INPUT_R_CURSOR_CHANGE_X 216
 /** \brief Position par défaut du curseur de changement d'onglet (partie instrument).*/
-#define INPUT_R_CURSOR_CHANGE_Y 24
+#define INPUT_R_CURSOR_CHANGE_Y 40
 
 /** \brief Définition globale du format d'affichage des numéros de lignes. */
 #define FAT_FORMAT_LINE "%.2x"

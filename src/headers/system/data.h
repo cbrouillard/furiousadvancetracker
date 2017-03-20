@@ -49,7 +49,7 @@
 /** \brief Nombre total de notes disponibles: de C à B (notation anglo-saxonne). */
 #define NB_NOTE 12
 /** \brief Définit le nombre d'effet disponibles pour les notes. */
-#define NB_NOTE_EFFECT 6
+#define NB_NOTE_EFFECT 14
 /** \brief Définit le nombre d'effet disponibles pour les blocks. */
 #define NB_BLOCK_EFFECT 1
 /** \brief Définit le nombre maximal de voix disponibles. Les voix sont l'équivalent des
@@ -121,6 +121,8 @@ extern const char* noteEffectName[NB_NOTE_EFFECT];
 /** \brief Mapping entre le nom de l'effet et son numéro dans la soundApi. Si le mapping
  * a pour valeur NULL_VALUE, alors l'effet n'est pas géré par la soundAPI. */
 extern const u8 noteEffectNum[NB_NOTE_EFFECT];
+/** Nom en toute lettres des effets */
+extern const char* noteEffectHelp[NB_NOTE_EFFECT];
 /** \brief Tableau constant contenant tous les noms d'effets disponibles pour les blocks. */
 extern const char* blockEffectName[NB_BLOCK_EFFECT];
 

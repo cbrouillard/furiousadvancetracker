@@ -22,12 +22,14 @@
 /** \brief Tableau constant contenant toutes les notes sous formes de chaînes de caractères. */
 const char* noteName[NB_NOTE] = {"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ", "G#", "A ", "A#", "B "};
 /** \brief Tableau constant contenant tous les noms d'effets disponibles pour les notes. */
-const char* noteEffectName[NB_NOTE_EFFECT] = {"HO", "KL", "OU", "SW", "VO", "CH"};
+const char* noteEffectName[NB_NOTE_EFFECT] = {"CH", "CV", "EN", "HO", "KL", "OU", "RT", "SL", "SR", "SW", "TP", "TS", "VB", "VO"};
 /** \brief Mapping entre le nom de l'effet et son numéro dans la soundApi. Si le mapping
  * a pour valeur NULL_VALUE, alors l'effet n'est pas géré par la soundAPI. */
-const u8 noteEffectNum[NB_NOTE_EFFECT] = {EFFECT_HOP, EFFECT_KILL, EFFECT_OUTPUT, EFFECT_SWEEP, EFFECT_VOLUME, EFFECT_CHORD};
+const u8 noteEffectNum[NB_NOTE_EFFECT] = {EFFECT_CHORD, EFFECT_CUSTOMVOICE, EFFECT_ENVELOPE, EFFECT_HOP, EFFECT_KILL, EFFECT_OUTPUT, EFFECT_RETRIG, EFFECT_SLIDE, EFFECT_SAMPLERATE, EFFECT_SWEEP, EFFECT_TEMPO, EFFECT_TRANSPOSE, EFFECT_VIBRATO, EFFECT_VOLUME};
 /** \brief Tableau constant contenant tous les noms d'effets disponibles pour les blocks. */
 const char* blockEffectName[NB_BLOCK_EFFECT] = {"K "};
+/** Nom en toute lettres des effets */
+const char* noteEffectHelp[NB_NOTE_EFFECT] = {"Chord      ", "Customvoice", "Enveloppe  ", "Hop!       ", "Kill       ", "Output     ", "Retrig     ", "Slide      ", "Samplerate ", "Sweep      ", "Tempo      ", "Transpose  ", "Vibrato    ", "Volume     "};
 
 /**
  * \brief Espace mémoire contenant le dernier effet écrit. Par défaut, l'effet est initialisé avec NULL_VALUE.
@@ -989,6 +991,7 @@ void FAT_data_note_changeEffectValue(u8 block, u8 line, s8 addedValue) {
             break;
         case EFFECT_SWEEP:
         case EFFECT_CHORD:
+        case EFFECT_SAMPLERATE:
             FAT_data_note_changeEffectValue_generic (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue);
             break;
         case EFFECT_VOLUME:
@@ -1009,7 +1012,7 @@ void FAT_data_note_changeEffectValue(u8 block, u8 line, s8 addedValue) {
  * @param line le numéro de ligne de la note
  */
 void FAT_data_note_pasteEffect(u8 block, u8 line) {
-    FAT_tracker.allBlocks[block].notes[line].effect.name = ((FAT_data_lastEffectWritten.name & 0xfe) >> 1) | 1;
+    FAT_tracker.allBlocks[block].notes[line].effect.name = ((FAT_data_lastEffectWritten.name & 0xfe)) | 1;
     FAT_tracker.allBlocks[block].notes[line].effect.value = FAT_data_lastEffectWritten.value;
 }
 

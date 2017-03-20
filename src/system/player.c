@@ -784,6 +784,9 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
                 FAT_player_effect_isRunningLongEffect[channel] = 1;
                 FAT_player_effect_longEffectValue[channel] = effect->value;
                 break;
+            case EFFECT_SAMPLERATE:
+                snd_setSampleRate (effect->value);
+                break;
         }
     }
 

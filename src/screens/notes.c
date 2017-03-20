@@ -45,8 +45,9 @@ void FAT_screenNotes_printLineColumns() {
  * séléctionné).
  */
 void FAT_screenNotes_printInfos() {
-    hel_BgTextPrintF(TEXT_LAYER, 18, 3, 0, "Channel  %.2x", FAT_screenSong_getCurrentSelectedColumn()+1);
-    hel_BgTextPrintF(TEXT_LAYER, 18, 4, 0, "Line     %.2x", FAT_screenNotes_getCurrentSelectedLine());
+    hel_BgTextPrintF(TEXT_LAYER, 18, 3, 0, "Channel %s", CHANNEL_NAME[FAT_screenSong_getCurrentSelectedColumn()]);
+    hel_BgTextPrintF(TEXT_LAYER, 18, 4, 0, "Sequence %.2x", FAT_screenBlocks_getCurrentSequenceId() != NULL_VALUE ? FAT_screenBlocks_getCurrentSequenceId() : 0);
+    hel_BgTextPrintF(TEXT_LAYER, 18, 6, 0, "Line     %.2x", FAT_screenNotes_getCurrentSelectedLine());
     //ham_DrawText(21, 4, "CHAN %2x", FAT_screenSong_getCurrentSelectedColumn()+1);
 }
 
@@ -98,20 +99,24 @@ void FAT_screenNotes_printEffect(u8 line) {
                 hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
                                                 "%.2s%s\0", noteEffectName[effectName], outputText[effect->value]);
                 break;
-            case EFFECT_VOLUME:
-                // de 0 à F, FF = INST DEFINED.
-                hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
-                                "%.2s%.2x\0", noteEffectName[effectName], effect->value);
-                break;
-            case EFFECT_HOP:
             case EFFECT_CHORD:
+            case EFFECT_CUSTOMVOICE:
+            case EFFECT_ENVELOPE:
+            case EFFECT_HOP:
+            case EFFECT_RETRIG:
+            case EFFECT_SLIDE:
+            case EFFECT_SAMPLERATE:
             case EFFECT_SWEEP:
+            case EFFECT_TEMPO:
+            case EFFECT_TRANSPOSE:
+            case EFFECT_VIBRATO:
+            case EFFECT_VOLUME:
                 // cas générique
                 hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
                                                 "%.2s%.2x\0", noteEffectName[effectName], effect->value);
                 break;
             }
-
+            hel_BgTextPrintF(TEXT_LAYER, 18, 10, 0, "%s", noteEffectHelp[effectName]);
     } else {
         hel_BgTextPrint(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
                 "    ");
@@ -143,7 +148,7 @@ void FAT_screenNotes_printAllScreenText() {
     FAT_screenNotes_printLineColumns();
     FAT_screenNotes_printAllNotes();
     FAT_screenNotes_printInfos();
-    hel_BgTextPrintF(TEXT_LAYER, 18, 6, 0, "Tsp-Proj %2.x\nTempo   %.3d", FAT_tracker.transpose, FAT_tracker.tempo);
+    hel_BgTextPrintF(TEXT_LAYER, 18, 7, 0, "Tsp-Proj %2.x\nTempo   %.3d", FAT_tracker.transpose, FAT_tracker.tempo);
 }
 
 /**
@@ -318,6 +323,7 @@ void FAT_screenNotes_pressB() {
                 FAT_data_note_pasteEffect(FAT_screenNotes_currentBlockId, FAT_screenNotes_getCurrentSelectedLine());
             } else {
                 FAT_data_note_cutEffect(FAT_screenNotes_currentBlockId, FAT_screenNotes_getCurrentSelectedLine());
+                hel_BgTextPrintF(TEXT_LAYER, 18, 10, 0, "%s", "           ");
             }
             FAT_screenNotes_printEffect(FAT_screenNotes_getCurrentSelectedLine());
             break;

@@ -22,20 +22,20 @@
 #ifndef _SOUND_API_
 #define _SOUND_API_
 
-#define EFFECT_HOP 0
-#define EFFECT_KILL 1
-#define EFFECT_OUTPUT 2
-#define EFFECT_SWEEP 3
-#define EFFECT_VOLUME 4
-// to implement
-#define EFFECT_CHORD 5
-#define EFFECT_ENVELOPE 6
-#define EFFECT_RETRIG 7
-#define EFFECT_TEMPO 8
-#define EFFECT_SAMPLERATE 9
-#define EFFECT_VIBRATO 10
-#define EFFECT_CUSTOMVOICE 11
-#define EFFECT_SLIDE 12
+#define EFFECT_CHORD 0 // CH
+#define EFFECT_CUSTOMVOICE 1 // CV
+#define EFFECT_ENVELOPE 2 // EN
+#define EFFECT_HOP 3 // HO
+#define EFFECT_KILL 4 // KL
+#define EFFECT_OUTPUT 5 // OU
+#define EFFECT_RETRIG 6 // RT
+#define EFFECT_SLIDE 7 // SL
+#define EFFECT_SAMPLERATE 8 // SR
+#define EFFECT_SWEEP 9 // SW
+#define EFFECT_TEMPO 10 // TP
+#define EFFECT_TRANSPOSE 11 // TS
+#define EFFECT_VIBRATO 12 // VB
+#define EFFECT_VOLUME 13 // VO
 
 #include "system/register.h"
 #include "kits/gbfs.h"
