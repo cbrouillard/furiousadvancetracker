@@ -217,6 +217,13 @@ void snd_applyFrequencyOn (u8 channel, u8 sfreq){
         if (!isLooping){
             REG_SOUND2CNT_L = (REG_SOUND2CNT_L & 0xFFC0);
         }
+        break;
+      case 2:
+        REG_SOUND3CNT_X = (REG_SOUND3CNT_X & 0x7800) + freqs[sfreq];
+        break;
+      case 3 :
+        REG_SOUND4CNT_H = (REG_SOUND4CNT_H & 0xFFF8) | (NB_FREQUENCES / sfreq) | (1 << 15);
+        break;
     }
 
 
@@ -352,8 +359,6 @@ void snd_stopAllSounds() {
     playSnBSample = 0;
     playSnAOsc = 0;
     playSnBOsc = 0;
-
-    //snd_init_soundApi(); // wtf.
 
     // activation de la puce sonore
     REG_SOUNDCNT_X = 0x80;
@@ -510,59 +515,6 @@ void snd_resetFIFOA() {
 
 void snd_resetFIFOB() {
     REG_SOUNDCNT_H |= 1 << 0xF;
-}
-
-// deprecated
-void snd_processSampleA() {
-    if (playSnASample) {
-        REG_SOUNDCNT_H &= ~(1 << 0xB);
-        if (!(snASampleOffset & 3)) {
-            SND_REG_SGFIFOA = (*snd_modulation_applyModulation[0]) (snASample[snASampleOffset >> 2], 1, 130, snASampleOffset, 500, 0);
-        }
-        snASampleOffset+=snASpeed;
-        //HEL_DEBUG_MSG ("o: %d s: %d", snASampleOffset, snASmpSize);
-        if (snASampleOffset > snASmpSize) {
-            //sample finished!
-            playSnASample = snALoop; // si loop = 0 on arrete, sinon c'est reparti.
-            snASampleOffset = 0;
-            snd_resetFIFOA();
-        }
-
-
-    }
-
-}
-
-// deprecated
-void snd_processSampleB() {
-    if (playSnBSample) {
-        REG_SOUNDCNT_H &= ~(1 << 0xF);
-        if (!(snBSampleOffset & 3)) {
-            SND_REG_SGFIFOB = (*snd_modulation_applyModulation[0]) (snBSample[snBSampleOffset >> 2], 1, 130, snBSampleOffset, 500, 0); // u32
-        }
-
-        snBSampleOffset += snBSpeed;
-
-        //HEL_DEBUG_MSG ("o: %d s: %d", snBSampleOffset, snBSmpSize);
-        if (snBSampleOffset > snBSmpSize) {
-            //sample finished!
-            playSnBSample = snBLoop;
-            snBSampleOffset = 0;
-            snd_resetFIFOB();
-        }
-    }
-}
-
-// deprecated
-void snd_timerFunc_sample() {
-  //snd_processSampleA();
-  //snd_processOscillatorA ();
-}
-
-// deprecated
-void snd_timerFunc_sampleB(){
-  //snd_processSampleB();
-  //snd_processOscillatorB ();
 }
 
 void snd_timerFunc_stopA (){

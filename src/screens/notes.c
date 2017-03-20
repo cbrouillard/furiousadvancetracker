@@ -101,16 +101,19 @@ void FAT_screenNotes_printEffect(u8 line) {
                 break;
             case EFFECT_CHORD:
             case EFFECT_CUSTOMVOICE:
+            case EFFECT_DELAY:
             case EFFECT_ENVELOPE:
             case EFFECT_HOP:
             case EFFECT_RETRIG:
             case EFFECT_SLIDE:
             case EFFECT_SAMPLERATE:
             case EFFECT_SWEEP:
+            case EFFECT_TABLE:
             case EFFECT_TEMPO:
             case EFFECT_TRANSPOSE:
             case EFFECT_VIBRATO:
             case EFFECT_VOLUME:
+            case EFFECT_WAVEFORM:
                 // cas générique
                 hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
                                                 "%.2s%.2x\0", noteEffectName[effectName], effect->value);

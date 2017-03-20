@@ -49,7 +49,7 @@
 /** \brief Nombre total de notes disponibles: de C à B (notation anglo-saxonne). */
 #define NB_NOTE 12
 /** \brief Définit le nombre d'effet disponibles pour les notes. */
-#define NB_NOTE_EFFECT 14
+#define NB_NOTE_EFFECT 17
 /** \brief Définit le nombre d'effet disponibles pour les blocks. */
 #define NB_BLOCK_EFFECT 1
 /** \brief Définit le nombre maximal de voix disponibles. Les voix sont l'équivalent des

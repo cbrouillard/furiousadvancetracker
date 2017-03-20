@@ -24,18 +24,21 @@
 
 #define EFFECT_CHORD 0 // CH
 #define EFFECT_CUSTOMVOICE 1 // CV
-#define EFFECT_ENVELOPE 2 // EN
-#define EFFECT_HOP 3 // HO
-#define EFFECT_KILL 4 // KL
-#define EFFECT_OUTPUT 5 // OU
-#define EFFECT_RETRIG 6 // RT
-#define EFFECT_SLIDE 7 // SL
-#define EFFECT_SAMPLERATE 8 // SR
-#define EFFECT_SWEEP 9 // SW
-#define EFFECT_TEMPO 10 // TP
-#define EFFECT_TRANSPOSE 11 // TS
-#define EFFECT_VIBRATO 12 // VB
-#define EFFECT_VOLUME 13 // VO
+#define EFFECT_DELAY 2 // DL
+#define EFFECT_ENVELOPE 3 // EN
+#define EFFECT_HOP 4 // HO
+#define EFFECT_KILL 5 // KL
+#define EFFECT_OUTPUT 6 // OU
+#define EFFECT_RETRIG 7 // RT
+#define EFFECT_SLIDE 8 // SL
+#define EFFECT_SAMPLERATE 9 // SR
+#define EFFECT_SWEEP 10 // SW
+#define EFFECT_TEMPO 11 // TP
+#define EFFECT_TABLE 12 // TA
+#define EFFECT_TRANSPOSE 13 // TS
+#define EFFECT_VIBRATO 14 // VB
+#define EFFECT_VOLUME 15 // VO
+#define EFFECT_WAVEFORM 16 // WA
 
 #include "system/register.h"
 #include "kits/gbfs.h"
