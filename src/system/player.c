@@ -787,6 +787,9 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
             case EFFECT_SAMPLERATE:
                 snd_setSampleRate (effect->value);
                 break;
+            case EFFECT_TEMPO:
+                FAT_tracker.tempo = effect->value;
+                break;
         }
     }
 

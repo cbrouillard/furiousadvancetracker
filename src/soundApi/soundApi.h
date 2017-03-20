@@ -33,8 +33,8 @@
 #define EFFECT_SLIDE 8 // SL
 #define EFFECT_SAMPLERATE 9 // SR
 #define EFFECT_SWEEP 10 // SW
-#define EFFECT_TEMPO 11 // TP
-#define EFFECT_TABLE 12 // TA
+#define EFFECT_TABLE 11 // TA
+#define EFFECT_TEMPO 12 // TP
 #define EFFECT_TRANSPOSE 13 // TS
 #define EFFECT_VIBRATO 14 // VB
 #define EFFECT_VOLUME 15 // VO
