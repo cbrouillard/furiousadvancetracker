@@ -985,6 +985,9 @@ void FAT_data_note_changeEffectValue(u8 block, u8 line, s8 addedValue) {
         case EFFECT_KILL:
             FAT_data_note_changeEffectValue_generic (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue);
             break;
+        case EFFECT_CUSTOMVOICE:
+            FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, NB_MAX_CUSTOM_VOICE-1);
+            break;
         case EFFECT_OUTPUT:
             // 4 valeurs seulement
             FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, 3);

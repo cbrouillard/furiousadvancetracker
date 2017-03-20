@@ -663,7 +663,8 @@ void FAT_player_playFromLive(){
               FAT_player_playNoteWithCustomParams(
                  FAT_player_buffer[i].note , i,
                  FAT_player_buffer[i].transpose,
-                 volume, FAT_player_buffer[i].sweep, FAT_player_buffer[i].output);
+                 volume, FAT_player_buffer[i].sweep,
+                 FAT_player_buffer[i].output);
           }
       }
 
@@ -741,7 +742,10 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
     }
 
     effect* effect = FAT_data_note_getEffect(FAT_currentPlayedBlock, actualNotesForChannel[channel]);
-    FAT_player_buffer[channel].volume = NULL_VALUE; FAT_player_buffer[channel].sweep = NULL_VALUE; FAT_player_buffer[channel].output = NULL_VALUE;
+    FAT_player_buffer[channel].volume = NULL_VALUE;
+    FAT_player_buffer[channel].sweep = NULL_VALUE;
+    FAT_player_buffer[channel].output = NULL_VALUE;
+    FAT_player_buffer[channel].customVoice = NULL_VALUE;
     if (effect){
         switch (((effect->name & 0xfe) >> 1)){
             case EFFECT_VOLUME:
@@ -779,6 +783,7 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
                   FAT_currentPlayedBlock = sequence->blocks[actualBlocksForChannel[channel]];
                   block = &(FAT_tracker.allBlocks[FAT_currentPlayedBlock]);
                 }
+                FAT_player_moveOrHideCursor(channel);
                 break;
             case EFFECT_CHORD:
                 FAT_player_effect_isRunningLongEffect[channel] = 1;
@@ -789,6 +794,11 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
                 break;
             case EFFECT_TEMPO:
                 FAT_tracker.tempo = effect->value;
+                break;
+            case EFFECT_CUSTOMVOICE:
+                if (channel == 3){
+                    FAT_player_buffer[channel].customVoice = effect->value;
+                }
                 break;
         }
     }
