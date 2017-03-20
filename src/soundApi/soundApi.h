@@ -22,22 +22,22 @@
 #ifndef _SOUND_API_
 #define _SOUND_API_
 
-#define EFFECT_CHORD 0 // CH
+#define EFFECT_CHORD 0 // CH [OK]
 #define EFFECT_CUSTOMVOICE 1 // CV
 #define EFFECT_DELAY 2 // DL
 #define EFFECT_ENVELOPE 3 // EN
-#define EFFECT_HOP 4 // HO
-#define EFFECT_KILL 5 // KL
-#define EFFECT_OUTPUT 6 // OU
+#define EFFECT_HOP 4 // HO [OK]
+#define EFFECT_KILL 5 // KL [~OK]
+#define EFFECT_OUTPUT 6 // OU [OK]
 #define EFFECT_RETRIG 7 // RT
 #define EFFECT_SLIDE 8 // SL
-#define EFFECT_SAMPLERATE 9 // SR
-#define EFFECT_SWEEP 10 // SW
+#define EFFECT_SAMPLERATE 9 // SR [OK]
+#define EFFECT_SWEEP 10 // SW [OK]
 #define EFFECT_TABLE 11 // TA
-#define EFFECT_TEMPO 12 // TP
+#define EFFECT_TEMPO 12 // TP [OK]
 #define EFFECT_TRANSPOSE 13 // TS
 #define EFFECT_VIBRATO 14 // VB
-#define EFFECT_VOLUME 15 // VO
+#define EFFECT_VOLUME 15 // VO [OK]
 #define EFFECT_WAVEFORM 16 // WA
 
 #include "system/register.h"
