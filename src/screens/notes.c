@@ -89,11 +89,6 @@ void FAT_screenNotes_printEffect(u8 line) {
         effect* effect = FAT_data_note_getEffect(FAT_screenNotes_currentBlockId, line);
         u8 effectName = (effect->name & 0xfe) >> 1;
         switch (effectName){
-            case EFFECT_KILL:
-                // pas de value
-                hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
-                                                "%.2s--\0", noteEffectName[effectName]);
-                break;
             case EFFECT_OUTPUT:
                 // 4 valeurs seulement
                 hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
@@ -104,6 +99,7 @@ void FAT_screenNotes_printEffect(u8 line) {
             case EFFECT_DELAY:
             case EFFECT_ENVELOPE:
             case EFFECT_HOP:
+            case EFFECT_KILL:
             case EFFECT_RETRIG:
             case EFFECT_SLIDE:
             case EFFECT_SAMPLERATE:

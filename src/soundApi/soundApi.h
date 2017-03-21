@@ -27,7 +27,7 @@
 #define EFFECT_DELAY 2 // DL
 #define EFFECT_ENVELOPE 3 // EN
 #define EFFECT_HOP 4 // HO [OK, TO TEST]
-#define EFFECT_KILL 5 // KL [TO CONFIGURE]
+#define EFFECT_KILL 5 // KL [OK]
 #define EFFECT_OUTPUT 6 // OU [OK]
 #define EFFECT_RETRIG 7 // RT
 #define EFFECT_SLIDE 8 // SL

@@ -23,6 +23,7 @@
 #define INITIAL_TEMPOREACH(t) (60000 / t) / 4
 
 void FAT_player_effect_chord (u8 channel);
+void FAT_player_effect_kill (u8 channel);
 void FAT_player_effect_checkAndApplyForLongEffect (u8 channel);
 
 void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* block);
@@ -282,9 +283,11 @@ void FAT_player_playNoteWithCustomParams(note* note, u8 channel, u8 transpose, u
         (*FAT_player_playNoteWithCustomParams_chanX[channel]) (note,channel,transpose,volume,sweep,outputValue, customVoice);
     }
 
+    /*
     if (note->effect.name != NULL_VALUE) {
         snd_tryToApplyEffect(channel, noteEffectNum[note->effect.name >> 1], note->effect.value);
     }
+    */
 }
 
 u8 FAT_player_searchFirstAvailableSequenceForChannel_returnLine (u8 channel, u8 startingLine){
@@ -700,6 +703,7 @@ void FAT_player_playFromBlocks() {
             sequence* seq = &(FAT_tracker.allSequences[FAT_currentPlayedSequence]);
             FAT_player_processNote_inSequence (FAT_currentPlayedChannel, seq);
 
+            if (FAT_player[FAT_currentPlayedChannel].haveToPlay) {
             FAT_player_playNoteWithCustomParams(
                FAT_player[FAT_currentPlayedChannel].note , FAT_currentPlayedChannel,
                FAT_player[FAT_currentPlayedChannel].transpose,
@@ -707,6 +711,7 @@ void FAT_player_playFromBlocks() {
                FAT_player[FAT_currentPlayedChannel].sweep,
                FAT_player[FAT_currentPlayedChannel].output,
                FAT_player[FAT_currentPlayedChannel].customVoice);
+             }
 
             FAT_player_progressInSequence (seq);
         }
@@ -722,7 +727,7 @@ void FAT_player_playFromBlocks() {
 }
 
 void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* block) {
-    FAT_player[channel].haveToPlay = 0; // TODO utile ?
+    FAT_player[channel].haveToPlay = 1;
 
     // Déplacement des curseurs de lecture
     FAT_player_moveOrHideCursor(channel);
@@ -783,7 +788,15 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
                 break;
             case EFFECT_CHORD:
                 FAT_player[channel].isRunningLongEffect = 1;
-                //FAT_player_effect_longEffectValue[channel] = effect->value;
+                break;
+            case EFFECT_KILL:
+                if (effect->value == 0) {
+                  FAT_player[channel].isRunningLongEffect = 0;
+                  FAT_player[channel].haveToPlay = 0;
+                  snd_effect_kill(channel, 0);
+                } else {
+                  FAT_player[channel].isRunningLongEffect = 1;
+                }
                 break;
             case EFFECT_SAMPLERATE:
                 snd_setSampleRate (effect->value);
@@ -801,7 +814,6 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
 
     FAT_player[channel].note = &(block->notes[actualNotesForChannel[channel]]);
     FAT_player[channel].transpose =  sequence ? sequence->transpose[actualBlocksForChannel[channel]] :  0;
-    FAT_player[channel].haveToPlay = 1;
 }
 
 void FAT_player_playFromNotes() {
@@ -813,6 +825,7 @@ void FAT_player_playFromNotes() {
 
             FAT_player_processNote_inBlock (FAT_currentPlayedChannel, NULL, block);
 
+            if (FAT_player[FAT_currentPlayedChannel].haveToPlay) {
             FAT_player_playNoteWithCustomParams(
                FAT_player[FAT_currentPlayedChannel].note , FAT_currentPlayedChannel,
                FAT_player[FAT_currentPlayedChannel].transpose,
@@ -820,6 +833,7 @@ void FAT_player_playFromNotes() {
                FAT_player[FAT_currentPlayedChannel].sweep,
                FAT_player[FAT_currentPlayedChannel].output,
                FAT_player[FAT_currentPlayedChannel].customVoice);
+             }
 
             FAT_player_progressInBlock ();
         }
@@ -840,8 +854,19 @@ void FAT_player_effect_checkAndApplyForLongEffect (u8 channel){
           case EFFECT_CHORD:
             FAT_player_effect_chord (channel);
             break;
+          case EFFECT_KILL:
+            FAT_player_effect_kill (channel);
+            break;
         }
     }
+}
+
+void FAT_player_effect_kill (u8 channel) {
+  if (FAT_player[channel].effectCounter >= FAT_player[channel].lastEffect->value) {
+      snd_effect_kill (channel, 0);
+      FAT_player[channel].isRunningLongEffect = 0;
+  }
+  FAT_player[channel].effectCounter ++;
 }
 
 void FAT_player_effect_chord (u8 channel){
