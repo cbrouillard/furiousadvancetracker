@@ -25,6 +25,7 @@
 void FAT_player_effect_chord (u8 channel);
 void FAT_player_effect_kill (u8 channel);
 void FAT_player_effect_delay (u8 channel);
+void FAT_player_effect_retrig (u8 channel);
 void FAT_player_effect_checkAndApplyForLongEffect (u8 channel);
 
 void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* block);
@@ -788,6 +789,7 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
                 FAT_player_moveOrHideCursor(channel);
                 break;
             case EFFECT_CHORD:
+            case EFFECT_RETRIG:
                 FAT_player[channel].isRunningLongEffect = 1;
                 break;
             case EFFECT_DELAY:
@@ -867,6 +869,9 @@ void FAT_player_effect_checkAndApplyForLongEffect (u8 channel){
           case EFFECT_DELAY:
             FAT_player_effect_delay (channel);
             break;
+          case EFFECT_RETRIG:
+            FAT_player_effect_retrig (channel);
+            break;
         }
     }
 }
@@ -882,6 +887,23 @@ void FAT_player_effect_delay (u8 channel) {
        FAT_player[channel].customVoice);
 
       FAT_player[channel].isRunningLongEffect = 0;
+      FAT_player[channel].effectCounter = 0;
+  }
+
+  FAT_player[channel].effectCounter ++;
+}
+
+void FAT_player_effect_retrig (u8 channel) {
+  if (FAT_player[channel].effectCounter >= FAT_player[channel].lastEffect->value) {
+    FAT_player_playNoteWithCustomParams(
+       FAT_player[channel].lastNote , channel,
+       FAT_player[channel].transpose,
+       FAT_player[channel].volume,
+       FAT_player[channel].sweep,
+       FAT_player[channel].output,
+       FAT_player[channel].customVoice);
+
+       FAT_player[channel].effectCounter = 0;
   }
 
   FAT_player[channel].effectCounter ++;

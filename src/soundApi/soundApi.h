@@ -24,12 +24,12 @@
 
 #define EFFECT_CHORD 0 // CH [OK]
 #define EFFECT_CUSTOMVOICE 1 // CV [OK]
-#define EFFECT_DELAY 2 // DL
+#define EFFECT_DELAY 2 // DL [OK]
 #define EFFECT_ENVELOPE 3 // EN
 #define EFFECT_HOP 4 // HO [OK, TO TEST]
 #define EFFECT_KILL 5 // KL [OK]
 #define EFFECT_OUTPUT 6 // OU [OK]
-#define EFFECT_RETRIG 7 // RT
+#define EFFECT_RETRIG 7 // RT [OK]
 #define EFFECT_SLIDE 8 // SL
 #define EFFECT_SAMPLERATE 9 // SR [OK]
 #define EFFECT_SWEEP 10 // SW [OK]
