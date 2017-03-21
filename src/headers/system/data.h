@@ -333,7 +333,11 @@ typedef struct PLAYERBUFFER {
     u8 sweep; // pour la commande "SWEEP". 0xff = non apply
     u8 output; // pour la commande "OUTPUT". 0xff = non apply
     u8 customVoice; // pour la commande "CUSTOMVOICE". 0xff = non apply
-} bufferPlayer;
+    bool isRunningLongEffect; // un effet long en cours sur le channel ?
+    u8 effectCounter; // compteur utile pour les effets longs
+    effect* lastEffect; // pointeur vers le dernier effet connu sur le channel
+    note* lastNote; // pointeur vers la dernière note connue
+} player;
 
 
 extern tracker ATTR_ALIGNED(8) ATTR_EWRAM FAT_tracker;

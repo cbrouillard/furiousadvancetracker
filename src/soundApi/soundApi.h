@@ -23,7 +23,7 @@
 #define _SOUND_API_
 
 #define EFFECT_CHORD 0 // CH [OK, TO TEST]
-#define EFFECT_CUSTOMVOICE 1 // CV [TO APPLY]
+#define EFFECT_CUSTOMVOICE 1 // CV [OK]
 #define EFFECT_DELAY 2 // DL
 #define EFFECT_ENVELOPE 3 // EN
 #define EFFECT_HOP 4 // HO [OK, TO TEST]
