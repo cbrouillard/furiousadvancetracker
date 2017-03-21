@@ -34,7 +34,7 @@
 #define EFFECT_SAMPLERATE 9 // SR [OK]
 #define EFFECT_SWEEP 10 // SW [OK]
 #define EFFECT_TABLE 11 // TA
-#define EFFECT_TEMPO 12 // TP [OK]
+#define EFFECT_TEMPO 12 // TM [OK]
 #define EFFECT_TRANSPOSE 13 // TS
 #define EFFECT_VIBRATO 14 // VB
 #define EFFECT_VOLUME 15 // VO [OK]
