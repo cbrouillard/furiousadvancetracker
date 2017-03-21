@@ -982,9 +982,6 @@ void FAT_data_note_changeEffectValue_generic (effect* effect, s8 addedValue){
 void FAT_data_note_changeEffectValue(u8 block, u8 line, s8 addedValue) {
     u8 effectName = (FAT_tracker.allBlocks[block].notes[line].effect.name & 0xfe) >> 1;
     switch (effectName){
-        case EFFECT_KILL:
-            FAT_data_note_changeEffectValue_generic (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue);
-            break;
         case EFFECT_CUSTOMVOICE:
             FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, NB_MAX_CUSTOM_VOICE-1);
             break;
@@ -996,6 +993,8 @@ void FAT_data_note_changeEffectValue(u8 block, u8 line, s8 addedValue) {
         case EFFECT_CHORD:
         case EFFECT_SAMPLERATE:
         case EFFECT_TEMPO:
+        case EFFECT_KILL:
+        case EFFECT_DELAY:
             FAT_data_note_changeEffectValue_generic (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue);
             break;
         case EFFECT_VOLUME:

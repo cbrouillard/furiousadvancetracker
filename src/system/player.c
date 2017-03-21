@@ -789,6 +789,12 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
             case EFFECT_CHORD:
                 FAT_player[channel].isRunningLongEffect = 1;
                 break;
+            case EFFECT_DELAY:
+                if (effect->value != 0) {
+                    FAT_player[channel].isRunningLongEffect = 1;
+                    FAT_player[channel].haveToPlay = 0;
+                }
+                break;
             case EFFECT_KILL:
                 if (effect->value == 0) {
                   FAT_player[channel].isRunningLongEffect = 0;
