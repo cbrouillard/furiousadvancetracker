@@ -26,6 +26,7 @@ void FAT_player_effect_chord (u8 channel);
 void FAT_player_effect_kill (u8 channel);
 void FAT_player_effect_delay (u8 channel);
 void FAT_player_effect_retrig (u8 channel);
+void FAT_player_effect_slide (u8 channel);
 void FAT_player_effect_checkAndApplyForLongEffect (u8 channel);
 
 void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* block);
@@ -746,6 +747,7 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
     FAT_player[channel].sweep = NULL_VALUE;
     FAT_player[channel].output = NULL_VALUE;
     FAT_player[channel].customVoice = NULL_VALUE;
+
     if (effect){
         FAT_player[channel].lastEffect = effect;
         FAT_player[channel].isRunningLongEffect = 0;
@@ -792,6 +794,10 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
             case EFFECT_RETRIG:
                 FAT_player[channel].isRunningLongEffect = 1;
                 break;
+            case EFFECT_SLIDE:
+                FAT_player[channel].isRunningLongEffect = 1;
+                //FAT_player[channel].haveToPlay = 0;
+                break;
             case EFFECT_DELAY:
                 if (effect->value != 0) {
                     FAT_player[channel].isRunningLongEffect = 1;
@@ -814,7 +820,7 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
                 FAT_tracker.tempo = effect->value;
                 break;
             case EFFECT_CUSTOMVOICE:
-                if (channel == 2){ // wave channel
+                if (channel == 2){ // wave channel only
                     FAT_player[channel].customVoice = effect->value;
                 }
                 break;
@@ -872,8 +878,21 @@ void FAT_player_effect_checkAndApplyForLongEffect (u8 channel){
           case EFFECT_RETRIG:
             FAT_player_effect_retrig (channel);
             break;
+          case EFFECT_SLIDE:
+            FAT_player_effect_slide (channel);
         }
     }
+}
+
+void FAT_player_effect_slide (u8 channel){
+  //if (FAT_player[channel].effectCounter >= FAT_player[channel].lastEffect->value) {
+      snd_applyFrequencyOn (channel, FAT_player[channel].lastNote->freq
+          + ((FAT_player[channel].effectCounter * FAT_player[channel].lastEffect->value)));
+
+
+  //}
+
+  FAT_player[channel].effectCounter ++;
 }
 
 void FAT_player_effect_delay (u8 channel) {
