@@ -822,6 +822,9 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
             case EFFECT_TRANSPOSE:
                 FAT_player[channel].transpose = effect->value;
                 break;
+            case EFFECT_WAVEFORM:
+                
+                break;
         }
     }
 

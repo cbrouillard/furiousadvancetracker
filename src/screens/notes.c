@@ -85,7 +85,7 @@ void FAT_screenNotes_printNote(u8 line) {
  */
 void FAT_screenNotes_printEffect(u8 line) {
     if (!FAT_data_note_isEffectEmpty(FAT_screenNotes_currentBlockId, line)) {
-
+        FAT_screenInstrument_hideAllWavedutySprite ();
         effect* effect = FAT_data_note_getEffect(FAT_screenNotes_currentBlockId, line);
         u8 effectName = (effect->name & 0xfe) >> 1;
         switch (effectName){
@@ -93,6 +93,11 @@ void FAT_screenNotes_printEffect(u8 line) {
                 // 4 valeurs seulement
                 hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
                                                 "%.2s%s\0", noteEffectName[effectName], outputText[effect->value]);
+                break;
+            case EFFECT_WAVEFORM:
+              hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
+                                            "%.2s  \0", noteEffectName[effectName]);
+                FAT_screenInstrument_showWaveduty(effect->value, 96, 16);
                 break;
             case EFFECT_CHORD:
             case EFFECT_CUSTOMVOICE:
@@ -109,7 +114,6 @@ void FAT_screenNotes_printEffect(u8 line) {
             case EFFECT_TRANSPOSE:
             case EFFECT_VIBRATO:
             case EFFECT_VOLUME:
-            case EFFECT_WAVEFORM:
                 // cas générique
                 hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
                                                 "%.2s%.2x\0", noteEffectName[effectName], effect->value);
