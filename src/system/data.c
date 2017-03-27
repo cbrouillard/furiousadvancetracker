@@ -996,6 +996,7 @@ void FAT_data_note_changeEffectValue(u8 block, u8 line, s8 addedValue) {
         case EFFECT_KILL:
         case EFFECT_DELAY:
         case EFFECT_RETRIG:
+        case EFFECT_TRANSPOSE:
             FAT_data_note_changeEffectValue_generic (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue);
             break;
         case EFFECT_VOLUME:

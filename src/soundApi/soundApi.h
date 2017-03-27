@@ -35,7 +35,7 @@
 #define EFFECT_SWEEP 10 // SW [OK]
 #define EFFECT_TABLE 11 // TA
 #define EFFECT_TEMPO 12 // TM [OK]
-#define EFFECT_TRANSPOSE 13 // TS
+#define EFFECT_TRANSPOSE 13 // TS [OK]
 #define EFFECT_VIBRATO 14 // VB
 #define EFFECT_VOLUME 15 // VO [OK]
 #define EFFECT_WAVEFORM 16 // WA

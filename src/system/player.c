@@ -746,6 +746,7 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
     FAT_player[channel].sweep = NULL_VALUE;
     FAT_player[channel].output = NULL_VALUE;
     FAT_player[channel].customVoice = NULL_VALUE;
+    FAT_player[channel].transpose = 0;
     if (effect){
         FAT_player[channel].lastEffect = effect;
         FAT_player[channel].isRunningLongEffect = 0;
@@ -818,11 +819,14 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
                     FAT_player[channel].customVoice = effect->value;
                 }
                 break;
+            case EFFECT_TRANSPOSE:
+                FAT_player[channel].transpose = effect->value;
+                break;
         }
     }
 
     FAT_player[channel].note = &(block->notes[actualNotesForChannel[channel]]);
-    FAT_player[channel].transpose =  sequence ? sequence->transpose[actualBlocksForChannel[channel]] :  0;
+    FAT_player[channel].transpose +=  sequence ? sequence->transpose[actualBlocksForChannel[channel]] :  0;
 }
 
 void FAT_player_playFromNotes() {
