@@ -333,6 +333,7 @@ typedef struct PLAYERBUFFER {
     u8 sweep; // pour la commande "SWEEP". 0xff = non apply
     u8 output; // pour la commande "OUTPUT". 0xff = non apply
     u8 customVoice; // pour la commande "CUSTOMVOICE". 0xff = non apply
+    u8 wavedutyOrPolynomialStep; // custom waveform
     bool isRunningLongEffect; // un effet long en cours sur le channel ?
     u8 effectCounter; // compteur utile pour les effets longs
     effect* lastEffect; // pointeur vers le dernier effet connu sur le channel

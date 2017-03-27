@@ -108,7 +108,7 @@ u8 FAT_player_live_getWaitForOtherChannel (u8 n){
 /**
 * \brief Pointeurs vers les fonctions de jeu de note.
 */
-void (*FAT_player_playNoteWithCustomParams_chanX[6]) (note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output, u8 customVoice);
+void (*FAT_player_playNoteWithCustomParams_chanX[6]) (note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output, u8 customVoice, u8 waveformOrPolystep);
 
 void FAT_player_firstInit (){
     u8 i;
@@ -167,7 +167,7 @@ void FAT_player_playComposerNote(u8 noteLine) {
         FAT_player_playNoteWithCustomParams(    note,
                                                 FAT_tracker.composer.channels[noteLine],
                                                 FAT_tracker.composer.transpose + FAT_tracker.transpose,
-                                                NULL_VALUE, NULL_VALUE, NULL_VALUE, NULL_VALUE); // TODO commandes et paramètres.
+                                                NULL_VALUE, NULL_VALUE, NULL_VALUE, NULL_VALUE, NULL_VALUE); // TODO commandes et paramètres.
     }
 }
 
@@ -185,10 +185,10 @@ void FAT_player_playNote(note* note, u8 channel, u8 forceVolume) {
   		channel -= 2;
   	}
 
-    FAT_player_playNoteWithCustomParams(note, channel, FAT_tracker.transpose, forceVolume, NULL_VALUE, NULL_VALUE, NULL_VALUE);
+    FAT_player_playNoteWithCustomParams(note, channel, FAT_tracker.transpose, forceVolume, NULL_VALUE, NULL_VALUE, NULL_VALUE, NULL_VALUE);
 }
 
-void FAT_player_playNoteWithCustomParams_chan1(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output, u8 customVoice){
+void FAT_player_playNoteWithCustomParams_chan1(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output, u8 customVoice, u8 waveformOrPolystep){
     instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
 
     u8 sweepValue = sweep != NULL_VALUE ? sweep : inst->sweep;
@@ -199,27 +199,29 @@ void FAT_player_playNoteWithCustomParams_chan1(note* note, u8 channel, u8 transp
         sweeptime -= 8;
         sweepdir = 0;
     }
+    u8 waveform = waveformOrPolystep != NULL_VALUE ? waveformOrPolystep : inst->wavedutyOrPolynomialStep;
 
     snd_playSoundOnChannel1(
         sweeptime, sweepdir, sweepshifts,
-        volume != 0xff ? volume : inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->wavedutyOrPolynomialStep,
+        volume != 0xff ? volume : inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, waveform,
         inst->soundlength, inst->loopmode,
         output,
         note->freq, transpose + FAT_tracker.transpose);
 
 }
-void FAT_player_playNoteWithCustomParams_chan2(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output, u8 customVoice){
+void FAT_player_playNoteWithCustomParams_chan2(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output, u8 customVoice, u8 waveformOrPolystep){
     instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
+    u8 waveform = waveformOrPolystep != NULL_VALUE ? waveformOrPolystep : inst->wavedutyOrPolynomialStep;
 
     snd_playSoundOnChannel2(
         volume != 0xff ? volume : inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5,
-        inst->wavedutyOrPolynomialStep,
+        waveform,
         inst->soundlength, inst->loopmode,
         output,
         note->freq, transpose + FAT_tracker.transpose);
 
 }
-void FAT_player_playNoteWithCustomParams_chan3(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output, u8 customVoice){
+void FAT_player_playNoteWithCustomParams_chan3(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output, u8 customVoice, u8 waveformOrPolystep){
     instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
     volume = (volume > 0x4) ? 0xff : volume;
     customVoice = (customVoice != NULL_VALUE) ? customVoice : inst->customVoice;
@@ -231,21 +233,23 @@ void FAT_player_playNoteWithCustomParams_chan3(note* note, u8 channel, u8 transp
         output, note->freq, transpose + FAT_tracker.transpose);
 
 }
-void FAT_player_playNoteWithCustomParams_chan4(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output, u8 customVoice){
+void FAT_player_playNoteWithCustomParams_chan4(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output, u8 customVoice, u8 waveformOrPolystep){
     instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
+    u8 waveform = waveformOrPolystep != NULL_VALUE ? waveformOrPolystep : inst->wavedutyOrPolynomialStep;
 
     snd_playSoundOnChannel4(
         volume != 0xff ? volume : inst->envelope & 0x0f, (inst->envelope & 0x10) >> 4, (inst->envelope & 0xe0) >> 5, inst->soundlength,
-        inst->loopmode, output, note->note & 0x0f, inst->wavedutyOrPolynomialStep,
+        inst->loopmode, output, note->note & 0x0f, waveform,
         note->freq / NB_FREQUENCES, transpose + FAT_tracker.transpose);
 
 }
-void FAT_player_playNoteWithCustomParams_chan5(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output, u8 customVoice){
+void FAT_player_playNoteWithCustomParams_chan5(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output, u8 customVoice, u8 waveformOrPolystep){
     instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
+    u8 waveform = waveformOrPolystep != NULL_VALUE ? waveformOrPolystep : inst->wavedutyOrPolynomialStep;
     // todo pointeur de func pour plus de perf ?
     if (inst->type > INSTRUMENT_TYPE_SAMPLEB){
         // waveduty = shape
-        snd_playOscillatorA (inst->wavedutyOrPolynomialStep, note->freq, inst->loopmode,
+        snd_playOscillatorA (waveform, note->freq, inst->loopmode,
           inst->soundlength, inst->volumeRatio >> 4, output);
     } else {
         snd_playChannelASample(
@@ -254,12 +258,13 @@ void FAT_player_playNoteWithCustomParams_chan5(note* note, u8 channel, u8 transp
             inst->loopmode, inst->soundlength, inst->offset, output); // loopmode est mal nommé : c'est le timedMode
     }
 }
-void FAT_player_playNoteWithCustomParams_chan6(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output, u8 customVoice){
+void FAT_player_playNoteWithCustomParams_chan6(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output, u8 customVoice, u8 waveformOrPolystep){
     instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
+    u8 waveform = waveformOrPolystep != NULL_VALUE ? waveformOrPolystep : inst->wavedutyOrPolynomialStep;
 
     if (inst->type > INSTRUMENT_TYPE_SAMPLEB){
         // waveduty = shape
-        snd_playOscillatorB (inst->wavedutyOrPolynomialStep, note->freq, inst->loopmode,
+        snd_playOscillatorB (waveform, note->freq, inst->loopmode,
            inst->soundlength, inst->volumeRatio >> 4, output);
     } else {
         snd_playChannelBSample(
@@ -276,20 +281,14 @@ void FAT_player_playNoteWithCustomParams_chan6(note* note, u8 channel, u8 transp
  * @param channel le numéro de channel sur lequel jouer la note
  * @param transpose la valeur de transpose, elle sera ajoutée à celle du projet
  */
-void FAT_player_playNoteWithCustomParams(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output, u8 customVoice) {
+void FAT_player_playNoteWithCustomParams(note* note, u8 channel, u8 transpose, u8 volume, u8 sweep, u8 output, u8 customVoice, u8 waveformOrPolystep) {
     if (note->freq != NULL_VALUE) {
         instrument* inst = &(FAT_tracker.allInstruments[note->instrument]);
         u8 outputValue = output != NULL_VALUE ? output : inst->output;
 
         // play it on the right channel. Happy pointer :D
-        (*FAT_player_playNoteWithCustomParams_chanX[channel]) (note,channel,transpose,volume,sweep,outputValue, customVoice);
+        (*FAT_player_playNoteWithCustomParams_chanX[channel]) (note,channel,transpose,volume,sweep,outputValue, customVoice, waveformOrPolystep);
     }
-
-    /*
-    if (note->effect.name != NULL_VALUE) {
-        snd_tryToApplyEffect(channel, noteEffectNum[note->effect.name >> 1], note->effect.value);
-    }
-    */
 }
 
 u8 FAT_player_searchFirstAvailableSequenceForChannel_returnLine (u8 channel, u8 startingLine){
@@ -575,7 +574,8 @@ void FAT_player_playFromSequences() {
                    FAT_player[i].volume,
                    FAT_player[i].sweep,
                    FAT_player[i].output,
-                   FAT_player[i].customVoice);
+                   FAT_player[i].customVoice,
+                   FAT_player[i].wavedutyOrPolynomialStep);
 
             }
         }
@@ -661,7 +661,8 @@ void FAT_player_playFromLive(){
                  FAT_player[i].transpose,
                  volume, FAT_player[i].sweep,
                  FAT_player[i].output,
-                 FAT_player[i].customVoice  );
+                 FAT_player[i].customVoice,
+                 FAT_player[i].wavedutyOrPolynomialStep);
           }
       }
 
@@ -712,7 +713,8 @@ void FAT_player_playFromBlocks() {
                FAT_player[FAT_currentPlayedChannel].volume,
                FAT_player[FAT_currentPlayedChannel].sweep,
                FAT_player[FAT_currentPlayedChannel].output,
-               FAT_player[FAT_currentPlayedChannel].customVoice);
+               FAT_player[FAT_currentPlayedChannel].customVoice,
+               FAT_player[FAT_currentPlayedChannel].wavedutyOrPolynomialStep);
              }
 
             FAT_player_progressInSequence (seq);
@@ -823,7 +825,7 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
                 FAT_player[channel].transpose = effect->value;
                 break;
             case EFFECT_WAVEFORM:
-                
+                FAT_player[channel].wavedutyOrPolynomialStep = effect->value;
                 break;
         }
     }
@@ -848,7 +850,8 @@ void FAT_player_playFromNotes() {
                FAT_player[FAT_currentPlayedChannel].volume,
                FAT_player[FAT_currentPlayedChannel].sweep,
                FAT_player[FAT_currentPlayedChannel].output,
-               FAT_player[FAT_currentPlayedChannel].customVoice);
+               FAT_player[FAT_currentPlayedChannel].customVoice,
+               FAT_player[FAT_currentPlayedChannel].wavedutyOrPolynomialStep);
              }
 
             FAT_player_progressInBlock ();
@@ -891,7 +894,8 @@ void FAT_player_effect_delay (u8 channel) {
        FAT_player[channel].volume,
        FAT_player[channel].sweep,
        FAT_player[channel].output,
-       FAT_player[channel].customVoice);
+       FAT_player[channel].customVoice,
+       FAT_player[channel].wavedutyOrPolynomialStep);
 
       FAT_player[channel].isRunningLongEffect = 0;
       FAT_player[channel].effectCounter = 0;
@@ -908,7 +912,8 @@ void FAT_player_effect_retrig (u8 channel) {
        FAT_player[channel].volume,
        FAT_player[channel].sweep,
        FAT_player[channel].output,
-       FAT_player[channel].customVoice);
+       FAT_player[channel].customVoice,
+       FAT_player[channel].wavedutyOrPolynomialStep);
 
        FAT_player[channel].effectCounter = 0;
   }

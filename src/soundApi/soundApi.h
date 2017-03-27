@@ -38,7 +38,7 @@
 #define EFFECT_TRANSPOSE 13 // TS [OK]
 #define EFFECT_VIBRATO 14 // VB
 #define EFFECT_VOLUME 15 // VO [OK]
-#define EFFECT_WAVEFORM 16 // WA
+#define EFFECT_WAVEFORM 16 // WA [OK]
 
 #include "system/register.h"
 #include "kits/gbfs.h"

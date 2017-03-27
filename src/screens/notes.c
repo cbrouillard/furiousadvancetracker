@@ -95,9 +95,16 @@ void FAT_screenNotes_printEffect(u8 line) {
                                                 "%.2s%s\0", noteEffectName[effectName], outputText[effect->value]);
                 break;
             case EFFECT_WAVEFORM:
-              hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
+                hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
                                             "%.2s  \0", noteEffectName[effectName]);
-                FAT_screenInstrument_showWaveduty(effect->value, 96, 16);
+                if (FAT_screenSong_getCurrentSelectedColumn() >= INSTRUMENT_TYPE_SAMPLEA) {
+                  FAT_screenInstrument_showOscForm (effect->value,96, 16);
+                }else if (FAT_screenSong_getCurrentSelectedColumn() == INSTRUMENT_TYPE_NOISE) {
+                  hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X+2, line + SCREENNOTES_LINE_START_Y, 0,
+                                              "%.2x\0", effect->value);
+                } else {
+                  FAT_screenInstrument_showWaveduty(effect->value, 96, 16);
+                }
                 break;
             case EFFECT_CHORD:
             case EFFECT_CUSTOMVOICE:
@@ -218,6 +225,8 @@ void FAT_screenNotes_checkButtons() {
             if (FAT_popup_getSelectedIcon() != SCREEN_NOTES_ID) {
                 FAT_cursors_hideCursor3();
                 FAT_cursors_hideCursor2();
+                FAT_screenInstrument_hideAllWavedutySprite();
+                FAT_screenInstrument_hideAllOscSprite ();
                 FAT_switchToScreen(FAT_popup_getSelectedIcon(), SCREEN_NOTES_ID);
             }
         }
