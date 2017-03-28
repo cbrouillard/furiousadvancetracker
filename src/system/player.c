@@ -736,6 +736,7 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
     FAT_player_moveOrHideCursor(channel);
 
     if ((block->notes[actualNotesForChannel[channel]]).freq != NULL_VALUE){
+      FAT_player[channel].previousNote = FAT_player[channel].lastNote;
       FAT_player[channel].lastNote = & (block->notes[actualNotesForChannel[channel]]);
       FAT_player[channel].isRunningLongEffect = 0;
       FAT_player[channel].effectCounter = 0;
@@ -796,7 +797,7 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
                 break;
             case EFFECT_SLIDE:
                 FAT_player[channel].isRunningLongEffect = 1;
-                //FAT_player[channel].haveToPlay = 0;
+                FAT_player[channel].haveToPlay = 0;
                 break;
             case EFFECT_DELAY:
                 if (effect->value != 0) {
@@ -885,10 +886,13 @@ void FAT_player_effect_checkAndApplyForLongEffect (u8 channel){
 }
 
 void FAT_player_effect_slide (u8 channel){
-  //if (FAT_player[channel].effectCounter >= FAT_player[channel].lastEffect->value) {
-      snd_applyFrequencyOn (channel, FAT_player[channel].lastNote->freq
-          + ((FAT_player[channel].effectCounter * FAT_player[channel].lastEffect->value)));
+  //if (FAT_player[channel].effectCounter > FAT_player[channel].lastEffect->value) {
+      //snd_applyFrequencyOn (channel, FAT_player[channel].lastNote->freq
+      //    + ((FAT_player[channel].effectCounter * FAT_player[channel].lastEffect->value)));
 
+      FAT_player[channel].isRunningLongEffect =
+      snd_applySlideEffectOn (channel, FAT_player[channel].previousNote->freq, FAT_player[channel].lastNote->freq,
+                              FAT_player[channel].lastEffect->value, FAT_player[channel].effectCounter);
 
   //}
 

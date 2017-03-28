@@ -229,6 +229,42 @@ void snd_applyFrequencyOn (u8 channel, u8 sfreq){
 
 }
 
+u8 snd_applySlideEffectOn (u8 channel, u8 freq, u8 destFreq, u8 value, u8 counter) {
+  bool isLooping = 0;
+  u16 realFreq = freqs[freq];
+  u8 continueSlide = 1;
+
+  if (destFreq > freq) {
+      realFreq = realFreq + (snd_sin_lut[counter  * value] * value);
+      if (realFreq >= freqs[destFreq]) {
+          continueSlide = 0;
+          realFreq = freqs[destFreq];
+      }
+  } else {
+      realFreq = realFreq - (snd_sin_lut[counter * value] * value);
+      if (realFreq <= freqs[destFreq]) {
+          continueSlide = 0;
+          realFreq = freqs[destFreq];
+      }
+  }
+
+  switch (channel) {
+    case 0:
+      isLooping = (REG_SOUND1CNT_X & 0x4000) >> 14;
+      REG_SOUND1CNT_X = (REG_SOUND1CNT_X & 0x7800) + realFreq;
+      if (!isLooping){ // Continuous = 0
+        // Frequency can always be changed without resetting the sound.
+        // However, when in continuous mode, alway set the sound lenght to zero after changing the frequency.
+        // Otherwise, the sound may stop.
+        REG_SOUND1CNT_H = (REG_SOUND1CNT_H & 0xFFC0);
+      }
+      break;
+  }
+
+  return continueSlide;
+
+}
+
 void snd_playSoundOnChannel2(u16 volume,
         u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
         u16 loopmode, u8 output, u8 sfreq, u8 transpose) {

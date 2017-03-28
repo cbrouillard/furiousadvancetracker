@@ -89,6 +89,8 @@ void snd_playSoundOnChannel1(
 
 void snd_applyFrequencyOn (u8 channel, u8 sfreq);
 
+u8 snd_applySlideEffectOn (u8 channel, u8 freq, u8 destFreq, u8 value, u8 counter);
+
 /**
  * \brief Joue un son sur le channel 1.
  *

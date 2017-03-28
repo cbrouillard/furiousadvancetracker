@@ -453,10 +453,10 @@ int main()
     fprintf(fp, "#define LUT_GENERIC_SIZE %d\n", 256);
     fprintf(fp, "#endif\n\n");
 
-    fprintf(fp, "const s8 snd_sin_lut[LUT_GENERIC_SIZE] = {\n");
+    fprintf(fp, "const s16 snd_sin_lut[LUT_GENERIC_SIZE] = {\n");
     int i;
     for (i = 0; i < 256; ++i) {
-        myLut[i] = (float) MAX_AMPLITUDE * sinf(2.0f * M_PI * (float)i / 256);
+        myLut[i] = (float) 128 * sinf(2.0f * M_PI * (float)i / 256);
         if(i%8 == 0) {
             fputs("\n\t", fp);
         }
