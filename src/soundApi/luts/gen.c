@@ -65,7 +65,7 @@ void generate_sinLuts (){
             bufferOsc |= val;
             phase += bufferFreq;
             if (phase > 2*M_PI){
-                phase = phase - 2*M_PI;
+                phase = 0;//phase - 2*M_PI;
             }
             bufferOsc &= 0x000000ff;
 
@@ -73,7 +73,7 @@ void generate_sinLuts (){
             bufferOsc |= (val << 8);
             phase += bufferFreq;
             if (phase > 2*M_PI){
-                phase = phase - 2*M_PI;
+                phase = 0;//phase - 2*M_PI;
             }
             bufferOsc &= 0x0000ffff;
 
@@ -81,7 +81,7 @@ void generate_sinLuts (){
             bufferOsc |= (val << 16);
             phase += bufferFreq;
             if (phase > 2*M_PI){
-                phase = phase - 2*M_PI;
+                phase = 0;//phase - 2*M_PI;
             }
             bufferOsc &= 0x00ffffff;
 
@@ -89,7 +89,7 @@ void generate_sinLuts (){
             bufferOsc |= (val << 24);
             phase += bufferFreq;
             if (phase > 2*M_PI){
-                phase = phase - 2*M_PI;
+                phase = 0;//phase - 2*M_PI;
             }
 
             if(ii%8 == 0) {

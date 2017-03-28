@@ -102,6 +102,9 @@ void FAT_screenNotes_printEffect(u8 line) {
                 }else if (FAT_screenSong_getCurrentSelectedColumn() == INSTRUMENT_TYPE_NOISE) {
                   hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X+2, line + SCREENNOTES_LINE_START_Y, 0,
                                               "%.2x\0", effect->value);
+                } else if (FAT_screenSong_getCurrentSelectedColumn() == INSTRUMENT_TYPE_WAVE) {
+                  hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X+2, line + SCREENNOTES_LINE_START_Y, 0,
+                                              "--\0");
                 } else {
                   FAT_screenInstrument_showWaveduty(effect->value, 96, 16);
                 }
