@@ -749,7 +749,11 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
     FAT_player[channel].sweep = NULL_VALUE;
     FAT_player[channel].output = NULL_VALUE;
     FAT_player[channel].customVoice = NULL_VALUE;
+<<<<<<< HEAD
+
+=======
     FAT_player[channel].transpose = 0;
+>>>>>>> master
     if (effect){
         FAT_player[channel].lastEffect = effect;
         FAT_player[channel].isRunningLongEffect = 0;
