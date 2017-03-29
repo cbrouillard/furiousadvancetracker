@@ -450,14 +450,16 @@ int main()
     fprintf(fp, "#define _SOUND_API_SINLUT_\n\n");
 
     fprintf(fp, "#ifndef LUT_GENERIC_SIZE\n");
-    fprintf(fp, "#define LUT_GENERIC_SIZE %d\n", 256);
+    fprintf(fp, "#define LUT_GENERIC_SIZE %d\n", 512);
     fprintf(fp, "#endif\n\n");
 
+    fprintf(fp, "//\n// Sine lut; %d entries, %d fixeds\n//\n\n",512, 12);
     fprintf(fp, "const s8 snd_sin_lut[LUT_GENERIC_SIZE] = {\n");
     unsigned short hw;
     int i;
-    for (i = 0; i < 256; ++i) {
-        hw = (float) MAX_AMPLITUDE * sinf(2.0f * M_PI * (float)i / 256);
+    for (i = 0; i < 512; ++i) {
+        //hw = (float) MAX_AMPLITUDE * sinf(2.0f * M_PI * (float)i / 256);
+        hw =  (unsigned short)(sin(i*2*M_PI/512)*(1<<12));
         if(i%8 == 0) {
             fputs("\n\t", fp);
         }
