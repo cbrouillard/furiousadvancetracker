@@ -454,17 +454,20 @@ int main()
     fprintf(fp, "#endif\n\n");
 
     fprintf(fp, "const s8 snd_sin_lut[LUT_GENERIC_SIZE] = {\n");
+    unsigned short hw;
     int i;
     for (i = 0; i < 256; ++i) {
-        myLut[i] = (float) MAX_AMPLITUDE * sinf(2.0f * M_PI * (float)i / 256);
+        hw = (float) MAX_AMPLITUDE * sinf(2.0f * M_PI * (float)i / 256);
         if(i%8 == 0) {
             fputs("\n\t", fp);
         }
 
-        fprintf(fp, "%d, ", (int) lround(myLut[i]));
+        //fprintf(fp, "%d, ", (int) lround(myLut[i]));
+        fprintf(fp, "0x%04X, ",hw);
 
     }
     fputs("\n};\n", fp);
+    fprintf(fp, "\nint lu_sin(u32 theta){return snd_sin_lut[(theta>>7)&0x1FF];}\n");
     fprintf(fp, "#endif\n");
     fclose(fp);
 
