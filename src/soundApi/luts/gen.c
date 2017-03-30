@@ -454,7 +454,7 @@ int main()
     fprintf(fp, "#endif\n\n");
 
     fprintf(fp, "//\n// Sine lut; %d entries, %d fixeds\n//\n\n",512, 12);
-    fprintf(fp, "const s8 snd_sin_lut[LUT_GENERIC_SIZE] = {\n");
+    fprintf(fp, "const u16 snd_sin_lut[LUT_GENERIC_SIZE] = {\n");
     unsigned short hw;
     int i;
     for (i = 0; i < 512; ++i) {
@@ -465,7 +465,8 @@ int main()
         }
 
         //fprintf(fp, "%d, ", (int) lround(myLut[i]));
-        fprintf(fp, "0x%04X, ",hw);
+        //fprintf(fp, "0x%04X, ",hw);
+        fprintf(fp, "%d, ",hw);
 
     }
     fputs("\n};\n", fp);

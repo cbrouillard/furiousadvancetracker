@@ -30,7 +30,7 @@
 #define EFFECT_KILL 5 // KL [OK]
 #define EFFECT_OUTPUT 6 // OU [OK]
 #define EFFECT_RETRIG 7 // RT [OK]
-#define EFFECT_SLIDE 8 // SL
+#define EFFECT_SLIDE 8 // SL [OK, a tester, valeurs bizarres]
 #define EFFECT_SAMPLERATE 9 // SR [OK]
 #define EFFECT_SWEEP 10 // SW [OK]
 #define EFFECT_TABLE 11 // TA
@@ -88,6 +88,8 @@ void snd_playSoundOnChannel1(
         u16 loopmode, u8 output, u8 sfreq, u8 transpose);
 
 void snd_applyFrequencyOn (u8 channel, u8 sfreq);
+
+u8 snd_applySlideEffectOn (u8 channel, u8 freq, u8 destFreq, u8 value, u8 counter);
 
 /**
  * \brief Joue un son sur le channel 1.

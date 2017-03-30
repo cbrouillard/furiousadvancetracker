@@ -19,13 +19,14 @@
 
 #include "../headers/fat.h"
 
-#define INITIAL_TICKCOUNTER (60000 / 100) / 32
+#define INITIAL_TICKCOUNTER 12
 #define INITIAL_TEMPOREACH(t) (60000 / t) / 4
 
 void FAT_player_effect_chord (u8 channel);
 void FAT_player_effect_kill (u8 channel);
 void FAT_player_effect_delay (u8 channel);
 void FAT_player_effect_retrig (u8 channel);
+void FAT_player_effect_slide (u8 channel);
 void FAT_player_effect_checkAndApplyForLongEffect (u8 channel);
 
 void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* block);
@@ -737,6 +738,7 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
     FAT_player_moveOrHideCursor(channel);
 
     if ((block->notes[actualNotesForChannel[channel]]).freq != NULL_VALUE){
+      FAT_player[channel].previousNote = FAT_player[channel].lastNote;
       FAT_player[channel].lastNote = & (block->notes[actualNotesForChannel[channel]]);
       FAT_player[channel].isRunningLongEffect = 0;
       FAT_player[channel].effectCounter = 0;
@@ -795,6 +797,10 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
             case EFFECT_RETRIG:
                 FAT_player[channel].isRunningLongEffect = 1;
                 break;
+            case EFFECT_SLIDE:
+                FAT_player[channel].isRunningLongEffect = 1;
+                FAT_player[channel].haveToPlay = 0;
+                break;
             case EFFECT_DELAY:
                 if (effect->value != 0) {
                     FAT_player[channel].isRunningLongEffect = 1;
@@ -817,7 +823,7 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
                 FAT_tracker.tempo = effect->value;
                 break;
             case EFFECT_CUSTOMVOICE:
-                if (channel == 2){ // wave channel
+                if (channel == 2){ // wave channel only
                     FAT_player[channel].customVoice = effect->value;
                 }
                 break;
@@ -882,8 +888,24 @@ void FAT_player_effect_checkAndApplyForLongEffect (u8 channel){
           case EFFECT_RETRIG:
             FAT_player_effect_retrig (channel);
             break;
+          case EFFECT_SLIDE:
+            FAT_player_effect_slide (channel);
         }
     }
+}
+
+void FAT_player_effect_slide (u8 channel){
+  //if (FAT_player[channel].effectCounter > FAT_player[channel].lastEffect->value) {
+      //snd_applyFrequencyOn (channel, FAT_player[channel].lastNote->freq
+      //    + ((FAT_player[channel].effectCounter * FAT_player[channel].lastEffect->value)));
+
+      FAT_player[channel].isRunningLongEffect =
+      snd_applySlideEffectOn (channel, FAT_player[channel].previousNote->freq, FAT_player[channel].lastNote->freq,
+                              FAT_player[channel].lastEffect->value, FAT_player[channel].effectCounter);
+
+  //}
+
+  FAT_player[channel].effectCounter ++;
 }
 
 void FAT_player_effect_delay (u8 channel) {

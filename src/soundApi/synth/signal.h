@@ -31,14 +31,14 @@ u32 snd_modulation_synthFM_n1 (u32 data, u32 amp, u32 f, u32 t, u32 param, u32 p
             + amp
             * snd_sin_lut [
                 (LUT_GENERIC_SIZE * f) // LUT_SIZE = 2PI
-                * ( 1 + snd_sin_lut[ t * param ] / 1000 )
+                //* ( 1 + snd_sin_lut[ t * param ] / 1000 )
                 * t
                 + phi
             ] ;
 }
 
 u32 snd_modulation_synthAM (u32 data, u32 amp, u32 f, u32 t, u32 param, u32 phi){
-    return data * (1 - amp * (snd_sin_lut[param * t]));
+    return data; //* (1 - amp * (snd_sin_lut[param * t]));
 }
 
 #endif
