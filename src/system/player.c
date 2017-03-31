@@ -27,6 +27,7 @@ void FAT_player_effect_kill (u8 channel);
 void FAT_player_effect_delay (u8 channel);
 void FAT_player_effect_retrig (u8 channel);
 void FAT_player_effect_slide (u8 channel);
+void FAT_player_effect_vibrato (u8 channel);
 void FAT_player_effect_checkAndApplyForLongEffect (u8 channel);
 
 void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* block);
@@ -795,13 +796,11 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
                 break;
             case EFFECT_CHORD:
             case EFFECT_RETRIG:
+            case EFFECT_VIBRATO:
                 FAT_player[channel].isRunningLongEffect = 1;
-                break;
-            case EFFECT_SLIDE:
-                FAT_player[channel].isRunningLongEffect = 1;
-                FAT_player[channel].haveToPlay = 0;
                 break;
             case EFFECT_DELAY:
+            case EFFECT_SLIDE:
                 if (effect->value != 0) {
                     FAT_player[channel].isRunningLongEffect = 1;
                     FAT_player[channel].haveToPlay = 0;
@@ -890,6 +889,10 @@ void FAT_player_effect_checkAndApplyForLongEffect (u8 channel){
             break;
           case EFFECT_SLIDE:
             FAT_player_effect_slide (channel);
+            break;
+          case EFFECT_VIBRATO:
+            FAT_player_effect_vibrato (channel);
+            break;
         }
     }
 }
@@ -905,6 +908,12 @@ void FAT_player_effect_slide (u8 channel){
 
   //}
 
+  FAT_player[channel].effectCounter ++;
+}
+
+void FAT_player_effect_vibrato (u8 channel) {
+
+  snd_applyVibratoEffectOn (channel, FAT_player[channel].lastNote->freq, FAT_player[channel].lastEffect->value, FAT_player[channel].effectCounter);
   FAT_player[channel].effectCounter ++;
 }
 
