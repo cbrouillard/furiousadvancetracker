@@ -98,6 +98,11 @@ release: clear gfx all
 run: release
 	vba $(PROGNAME).$(EXT)
 
+test: release
+	vba $(PROGNAME).$(EXT) &
+	sleep 1
+	test/01firstTest.sh
+
 manual: makefile
 	manual/buildPDF.sh
 
