@@ -22,15 +22,21 @@ chmod +x gcc-arm/arm-thumb-elf/bin/*
 echo "Configuring home"
 echo "export HAMDIR=\"~/GBA/ham\"" >> ~/.bashrc
 source ~/.bashrc
+echo "Done !"
 
 echo "Export library (sudo ldconfig)"
 sudo mv ~/GBA/libstdc++-libc6.1-1.so.2 /usr/lib/
 sudo ldconfig
+echo "Done !"
 
 echo "Cloning source code"
 git clone https://github.com/cbrouillard/furiousadvancetracker.git
-
 echo "Done !"
-echo "You now have to install VisualBoyAdvance, wine and make tools then :"
-echo "cd ~/GBA/furiousadvancetracker"
+
+echo -e "\nYou now have to install VisualBoyAdvance, wine and make tools :"
+echo "sudo apt-get install wine make"
 echo "make run"
+
+echo -e "\nDo not forget you have to install xdotool and xmacro to execute tests"
+echo "sudo apt-get install xdotool xmacro"
+echo "make test"

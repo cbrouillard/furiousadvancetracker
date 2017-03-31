@@ -65,3 +65,6 @@ KeyStrRelease Return"  | xmacroplay -d 100
 sleep 4
 echo "KeyStrPress Return
 KeyStrRelease Return"  | xmacroplay -d 100
+
+sleep 1
+xdotool windowkill $WID
