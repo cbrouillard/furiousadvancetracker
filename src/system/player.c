@@ -912,9 +912,8 @@ void FAT_player_effect_slide (u8 channel){
 }
 
 void FAT_player_effect_vibrato (u8 channel) {
-
-  snd_applyVibratoEffectOn (channel, FAT_player[channel].lastNote->freq, FAT_player[channel].lastEffect->value, FAT_player[channel].effectCounter);
-  FAT_player[channel].effectCounter ++;
+    snd_applyVibratoEffectOn (channel, FAT_player[channel].lastNote->freq, FAT_player[channel].lastEffect->value, FAT_player[channel].effectCounter);
+    FAT_player[channel].effectCounter ++;
 }
 
 void FAT_player_effect_delay (u8 channel) {
@@ -963,12 +962,12 @@ void FAT_player_effect_kill (u8 channel) {
 void FAT_player_effect_chord (u8 channel){
   if (FAT_player[channel].effectCounter > 2){
     FAT_player[channel].effectCounter = 0;
-    snd_applyFrequencyOn (channel, FAT_player[channel].lastNote->freq);
+    snd_applyFrequencyOn (channel, FAT_player[channel].lastNote->freq + FAT_player[channel].transpose + FAT_tracker.transpose);
   } else {
     if (FAT_player[channel].effectCounter == 1) {
-        snd_applyFrequencyOn (channel, FAT_player[channel].lastNote->freq + ((FAT_player[channel].lastEffect->value & 0xf0) >> 4));
+        snd_applyFrequencyOn (channel, FAT_player[channel].lastNote->freq + ((FAT_player[channel].lastEffect->value & 0xf0) >> 4) + FAT_player[channel].transpose + FAT_tracker.transpose);
     } else {
-        snd_applyFrequencyOn (channel, FAT_player[channel].lastNote->freq + (FAT_player[channel].lastEffect->value & 0x0f));
+        snd_applyFrequencyOn (channel, FAT_player[channel].lastNote->freq + (FAT_player[channel].lastEffect->value & 0x0f) + FAT_player[channel].transpose + FAT_tracker.transpose);
     }
   }
   FAT_player[channel].effectCounter ++;

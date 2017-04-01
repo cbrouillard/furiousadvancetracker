@@ -465,8 +465,8 @@ int main()
         }
 
         //fprintf(fp, "%d, ", (int) lround(myLut[i]));
-        //fprintf(fp, "0x%04X, ",hw);
-        fprintf(fp, "%d, ",hw);
+        fprintf(fp, "0x%04X, ",hw);
+        //fprintf(fp, "%d, ",hw);
 
     }
     fputs("\n};\n", fp);

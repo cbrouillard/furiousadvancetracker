@@ -276,7 +276,7 @@ void snd_applyVibratoEffectOn (u8 channel, u8 baseFreq, u8 value, u8 counter){
   bool isLooping = 0;
   u16 realFreq = freqs[baseFreq];
 
-  realFreq = realFreq + lu_sin(counter * value);
+  realFreq +=  1 * lu_sin ( ((int)(2 * 3.14 * realFreq + 2 * lu_sin(2 * 3.14 * value * counter))) % 512) ;
 
   switch (channel) {
     case 0:
