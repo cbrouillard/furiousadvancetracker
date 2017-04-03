@@ -99,9 +99,9 @@ run: release
 	vba $(PROGNAME).$(EXT)
 
 test: release
-	vba $(PROGNAME).$(EXT) &
-	sleep 1
-	test/01firstTest.sh
+	chmod +x test/*.sh
+	test/01firstTest.sh $(PROGNAME).$(EXT)
+	test/02chordeffect.sh $(PROGNAME).$(EXT)
 
 manual: makefile
 	manual/buildPDF.sh

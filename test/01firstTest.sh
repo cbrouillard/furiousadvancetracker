@@ -1,4 +1,7 @@
 #!/bin/bash
+vba $1&
+sleep 1
+
 WID=`xdotool search --name "VisualBoyAdvance" | head -n 1`
 
 xdotool windowfocus $WID
@@ -66,5 +69,4 @@ sleep 4
 echo "KeyStrPress Return
 KeyStrRelease Return"  | xmacroplay -d 100
 
-sleep 1
-xdotool windowkill $WID
+killall vba
