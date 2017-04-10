@@ -26,19 +26,22 @@
 #define EFFECT_CUSTOMVOICE 1 // CV [OK]
 #define EFFECT_DELAY 2 // DL [OK]
 #define EFFECT_ENVELOPE 3 // EN
-#define EFFECT_HOP 4 // HO [OK, TO TEST]
-#define EFFECT_KILL 5 // KL [OK]
-#define EFFECT_OUTPUT 6 // OU [OK]
-#define EFFECT_RETRIG 7 // RT [OK]
-#define EFFECT_SLIDE 8 // SL [OK, a tester, valeurs bizarres]
-#define EFFECT_SAMPLERATE 9 // SR [OK]
-#define EFFECT_SWEEP 10 // SW [OK]
-#define EFFECT_TABLE 11 // TA
-#define EFFECT_TEMPO 12 // TM [OK]
-#define EFFECT_TRANSPOSE 13 // TS [OK]
-#define EFFECT_VIBRATO 14 // VB
-#define EFFECT_VOLUME 15 // VO [OK]
-#define EFFECT_WAVEFORM 16 // WA [OK]
+#define EFFECT_FMSYNTH 4  // FM
+#define EFFECT_HOP 5 // HO [OK, TO TEST]
+#define EFFECT_KILL 6 // KL [OK]
+#define EFFECT_OUTPUT 7 // OU [OK]
+#define EFFECT_PITCH 8 // PI
+#define EFFECT_RETRIG 9 // RT [OK]
+#define EFFECT_SLIDE 10 // SL [OK, a tester, valeurs bizarres]
+#define EFFECT_SAMPLERATE 11 // SR [OK]
+#define EFFECT_SWEEP 12 // SW [OK]
+#define EFFECT_TABLE 13 // TA
+#define EFFECT_TEMPO 14 // TM [OK]
+#define EFFECT_TRANSPOSE 15 // TS [OK]
+#define EFFECT_TREMOLO 16 // TR
+#define EFFECT_VIBRATO 17 // VB
+#define EFFECT_VOLUME 18 // VO [OK]
+#define EFFECT_WAVEFORM 19 // WA [OK]
 
 #include "system/register.h"
 #include "kits/gbfs.h"

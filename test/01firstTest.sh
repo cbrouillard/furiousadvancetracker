@@ -1,6 +1,6 @@
 #!/bin/bash
 vba $1&
-sleep 1
+sleep 2
 
 WID=`xdotool search --name "VisualBoyAdvance" | head -n 1`
 
