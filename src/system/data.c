@@ -22,7 +22,7 @@
 /** \brief Tableau constant contenant toutes les notes sous formes de chaînes de caractères. */
 const char* noteName[NB_NOTE] = {"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ", "G#", "A ", "A#", "B "};
 /** \brief Tableau constant contenant tous les noms d'effets disponibles pour les notes. */
-const char* noteEffectName[NB_NOTE_EFFECT] = {"CH", "CV", "DL", "EN", "HO", "KL", "OU", "RT", "SL", "SR", "SW", "TA", "TP", "TS", "VB", "VO", "WA"};
+const char* noteEffectName[NB_NOTE_EFFECT] = {"CH", "CV", "DL", "EN", "FM", "HO", "KL", "OU", "PI", "RT", "SL", "SR", "SW", "TA", "TP", "TS", "TR", "VB", "VO", "WA"};
 /** \brief Mapping entre le nom de l'effet et son numéro dans la soundApi. Si le mapping
  * a pour valeur NULL_VALUE, alors l'effet n'est pas géré par la soundAPI. */
 const u8 noteEffectNum[NB_NOTE_EFFECT] = {EFFECT_CHORD, EFFECT_CUSTOMVOICE, EFFECT_DELAY, EFFECT_ENVELOPE, EFFECT_HOP, EFFECT_KILL, EFFECT_OUTPUT, EFFECT_RETRIG, EFFECT_SLIDE, EFFECT_SAMPLERATE, EFFECT_SWEEP, EFFECT_TABLE, EFFECT_TEMPO, EFFECT_TRANSPOSE, EFFECT_VIBRATO, EFFECT_VOLUME, EFFECT_WAVEFORM};
