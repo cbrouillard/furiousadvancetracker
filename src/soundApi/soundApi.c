@@ -278,6 +278,17 @@ void snd_applyVibratoEffectOn (u8 channel, u8 baseFreq, u8 value, int time){
   snd_applyRealFrequencyOn(channel, realFreq);
 }
 
+void snd_applyTremoloEffectOn (u8 channel, u8 baseVolume, u8 value, int time){
+
+  u16 calcul = baseVolume + ( lu_sin ( (value) * time ) / ((float) (1 << 12 ) ));
+
+  switch (channel) {
+    case 0:
+      REG_SOUND1CNT_H = (REG_SOUND1CNT_H & 0x0fff) | ( calcul << 12);
+      break;
+  }
+}
+
 void snd_playSoundOnChannel2(u16 volume,
         u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
         u16 loopmode, u8 output, u8 sfreq, u8 transpose) {

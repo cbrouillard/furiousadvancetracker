@@ -990,18 +990,6 @@ void FAT_data_note_changeEffectValue(u8 block, u8 line, s8 addedValue) {
             // 4 valeurs seulement
             FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, 3);
             break;
-        case EFFECT_SWEEP:
-        case EFFECT_CHORD:
-        case EFFECT_SAMPLERATE:
-        case EFFECT_TEMPO:
-        case EFFECT_KILL:
-        case EFFECT_DELAY:
-        case EFFECT_RETRIG:
-        case EFFECT_TRANSPOSE:
-        case EFFECT_SLIDE:
-        case EFFECT_VIBRATO:
-            FAT_data_note_changeEffectValue_generic (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue);
-            break;
         case EFFECT_VOLUME:
             // de 0 à F, FF = INST DEFINED.
             FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, 0xf);
@@ -1010,6 +998,10 @@ void FAT_data_note_changeEffectValue(u8 block, u8 line, s8 addedValue) {
             // de 0 à F.
             FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, 0xf);
             break;
+        default:
+            FAT_data_note_changeEffectValue_generic (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue);
+            break;
+
     }
 }
 

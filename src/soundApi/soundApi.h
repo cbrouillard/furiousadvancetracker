@@ -32,7 +32,7 @@
 #define EFFECT_OUTPUT 7 // OU [OK]
 #define EFFECT_PITCH 8 // PI
 #define EFFECT_RETRIG 9 // RT [OK]
-#define EFFECT_SLIDE 10 // SL [OK, a refacto, cf vibrato]
+#define EFFECT_SLIDE 10 // SL [OK, a tester]
 #define EFFECT_SAMPLERATE 11 // SR [OK]
 #define EFFECT_SWEEP 12 // SW [OK]
 #define EFFECT_TABLE 13 // TA
@@ -104,6 +104,11 @@ u8 snd_applySlideEffectOn (u8 channel, u8 freq, u8 destFreq, u8 value, u8 counte
 * \brief Gère un effet de vibrato en fonction du temps.
 */
 void snd_applyVibratoEffectOn (u8 channel, u8 baseFreq, u8 value, int time);
+
+/**
+* \brief Gère un effet de vibrato en fonction du temps.
+*/
+void snd_applyTremoloEffectOn (u8 channel, u8 baseVolume, u8 value, int time);
 
 float test_sin (int t);
 

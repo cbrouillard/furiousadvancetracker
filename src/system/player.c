@@ -28,6 +28,7 @@ void FAT_player_effect_delay (u8 channel);
 void FAT_player_effect_retrig (u8 channel);
 void FAT_player_effect_slide (u8 channel);
 void FAT_player_effect_vibrato (u8 channel);
+void FAT_player_effect_tremolo(u8 channel);
 void FAT_player_effect_checkAndApplyForLongEffect (u8 channel);
 
 void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* block);
@@ -800,6 +801,7 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
             case EFFECT_CHORD:
             case EFFECT_RETRIG:
             case EFFECT_VIBRATO:
+            case EFFECT_TREMOLO:
                 FAT_player[channel].isRunningLongEffect = 1;
                 break;
             case EFFECT_DELAY:
@@ -896,6 +898,9 @@ void FAT_player_effect_checkAndApplyForLongEffect (u8 channel){
           case EFFECT_VIBRATO:
             FAT_player_effect_vibrato (channel);
             break;
+          case EFFECT_TREMOLO:
+            FAT_player_effect_tremolo(channel);
+            break;
         }
     }
 }
@@ -914,11 +919,15 @@ void FAT_player_effect_slide (u8 channel){
   FAT_player[channel].effectCounter ++;
 }
 
+void FAT_player_effect_tremolo(u8 channel) {
+  snd_applyTremoloEffectOn (channel, FAT_player[channel].volume, FAT_player[channel].lastEffect->value, FAT_player[channel].effectCounter);
+  FAT_player[channel].effectCounter ++;
+  //hel_BgTextPrintF(TEXT_LAYER, 24, 13, 0, "%d", FAT_player[channel].volume + ( test_sin (0xFFFF * (FAT_player[channel].lastEffect->value * 10) * time ))) ;
+}
+
 void FAT_player_effect_vibrato (u8 channel) {
     snd_applyVibratoEffectOn (channel, FAT_player[channel].lastNote->freq, FAT_player[channel].lastEffect->value, time);
     FAT_player[channel].effectCounter ++;
-
-    hel_BgTextPrintF(TEXT_LAYER, 20, 16, 0, "%d", test_sin(0xFFFF * FAT_player[channel].lastEffect->value * time));
 }
 
 void FAT_player_effect_delay (u8 channel) {
