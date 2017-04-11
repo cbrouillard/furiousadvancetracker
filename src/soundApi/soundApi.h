@@ -32,14 +32,14 @@
 #define EFFECT_OUTPUT 7 // OU [OK]
 #define EFFECT_PITCH 8 // PI
 #define EFFECT_RETRIG 9 // RT [OK]
-#define EFFECT_SLIDE 10 // SL [OK, a tester, valeurs bizarres]
+#define EFFECT_SLIDE 10 // SL [OK, a refacto, cf vibrato]
 #define EFFECT_SAMPLERATE 11 // SR [OK]
 #define EFFECT_SWEEP 12 // SW [OK]
 #define EFFECT_TABLE 13 // TA
 #define EFFECT_TEMPO 14 // TM [OK]
 #define EFFECT_TRANSPOSE 15 // TS [OK]
 #define EFFECT_TREMOLO 16 // TR
-#define EFFECT_VIBRATO 17 // VB
+#define EFFECT_VIBRATO 17 // VB [OK, a tester]
 #define EFFECT_VOLUME 18 // VO [OK]
 #define EFFECT_WAVEFORM 19 // WA [OK]
 
@@ -90,9 +90,19 @@ void snd_playSoundOnChannel1(
         u16 envdir, u16 envsteptime, u16 waveduty, u16 soundlength,
         u16 loopmode, u8 output, u8 sfreq, u8 transpose);
 
+/**
+* \brief Applique une nouvelle fréquence sur un channel donné, sans changer les autres parametres du son.
+*/
 void snd_applyFrequencyOn (u8 channel, u8 sfreq);
 
+/**
+* \brief Gère un effet de slide depuis freq vers destFreq en fonction du temps (counter).
+*/
 u8 snd_applySlideEffectOn (u8 channel, u8 freq, u8 destFreq, u8 value, u8 counter);
+
+/**
+* \brief Gère un effet de vibrato en fonction du temps.
+*/
 void snd_applyVibratoEffectOn (u8 channel, u8 baseFreq, u8 value, int time);
 
 float test_sin (int t);
