@@ -93,7 +93,9 @@ void snd_playSoundOnChannel1(
 void snd_applyFrequencyOn (u8 channel, u8 sfreq);
 
 u8 snd_applySlideEffectOn (u8 channel, u8 freq, u8 destFreq, u8 value, u8 counter);
-void snd_applyVibratoEffectOn (u8 channel, u8 baseFreq, u8 value, u8 counter);
+void snd_applyVibratoEffectOn (u8 channel, u8 baseFreq, u8 value, int time);
+
+float test_sin (int t);
 
 /**
  * \brief Joue un son sur le channel 1.

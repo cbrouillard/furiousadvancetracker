@@ -93,6 +93,8 @@ int FAT_player_debug_getTempoReach(){
 */
 volatile int tickCounter = INITIAL_TICKCOUNTER;
 
+volatile int time = 0;
+
 /**
  * /brief Pour savoir de quelle endroit l'utilisateur a lancé le son.
 */
@@ -466,6 +468,7 @@ void ATTR_FASTFUNC FAT_player_timerFunc() {
     if (tickCounter >= 0) {
       tickCounter--;
     }
+    time ++;
 }
 
 void FAT_player_progressInSong(u8 channel, sequence* seq){
@@ -912,8 +915,10 @@ void FAT_player_effect_slide (u8 channel){
 }
 
 void FAT_player_effect_vibrato (u8 channel) {
-    snd_applyVibratoEffectOn (channel, FAT_player[channel].lastNote->freq, FAT_player[channel].lastEffect->value, FAT_player[channel].effectCounter);
+    snd_applyVibratoEffectOn (channel, FAT_player[channel].lastNote->freq, FAT_player[channel].lastEffect->value, time);
     FAT_player[channel].effectCounter ++;
+
+    hel_BgTextPrintF(TEXT_LAYER, 20, 16, 0, "%d", test_sin(0xFFFF * FAT_player[channel].lastEffect->value * time));
 }
 
 void FAT_player_effect_delay (u8 channel) {

@@ -470,25 +470,9 @@ int main()
 
     }
     fputs("\n};\n", fp);
-    fprintf(fp, "\ns16 lu_sin(u32 theta){return snd_sin_lut[(theta>>7)&0x1FF];}\n\n\n");
+    fprintf(fp, "\nint lu_sin(u32 theta){\n\treturn snd_sin_lut[(theta>>7)&0x1FF];}\n\n");
+    fprintf(fp, "\nint lu_cos(u32 theta){\n\treturn snd_sin_lut[((theta>>7)+128)&0x1FF];}\n\n\n");
 
-
-    fprintf(fp, "//\n// Cosine lut; %d entries, %d fixeds\n//\n",512, 12);
-    fprintf(fp, "const s16 snd_cos_lut[LUT_GENERIC_SIZE] = {\n");
-    for (i = 0; i < 512; ++i) {
-        //hw = (float) MAX_AMPLITUDE * sinf(2.0f * M_PI * (float)i / 256);
-        hw =  (unsigned short)(cos(i*2*M_PI/512)*(1<<12));
-        if(i%8 == 0) {
-            fputs("\n\t", fp);
-        }
-
-        //fprintf(fp, "%d, ", (int) lround(myLut[i]));
-        //fprintf(fp, "0x%04X, ",hw);
-        fprintf(fp, "%d, ",hw);
-
-    }
-    fputs("\n};\n", fp);
-    fprintf(fp, "\ns16 lu_cos(u32 theta){return snd_cos_lut[(theta>>7)&0x1FF];}\n");
 
     fprintf(fp, "#endif\n");
     fclose(fp);

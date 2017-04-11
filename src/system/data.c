@@ -25,11 +25,11 @@ const char* noteName[NB_NOTE] = {"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ",
 const char* noteEffectName[NB_NOTE_EFFECT] = {"CH", "CV", "DL", "EN", "FM", "HO", "KL", "OU", "PI", "RT", "SL", "SR", "SW", "TA", "TP", "TS", "TR", "VB", "VO", "WA"};
 /** \brief Mapping entre le nom de l'effet et son numéro dans la soundApi. Si le mapping
  * a pour valeur NULL_VALUE, alors l'effet n'est pas géré par la soundAPI. */
-const u8 noteEffectNum[NB_NOTE_EFFECT] = {EFFECT_CHORD, EFFECT_CUSTOMVOICE, EFFECT_DELAY, EFFECT_ENVELOPE, EFFECT_HOP, EFFECT_KILL, EFFECT_OUTPUT, EFFECT_RETRIG, EFFECT_SLIDE, EFFECT_SAMPLERATE, EFFECT_SWEEP, EFFECT_TABLE, EFFECT_TEMPO, EFFECT_TRANSPOSE, EFFECT_VIBRATO, EFFECT_VOLUME, EFFECT_WAVEFORM};
+const u8 noteEffectNum[NB_NOTE_EFFECT] = {EFFECT_CHORD, EFFECT_CUSTOMVOICE, EFFECT_DELAY, EFFECT_ENVELOPE, EFFECT_FMSYNTH, EFFECT_HOP, EFFECT_KILL, EFFECT_OUTPUT, EFFECT_PITCH, EFFECT_RETRIG, EFFECT_SLIDE, EFFECT_SAMPLERATE, EFFECT_SWEEP, EFFECT_TABLE, EFFECT_TEMPO, EFFECT_TRANSPOSE, EFFECT_TREMOLO, EFFECT_VIBRATO, EFFECT_VOLUME, EFFECT_WAVEFORM};
 /** \brief Tableau constant contenant tous les noms d'effets disponibles pour les blocks. */
 const char* blockEffectName[NB_BLOCK_EFFECT] = {"K "};
 /** Nom en toute lettres des effets */
-const char* noteEffectHelp[NB_NOTE_EFFECT] = {"Chord      ", "Customvoice", "Delay      ", "Enveloppe  ", "Hop!       ", "Kill       ", "Output     ", "Retrig     ", "Slide      ", "Samplerate ", "Sweep      ", "Table      ", "Tempo      ", "Transpose  ", "Vibrato    ", "Volume     ", "Waveform   "};
+const char* noteEffectHelp[NB_NOTE_EFFECT] = {"Chord      ", "Customvoice", "Delay      ", "Enveloppe  ", "FM Synth    ", "Hop!       ", "Kill       ", "Output     ", "Pitch      ", "Retrig     ", "Slide      ", "Samplerate ", "Sweep      ", "Table      ", "Tempo      ", "Transpose  ", "Tremolo    ", "Vibrato    ", "Volume     ", "Waveform   "};
 
 /**
  * \brief Espace mémoire contenant le dernier effet écrit. Par défaut, l'effet est initialisé avec NULL_VALUE.

@@ -272,15 +272,20 @@ u8 snd_applySlideEffectOn (u8 channel, u8 freq, u8 destFreq, u8 value, u8 counte
 
 }
 
-void snd_applyVibratoEffectOn (u8 channel, u8 baseFreq, u8 value, u8 counter){
+float test_sin (int t){
+  return lu_sin(t) / ((float) (1 << 12 ));
+}
+
+void snd_applyVibratoEffectOn (u8 channel, u8 baseFreq, u8 value, int time){
   bool isLooping = 0;
   u16 realFreq = freqs[baseFreq];
 
-  // A cos(2 π fc t + β cos(2 π fm t ))
-  // A = 1, fc = realFreq (Hz), β = 2 and fm = effectValue (Hz).
-  int test = (2 * 3.14 * realFreq * counter + 2 * lu_sin( ((int)(2 * 3.14 * value * counter)) % 512) ) ;
-
-  realFreq +=  1 * lu_sin ( test % 512 );
+  // ft = f1 + vibWidth * sin (2π * vibRate * t)
+  //f1 is the frequency of the note being played, also known as the fundamental frequency
+  //These parameters are used:
+  //vibrato rate - This will use a typical value of 8 Hz
+  //vibrato width - 1% of the fundamental frequency, f1, is used.
+  realFreq = realFreq + 100 *  ( lu_sin (0xFFFF * (value * 10) * time ) / ((float) (1 << 12 ) ));
 
   switch (channel) {
     case 0:
