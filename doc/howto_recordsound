@@ -1,0 +1,9 @@
+# UBUNTU
+install pavucontrol
+install gnome-sound-recorder
+
+open pavucontrol
+open gnome-sound-recorder
+
+start record
+in pavucontrol, "recording tab", choose the right "in"
