@@ -290,7 +290,8 @@ u8 snd_applyTremoloEffectOn (u8 channel, u8 baseVolume, u8 value, int time){
 
   switch (channel) {
     case 0:
-      REG_SOUND1CNT_H = (REG_SOUND1CNT_H & 0x0fff)|(calcul << 12);
+      REG_SOUND1CNT_H = calcul | (REG_SOUND1CNT_H & 0x0fff);
+      REG_SOUND1CNT_X |= 0x8000;
       break;
   }
 
