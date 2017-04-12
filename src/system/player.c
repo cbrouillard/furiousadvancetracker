@@ -920,9 +920,11 @@ void FAT_player_effect_slide (u8 channel){
 }
 
 void FAT_player_effect_tremolo(u8 channel) {
-  snd_applyTremoloEffectOn (channel, FAT_player[channel].volume, FAT_player[channel].lastEffect->value, time);
+  FAT_player[channel].volume = snd_applyTremoloEffectOn (channel, FAT_player[channel].volume, FAT_player[channel].lastEffect->value, time);
   //FAT_player[channel].effectCounter ++;
-  //hel_BgTextPrintF(TEXT_LAYER, 24, 13, 0, "%d", FAT_player[channel].volume + ( test_sin (0xFFFF * (FAT_player[channel].lastEffect->value * 10) * time ))) ;
+  hel_BgTextPrintF(TEXT_LAYER, 20, 14, 0, "%x",  REG_SOUND1CNT_H) ;
+  hel_BgTextPrintF(TEXT_LAYER, 20, 15, 0, "%x",  FAT_player[channel].volume) ;
+
 }
 
 void FAT_player_effect_vibrato (u8 channel) {

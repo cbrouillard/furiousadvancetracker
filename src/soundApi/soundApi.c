@@ -265,6 +265,10 @@ float test_sin (int t){
   return lu_sin(t) / ((float) (1 << 12 ));
 }
 
+float snd_sinf (int t){
+  return lu_sin(t) / ((float) (1 << 12 ));
+}
+
 void snd_applyVibratoEffectOn (u8 channel, u8 baseFreq, u8 value, int time){
   u16 realFreq = freqs[baseFreq];
 
@@ -272,21 +276,25 @@ void snd_applyVibratoEffectOn (u8 channel, u8 baseFreq, u8 value, int time){
   //f1 is the frequency of the note being played, also known as the fundamental frequency
   //These parameters are used:
   //vibrato rate - This will use a typical value of 8 Hz
-  //vibrato width - 1% of the fundamental frequency, f1, is used.
+  //vibrato width - % of the fundamental frequency, f1, is used.
   realFreq = realFreq + 100 *  ( lu_sin (0xFFFF * (value * 10) * time ) / ((float) (1 << 12 ) ));
 
   snd_applyRealFrequencyOn(channel, realFreq);
 }
 
-void snd_applyTremoloEffectOn (u8 channel, u8 baseVolume, u8 value, int time){
+u8 snd_applyTremoloEffectOn (u8 channel, u8 baseVolume, u8 value, int time){
 
-  u16 calcul = baseVolume + ( lu_sin ( (value) * time ) / ((float) (1 << 12 ) ));
+  u16 calcul = baseVolume + ( snd_sinf(time * value) / 0xFFFF ); // ( lu_sin ( 0xFFFF * (value * 10) * time ) / ((float) (1 << 12 ) ));
+  calcul &= 0x000F;
+  calcul = calcul << 12;
 
   switch (channel) {
     case 0:
-      REG_SOUND1CNT_H = (REG_SOUND1CNT_H & 0x0fff) | ( calcul << 12);
+      REG_SOUND1CNT_H = (REG_SOUND1CNT_H & 0x0fff)|(calcul << 12);
       break;
   }
+
+  return calcul >> 12;
 }
 
 void snd_playSoundOnChannel2(u16 volume,

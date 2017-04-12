@@ -108,7 +108,7 @@ void snd_applyVibratoEffectOn (u8 channel, u8 baseFreq, u8 value, int time);
 /**
 * \brief Gère un effet de vibrato en fonction du temps.
 */
-void snd_applyTremoloEffectOn (u8 channel, u8 baseVolume, u8 value, int time);
+u8 snd_applyTremoloEffectOn (u8 channel, u8 baseVolume, u8 value, int time);
 
 float test_sin (int t);
 
