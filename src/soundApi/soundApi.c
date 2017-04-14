@@ -277,25 +277,24 @@ void snd_applyVibratoEffectOn (u8 channel, u8 baseFreq, u8 value, int time){
   //These parameters are used:
   //vibrato rate - This will use a typical value of 8 Hz
   //vibrato width - % of the fundamental frequency, f1, is used.
-  realFreq = realFreq + 100 *  ( lu_sin (0xFFFF * (value * 10) * time ) / ((float) (1 << 12 ) ));
+  realFreq = realFreq + 10 *  ( lu_sin (0xFFFF * (value * 10) * time ) / ((float) (1 << 12 ) ));
 
   snd_applyRealFrequencyOn(channel, realFreq);
 }
 
-u8 snd_applyTremoloEffectOn (u8 channel, u8 baseVolume, u8 value, int time){
+u8 snd_applyTremoloEffectOn (u8 channel, u8 baseVolume, u8 value, int time) {//, u16 envdirection, u16 envsteptime, u16 waveduty, u16 soundlength,){
 
   u16 calcul = baseVolume + ( snd_sinf(time * value) / 0xFFFF ); // ( lu_sin ( 0xFFFF * (value * 10) * time ) / ((float) (1 << 12 ) ));
   calcul &= 0x000F;
-  calcul = calcul << 12;
 
   switch (channel) {
     case 0:
-      REG_SOUND1CNT_H = calcul | (REG_SOUND1CNT_H & 0x0fff);
+      REG_SOUND1CNT_H = (calcul << 12); // | (envdirection << 11) | (envsteptime << 8) | (waveduty << 6) | soundlength;
       REG_SOUND1CNT_X |= 0x8000;
       break;
   }
 
-  return calcul >> 12;
+  return calcul;
 }
 
 void snd_playSoundOnChannel2(u16 volume,

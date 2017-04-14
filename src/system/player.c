@@ -369,6 +369,7 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
     }
 
     FAT_player_runTimer ();
+    time = 0;
 }
 
 void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
@@ -407,6 +408,7 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
     if (FAT_live_waitForOtherChannel[channel] == 0){
         FAT_player_moveOrHideCursor(channel);
         FAT_player_runTimer ();
+        time = 0;
     }
 }
 
@@ -434,6 +436,7 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
     FAT_player_isPlayingFrom = SCREEN_BLOCKS_ID;
 
     FAT_player_runTimer ();
+    time = 0;
 
 }
 
@@ -460,6 +463,7 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
     FAT_player_isPlayingFrom = SCREEN_NOTES_ID;
 
     FAT_player_runTimer ();
+    time = 0;
 }
 
 void ATTR_FASTFUNC FAT_player_timerFunc() {
