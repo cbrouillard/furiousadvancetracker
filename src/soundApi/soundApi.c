@@ -23,6 +23,7 @@ typedef unsigned int u32;
 
 #define NULL_VALUE 0xff
 
+// F(hz)=4194304/(32*(2048-register value))
 #define NB_FREQUENCES 72
 const u16 freqs[NB_FREQUENCES] = {
       44, 156,   262,  363,  457,  547,  631,  710,  786,  854,  923,  986,
