@@ -107,9 +107,11 @@ void FAT_screenNotes_printEffect(u8 line) {
                 }
                 break;
             default:
-                // cas générique
-                hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
-                                                "%.2s%.2x\0", noteEffectName[effectName], effect->value);
+                if (effectImplemented[effectName]) {
+                  // cas générique
+                  hel_BgTextPrintF(TEXT_LAYER, SCREENNOTES_EFFECT_LINE_X, line + SCREENNOTES_LINE_START_Y, 0,
+                                                  "%.2s%.2x\0", noteEffectName[effectName], effect->value);
+                }
                 break;
             }
             hel_BgTextPrintF(TEXT_LAYER, 18, 10, 0, "%s", noteEffectHelp[effectName]);
@@ -473,6 +475,16 @@ void FAT_screenNotes_pressOrHeldA() {
             if (hel_PadQuery()->Pressed.Left) {
                 FAT_data_note_changeEffectName(FAT_screenNotes_currentBlockId,
                         FAT_screenNotes_getCurrentSelectedLine(), -1);
+            }
+
+            if (hel_PadQuery()->Pressed.Up) {
+              FAT_data_note_changeEffectName(FAT_screenNotes_currentBlockId,
+                      FAT_screenNotes_getCurrentSelectedLine(), 3);
+            }
+
+            if (hel_PadQuery()->Pressed.Down) {
+              FAT_data_note_changeEffectName(FAT_screenNotes_currentBlockId,
+                      FAT_screenNotes_getCurrentSelectedLine(), -3);
             }
 
             break;

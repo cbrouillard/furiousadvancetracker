@@ -126,6 +126,8 @@ extern const char* noteEffectHelp[NB_NOTE_EFFECT];
 /** \brief Tableau constant contenant tous les noms d'effets disponibles pour les blocks. */
 extern const char* blockEffectName[NB_BLOCK_EFFECT];
 
+extern const bool effectImplemented [NB_NOTE_EFFECT];
+
 /**
  * \brief Nombre total de fréquences de notes.
  *

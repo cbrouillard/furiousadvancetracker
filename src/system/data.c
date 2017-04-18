@@ -31,6 +31,8 @@ const char* blockEffectName[NB_BLOCK_EFFECT] = {"K "};
 /** Nom en toute lettres des effets */
 const char* noteEffectHelp[NB_NOTE_EFFECT] = {"Chord      ", "Customvoice", "Delay      ", "Enveloppe  ", "FM Synth    ", "Hop!       ", "Kill       ", "Output     ", "Pitch      ", "Retrig     ", "Slide      ", "Samplerate ", "Sweep      ", "Table      ", "Tempo      ", "Transpose  ", "Tremolo    ", "Vibrato    ", "Volume     ", "Waveform   "};
 
+const bool effectImplemented [NB_NOTE_EFFECT] = {1,1,1,0,0,1,1,1,0,1,1,1,1,0,1,1,0,1,1,1};
+
 /**
  * \brief Espace mémoire contenant le dernier effet écrit. Par défaut, l'effet est initialisé avec NULL_VALUE.
  */
@@ -892,21 +894,21 @@ void FAT_data_note_changeInstrument(u8 currentChannel, u8 block, u8 noteLine, s8
 void FAT_data_note_filterEffectValue (effect* effect) {
     u8 effectName = (effect->name & 0xfe) >> 1;
     switch (effectName){
-        case EFFECT_KILL:
-            // 0xff max. On ne touche pas.
-            break;
+        case EFFECT_CUSTOMVOICE:
+          if (effect->value >= NB_MAX_CUSTOM_VOICE) {
+            effect->value = NB_MAX_CUSTOM_VOICE - 1;
+            FAT_data_lastEffectWritten.value = effect->value;
+          }
+          break;
         case EFFECT_OUTPUT:
+        case EFFECT_WAVEFORM:
             // 4 valeurs seulement. 3 est le max.
             if (effect->value > 3) {
                 effect->value = 3;
                 FAT_data_lastEffectWritten.value = effect->value;
             }
             break;
-        case EFFECT_SWEEP:
-        case EFFECT_CHORD:
         case EFFECT_HOP:
-            // 0xff max. On ne touche pas.
-            break;
         case EFFECT_VOLUME:
             // de 0 à F
             if (effect->value > 0xF) {
@@ -935,8 +937,12 @@ void FAT_data_note_changeEffectName(u8 block, u8 line, s8 addedValue) {
         FAT_tracker.allBlocks[block].notes[line].effect.name = (effectName << 1) | 1;
         FAT_data_lastEffectWritten.name = FAT_tracker.allBlocks[block].notes[line].effect.name;
 
-        // recalibrage de la valeur
-        FAT_data_note_filterEffectValue (&(FAT_tracker.allBlocks[block].notes[line].effect));
+        if (!effectImplemented[effectName]){
+            FAT_data_note_changeEffectName (block, line, 1);
+        } else {
+          // recalibrage de la valeur
+          FAT_data_note_filterEffectValue (&(FAT_tracker.allBlocks[block].notes[line].effect));
+        }
     }
 }
 
@@ -991,11 +997,8 @@ void FAT_data_note_changeEffectValue(u8 block, u8 line, s8 addedValue) {
             FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, 3);
             break;
         case EFFECT_VOLUME:
-            // de 0 à F, FF = INST DEFINED.
-            FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, 0xf);
-            break;
         case EFFECT_HOP:
-            // de 0 à F.
+            // de 0 à F
             FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, 0xf);
             break;
         default:

@@ -38,7 +38,7 @@
 #define EFFECT_TABLE 13 // TA
 #define EFFECT_TEMPO 14 // TM [OK]
 #define EFFECT_TRANSPOSE 15 // TS [OK]
-#define EFFECT_TREMOLO 16 // TR
+#define EFFECT_TREMOLO 16 // TR [NOPE]
 #define EFFECT_VIBRATO 17 // VB [OK, a tester]
 #define EFFECT_VOLUME 18 // VO [OK]
 #define EFFECT_WAVEFORM 19 // WA [OK]
