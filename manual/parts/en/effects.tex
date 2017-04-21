@@ -1,5 +1,4 @@
-\ColoredAnnotation{\FAT is not yet rich in effects of any kind for the moment: it will have to be content for the time.
-Several commands are in the program and will land in the following versions. Patience!}
+\ColoredAnnotation{\FAT is enriched with commands as it is designed. All are not yet present but it is only a matter of time! Patience :)}
 
 Here are the currently usable commands.
 
@@ -9,7 +8,24 @@ Here are the currently usable commands.
 
 Generates an arpeggio consisting of 3 notes. Ex: "C 4 CH3C" give "0,3,C,0,3,C, etc ..." arpeggio.
 
+\subsection{CV (Custom Voice)}
+
+\ColoredAnnotation{Works on WAVE channel only}
+
+Selects a custom wave to apply to the note.
+
+\subsection{DL (DeLay)}
+
+\ColoredAnnotation{Works on all channels}
+
+Play the note with a delay.
+
+\Annotation{\textcolor{red}{
+Caution, playing another effect or another note before the actual duration of the delay cancels it. \FAT is not able to parallelize the management of the delay with respect to the other events constituted by the notes or the commands.}}
+
 \subsection{HO (Hop!)}
+
+\ColoredAnnotation{Works on all channels}
 
 This command lets you jump directly to the next block.
 It can create time lags between blocks.
@@ -17,19 +33,41 @@ The value you set is the line number to jump to.
 
 \subsection{KL (KilL)}
 
-This command is used to stop the sound.
+\ColoredAnnotation{Works on all channels}
+
+This command is used to stop the sound. You can specify a delay.
 
 \ColoredAnnotation{No value is currently available for this parameter.}
 
 \subsection{OU (OUtput)}
 
+\ColoredAnnotation{Works on all channels}
+
 Direct the sound to the right (\_R), left (L\_), both (LR) or neither (\_\_)
+
+\subsection{RT (ReTrig)}
+
+\ColoredAnnotation{Works on all channels}
+
+Replays the same note with the same parameters. The value of the effect indicates the speed of repetition.
+
+\subsection{SL (SLide)}
+
+\ColoredAnnotation{Works on PU1, PU2 and WAVE channels}
+
+Applies a slide from one note to another.
 
 \subsection{SR (SampleRate)}
 
-Change project's parameter "SampleRate" value.
+\ColoredAnnotation{Works on all channels but has impact only on SNA and SNB channels}
+
+Modifies the project parameter "SampleRate". This parameter changes the sampling speed for SAMPLE or OSCILLATOR instruments.
+
+\Annotation{\textcolor{red}{Caution, the parameter "SampleRate" applies for ALL the track (and not only the note concerned by the command)}}
 
 \subsection{SW (SWeep)}
+
+\ColoredAnnotation{Works on PU1 channel only}
 
 This command is effective only on channel 1 (PU1): it allows to modify the value of the sweep.
 This sweep replaces the one configured in the instrument.
@@ -38,8 +76,26 @@ This sweep replaces the one configured in the instrument.
 
 Change project's parameter "Tempo".
 
+\subsection{TS (TranSpose)}
+
+\ColoredAnnotation{Works on PU1, PU2 and WAVE channels}
+
+Modifies the transpose of a note. This transpose is added to that of the project, the block and the instrument.
+
+\subsection{VB (ViBrato)}
+
+\ColoredAnnotation{Works on PU1, PU2 and WAVE channels}
+
+Applies a vibrato effect to the note. The value indicates the "power" of the vibrato.
+
 \subsection{VO (VOlume)}
 
 Use this command to change the volume of the sound.
 \#captainobvious.
 Note that depending on the channel, the value you pass is taken differently.
+
+\subsection{WA (WAveform)}
+
+\ColoredAnnotation{Works on PU1 and PU2 channels and on SNA and SNB channels for OSCILLATOR instruments}
+
+Changes the waveform to be applied to the note.

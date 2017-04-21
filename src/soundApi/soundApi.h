@@ -22,26 +22,30 @@
 #ifndef _SOUND_API_
 #define _SOUND_API_
 
-#define EFFECT_CHORD 0 // CH [OK]
-#define EFFECT_CUSTOMVOICE 1 // CV [OK]
-#define EFFECT_DELAY 2 // DL [OK]
-#define EFFECT_ENVELOPE 3 // EN
-#define EFFECT_FMSYNTH 4  // FM
-#define EFFECT_HOP 5 // HO [OK, TO TEST]
-#define EFFECT_KILL 6 // KL [OK]
-#define EFFECT_OUTPUT 7 // OU [OK]
-#define EFFECT_PITCH 8 // PI
-#define EFFECT_RETRIG 9 // RT [OK]
-#define EFFECT_SLIDE 10 // SL [OK, a tester]
-#define EFFECT_SAMPLERATE 11 // SR [OK]
-#define EFFECT_SWEEP 12 // SW [OK]
-#define EFFECT_TABLE 13 // TA
-#define EFFECT_TEMPO 14 // TM [OK]
-#define EFFECT_TRANSPOSE 15 // TS [OK]
-#define EFFECT_TREMOLO 16 // TR [NOPE]
-#define EFFECT_VIBRATO 17 // VB [OK, a tester]
-#define EFFECT_VOLUME 18 // VO [OK]
-#define EFFECT_WAVEFORM 19 // WA [OK]
+#define EFFECT_CHORD 0        // CH [OK]
+#define EFFECT_CUSTOMVOICE 1  // CV [OK]
+#define EFFECT_DELAY 2        // DL [OK]
+#define EFFECT_ENVELOPE 3     // EN
+#define EFFECT_FMSYNTH 4      // FM
+#define EFFECT_HOP 5          // HO [OK, a tester]
+#define EFFECT_KILL 6         // KL [OK]
+#define EFFECT_OUTPUT 7       // OU [OK]
+#define EFFECT_PITCH 8        // PI
+#define EFFECT_RETRIG 9       // RT [OK]
+#define EFFECT_SLIDE 10       // SL [OK, a tester]
+#define EFFECT_SAMPLERATE 11  // SR [OK]
+#define EFFECT_SWEEP 12       // SW [OK]
+#define EFFECT_TABLE 13       // TA
+#define EFFECT_TEMPO 14       // TM [OK]
+#define EFFECT_TRANSPOSE 15   // TS [OK]
+#define EFFECT_TREMOLO 16     // TR [NOPE]
+#define EFFECT_VIBRATO 17     // VB [OK, a tester]
+#define EFFECT_VOLUME 18      // VO [OK]
+#define EFFECT_WAVEFORM 19    // WA [OK]
+
+// Idées d'effets
+// ECHO : applique un écho sur la note (retrig degressif sur le volume).
+// CHORD inversé : joue l'effet CHORD mais en faisant un arpège vers le bas.
 
 #include "system/register.h"
 #include "kits/gbfs.h"

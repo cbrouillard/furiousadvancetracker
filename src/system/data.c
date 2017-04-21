@@ -30,7 +30,7 @@ const u8 noteEffectNum[NB_NOTE_EFFECT] = {EFFECT_CHORD, EFFECT_CUSTOMVOICE, EFFE
 const char* blockEffectName[NB_BLOCK_EFFECT] = {"K "};
 /** Nom en toute lettres des effets */
 const char* noteEffectHelp[NB_NOTE_EFFECT] = {"Chord      ", "Customvoice", "Delay      ", "Enveloppe  ", "FM Synth    ", "Hop!       ", "Kill       ", "Output     ", "Pitch      ", "Retrig     ", "Slide      ", "Samplerate ", "Sweep      ", "Table      ", "Tempo      ", "Transpose  ", "Tremolo    ", "Vibrato    ", "Volume     ", "Waveform   "};
-
+/** \brief Tableau de boolean pour déterminer si un effet est implémenté ou non **/
 const bool effectImplemented [NB_NOTE_EFFECT] = {1,1,1,0,0,1,1,1,0,1,1,1,1,0,1,1,0,1,1,1};
 
 /**

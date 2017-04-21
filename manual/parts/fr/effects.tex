@@ -1,15 +1,30 @@
-\ColoredAnnotation{\FAT n'est pas encore très riche d'effets en tout genre pour le moment: il va falloir s'en contenter pour l'heure.
-Plusieurs commandes sont aux programme et débarqueront dans les versions suivantes. Patience !}
+\ColoredAnnotation{\FAT s'enrichit de commandes au fur et à mesure de sa conception. Toutes ne sont pas encore présentes mais ce n'est qu'une question de temps ! Patience :)}
 
-Voici les commandes actuellements utilisables.
+Voici les commandes actuellement utilisables.
 
-\subsection{CH (Chord)}
+\subsection{CH (CHord)}
 
-\ColoredAnnotation {Fonctionne sur PU1, PU2, WAVE et NOISE}
+\ColoredAnnotation {Fonctionne sur les canaux PU1, PU2, WAVE et NOISE}
 
 Génére un arpège constitué de 3 notes. Ex: "C 4 CH3C" donne un arpège de "0,3,C,0,3,C, etc ...".
 
+\subsection{CV (Custom Voice)}
+
+\ColoredAnnotation{Fonctionne sur le canal WAVE uniquement}
+
+Sélectionne une onde personalisée à appliquer sur la note.
+
+\subsection{DL (DeLay)}
+
+\ColoredAnnotation{Fonctionne sur tous les canaux}
+
+Joue la note avec un délai.
+
+\Annotation{\textcolor{red}{Attention, jouer un autre effet ou une autre note avant la durée effective du délai annule celui-ci. \FAT n'est pas capable de paralléliser la gestion du délai par rapport aux autres événements que constituent les notes ou les commandes.}}
+
 \subsection{HO (Hop!)}
+
+\ColoredAnnotation{Fonctionne sur tous les canaux}
 
 Cette commande permet de sauter directement au block suivant.
 Elle peut permettre de créer des décalages de temps entre les blocks.
@@ -17,29 +32,69 @@ La valeur que vous paramétrez correspond au numéro de ligne vers lequel sauter
 
 \subsection{KL (KilL)}
 
-Cette commande permet de stopper (kill = tuer) le son.
+\ColoredAnnotation{Fonctionne sur tous les canaux}
 
-\ColoredAnnotation{Pas de valeur possible pour le moment pour ce paramètre.}
+Cette commande permet de stopper (kill = tuer) le son. Il est possible de donner un délai.
 
 \subsection{OU (OUtput)}
 
+\ColoredAnnotation{Fonctionne sur tous les canaux}
+
 Dirige le son vers la droite (\_R), gauche (L\_), les deux (LR) ou aucun des deux (\_\_)
+
+\subsection{RT (ReTrig)}
+
+\ColoredAnnotation{Fonctionne sur tous les canaux}
+
+Rejoue la même note avec les mêmes paramètres. La valeur de l'effet indique la rapidité de répétition.
+
+\subsection{SL (SLide)}
+
+\ColoredAnnotation{Fonctionne sur les canaux PU1, PU2 et WAVE}
+
+Applique un slide d'une note vers une autre.
 
 \subsection{SR (SampleRate)}
 
-Modifie le paramètre projet "SampleRate".
+\ColoredAnnotation{Fonctionne sur tous les canaux mais n'a d'impact que sur les canaux SNA et SNB}
+
+Modifie le paramètre projet "SampleRate". Ce paramètre modifie la vitesse d'échantillonage pour les instruments de type SAMPLE ou OSCILLATOR.
+
+\Annotation{\textcolor{red}{Attention, le paramètre "SampleRate" s'applique pour TOUTE la track (et pas seulement la note concernée par la commande)}}
 
 \subsection{SW (SWeep)}
+
+\ColoredAnnotation{Fonctionne sur le canal PU1 uniquement}
 
 Cette commande n'est effective que sur le channel 1 (PU1) : elle permet de modifier la valeur du sweep.
 Ce sweep remplace celui configuré dans l'instrument.
 
 \subsection{TP (TemPo)}
 
+\ColoredAnnotation{Fonctionne sur tous les canaux}
+
 Modifie le paramètre projet "Tempo".
+
+\subsection{TS (TranSpose)}
+
+\ColoredAnnotation{Fonctionne sur les canaux PU1, PU2 et WAVE}
+
+Modifie le transpose d'une note. Ce transpose s'ajoute à celui du projet, du block et de l'instrument.
+
+\subsection{VB (ViBrato)}
+
+\ColoredAnnotation{Fonctionne sur les canaux PU1, PU2 et WAVE}
+
+Applique un effet de vibrato sur la note. La valeur indique la "puissance" du vibrato.
 
 \subsection{VO (VOlume)}
 
+\ColoredAnnotation{Fonctionne sur tous les canaux}
+
 Cette commande permet de modifier le volume du son.
-\#captainobvious.
-Notez que selon le channel, la valeur que vous passez est prise en compte différemment.
+
+\subsection{WA (WAveform)}
+
+\ColoredAnnotation{Fonctionne sur les canaux PU1 et PU2 et sur les canaux SNA et SNB pour les instruments de type OSCILLATOR}
+
+Modifie la forme d'onde à appliquer à la note.

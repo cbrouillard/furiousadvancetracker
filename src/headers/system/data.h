@@ -125,7 +125,7 @@ extern const u8 noteEffectNum[NB_NOTE_EFFECT];
 extern const char* noteEffectHelp[NB_NOTE_EFFECT];
 /** \brief Tableau constant contenant tous les noms d'effets disponibles pour les blocks. */
 extern const char* blockEffectName[NB_BLOCK_EFFECT];
-
+/** \brief Tableau de boolean pour déterminer si un effet est implémenté ou non **/
 extern const bool effectImplemented [NB_NOTE_EFFECT];
 
 /**
