@@ -60,6 +60,8 @@ typedef const GBFS_FILE kit;
 extern volatile bool playSnASample;
 extern volatile bool playSnBSample;
 
+float snd_sinf (int t);
+
 /**
  * \brief Initialise le mode audio sur la Gameboy: active les 4 canaux.
  **/
@@ -114,7 +116,7 @@ void snd_applyVibratoEffectOn (u8 channel, u8 baseFreq, u8 value, int time);
 */
 u8 snd_applyTremoloEffectOn (u8 channel, u8 baseVolume, u8 value, int time);
 
-float test_sin (int t);
+
 
 /**
  * \brief Joue un son sur le channel 1.
@@ -208,16 +210,6 @@ void snd_simple_playSoundOnChannel4(u16 envelope, u8 mode, u8 length);
  * \brief Eteint tout les sons en cours de lecture.
  */
 void snd_stopAllSounds();
-
-/**
- * \brief Cette fonction essaie d'appliquer en effet en dehors du contexte "note": la commande sera appliquée
- * sans jouer de note.
- *
- * @param channelId le numéro de channel sur lequel appliquer l'effet
- * @param effectNumber le numéro d'effet à appliquer
- * @param effectValue la valeur de l'effet
- */
-void snd_tryToApplyEffect(u8 channelId, u8 effectNumber, u8 effectValue);
 
 /**
  * \brief Charge un kit par son numéro.

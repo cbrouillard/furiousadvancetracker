@@ -262,10 +262,6 @@ u8 snd_applySlideEffectOn (u8 channel, u8 freq, u8 destFreq, u8 value, u8 counte
 
 }
 
-float test_sin (int t){
-  return lu_sin(t) / ((float) (1 << 12 ));
-}
-
 float snd_sinf (int t){
   return lu_sin(t) / ((float) (1 << 12 ));
 }
@@ -466,14 +462,6 @@ void snd_effect_kill(u8 channelId, u8 value) {
             R_DMA2CNT=0;
             playSnBSample = 0;
             playSnBOsc = 0;
-            break;
-    }
-}
-
-void snd_tryToApplyEffect(u8 channelId, u8 effectNumber, u8 effectValue) {
-    switch (effectNumber) {
-        case EFFECT_KILL:
-            snd_effect_kill(channelId, effectValue);
             break;
     }
 }
