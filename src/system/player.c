@@ -29,6 +29,7 @@ void FAT_player_effect_retrig (u8 channel);
 void FAT_player_effect_slide (u8 channel);
 void FAT_player_effect_vibrato (u8 channel);
 void FAT_player_effect_tremolo(u8 channel);
+void FAT_player_effect_pitch(u8 channel);
 void FAT_player_effect_checkAndApplyForLongEffect (u8 channel);
 
 void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* block);
@@ -759,6 +760,7 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
     FAT_player[channel].sweep = NULL_VALUE;
     FAT_player[channel].output = NULL_VALUE;
     FAT_player[channel].customVoice = NULL_VALUE;
+    FAT_player[channel].wavedutyOrPolynomialStep = NULL_VALUE;
     FAT_player[channel].transpose = 0;
     if (effect){
         FAT_player[channel].lastEffect = effect;
@@ -806,6 +808,7 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
             case EFFECT_RETRIG:
             case EFFECT_VIBRATO:
             case EFFECT_TREMOLO:
+            case EFFECT_PITCH:
                 FAT_player[channel].isRunningLongEffect = 1;
                 break;
             case EFFECT_DELAY:
@@ -905,20 +908,25 @@ void FAT_player_effect_checkAndApplyForLongEffect (u8 channel){
           case EFFECT_TREMOLO:
             FAT_player_effect_tremolo(channel);
             break;
+          case EFFECT_PITCH:
+            FAT_player_effect_pitch(channel);
+            break;
         }
     }
 }
 
+void FAT_player_effect_pitch(u8 channel) {
+  FAT_player[channel].isRunningLongEffect =
+    snd_applyPitchEffectOn (channel, FAT_player[channel].lastNote->freq,
+                          FAT_player[channel].lastEffect->value, FAT_player[channel].effectCounter);
+                          
+  FAT_player[channel].effectCounter ++;
+}
+
 void FAT_player_effect_slide (u8 channel){
-  //if (FAT_player[channel].effectCounter > FAT_player[channel].lastEffect->value) {
-      //snd_applyFrequencyOn (channel, FAT_player[channel].lastNote->freq
-      //    + ((FAT_player[channel].effectCounter * FAT_player[channel].lastEffect->value)));
-
-      FAT_player[channel].isRunningLongEffect =
-      snd_applySlideEffectOn (channel, FAT_player[channel].previousNote->freq, FAT_player[channel].lastNote->freq,
+  FAT_player[channel].isRunningLongEffect =
+    snd_applySlideEffectOn (channel, FAT_player[channel].previousNote->freq, FAT_player[channel].lastNote->freq,
                               FAT_player[channel].lastEffect->value, FAT_player[channel].effectCounter);
-
-  //}
 
   FAT_player[channel].effectCounter ++;
 }

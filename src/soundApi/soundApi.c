@@ -262,6 +262,20 @@ u8 snd_applySlideEffectOn (u8 channel, u8 freq, u8 destFreq, u8 value, u8 counte
 
 }
 
+u8 snd_applyPitchEffectOn (u8 channel, u8 freq, u8 value, u8 counter) {
+    u16 realFreq = freqs[freq];
+    u8 continuePitch = 1;
+
+    if (value > 127) {
+        realFreq = realFreq - lu_sin(counter * value);
+    } else {
+        realFreq = realFreq + lu_sin(counter * value);
+    }
+
+    snd_applyRealFrequencyOn(channel, realFreq);
+    return continuePitch;
+}
+
 float snd_sinf (int t){
   return lu_sin(t) / ((float) (1 << 12 ));
 }

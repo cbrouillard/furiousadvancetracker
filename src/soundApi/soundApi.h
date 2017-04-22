@@ -23,25 +23,45 @@
 #define _SOUND_API_
 
 #define EFFECT_CHORD 0        // CH [OK]
+#define E_CHORD_IMPL 1
 #define EFFECT_CUSTOMVOICE 1  // CV [OK]
+#define E_CUSTOMVOICE_IMPL 1
 #define EFFECT_DELAY 2        // DL [OK]
+#define E_DELAY_IMPL 1
 #define EFFECT_ENVELOPE 3     // EN
+#define E_ENVELOPE_IMPL 0
 #define EFFECT_FMSYNTH 4      // FM
+#define E_FMSYNTH_IMPL 0
 #define EFFECT_HOP 5          // HO [OK, a tester]
+#define E_HOP_IMPL 1
 #define EFFECT_KILL 6         // KL [OK]
+#define E_KILL_IMPL 1
 #define EFFECT_OUTPUT 7       // OU [OK]
+#define E_OUTPUT_IMPL 1
 #define EFFECT_PITCH 8        // PI
+#define E_PITCH_IMPL 1
 #define EFFECT_RETRIG 9       // RT [OK]
+#define E_RETRIG_IMPL 1
 #define EFFECT_SLIDE 10       // SL [OK, a tester]
+#define E_SLIDE_IMPL 1
 #define EFFECT_SAMPLERATE 11  // SR [OK]
+#define E_SAMPLERATE_IMPL 1
 #define EFFECT_SWEEP 12       // SW [OK]
+#define E_SWEEP_IMPL 1
 #define EFFECT_TABLE 13       // TA
+#define E_TABLE_IMPL 0
 #define EFFECT_TEMPO 14       // TM [OK]
+#define E_TEMPO_IMPL 1
 #define EFFECT_TRANSPOSE 15   // TS [OK]
+#define E_TRANSPOSE_IMPL 1
 #define EFFECT_TREMOLO 16     // TR [NOPE]
+#define E_TREMOLO_IMPL 0
 #define EFFECT_VIBRATO 17     // VB [OK, a tester]
+#define E_VIBRATO_IMPL 1
 #define EFFECT_VOLUME 18      // VO [OK]
+#define E_VOLUME_IMPL 1
 #define EFFECT_WAVEFORM 19    // WA [OK]
+#define E_WAVEFORM_IMPL 1
 
 // Idées d'effets
 // ECHO : applique un écho sur la note (retrig degressif sur le volume).
@@ -105,6 +125,11 @@ void snd_applyFrequencyOn (u8 channel, u8 sfreq);
 * \brief Gère un effet de slide depuis freq vers destFreq en fonction du temps (counter).
 */
 u8 snd_applySlideEffectOn (u8 channel, u8 freq, u8 destFreq, u8 value, u8 counter);
+
+/**
+* \brief Gère un effet de pitch depuis freq en fonction du temps (counter).
+*/
+u8 snd_applyPitchEffectOn (u8 channel, u8 freq, u8 value, u8 counter);
 
 /**
 * \brief Gère un effet de vibrato en fonction du temps.

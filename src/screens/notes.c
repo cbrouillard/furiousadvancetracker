@@ -323,6 +323,8 @@ void FAT_screenNotes_pressB() {
                 FAT_data_note_pasteEffect(FAT_screenNotes_currentBlockId, FAT_screenNotes_getCurrentSelectedLine());
             } else {
                 FAT_data_note_cutEffect(FAT_screenNotes_currentBlockId, FAT_screenNotes_getCurrentSelectedLine());
+                FAT_screenInstrument_hideAllWavedutySprite();
+                FAT_screenInstrument_hideAllOscSprite ();
                 hel_BgTextPrintF(TEXT_LAYER, 18, 10, 0, "%s", "           ");
             }
             FAT_screenNotes_printEffect(FAT_screenNotes_getCurrentSelectedLine());
