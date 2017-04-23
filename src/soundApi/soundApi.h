@@ -38,7 +38,7 @@
 #define E_KILL_IMPL 1
 #define EFFECT_OUTPUT 7       // OU [OK]
 #define E_OUTPUT_IMPL 1
-#define EFFECT_PITCH 8        // PI
+#define EFFECT_PITCH 8        // PI [BOF]
 #define E_PITCH_IMPL 1
 #define EFFECT_RETRIG 9       // RT [OK]
 #define E_RETRIG_IMPL 1

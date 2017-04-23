@@ -95,8 +95,6 @@ int FAT_player_debug_getTempoReach(){
 */
 volatile int tickCounter = INITIAL_TICKCOUNTER;
 
-volatile int time = 0;
-
 /**
  * /brief Pour savoir de quelle endroit l'utilisateur a lancé le son.
 */
@@ -370,7 +368,6 @@ void FAT_player_startPlayerFromSequences(u8 startLine) {
     }
 
     FAT_player_runTimer ();
-    time = 0;
 }
 
 void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
@@ -409,7 +406,6 @@ void FAT_player_startPlayerFromLive_oneChannel(u8 line, u8 channel){
     if (FAT_live_waitForOtherChannel[channel] == 0){
         FAT_player_moveOrHideCursor(channel);
         FAT_player_runTimer ();
-        time = 0;
     }
 }
 
@@ -437,7 +433,6 @@ void FAT_player_startPlayerFromBlocks(u8 sequenceId, u8 startLine, u8 channel) {
     FAT_player_isPlayingFrom = SCREEN_BLOCKS_ID;
 
     FAT_player_runTimer ();
-    time = 0;
 
 }
 
@@ -464,7 +459,6 @@ void FAT_player_startPlayerFromNotes(u8 blockId, u8 startLine, u8 channel) {
     FAT_player_isPlayingFrom = SCREEN_NOTES_ID;
 
     FAT_player_runTimer ();
-    time = 0;
 }
 
 void ATTR_FASTFUNC FAT_player_timerFunc() {
@@ -474,7 +468,12 @@ void ATTR_FASTFUNC FAT_player_timerFunc() {
     if (tickCounter >= 0) {
       tickCounter--;
     }
-    time ++;
+    FAT_player[0].time ++;
+    FAT_player[1].time ++;
+    FAT_player[2].time ++;
+    FAT_player[3].time ++;
+    FAT_player[4].time ++;
+    FAT_player[5].time ++;
 }
 
 void FAT_player_progressInSong(u8 channel, sequence* seq){
@@ -766,6 +765,7 @@ void FAT_player_processNote_inBlock (u8 channel, sequence* sequence, block* bloc
         FAT_player[channel].lastEffect = effect;
         FAT_player[channel].isRunningLongEffect = 0;
         FAT_player[channel].effectCounter = 0;
+        FAT_player[channel].time = 0;
         switch (((effect->name & 0xfe) >> 1)){
             case EFFECT_VOLUME:
                 FAT_player[channel].volume = effect->value;
@@ -918,9 +918,7 @@ void FAT_player_effect_checkAndApplyForLongEffect (u8 channel){
 void FAT_player_effect_pitch(u8 channel) {
   FAT_player[channel].isRunningLongEffect =
     snd_applyPitchEffectOn (channel, FAT_player[channel].lastNote->freq,
-                          FAT_player[channel].lastEffect->value, time);
-
-  FAT_player[channel].effectCounter ++;
+                          FAT_player[channel].lastEffect->value, FAT_player[channel].time);
 }
 
 void FAT_player_effect_slide (u8 channel){
@@ -932,15 +930,11 @@ void FAT_player_effect_slide (u8 channel){
 }
 
 void FAT_player_effect_tremolo(u8 channel) {
-  FAT_player[channel].volume = snd_applyTremoloEffectOn (channel, FAT_player[channel].volume, FAT_player[channel].lastEffect->value, time);
-  //FAT_player[channel].effectCounter ++;
-  hel_BgTextPrintF(TEXT_LAYER, 20, 14, 0, "%x",  REG_SOUND1CNT_H) ;
-  hel_BgTextPrintF(TEXT_LAYER, 20, 15, 0, "%x",  FAT_player[channel].volume) ;
-
+  FAT_player[channel].volume = snd_applyTremoloEffectOn (channel, FAT_player[channel].volume, FAT_player[channel].lastEffect->value, FAT_player[channel].time);
 }
 
 void FAT_player_effect_vibrato (u8 channel) {
-    snd_applyVibratoEffectOn (channel, FAT_player[channel].lastNote->freq, FAT_player[channel].lastEffect->value, time);
+    snd_applyVibratoEffectOn (channel, FAT_player[channel].lastNote->freq, FAT_player[channel].lastEffect->value, FAT_player[channel].time);
     //FAT_player[channel].effectCounter ++;
 }
 

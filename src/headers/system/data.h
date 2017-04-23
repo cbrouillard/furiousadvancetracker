@@ -338,6 +338,7 @@ typedef struct PLAYERBUFFER {
     u8 wavedutyOrPolynomialStep; // custom waveform
     bool isRunningLongEffect; // un effet long en cours sur le channel ?
     u8 effectCounter; // compteur utile pour les effets longs
+    int time; // le temps qui passe sur chaque channel
     effect* lastEffect; // pointeur vers le dernier effet connu sur le channel
     note* lastNote; // pointeur vers la dernière note connue
     note* previousNote; // pointeur vers l'avant dernière note connue
