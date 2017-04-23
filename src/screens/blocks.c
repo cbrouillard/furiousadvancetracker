@@ -51,7 +51,8 @@ void FAT_screenBlocks_printLineColumns() {
  * en cours d'édition.
  */
 void FAT_screenBlocks_printInfos() {
-    hel_BgTextPrintF(TEXT_LAYER, 18, 4, 0, "Line     %.2x", FAT_screenBlocks_getCurrentSelectedLine());
+    hel_BgTextPrintF(TEXT_LAYER, 18, 3, 0, "Channel %s", CHANNEL_NAME[FAT_screenSong_getCurrentSelectedColumn()]);
+    hel_BgTextPrintF(TEXT_LAYER, 18, 5, 0, "Line     %.2x", FAT_screenBlocks_getCurrentSelectedLine());
 }
 
 /**
@@ -61,7 +62,7 @@ void FAT_screenBlocks_printInfos() {
  * peu de fois.
  */
 void FAT_screenBlocks_printSequenceNumber() {
-    hel_BgTextPrintF(TEXT_LAYER, 18, 3, 0, "Sequence %.2x", FAT_screenBlocks_currentSequenceId);
+    hel_BgTextPrintF(TEXT_LAYER, 18, 4, 0, "Sequence %.2x", FAT_screenBlocks_currentSequenceId);
 }
 
 /**
@@ -148,7 +149,7 @@ void FAT_screenBlocks_init(u8 fromScreenId) {
     // initialisation du fond (interface)
     ham_bg[SCREEN_LAYER].ti = ham_InitTileSet((void*)ResData(RES_SCREEN_BLOCKS_RAW), RES_SCREEN_BLOCKS_RAW_SIZE16, 1, 1);
     hel_MapCreate(SCREEN_LAYER, 32, 20, ResData(RES_SCREEN_BLOCKS_MAP), sizeof(u16), MAP_FLAGS_DEFAULT);
-        
+
     // affichage d'un peu de texte
     // numéro de la séquence en cours d'édition, tout est dans SCREEN_SONG ou le SCREEN_LIVE !
     switch (fromScreenId){
@@ -170,7 +171,7 @@ void FAT_screenBlocks_init(u8 fromScreenId) {
     FAT_cursors_hideCursor2();
     FAT_screenBlocks_commitCursorMove();
     FAT_cursors_showCursor2();
-    FAT_cursors_moveCursorChange(INPUT_R_CURSOR_CHANGE_X, INPUT_R_CURSOR_CHANGE_Y);
+    FAT_cursors_moveCursorChange(INPUT_R_CURSOR_CHANGE_X, INPUT_R_CURSOR_CHANGE_Y - 8);
 }
 
 /**
