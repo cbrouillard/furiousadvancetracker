@@ -918,8 +918,8 @@ void FAT_player_effect_checkAndApplyForLongEffect (u8 channel){
 void FAT_player_effect_pitch(u8 channel) {
   FAT_player[channel].isRunningLongEffect =
     snd_applyPitchEffectOn (channel, FAT_player[channel].lastNote->freq,
-                          FAT_player[channel].lastEffect->value, FAT_player[channel].effectCounter);
-                          
+                          FAT_player[channel].lastEffect->value, time);
+
   FAT_player[channel].effectCounter ++;
 }
 

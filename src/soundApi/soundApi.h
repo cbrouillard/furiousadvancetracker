@@ -129,7 +129,7 @@ u8 snd_applySlideEffectOn (u8 channel, u8 freq, u8 destFreq, u8 value, u8 counte
 /**
 * \brief Gère un effet de pitch depuis freq en fonction du temps (counter).
 */
-u8 snd_applyPitchEffectOn (u8 channel, u8 freq, u8 value, u8 counter);
+u8 snd_applyPitchEffectOn (u8 channel, u8 freq, u8 value, int time);
 
 /**
 * \brief Gère un effet de vibrato en fonction du temps.
