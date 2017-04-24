@@ -329,6 +329,25 @@ void FAT_screenComposer_pressOrHeldA() {
                 }
                 break;
             case SCREENCOMPOSER_COLUMN_ID_CMD_NAME:
+                if (FAT_data_composer_isEffectEmpty(realLine)){
+                  FAT_data_composer_addDefaultEffect(realLine);
+                }
+
+                if (hel_PadQuery()->Pressed.Right) {
+                    FAT_data_composer_changeEffectName(realLine, 1);
+                }
+
+                if (hel_PadQuery()->Pressed.Left) {
+                    FAT_data_composer_changeEffectName(realLine, -1);
+                }
+
+                if (hel_PadQuery()->Pressed.Up) {
+                    FAT_data_composer_changeEffectName(realLine, 3);
+                }
+
+                if (hel_PadQuery()->Pressed.Down) {
+                    FAT_data_composer_changeEffectName(realLine, -3);
+                }
 
                 break;
             case SCREENCOMPOSER_COLUMN_ID_CMD_PARAM:
