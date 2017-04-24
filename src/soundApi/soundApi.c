@@ -289,7 +289,6 @@ void snd_applyVibratoEffectOn (u8 channel, u8 baseFreq, u8 value, int time){
   //vibrato rate - This will use a typical value of 8 Hz
   //vibrato width - % of the fundamental frequency, f1, is used.
   realFreq = realFreq + 10 *  ( snd_sinf (0xFFFF * (value * 10) * time ) );
-
   snd_applyRealFrequencyOn(channel, realFreq);
 }
 
