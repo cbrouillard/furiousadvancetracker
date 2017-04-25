@@ -1958,10 +1958,10 @@ void FAT_data_composer_changeInstrument(u8 line, s8 addedValue) {
 }
 
 bool FAT_data_composer_isEffectEmpty(u8 line){
-  return 1;
+  return FAT_tracker.composer.notes[line].effect.name == NULL_VALUE;
 }
 void FAT_data_composer_addDefaultEffect(u8 line){
-
+  
 }
 void FAT_data_composer_changeEffectName (u8 line, s8 value){
 
