@@ -370,6 +370,7 @@ void FAT_data_cutNote(u8 block, u8 noteLine);
 void FAT_data_composer_cutNote(u8 line);
 void FAT_data_pasteNote(u8 block, u8 noteLine);
 void FAT_data_composer_pasteNote(u8 line);
+effect* FAT_data_composer_getEffect (u8 line);
 
 bool FAT_data_isSequenceAllocatable(u8 channelId, u8 line);
 bool FAT_data_isBlockAllocatable(u8 sequence, u8 blockLine);

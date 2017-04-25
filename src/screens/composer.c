@@ -69,6 +69,31 @@ void FAT_screenComposer_printNote(u8 line) {
     }
 }
 
+void FAT_screenComposer_printEffect (u8 line){
+  if (!FAT_data_composer_isEffectEmpty(line)){
+    effect* effect = FAT_data_composer_getEffect(line);
+    u8 effectName = (effect->name & 0xfe) >> 1;
+
+    switch (effectName){
+        case EFFECT_OUTPUT:
+            // 4 valeurs seulement
+            hel_BgTextPrintF(TEXT_LAYER, SCREENCOMPOSER_NOTE_LINE_X +5, line + SCREENCOMPOSER_LINE_START_Y, 0,
+                                            "%.2s%s\0", noteEffectName[effectName], outputText[effect->value]);
+            break;
+        default:
+            if (effectImplemented[effectName]) {
+              // cas générique
+              hel_BgTextPrintF(TEXT_LAYER, SCREENCOMPOSER_NOTE_LINE_X +5, line + SCREENCOMPOSER_LINE_START_Y, 0,
+                                              "%.2s%.2x\0", noteEffectName[effectName], effect->value);
+            }
+            break;
+        }
+  } else {
+    hel_BgTextPrintF(TEXT_LAYER, SCREENCOMPOSER_NOTE_LINE_X + 5, line + SCREENCOMPOSER_LINE_START_Y,0,
+        "    ");
+  }
+}
+
 /**
  * \brief Affiche toutes les notes du COMPOSER.
  */
@@ -76,6 +101,7 @@ void FAT_screenComposer_printAllNote() {
     u8 b;
     for (b = 0; b < SCREENCOMPOSER_NB_LINES_ON_SCREEN; b++) {
         FAT_screenComposer_printNote(b);
+        FAT_screenComposer_printEffect(b);
     }
 }
 
@@ -329,6 +355,7 @@ void FAT_screenComposer_pressOrHeldA() {
                 }
                 break;
             case SCREENCOMPOSER_COLUMN_ID_CMD_NAME:
+
                 if (FAT_data_composer_isEffectEmpty(realLine)){
                   FAT_data_composer_addDefaultEffect(realLine);
                 }

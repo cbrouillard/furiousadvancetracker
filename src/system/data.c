@@ -1961,10 +1961,36 @@ bool FAT_data_composer_isEffectEmpty(u8 line){
   return FAT_tracker.composer.notes[line].effect.name == NULL_VALUE;
 }
 void FAT_data_composer_addDefaultEffect(u8 line){
-  
-}
-void FAT_data_composer_changeEffectName (u8 line, s8 value){
+  if (FAT_data_lastEffectWritten.name == NULL_VALUE) {
+      FAT_data_lastEffectWritten.name = 1; // 1 = type note et numéro 0 dans le tableau
+      FAT_data_lastEffectWritten.value = 0;
+  }
 
+  FAT_tracker.composer.notes[line].effect.name = FAT_data_lastEffectWritten.name;
+  FAT_tracker.composer.notes[line].effect.value = FAT_data_lastEffectWritten.value;
+}
+void FAT_data_composer_changeEffectName (u8 line, s8 addedValue){
+  u8 effectName = (FAT_tracker.composer.notes[line].effect.name & 0xfe) >> 1;
+  if (
+          (addedValue < 0 && effectName > (-addedValue - 1)) ||
+          (addedValue > 0 && effectName < NB_NOTE_EFFECT - addedValue)
+
+          ) {
+      effectName += addedValue;
+      FAT_tracker.composer.notes[line].effect.name = (effectName << 1) | 1;
+      FAT_data_lastEffectWritten.name = FAT_tracker.composer.notes[line].effect.name;
+
+      if (!effectImplemented[effectName]){
+          FAT_data_composer_changeEffectName (line, 1);
+      } else {
+        // recalibrage de la valeur
+        FAT_data_note_filterEffectValue (&(FAT_tracker.composer.notes[line].effect));
+      }
+  }
+}
+
+effect* FAT_data_composer_getEffect (u8 line) {
+  return &(FAT_tracker.composer.notes[line].effect);
 }
 
 /**
