@@ -978,6 +978,29 @@ void FAT_data_note_changeEffectValue_generic (effect* effect, s8 addedValue){
     FAT_data_note_changeEffectValue_limited  (effect, addedValue, 0xff);
 }
 
+void FAT_data_effect_changeEffectValue (effect* effect, s8 addedValue){
+  u8 effectName = (effect->name & 0xfe) >> 1;
+  switch (effectName){
+      case EFFECT_CUSTOMVOICE:
+          FAT_data_note_changeEffectValue_limited (effect, addedValue, NB_MAX_CUSTOM_VOICE-1);
+          break;
+      case EFFECT_OUTPUT:
+      case EFFECT_WAVEFORM:
+          // 4 valeurs seulement
+          FAT_data_note_changeEffectValue_limited (effect, addedValue, 3);
+          break;
+      case EFFECT_VOLUME:
+      case EFFECT_HOP:
+          // de 0 à F
+          FAT_data_note_changeEffectValue_limited (effect, addedValue, 0xf);
+          break;
+      default:
+          FAT_data_note_changeEffectValue_generic (effect, addedValue);
+          break;
+
+  }
+}
+
 /**
  * \brief Modifie la valeur d'un effet assigné à une note.
  *
@@ -986,26 +1009,7 @@ void FAT_data_note_changeEffectValue_generic (effect* effect, s8 addedValue){
  * @param addedValue la valeur à ajouter/retrancher
  */
 void FAT_data_note_changeEffectValue(u8 block, u8 line, s8 addedValue) {
-    u8 effectName = (FAT_tracker.allBlocks[block].notes[line].effect.name & 0xfe) >> 1;
-    switch (effectName){
-        case EFFECT_CUSTOMVOICE:
-            FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, NB_MAX_CUSTOM_VOICE-1);
-            break;
-        case EFFECT_OUTPUT:
-        case EFFECT_WAVEFORM:
-            // 4 valeurs seulement
-            FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, 3);
-            break;
-        case EFFECT_VOLUME:
-        case EFFECT_HOP:
-            // de 0 à F
-            FAT_data_note_changeEffectValue_limited (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue, 0xf);
-            break;
-        default:
-            FAT_data_note_changeEffectValue_generic (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue);
-            break;
-
-    }
+    FAT_data_effect_changeEffectValue (&(FAT_tracker.allBlocks[block].notes[line].effect), addedValue);
 }
 
 /**
@@ -1960,6 +1964,7 @@ void FAT_data_composer_changeInstrument(u8 line, s8 addedValue) {
 bool FAT_data_composer_isEffectEmpty(u8 line){
   return FAT_tracker.composer.notes[line].effect.name == NULL_VALUE;
 }
+
 void FAT_data_composer_addDefaultEffect(u8 line){
   if (FAT_data_lastEffectWritten.name == NULL_VALUE) {
       FAT_data_lastEffectWritten.name = 1; // 1 = type note et numéro 0 dans le tableau
@@ -1969,6 +1974,7 @@ void FAT_data_composer_addDefaultEffect(u8 line){
   FAT_tracker.composer.notes[line].effect.name = FAT_data_lastEffectWritten.name;
   FAT_tracker.composer.notes[line].effect.value = FAT_data_lastEffectWritten.value;
 }
+
 void FAT_data_composer_changeEffectName (u8 line, s8 addedValue){
   u8 effectName = (FAT_tracker.composer.notes[line].effect.name & 0xfe) >> 1;
   if (
@@ -1987,6 +1993,10 @@ void FAT_data_composer_changeEffectName (u8 line, s8 addedValue){
         FAT_data_note_filterEffectValue (&(FAT_tracker.composer.notes[line].effect));
       }
   }
+}
+
+void FAT_data_composer_changeEffectValue (u8 line, s8 value){
+  FAT_data_effect_changeEffectValue (&(FAT_tracker.composer.notes[line].effect), value);
 }
 
 effect* FAT_data_composer_getEffect (u8 line) {

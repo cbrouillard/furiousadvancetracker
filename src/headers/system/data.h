@@ -485,6 +485,7 @@ void FAT_data_composer_changeAffectedChannelValue(u8 line, s8 addedValue);
 bool FAT_data_composer_isEffectEmpty(u8 line);
 void FAT_data_composer_addDefaultEffect(u8 line);
 void FAT_data_composer_changeEffectName (u8 line, s8 value);
+void FAT_data_composer_changeEffectValue (u8 line, s8 value);
 
 void FAT_data_wave_initIfNeeded (u8 customVoiceId, u8 instrumentId);
 void FAT_data_wave_changeValue (u8 customVoiceId, u8 dataNumber, u8 part, s8 addedValue);

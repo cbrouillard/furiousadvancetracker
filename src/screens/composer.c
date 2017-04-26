@@ -70,26 +70,26 @@ void FAT_screenComposer_printNote(u8 line) {
 }
 
 void FAT_screenComposer_printEffect (u8 line){
+
   if (!FAT_data_composer_isEffectEmpty(line)){
     effect* effect = FAT_data_composer_getEffect(line);
     u8 effectName = (effect->name & 0xfe) >> 1;
-
     switch (effectName){
         case EFFECT_OUTPUT:
             // 4 valeurs seulement
-            hel_BgTextPrintF(TEXT_LAYER, SCREENCOMPOSER_NOTE_LINE_X +5, line + SCREENCOMPOSER_LINE_START_Y, 0,
+            hel_BgTextPrintF(TEXT_LAYER, SCREENCOMPOSER_NOTE_LINE_X +7, line + SCREENCOMPOSER_LINE_START_Y, 0,
                                             "%.2s%s\0", noteEffectName[effectName], outputText[effect->value]);
             break;
         default:
             if (effectImplemented[effectName]) {
               // cas générique
-              hel_BgTextPrintF(TEXT_LAYER, SCREENCOMPOSER_NOTE_LINE_X +5, line + SCREENCOMPOSER_LINE_START_Y, 0,
+              hel_BgTextPrintF(TEXT_LAYER, SCREENCOMPOSER_NOTE_LINE_X +7, line + SCREENCOMPOSER_LINE_START_Y, 0,
                                               "%.2s%.2x\0", noteEffectName[effectName], effect->value);
             }
             break;
         }
   } else {
-    hel_BgTextPrintF(TEXT_LAYER, SCREENCOMPOSER_NOTE_LINE_X + 5, line + SCREENCOMPOSER_LINE_START_Y,0,
+    hel_BgTextPrintF(TEXT_LAYER, SCREENCOMPOSER_NOTE_LINE_X +7, line + SCREENCOMPOSER_LINE_START_Y,0,
         "    ");
   }
 }
@@ -129,9 +129,9 @@ void FAT_screenComposer_printAllScreenText() {
  * \brief Fonction appelée à l'initialisation afin d'imprimer le numéro des lignes sur l'écran.
  */
 void FAT_screenComposer_printColumns() {
-    hel_BgTextPrint(TEXT_LAYER, 7, 7, 0, " L");
-    hel_BgTextPrint(TEXT_LAYER, 7, 8, 0, " R");
-    hel_BgTextPrint(TEXT_LAYER, 7, 9, 0, " A");
+    hel_BgTextPrint(TEXT_LAYER, 7, 7,  0, " L");
+    hel_BgTextPrint(TEXT_LAYER, 7, 8,  0, " R");
+    hel_BgTextPrint(TEXT_LAYER, 7, 9,  0, " A");
     hel_BgTextPrint(TEXT_LAYER, 7, 10, 0, " B");
     hel_BgTextPrint(TEXT_LAYER, 7, 11, 0, "UP");
     hel_BgTextPrint(TEXT_LAYER, 7, 12, 0, "RT");
@@ -306,21 +306,21 @@ void FAT_screenComposer_pressOrHeldA() {
                 }
 
                 if (hel_PadQuery()->Pressed.Up) {
-					if (FAT_data_composer_getChannel(realLine) <= INSTRUMENT_TYPE_NOISE){
-                        FAT_data_composer_changeOctave(realLine, 1); // ajout de 1
-                        if (FAT_data_isPreviewEnabled() && !FAT_getIsCurrentlyPlaying()) {
-                            FAT_data_composer_previewNote(realLine);
-                        }
-					}
+        					if (FAT_data_composer_getChannel(realLine) <= INSTRUMENT_TYPE_NOISE){
+                                FAT_data_composer_changeOctave(realLine, 1); // ajout de 1
+                                if (FAT_data_isPreviewEnabled() && !FAT_getIsCurrentlyPlaying()) {
+                                    FAT_data_composer_previewNote(realLine);
+                                }
+        					}
                 }
 
                 if (hel_PadQuery()->Pressed.Down) {
-					if (FAT_data_composer_getChannel(realLine) <= INSTRUMENT_TYPE_NOISE) {
-                        FAT_data_composer_changeOctave(realLine, -1);
-                        if (FAT_data_isPreviewEnabled() && !FAT_getIsCurrentlyPlaying()) {
-                            FAT_data_composer_previewNote(realLine);
-                        }
-					}
+        					if (FAT_data_composer_getChannel(realLine) <= INSTRUMENT_TYPE_NOISE) {
+                                FAT_data_composer_changeOctave(realLine, -1);
+                                if (FAT_data_isPreviewEnabled() && !FAT_getIsCurrentlyPlaying()) {
+                                    FAT_data_composer_previewNote(realLine);
+                                }
+        					}
                 }
 
                 if (FAT_data_isPreviewEnabled() && !FAT_getIsCurrentlyPlaying() && hel_PadQuery()->Pressed.A) {
@@ -379,6 +379,26 @@ void FAT_screenComposer_pressOrHeldA() {
                 break;
             case SCREENCOMPOSER_COLUMN_ID_CMD_PARAM:
 
+                if (FAT_data_composer_isEffectEmpty(realLine)){
+                  FAT_data_composer_addDefaultEffect(realLine);
+                }
+
+                if (hel_PadQuery()->Pressed.Right) {
+                    FAT_data_composer_changeEffectValue(realLine, 1);
+                }
+
+                if (hel_PadQuery()->Pressed.Left) {
+                    FAT_data_composer_changeEffectValue(realLine, -1);
+                }
+
+                if (hel_PadQuery()->Pressed.Up) {
+                    FAT_data_composer_changeEffectValue(realLine, 16);
+                }
+
+                if (hel_PadQuery()->Pressed.Down) {
+                    FAT_data_composer_changeEffectValue(realLine, -16);
+                }
+
                 break;
             case SCREENCOMPOSER_COLUMN_ID_CHANNEL:
 
@@ -404,6 +424,7 @@ void FAT_screenComposer_pressOrHeldA() {
         }
 
         FAT_screenComposer_printNote(realLine);
+        FAT_screenComposer_printEffect(realLine);
     } else {
         // on joue avec les paramètres
         switch (FAT_screenComposer_getCurrentSelectedLine()) {
