@@ -10,8 +10,8 @@
 */
 
 /**
-* \file system.c
-* \brief Code contenant les routines systèmes (init, ...)
+* \file data.c
+* \brief Code contenant les routines d'accès aux données
 */
 
 #include <hel2.h>

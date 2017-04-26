@@ -23,7 +23,7 @@ PROGNAME = FAT_v1.3.0
 # Please let the libgbfs.o at last position. IMPORTANT !
 #
 OFILES += src/main.o \
-	src/system/system.o src/system/data.o src/system/filesystem.o src/system/player.o \
+	src/system/system.o src/system/data/data.o src/system/filesystem.o src/system/player.o \
  	src/sprites/cursors.o src/sprites/player_cursors.o \
  	src/screens/project.o src/screens/filesystem.o \
 	src/screens/blocks.o src/screens/composer.o src/screens/effects.o \
