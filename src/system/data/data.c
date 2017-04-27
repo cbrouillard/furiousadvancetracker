@@ -17,7 +17,7 @@
 #include <hel2.h>
 #include <stdarg.h>
 
-#include "../headers/fat.h"
+#include "../../headers/fat.h"
 
 /** \brief Tableau constant contenant toutes les notes sous formes de chaînes de caractères. */
 const char* noteName[NB_NOTE] = {"C ", "C#", "D ", "D#", "E ", "F ", "F#", "G ", "G#", "A ", "A#", "B "};
