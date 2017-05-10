@@ -131,11 +131,11 @@ void FAT_popup_moveSelectedScreenCursor() {
  * \brief Cette fonction permet de tester les actions utilisateurs sur la popup.
  */
 void FAT_popup_checkButtons() {
-    if (hel_PadQuery()->Pressed.Right) {
+    if (hel_PadQuery()->Pressed.Right || hel_PadQuery()->Pressed.R) {
         FAT_popup_moveSelectionCursorRight();
     }
 
-    if (hel_PadQuery()->Pressed.Left) {
+    if (hel_PadQuery()->Pressed.Left || hel_PadQuery()->Pressed.L) {
         FAT_popup_moveSelectionCursorLeft();
     }
 
