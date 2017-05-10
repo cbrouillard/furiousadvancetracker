@@ -32,7 +32,7 @@ const char* blockEffectName[NB_BLOCK_EFFECT] = {"KL"};
 const char* noteEffectHelp[NB_NOTE_EFFECT] = {"Chord      ", "Customvoice", "Delay      ", "Enveloppe  ", "FM Synth    ", "Hop!       ", "Kill       ", "Output     ", "Pitch      ", "Retrig     ", "Slide      ", "Samplerate ", "Sweep      ", "Table      ", "Tempo      ", "Transpose  ", "Tremolo    ", "Vibrato    ", "Volume     ", "Waveform   "};
 /** \brief Tableau de boolean pour déterminer si un effet est implémenté ou non **/
 const bool effectImplemented [NB_NOTE_EFFECT] = {E_CHORD_IMPL,E_CUSTOMVOICE_IMPL,E_DELAY_IMPL,E_ENVELOPE_IMPL,E_FMSYNTH_IMPL,E_HOP_IMPL,E_KILL_IMPL,E_OUTPUT_IMPL,E_PITCH_IMPL,E_RETRIG_IMPL,E_SLIDE_IMPL,E_SAMPLERATE_IMPL,E_SWEEP_IMPL,E_TABLE_IMPL,E_TEMPO_IMPL,E_TRANSPOSE_IMPL,E_TREMOLO_IMPL,E_VIBRATO_IMPL, E_VOLUME_IMPL,E_WAVEFORM_IMPL};
-
+const bool effectImplemented_composer[NB_NOTE_EFFECT] = {0,1,0,0,0,0,0,1,0,1,0,1,1,0,1,1,0,0,1,1};
 /**
  * \brief Espace mémoire contenant le dernier effet écrit. Par défaut, l'effet est initialisé avec NULL_VALUE.
  */
@@ -938,7 +938,7 @@ void FAT_data_note_changeEffectName(u8 block, u8 line, s8 addedValue) {
         FAT_data_lastEffectWritten.name = FAT_tracker.allBlocks[block].notes[line].effect.name;
 
         if (!effectImplemented[effectName]){
-            FAT_data_note_changeEffectName (block, line, 1);
+            FAT_data_note_changeEffectName (block, line, addedValue);
         } else {
           // recalibrage de la valeur
           FAT_data_note_filterEffectValue (&(FAT_tracker.allBlocks[block].notes[line].effect));
@@ -1986,8 +1986,8 @@ void FAT_data_composer_changeEffectName (u8 line, s8 addedValue){
       FAT_tracker.composer.notes[line].effect.name = (effectName << 1) | 1;
       FAT_data_lastEffectWritten.name = FAT_tracker.composer.notes[line].effect.name;
 
-      if (!effectImplemented[effectName]){
-          FAT_data_composer_changeEffectName (line, 1);
+      if (!effectImplemented_composer[effectName]){
+          FAT_data_composer_changeEffectName (line, addedValue);
       } else {
         // recalibrage de la valeur
         FAT_data_note_filterEffectValue (&(FAT_tracker.composer.notes[line].effect));
