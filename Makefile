@@ -16,7 +16,7 @@ ADD_LIBS += $(GCCARM)/lib/libhel2.a
 #
 # Set the name of your desired GBA image name here
 #
-PROGNAME = FAT_v1.3.0-RC1
+PROGNAME = FAT_v1.4.0
 
 #
 # Set a list of files you want to compile
