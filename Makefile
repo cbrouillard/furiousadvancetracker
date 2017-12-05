@@ -81,6 +81,7 @@ release: clear gfx all
 	wine gbfs.exe kits/battery.gbfs samples/battery/0infos samples/battery/*.snd > /dev/null
 	wine gbfs.exe kits/rhythms.gbfs samples/rhythm/0infos samples/rhythm/*.snd > /dev/null
 	wine gbfs.exe kits/tr606.gbfs samples/tr-606-7/0infos samples/tr-606-7/*.snd > /dev/null
+	cp $(PROGNAME).$(EXT) $(PROGNAME)_buildable.$(EXT)
 	cat $(PROGNAME).$(EXT) kits/infosNoKits.gbfs > $(PROGNAME)_default.$(EXT)
 	cat $(PROGNAME).$(EXT) kits/infos.gbfs kits/devmess.gbfs kits/littlescale-md.gbfs kits/c64-drums.gbfs kits/ym-drums.gbfs kits/battery.gbfs kits/rhythms.gbfs kits/tr606.gbfs > TMP.gba
 	mv TMP.gba $(PROGNAME).$(EXT)
