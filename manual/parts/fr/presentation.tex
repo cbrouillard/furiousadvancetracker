@@ -199,8 +199,25 @@ Voici les quelques cartouches déjà testées avec \FAT :
 
 \medskip Le meilleur choix reste l'ezflash1. A chercher sur la toile.
 
-\medskip Si vous utilisez l'EZFlashIV et que vous avez un souci de curseur "noir", voici la solution trouvée par \textcolor{bleu}{\bf @maz\_hoot} (sur Twitter, merci pour le partage ! ) :
-\ColoredAnnotation{Il faut écrire FAT comme jeu en chargement rapide. Pour ce faire, quand on est sur l'écran de lancement de la rom FAT, appuyez sur select : un panneau s'ouvre. Pressez A et ça écrit. Il est ensuite selectionnable en lancement rapide et le curseur est bien vert.}
+\ColoredAnnotation{
+\WriteTextWithImgOnLeft{images/ezflash4}{0.1}{Si vous avez un souci de curseur "noir" avec l'ezFlash IV, voici une solution trouvée par \textcolor{bleu}{\bf @maz\_hoot} (merci pour le partage !)
+
+\medskip
+
+{\bf Procédure : Écrire FAT dans la mémoire NOR.}\\
+(Ça marche sur l’EZ flash IV avec micro sd mais sur les anciennes version avec sd j’imagine que c’est pareil)
+\medskip
+\begin{enumerate}
+  \item{allumer la console}
+  \item{une fois l’écran d’accueil affiché, placer le curseur sur la planète et appuyer sur A 2 fois (c’est ce que vous faites d’habitude normalement).}
+  \item{appuyer sur A pour entrer dans le dossier EZ-Disk (comme d’habitude)}
+  \item{mettre le curseur sur FAT.gba}
+  \item{appuyer sur select. Une boite de dialogue apparaît.}
+  \item{appuyer sur A. FAT.gba s’écrit sur la cartouche en mode NOR. Ça peut prendre du temps c’est normal.}
+  \item{vous devriez vous retrouver devant le dossier EZ-Disk sauf qu’il y aura FAT.gba juste en dessous. Si ce n'est pas le cas peut être qu’il faut éteindre et rallumer la console une fois que l’écriture est terminée.}
+  \item{lancer FAT.gba en appuyant sur A depuis cet endroit là. Ça va se lancer beaucoup plus vite et il n'y aura plus ce problème de curseur noir.}
+\end{enumerate}
+}}
 
 \subsection{Changements pour la \fatversion}
 
