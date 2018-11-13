@@ -56,9 +56,9 @@ include $(HAMDIR)/system/standard-targets.mak
 ######################################
 .PHONY gfx: makefile
 	mkdir -p src/gfx/raw/app src/gfx/raw/intro
-	$(HAMDIR)/tools/linux/gfx2gba -t8 -m -fraw -osrc/gfx/raw/intro -pintro.pal src/gfx/img/screens/intro.bmp
-	$(HAMDIR)/tools/linux/gfx2gba -t8 -m -fraw -osrc/gfx/raw/app -pscreen.pal src/gfx/img/screens/screen*.bmp src/gfx/img/text.bmp
-	$(HAMDIR)/tools/linux/gfx2gba -t8 -D -c16 -fraw -osrc/gfx/raw/app -psprites.pal src/gfx/img/sprites/*.bmp
+	wine $(HAMDIR)/tools/win32/gfx2gba.exe -t8 -m -fraw -osrc/gfx/raw/intro -pintro.pal src/gfx/img/screens/intro.bmp
+	wine $(HAMDIR)/tools/win32/gfx2gba.exe -t8 -m -fraw -osrc/gfx/raw/app -pscreen.pal src/gfx/img/screens/screen*.bmp src/gfx/img/text.bmp
+	wine $(HAMDIR)/tools/win32/gfx2gba.exe -t8 -D -c16 -fraw -osrc/gfx/raw/app -psprites.pal src/gfx/img/sprites/*.bmp
 	wine $(HAMDIR)/tools/win32/katie.exe --output-asm-arm --output-h --output-h-filename src/gfx/ResourceData.h --output-asm-arm-filename src/gfx/ResourceData.s src/gfx/raw/intro/*.* src/gfx/raw/app/*.*
 
 clear: makefile
